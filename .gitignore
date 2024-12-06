@@ -1,0 +1,104 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# React Native
+android/
+ios/
+*.keystore
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Build
+build/
+web-build/
+.gradle
+local.properties
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Cache and temp files
+.cache/
+.expo/
+.tmp/
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+__tests__/coverage/
+.jest/
+__snapshots__/
+
+# Production
+/src/web/build
+/src/mobile/build
+/dist
+
+# Mobile specific
+/android/app/debug
+/android/app/release
+/ios/Pods/
+*.mobileprovision
+*.certSigningRequest
+*.cer
+
+# Development
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDEs and editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.code-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.yarn-integrity
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Cache
+.eslintcache
+.prettier-cache
