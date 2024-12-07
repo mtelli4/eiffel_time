@@ -2,7 +2,8 @@
 export default {
   content: [
     './index.html', 
-    './src/**/*.{js,ts,jsx,tsx}'
+    "./src/web/**/*.{js,ts,jsx,tsx}",
+    "./src/mobile/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -12,6 +13,9 @@ export default {
         background: '#ECF0F1',
       },
     },
+  },
+  theme: {
+    extend: {},
   },
   plugins: [],
 };
