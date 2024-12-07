@@ -1,7 +1,7 @@
 // src/web/routes.tsx
 import { Routes, Route } from 'react-router-dom';
 import { Grades } from './pages/Grades';
-import { TeacherGrades } from './pages/TeacherGrades';
+import { TeacherGrades } from './pages/teacher-grades';
 
 export function AppRoutes() {
   return (
