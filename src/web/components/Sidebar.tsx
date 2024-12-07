@@ -1,7 +1,8 @@
-import { ArrowLeftToLine, Calendar, ClipboardList, GraduationCap, Settings, UserCheck, Users, Wrench } from 'lucide-react';
+import { ArrowLeftToLine, ArrowRightToLine, Calendar, ClipboardList, GraduationCap, Settings, UserCheck, Users, Wrench } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import logo from '../../shared/assets/Logo.svg';
 import { cn } from '../../shared/lib/utils';
+import { useState, useEffect } from 'react';
 
 interface SidebarProps {
   userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin';
@@ -43,10 +44,48 @@ const navigationConfig = {
 };
 
 export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
+  const [isManuallyOpened, setIsManuallyOpened] = useState(false);
   const navigation = navigationConfig[userRole];
 
+  useEffect(() => {
+    const handleMouseEnter = () => {
+      if (!isVisible) {
+        setIsVisible(true);
+      }
+    };
+
+    const handleMouseLeave = () => {
+      if (!isManuallyOpened) {
+        setIsVisible(false);
+      }
+    };
+
+    const leftEdge = document.createElement('div');
+    leftEdge.style.position = 'fixed';
+    leftEdge.style.top = '0';
+    leftEdge.style.left = '0';
+    leftEdge.style.width = '10px';
+    leftEdge.style.height = '100vh';
+    leftEdge.style.zIndex = '9999';
+    leftEdge.addEventListener('mouseenter', handleMouseEnter);
+    document.body.appendChild(leftEdge);
+
+    const sidebarElement = document.querySelector('.sidebar');
+    if (sidebarElement) {
+      sidebarElement.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    return () => {
+      leftEdge.removeEventListener('mouseenter', handleMouseEnter);
+      document.body.removeChild(leftEdge);
+      if (sidebarElement) {
+        sidebarElement.removeEventListener('mouseleave', handleMouseLeave);
+      }
+    };
+  }, [isVisible, isManuallyOpened, setIsVisible]);
+
   return (
-    <div className={`h-screen w-[280px] bg-[#2E3494] text-white fixed top-0 p-4 flex flex-col justify-between transition-transform ${isVisible ? 'left-0' : '-left-[280px]'}`}>
+    <div className={`sidebar h-screen w-[280px] bg-[#2E3494] text-white fixed top-0 p-4 flex flex-col justify-between transition-transform ${isVisible ? 'left-0' : '-left-[280px]'}`}>
       <div>
         <div className="flex items-center justify-start mb-8 pt-4 ml-9">
           <img src={logo} alt="Logo" className="w-10 h-10" />
@@ -74,7 +113,23 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
       </div>
       <div className="flex justify-between items-end p-2">
         <Settings className="w-6 h-6 cursor-pointer" />
-        <ArrowLeftToLine className="w-6 h-6 cursor-pointer" onClick={() => setIsVisible(false)} />
+        {isManuallyOpened ? (
+          <ArrowLeftToLine
+            className="w-6 h-6 cursor-pointer"
+            onClick={() => {
+              setIsVisible(false);
+              setIsManuallyOpened(false);
+            }}
+          />
+        ) : (
+          <ArrowRightToLine
+            className="w-6 h-6 cursor-pointer"
+            onClick={() => {
+              setIsVisible(true);
+              setIsManuallyOpened(true);
+            }}
+          />
+        )}
       </div>
     </div>
   );
