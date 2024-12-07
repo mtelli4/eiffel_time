@@ -1,12 +1,14 @@
+// src/web/components/Layout.tsx
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 
 interface LayoutProps {
   userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin';
+  children: React.ReactNode;
 }
 
-export function Layout({ userRole }: LayoutProps) {
+export function Layout({ userRole, children }: LayoutProps) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   return (
@@ -16,7 +18,7 @@ export function Layout({ userRole }: LayoutProps) {
         <header className="h-16 bg-white border-b border-gray-200 px-8 flex items-center justify-end">
         </header>
         <main className="p-8">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>

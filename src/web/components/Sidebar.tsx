@@ -35,7 +35,7 @@ const navigationConfig = {
   ],
   admin: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
-    { icon: ClipboardList, label: 'Notes', path: '../pages/grades' },
+    { icon: ClipboardList, label: 'Notes', path: '/teacher-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/averages' },
     { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     { icon: Users, label: 'Suivi des présences des professeurs', path: '/teacher-attendance' },
