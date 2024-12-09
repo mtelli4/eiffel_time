@@ -8,8 +8,8 @@
     "src/mobile"
   ],
   "scripts": {
-    "dev:web": "vite",
-    "dev:mobile": "react-native start",
+    "dev:web": "vite && nodemon index.js",
+    "dev:mobile": "react-native start && nodemon index.js",
     "build:web": "tsc -b && vite build",
     "build:mobile": "react-native build-android && react-native build-ios",
     "lint": "eslint .",
@@ -21,10 +21,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@prisma/client": "^6.0.1",
     "@tanstack/react-query": "^5.0.0",
     "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.4.20",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "nativewind": "^2.0.11",
     "pg": "^8.13.1",
     "postcss": "^8.4.49",
@@ -55,7 +60,9 @@
     "jest": "^29.0.0",
     "lint-staged": "^15.0.0",
     "metro-react-native-babel-preset": "^0.77.0",
+    "nodemon": "^3.1.7",
     "prettier": "^3.0.0",
+    "prisma": "^6.0.1",
     "react-native-cli": "^2.0.1",
     "react-test-renderer": "18.2.0"
   },
