@@ -1,38 +1,27 @@
 import './App.css'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { Utilisateur } from './backend/classes/Utilisateur.ts'
 
 function App() {
-    const [utilisateurs, setUtilisateurs] = useState([])
-
     useEffect(() => {
-        // Fonction pour charger les utilisateurs depuis l'API backend
+        // Charger les données depuis l'API backend
         const fetchUtilisateurs = async () => {
             try {
-                const response = await fetch('http://localhost:4000/api/utilisateurs')
+                const response = await fetch('http://localhost:4000/api/utilisateur')
                 const data = await response.json()
-                setUtilisateurs(data)
+                localStorage.setItem('utilisateur', JSON.stringify(new Utilisateur(data)))
             } catch (error) {
-                console.error(
-                    'Erreur lors du chargement des utilisateurs :',
-                    error
-                )
+                console.error('Erreur lors du chargement de l\'utilisateur :', error)
             }
         }
 
-        fetchUtilisateurs().then(() => console.log('Utilisateurs chargés'))
+        fetchUtilisateurs().then(() => console.log('Utilisateur chargé'))
     }, [])
 
     return (
         <div>
-            <h1>Liste des utilisateurs</h1>
             <ul>
-                {utilisateurs.map((utilisateur) => (
-                    <li key={utilisateur.id_utilisateur}>
-                        {utilisateur.prenom} {utilisateur.nom} -{' '}
-                        {utilisateur.email} -{' '}
-                        {utilisateur.statut}
-                    </li>
-                ))}
+                <li>Utilisateur : {localStorage.getItem('utilisateur')}</li>
             </ul>
         </div>
     )
