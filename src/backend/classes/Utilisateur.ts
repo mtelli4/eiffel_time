@@ -1,22 +1,26 @@
-import { capitalizeFirstLetter } from '../../utils/stringUtils.ts'
+import { capitalizeFirstLetter, capitalizeWords } from '../../utils/stringUtils.ts'
+
+export interface UtilisateurData {
+    id_utilisateur: number
+    nom: string
+    prenom: string
+    email: string | null
+    statut: string | null
+}
 
 export class Utilisateur {
-    id_utilisateur: number;
-    nom: string;
-    prenom: string;
-    email?: string;
-    statut?: string;
+    id_utilisateur: number
+    nom: string
+    prenom: string
+    email: string | null
+    statut: string | null
 
-    constructor(data: Partial<Utilisateur>) {
-        this.id_utilisateur = data.id_utilisateur!;
-        this.nom = capitalizeFirstLetter(data.nom!);
-        this.prenom = capitalizeFirstLetter(data.prenom!);
+    constructor(data: any) {
+        this.id_utilisateur = data.id_utilisateur;
+        this.nom = capitalizeWords(data.nom);
+        this.prenom = capitalizeWords(data.prenom);
         this.email = data.email;
         this.statut = data.statut;
-    }
-
-    fullName(): string {
-        return this.prenom + ' ' + this.nom;
     }
 
     static fromJSON(data: any): Utilisateur {

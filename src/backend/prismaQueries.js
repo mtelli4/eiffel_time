@@ -7,14 +7,14 @@ async function getUtilisateurById(id_utilisateur) {
     try {
         return await prisma.utilisateur.findUnique({
             where: {
-                id_utilisateur: id_utilisateur,
+                id_utilisateur: id_utilisateur
             },
             select: {
                 id_utilisateur: true,
                 nom: true,
                 prenom: true,
                 email: true,
-                statut: true,
+                statut: true
             },
         })
     } catch (error) {

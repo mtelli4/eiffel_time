@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Route pour obtenir un utilisateur
 router.get('/api/utilisateur', async (req, res) => {
-    const userId = parseInt(req.query.id) || 1;  // ID par défaut = 1 si non fourni
+    const userId = 1;  // ID par défaut = 1 si non fourni
 
     try {
         const utilisateur = await getUtilisateurById(userId);
