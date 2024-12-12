@@ -1,260 +1,260 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model absence {
-  id_absence     Int          @id @default(autoincrement())
-  justificatif   String?      @db.VarChar(50)
-  message        String?      @db.VarChar(1000)
-  valide         Boolean?
-  retard         Int?
-  envoye         Boolean?
-  createdat      DateTime?    @db.Timestamp(6)
-  updatedat      DateTime?    @db.Timestamp(6)
-  id_notif       Int
-  id_utilisateur Int
-  id_cours       Int
-  cours          cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
-  notification   notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
-  etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_absence     Int          @id @default(autoincrement())
+    justificatif   String?      @db.VarChar(50)
+    message        String?      @db.VarChar(1000)
+    valide         Boolean?
+    retard         Int?
+    envoye         Boolean?
+    createdat      DateTime?    @db.Timestamp(6)
+    updatedat      DateTime?    @db.Timestamp(6)
+    id_notif       Int
+    id_utilisateur Int
+    id_cours       Int
+    cours          cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
+    notification   notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
+    etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model bloc_competence {
-  id_bloc_comp           Int                      @id @default(autoincrement())
-  libelle                String?                  @db.VarChar(50)
-  id_formation           Int
-  formation              formation                @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
-  module_bloc_competence module_bloc_competence[]
+    id_bloc_comp           Int                      @id @default(autoincrement())
+    libelle                String?                  @db.VarChar(50)
+    id_formation           Int
+    formation              formation                @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
+    module_bloc_competence module_bloc_competence[]
 }
 
 model communiquer {
-  id_communiquer Int         @id @default(autoincrement())
-  contenu        String
-  createdat      DateTime    @db.Timestamp(6)
-  id_cours       Int
-  id_utilisateur Int
-  cours          cours       @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
-  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_communiquer Int         @id @default(autoincrement())
+    contenu        String
+    createdat      DateTime    @db.Timestamp(6)
+    id_cours       Int
+    id_utilisateur Int
+    cours          cours       @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
+    utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model cours {
-  id_cours     Int           @id @default(autoincrement())
-  type         type_cours?
-  libelle      String?       @db.VarChar(50)
-  debut        DateTime?     @db.Timestamp(6)
-  fin          DateTime?     @db.Timestamp(6)
-  batiment     String        @db.VarChar(50)
-  salle        String?       @db.VarChar(10)
-  createdat    DateTime?     @db.Timestamp(6)
-  updatedat    DateTime?     @db.Timestamp(6)
-  appel        Boolean?
-  presence     String?       @db.VarChar(10)
-  id_module    Int
-  id_formation Int
-  id_grp       Int?
-  absence      absence[]
-  communiquer  communiquer[]
-  formation    formation     @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
-  groupe       groupe?       @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
-  module       module        @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
-  evaluation   evaluation[]
+    id_cours     Int           @id @default(autoincrement())
+    type         type_cours?
+    libelle      String?       @db.VarChar(50)
+    debut        DateTime?     @db.Timestamp(6)
+    fin          DateTime?     @db.Timestamp(6)
+    batiment     String        @db.VarChar(50)
+    salle        String?       @db.VarChar(10)
+    createdat    DateTime?     @db.Timestamp(6)
+    updatedat    DateTime?     @db.Timestamp(6)
+    appel        Boolean?
+    presence     String?       @db.VarChar(10)
+    id_module    Int
+    id_formation Int
+    id_grp       Int?
+    absence      absence[]
+    communiquer  communiquer[]
+    formation    formation     @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
+    groupe       groupe?       @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
+    module       module        @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
+    evaluation   evaluation[]
 }
 
 model enseignant {
-  id_utilisateur    Int                 @id
-  vacataire         Boolean?
-  utilisateur       utilisateur         @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
-  enseignant_module enseignant_module[]
+    id_utilisateur    Int                 @id
+    vacataire         Boolean?
+    utilisateur       utilisateur         @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    enseignant_module enseignant_module[]
 }
 
 model enseignant_module {
-  id_module      Int
-  id_utilisateur Int
-  module         module     @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
-  enseignant     enseignant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_module      Int
+    id_utilisateur Int
+    module         module     @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
+    enseignant     enseignant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([id_module, id_utilisateur])
+    @@id([id_module, id_utilisateur])
 }
 
 model etudiant {
-  id_utilisateur Int            @id
-  numeroetudiant String?        @unique @db.VarChar(50)
-  tierstemps     Boolean?
-  delegue        Boolean?
-  id_grp         Int
-  absence        absence[]
-  groupe         groupe         @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
-  utilisateur    utilisateur    @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
-  notes          notes[]
-  notification   notification[]
+    id_utilisateur Int            @id
+    numeroetudiant String?        @unique @db.VarChar(50)
+    tierstemps     Boolean?
+    delegue        Boolean?
+    id_grp         Int
+    absence        absence[]
+    groupe         groupe         @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
+    utilisateur    utilisateur    @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    notes          notes[]
+    notification   notification[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model evaluation {
-  id_eval      Int          @id @default(autoincrement())
-  libelle      String?      @db.VarChar(50)
-  coefficient  Int?
-  notemaximale Decimal?     @db.Decimal(20, 0)
-  periode      String?      @db.VarChar(50)
-  createdat    DateTime?    @db.Timestamp(6)
-  updatedat    DateTime?    @db.Timestamp(6)
-  id_cours     Int
-  id_notif     Int
-  cours        cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
-  notification notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
-  notes        notes[]
+    id_eval      Int          @id @default(autoincrement())
+    libelle      String?      @db.VarChar(50)
+    coefficient  Int?
+    notemaximale Decimal?     @db.Decimal(20, 0)
+    periode      String?      @db.VarChar(50)
+    createdat    DateTime?    @db.Timestamp(6)
+    updatedat    DateTime?    @db.Timestamp(6)
+    id_cours     Int
+    id_notif     Int
+    cours        cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
+    notification notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
+    notes        notes[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model formation {
-  id_formation          Int                     @id @default(autoincrement())
-  libelle               String?                 @db.VarChar(50)
-  lien                  String?                 @db.VarChar(255)
-  trombinoscope         String?                 @db.VarChar(50)
-  bloc_competence       bloc_competence[]
-  cours                 cours[]
-  formation_utilisateur formation_utilisateur[]
-  groupe_formation      groupe_formation[]
+    id_formation          Int                     @id @default(autoincrement())
+    libelle               String?                 @db.VarChar(50)
+    lien                  String?                 @db.VarChar(255)
+    trombinoscope         String?                 @db.VarChar(50)
+    bloc_competence       bloc_competence[]
+    cours                 cours[]
+    formation_utilisateur formation_utilisateur[]
+    groupe_formation      groupe_formation[]
 }
 
 model formation_utilisateur {
-  id_utilisateur Int
-  id_formation   Int
-  formation      formation   @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
-  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_utilisateur Int
+    id_formation   Int
+    formation      formation   @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
+    utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([id_utilisateur, id_formation])
+    @@id([id_utilisateur, id_formation])
 }
 
 model groupe {
-  id_grp           Int                @id @default(autoincrement())
-  libelle          String?            @db.VarChar(50)
-  cours            cours[]
-  etudiant         etudiant[]
-  groupe_formation groupe_formation[]
+    id_grp           Int                @id @default(autoincrement())
+    libelle          String?            @db.VarChar(50)
+    cours            cours[]
+    etudiant         etudiant[]
+    groupe_formation groupe_formation[]
 }
 
 model groupe_formation {
-  id_formation Int
-  id_grp       Int
-  formation    formation @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
-  groupe       groupe    @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
+    id_formation Int
+    id_grp       Int
+    formation    formation @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
+    groupe       groupe    @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([id_formation, id_grp])
+    @@id([id_formation, id_grp])
 }
 
 model message {
-  id_message                                 Int         @id @default(autoincrement())
-  contenu                                    String?
-  createdat                                  DateTime?   @db.Timestamp(6)
-  emetteur                                   Int
-  recepteur                                  Int
-  utilisateur_message_emetteurToutilisateur  utilisateur @relation("message_emetteurToutilisateur", fields: [emetteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
-  utilisateur_message_recepteurToutilisateur utilisateur @relation("message_recepteurToutilisateur", fields: [recepteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_message                                 Int         @id @default(autoincrement())
+    contenu                                    String?
+    createdat                                  DateTime?   @db.Timestamp(6)
+    emetteur                                   Int
+    recepteur                                  Int
+    utilisateur_message_emetteurToutilisateur  utilisateur @relation("message_emetteurToutilisateur", fields: [emetteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    utilisateur_message_recepteurToutilisateur utilisateur @relation("message_recepteurToutilisateur", fields: [recepteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model module {
-  id_module              Int                      @id @default(autoincrement())
-  libelle                String?                  @db.VarChar(50)
-  codeapogee             String?                  @db.VarChar(50)
-  heures                 String?                  @db.VarChar(50)
-  cours                  cours[]
-  enseignant_module      enseignant_module[]
-  module_bloc_competence module_bloc_competence[]
+    id_module              Int                      @id @default(autoincrement())
+    libelle                String?                  @db.VarChar(50)
+    codeapogee             String?                  @db.VarChar(50)
+    heures                 String?                  @db.VarChar(50)
+    cours                  cours[]
+    enseignant_module      enseignant_module[]
+    module_bloc_competence module_bloc_competence[]
 }
 
 model module_bloc_competence {
-  id_module       Int
-  id_bloc_comp    Int
-  bloc_competence bloc_competence @relation(fields: [id_bloc_comp], references: [id_bloc_comp], onDelete: NoAction, onUpdate: NoAction)
-  module          module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
+    id_module       Int
+    id_bloc_comp    Int
+    bloc_competence bloc_competence @relation(fields: [id_bloc_comp], references: [id_bloc_comp], onDelete: NoAction, onUpdate: NoAction)
+    module          module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([id_module, id_bloc_comp])
+    @@id([id_module, id_bloc_comp])
 }
 
 model notes {
-  id_utilisateur Int
-  id_eval        Int
-  note           Decimal?   @db.Decimal(15, 2)
-  commentaire    String?    @db.VarChar(255)
-  createdat      DateTime?  @db.Timestamp(6)
-  updatedat      DateTime?  @db.Timestamp(6)
-  evaluation     evaluation @relation(fields: [id_eval], references: [id_eval], onDelete: NoAction, onUpdate: NoAction)
-  etudiant       etudiant   @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_utilisateur Int
+    id_eval        Int
+    note           Decimal?   @db.Decimal(15, 2)
+    commentaire    String?    @db.VarChar(255)
+    createdat      DateTime?  @db.Timestamp(6)
+    updatedat      DateTime?  @db.Timestamp(6)
+    evaluation     evaluation @relation(fields: [id_eval], references: [id_eval], onDelete: NoAction, onUpdate: NoAction)
+    etudiant       etudiant   @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([id_utilisateur, id_eval])
+    @@id([id_utilisateur, id_eval])
 }
 
 model notification {
-  id_notif       Int          @id @default(autoincrement())
-  type           String?      @db.VarChar(50)
-  message        String?
-  createdat      DateTime?    @db.Timestamp(6)
-  id_utilisateur Int
-  absence        absence[]
-  evaluation     evaluation[]
-  etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_notif       Int          @id @default(autoincrement())
+    type           String?      @db.VarChar(50)
+    message        String?
+    createdat      DateTime?    @db.Timestamp(6)
+    id_utilisateur Int
+    absence        absence[]
+    evaluation     evaluation[]
+    etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model sequelizemeta {
-  name String @id @db.VarChar(255)
+    name String @id @db.VarChar(255)
 }
 
 model utilisateur {
-  id_utilisateur                         Int                     @id @default(autoincrement())
-  nom                                    String                  @db.VarChar(255)
-  prenom                                 String                  @db.VarChar(255)
-  email                                  String?                 @db.VarChar(255)
-  mdp                                    String?                 @db.VarChar(255)
-  salt                                   String?                 @db.VarBit(16)
-  premiereconnexion                      Boolean?
-  statut                                 statut_utilisateur?
-  createdat                              DateTime                @db.Timestamp(6)
-  updatedat                              DateTime                @db.Timestamp(6)
-  communiquer                            communiquer[]
-  enseignant                             enseignant?
-  etudiant                               etudiant?
-  formation_utilisateur                  formation_utilisateur[]
-  message_message_emetteurToutilisateur  message[]               @relation("message_emetteurToutilisateur")
-  message_message_recepteurToutilisateur message[]               @relation("message_recepteurToutilisateur")
-  utilisateurs_eav                       utilisateurs_eav[]
+    id_utilisateur                         Int                     @id @default(autoincrement())
+    nom                                    String                  @db.VarChar(255)
+    prenom                                 String                  @db.VarChar(255)
+    email                                  String?                 @db.VarChar(255)
+    mdp                                    String?                 @db.VarChar(255)
+    salt                                   String?                 @db.VarBit(16)
+    premiereconnexion                      Boolean?
+    statut                                 statut_utilisateur?
+    createdat                              DateTime                @db.Timestamp(6)
+    updatedat                              DateTime                @db.Timestamp(6)
+    communiquer                            communiquer[]
+    enseignant                             enseignant?
+    etudiant                               etudiant?
+    formation_utilisateur                  formation_utilisateur[]
+    message_message_emetteurToutilisateur  message[]               @relation("message_emetteurToutilisateur")
+    message_message_recepteurToutilisateur message[]               @relation("message_recepteurToutilisateur")
+    utilisateurs_eav                       utilisateurs_eav[]
 }
 
 model utilisateurs_eav {
-  id_user_eav    Int         @id @default(autoincrement())
-  attribute      String?     @db.VarChar(255)
-  valueeav       String?     @db.VarChar(255)
-  createdat      DateTime    @db.Timestamp(6)
-  id_utilisateur Int
-  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+    id_user_eav    Int         @id @default(autoincrement())
+    attribute      String?     @db.VarChar(255)
+    valueeav       String?     @db.VarChar(255)
+    createdat      DateTime    @db.Timestamp(6)
+    id_utilisateur Int
+    utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum statut_utilisateur {
-  tudiant      @map("étudiant")
-  etudiant
-  enseignant
-  secr_taire   @map("secrétaire")
-  secretaire
-  directeur
-  gestionnaire
-  admin
-  ind_fini     @map("indéfini")
-  indefini
+    tudiant      @map("étudiant")
+    etudiant
+    enseignant
+    secr_taire   @map("secrétaire")
+    secretaire
+    directeur
+    gestionnaire
+    admin
+    ind_fini     @map("indéfini")
+    indefini
 }
 
 enum type_cours {
-  CM
-  TD
-  TP
-  EMPTY_ENUM_VALUE @map("")
+    CM
+    TD
+    TP
+    EMPTY_ENUM_VALUE @map("")
 }
