@@ -12,6 +12,7 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, './src/shared'),
       '@web': path.resolve(__dirname, './src/web'),
       '@mobile': path.resolve(__dirname, './src/mobile'),
+      'react-native': 'react-native-web',
     },
   },
 });

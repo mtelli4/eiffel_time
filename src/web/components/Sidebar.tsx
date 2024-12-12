@@ -1,6 +1,6 @@
 import { ArrowLeftToLine, ArrowRightToLine, Calendar, ClipboardList, GraduationCap, Settings, UserCheck, Users, Wrench } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import logo from '../../shared/assets/Logo.svg';
+import logo from '../../shared/assets/logo.svg';
 import { cn } from '../../shared/lib/utils';
 import { useState, useEffect } from 'react';
 

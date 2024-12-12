@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Users, BookOpen, Calendar, Building2, UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { View, Text, TouchableOpacity} from 'react-native';
+import { Users, UserPlus } from 'lucide-react';
 import { UserFilters } from '../components/admin/UserFilters';
 import { UserTable } from '../components/admin/UserTable';
 import { UserForm } from '../components/admin/UserForm';
+import { styles } from '../styles/AdminStyles'; // Import the styles
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms';
 
@@ -64,41 +66,42 @@ export function Admin() {
   };
 
   return (
-    <div className="h-full">
-      <h1 className="text-2xl font-bold text-[#2C3E50] mb-6">Administration</h1>
+    <View style={styles.container}>
+      <Text style={styles.title}>Administration</Text>
 
-      <div className="flex space-x-4 mb-6">
+      <View style={styles.tabContainer}>
         {tabs.map((tab) => (
-          <button
+          <TouchableOpacity
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-              activeTab === tab.id
-                ? 'bg-[#2C3E50] text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
-            }`}
+            onPress={() => setActiveTab(tab.id)}
+            style={[
+              styles.tabButton,
+              activeTab === tab.id ? styles.activeTabButton : styles.inactiveTabButton
+            ]}
           >
-            <tab.icon className="w-5 h-5" />
-            {tab.label}
-          </button>
+            <tab.icon style={styles.tabIcon} />
+            <Text style={activeTab === tab.id ? styles.activeTabText : styles.inactiveTabText}>
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
         ))}
-      </div>
+      </View>
 
       {activeTab === 'users' && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-[#2C3E50]">Gestion des utilisateurs</h2>
-            <button
-              onClick={() => {
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.subtitle}>Gestion des utilisateurs</Text>
+            <TouchableOpacity
+              onPress={() => {
                 setSelectedUser(null);
                 setShowUserForm(true);
               }}
-              className="btn btn-primary flex items-center gap-2"
+              style={styles.addButton}
             >
-              <UserPlus className="w-4 h-4" />
-              Ajouter un utilisateur
-            </button>
-          </div>
+              <UserPlus style={styles.addIcon} />
+              <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
+            </TouchableOpacity>
+          </View>
 
           <UserFilters
             onRoleChange={() => {}}
@@ -114,7 +117,7 @@ export function Admin() {
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
           />
-        </div>
+        </View>
       )}
 
       {showUserForm && (
@@ -129,6 +132,6 @@ export function Admin() {
           isEdit={!!selectedUser}
         />
       )}
-    </div>
+    </View>
   );
 }
