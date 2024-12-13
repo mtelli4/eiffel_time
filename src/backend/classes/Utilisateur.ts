@@ -1,12 +1,4 @@
-import { capitalizeFirstLetter, capitalizeWords } from '../../utils/stringUtils.ts'
-
-export interface UtilisateurData {
-    id_utilisateur: number
-    nom: string
-    prenom: string
-    email: string | null
-    statut: string | null
-}
+import { capitalizeWords } from '../../utils/stringUtils.ts'
 
 export class Utilisateur {
     id_utilisateur: number

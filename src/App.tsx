@@ -1,6 +1,6 @@
 import './App.css'
 import { useEffect, useState } from 'react'
-import { Utilisateur, UtilisateurData } from './backend/classes/Utilisateur'
+import { Utilisateur } from './backend/classes/Utilisateur'
 
 function App() {
     const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null)
