@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import { createWithEqualityFn } from 'zustand/traditional'
 
 function generateSalt(length: number = 16): string {
     return crypto.randomBytes(length).toString('base64')
