@@ -6,8 +6,8 @@
  * @returns The capitalized text.
  */
 export function capitalizeFirstLetter(text: string): string {
-    if (!text) return '';
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    if (!text) return ''
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
 }
 
 /*
@@ -18,9 +18,9 @@ export function capitalizeFirstLetter(text: string): string {
  * @returns The capitalized text.
  */
 export function capitalizeWords(text: string): string {
-    if (!text) return '';
+    if (!text) return ''
     return text
         .split(' ')
-        .map(word => capitalizeFirstLetter(word))
-        .join(' ');
+        .map((word) => capitalizeFirstLetter(word))
+        .join(' ')
 }
