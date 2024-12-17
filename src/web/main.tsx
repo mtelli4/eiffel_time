@@ -5,44 +5,48 @@ import './styles/index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Root, { Error } from './root'
 import { Grades } from './pages/Grades'
-import { TeacherGrades } from './pages/TeacherGrades'
-import { Averages } from './pages/Averages'
-import { Admin } from './pages/Admin'
+import { TeacherGrades } from '../shared/pages/TeacherGrades'
+import { Averages } from '../shared/pages/Averages'
+import { Admin } from '../shared/pages/Admin'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Root/>,
-    errorElement: <Error/>,
+    path: '/',
+    element: <Root />,
+    errorElement: <Error />,
     children: [
       {
-        path: "/grades", element: <Grades/>
+        path: '/grades',
+        element: <Grades />,
       },
       {
-        path: "/teacher-grades", element: <TeacherGrades/>
+        path: '/teacher-grades',
+        element: <TeacherGrades />,
       },
       {
-        path: "/averages", element: <Averages/>
+        path: '/averages',
+        element: <Averages />,
       },
       {
-        path: "/admin", element: <Admin/>
-      }
-    ]
+        path: '/admin',
+        element: <Admin />,
+      },
+    ],
   },
   {
-    path: "/login",
-    element: <Login/>
+    path: '/login',
+    element: <Login />,
   },
   {
-    path: "/register",
-    element: <Register/>
-  }
+    path: '/register',
+    element: <Register />,
+  },
 ])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </StrictMode>
 )
