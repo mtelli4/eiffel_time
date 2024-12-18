@@ -240,16 +240,13 @@ model utilisateurs_eav {
 }
 
 enum statut_utilisateur {
-  tudiant      @map("étudiant")
-  etudiant
-  enseignant
-  secr_taire   @map("secrétaire")
-  secretaire
-  directeur
-  gestionnaire
-  admin
-  ind_fini     @map("indéfini")
-  indefini
+  indefinite
+  student
+  teacher
+  secretary
+  director
+  manager
+  administrator
 }
 
 enum type_cours {

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "statut_utilisateur" AS ENUM ('étudiant', 'etudiant', 'enseignant', 'secrétaire', 'secretaire', 'directeur', 'gestionnaire', 'admin', 'indéfini', 'indefini');
+CREATE TYPE "statut_utilisateur" AS ENUM ('indefinite', 'student', 'teacher', 'secretary', 'director', 'manager', 'administrator');
 
 -- CreateEnum
 CREATE TYPE "type_cours" AS ENUM ('CM', 'TD', 'TP', '');
