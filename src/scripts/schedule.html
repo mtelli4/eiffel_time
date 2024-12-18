@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi du Temps</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        .day {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        .event {
+            margin-top: 10px;
+            padding: 5px;
+            border: 1px solid #000;
+            background-color: #f0f0f0;
+        }
+        .time-slot {
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emploi du Temps</h1>
+    <div>
+        <label for="ical-url">URL iCal:</label>
+        <input type="text" id="ical-url" placeholder="Entrez l'URL iCal">
+        <button onclick="loadCalendar()">Charger l'Emploi du Temps</button>
+    </div>
+    <div>
+        <label for="view-type">Vue:</label>
+        <select id="view-type" onchange="updateCalendarView()">
+            <option value="day">Jour</option>
+            <option value="week">Semaine</option>
+            <option value="month">Mois</option>
+        </select>
+    </div>
+    <div id="calendar" class="calendar"></div>
+    <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
+    <script src="schedule.js"></script>
+</body>
+</html>
