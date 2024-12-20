@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity} from 'react-native';
-import { Users, UserPlus } from 'lucide-react';
-import { UserFilters } from '../components/admin/UserFilters';
-import { UserTable } from '../components/admin/UserTable';
-import { UserForm } from '../components/admin/UserForm';
-import { styles } from '../styles/AdminStyles'; // Import the styles
+import { UserPlus, Users } from 'lucide-react'
+import { useState } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
+import { UserFilters } from '../../components/admin/UserFilters'
+import { UserForm } from '../../components/admin/UserForm'
+import { UserTable } from '../../components/admin/UserTable'
+import { styles } from '../../styles/Admin/AdminStyles' // Import the styles
 
-type Tab = 'users' | 'courses' | 'schedule' | 'rooms';
+type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  formation?: string;
-  group?: string;
-  type?: string;
+  id: string
+  name: string
+  email: string
+  role: string
+  formation?: string
+  group?: string
+  type?: string
 }
 
 const MOCK_USERS: User[] = [
@@ -25,45 +25,45 @@ const MOCK_USERS: User[] = [
     email: 'jean.dupont@example.com',
     role: 'student',
     formation: 'Informatique',
-    group: 'A1'
+    group: 'A1',
   },
   {
     id: 'P001',
     name: 'MARTIN Pierre',
     email: 'pierre.martin@example.com',
     role: 'teacher',
-    type: 'permanent'
-  }
-];
+    type: 'permanent',
+  },
+]
 
 export function Admin() {
-  const [activeTab, setActiveTab] = useState<Tab>('users');
-  const [showUserForm, setShowUserForm] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>(MOCK_USERS);
+  const [activeTab, setActiveTab] = useState<Tab>('users')
+  const [showUserForm, setShowUserForm] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [users, setUsers] = useState<User[]>(MOCK_USERS)
 
-  const tabs = [
-    { id: 'users' as const, label: 'Utilisateurs', icon: Users },
-  ];
+  const tabs = [{ id: 'users' as const, label: 'Utilisateurs', icon: Users }]
 
   const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setShowUserForm(true);
-  };
+    setSelectedUser(user)
+    setShowUserForm(true)
+  }
 
   const handleDeleteUser = (user: User) => {
-    setUsers(users.filter(u => u.id !== user.id));
-  };
+    setUsers(users.filter((u) => u.id !== user.id))
+  }
 
   const handleSubmitUser = (data: any) => {
     if (selectedUser) {
-      setUsers(users.map(u => u.id === selectedUser.id ? { ...u, ...data } : u));
+      setUsers(
+        users.map((u) => (u.id === selectedUser.id ? { ...u, ...data } : u))
+      )
     } else {
-      setUsers([...users, { ...data, id: `U${Date.now()}` }]);
+      setUsers([...users, { ...data, id: `U${Date.now()}` }])
     }
-    setShowUserForm(false);
-    setSelectedUser(null);
-  };
+    setShowUserForm(false)
+    setSelectedUser(null)
+  }
 
   return (
     <View style={styles.container}>
@@ -76,11 +76,19 @@ export function Admin() {
             onPress={() => setActiveTab(tab.id)}
             style={[
               styles.tabButton,
-              activeTab === tab.id ? styles.activeTabButton : styles.inactiveTabButton
+              activeTab === tab.id
+                ? styles.activeTabButton
+                : styles.inactiveTabButton,
             ]}
           >
             <tab.icon style={styles.tabIcon} />
-            <Text style={activeTab === tab.id ? styles.activeTabText : styles.inactiveTabText}>
+            <Text
+              style={
+                activeTab === tab.id
+                  ? styles.activeTabText
+                  : styles.inactiveTabText
+              }
+            >
               {tab.label}
             </Text>
           </TouchableOpacity>
@@ -93,8 +101,8 @@ export function Admin() {
             <Text style={styles.subtitle}>Gestion des utilisateurs</Text>
             <TouchableOpacity
               onPress={() => {
-                setSelectedUser(null);
-                setShowUserForm(true);
+                setSelectedUser(null)
+                setShowUserForm(true)
               }}
               style={styles.addButton}
             >
@@ -124,8 +132,8 @@ export function Admin() {
         <UserForm
           isOpen={showUserForm}
           onClose={() => {
-            setShowUserForm(false);
-            setSelectedUser(null);
+            setShowUserForm(false)
+            setSelectedUser(null)
           }}
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
@@ -133,5 +141,5 @@ export function Admin() {
         />
       )}
     </View>
-  );
+  )
 }

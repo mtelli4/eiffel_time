@@ -1,15 +1,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './styles/App.css'
-import './styles/index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Root, { Error } from './root'
-import { Grades } from './pages/Grades'
-import { TeacherGrades } from '../shared/pages/TeacherGrades'
-import { Averages } from '../shared/pages/Averages'
-import { Admin } from '../shared/pages/Admin'
+import { Admin } from '../shared/pages/Admin/Admin'
+import { ClassAverages } from '../shared/pages/Class/ClassAverages'
+import { ClassGrades } from '../shared/pages/Class/ClassGrades'
+import { Grades } from '../shared/pages/Student/Grades'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
+import Root, { Error } from './root'
+import './styles/App.css'
+import './styles/index.css'
 
 const router = createBrowserRouter([
   {
@@ -22,12 +22,12 @@ const router = createBrowserRouter([
         element: <Grades />,
       },
       {
-        path: '/teacher-grades',
-        element: <TeacherGrades />,
+        path: '/class-grades',
+        element: <ClassGrades />,
       },
       {
-        path: '/averages',
-        element: <Averages />,
+        path: '/class-averages',
+        element: <ClassAverages />,
       },
       {
         path: '/admin',

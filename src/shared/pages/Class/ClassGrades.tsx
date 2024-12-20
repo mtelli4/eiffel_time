@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native'
-import { GradeStatus } from '../../shared/types/types'
-import { AddGradeModal } from '../components/Teacher/AddGradeModal'
+import { AddGradeModal } from '../../components/Teacher/AddGradeModal'
+import { GradeStatus } from '../../types/types'
 
 interface Student {
   id: string
@@ -80,7 +80,7 @@ const MOCK_STUDENTS: Student[] = [
   },
 ]
 
-export function TeacherGrades() {
+export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
   const [showAddGrade, setShowAddGrade] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')

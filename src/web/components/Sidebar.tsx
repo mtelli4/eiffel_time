@@ -9,10 +9,10 @@ import {
   Users,
   Wrench,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import logo from '../../shared/assets/logo.svg'
 import { cn } from '../../shared/lib/utils'
-import { useState, useEffect } from 'react'
 
 interface SidebarProps {
   userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin'
@@ -28,8 +28,8 @@ const navigationConfig = {
   ],
   teacher: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
-    { icon: ClipboardList, label: 'Notes', path: '/grades' },
-    { icon: GraduationCap, label: 'Moyennes', path: '/averages' },
+    { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
+    { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
   ],
   secretary: [
     {
@@ -37,24 +37,20 @@ const navigationConfig = {
       label: 'Suivi des présences professeurs',
       path: '/teacher-attendance',
     },
-    { icon: GraduationCap, label: 'Moyennes', path: '/averages' },
+    { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences', path: '/absences' },
   ],
   manager: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
-    { icon: ClipboardList, label: 'Notes', path: '/grades' },
-    { icon: GraduationCap, label: 'Moyennes', path: '/averages' },
+    { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
+    { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences', path: '/absences' },
     { icon: Settings, label: 'Paramètres', path: '/settings' },
   ],
   admin: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
-    {
-      icon: ClipboardList,
-      label: 'Notes',
-      path: '/teacher-grades',
-    },
-    { icon: GraduationCap, label: 'Moyennes', path: '/averages' },
+    { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
+    { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     {
       icon: Users,

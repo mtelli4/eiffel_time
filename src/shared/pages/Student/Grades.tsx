@@ -1,33 +1,33 @@
-import { ChevronDown, Clock, FileDown, FileSpreadsheet } from 'lucide-react';
-import { useState } from 'react';
-import { cn } from '../../shared/lib/utils';
-import { PlannedHours } from '../../shared/types/types';
+import { ChevronDown, Clock, FileDown, FileSpreadsheet } from 'lucide-react'
+import { useState } from 'react'
+import { cn } from '../../lib/utils'
+import { PlannedHours } from '../../types/types'
 
 interface Grade {
-  id: string;
-  value: number;
-  maxValue: number;
-  coefficient: number;
-  date: string;
-  name: string;
+  id: string
+  value: number
+  maxValue: number
+  coefficient: number
+  date: string
+  name: string
 }
 
 interface Module {
-  id: string;
-  code: string;
-  name: string;
-  average: number;
-  grades: Grade[];
-  hours: PlannedHours;
+  id: string
+  code: string
+  name: string
+  average: number
+  grades: Grade[]
+  hours: PlannedHours
 }
 
 interface UE {
-  id: string;
-  code: string;
-  name: string;
-  ects: number;
-  average: number;
-  modules: Module[];
+  id: string
+  code: string
+  name: string
+  ects: number
+  average: number
+  modules: Module[]
 }
 
 const MOCK_UES: UE[] = [
@@ -46,7 +46,7 @@ const MOCK_UES: UE[] = [
         hours: {
           CM: 10,
           TD: 20,
-          TP: 20
+          TP: 20,
         },
         grades: [
           {
@@ -55,7 +55,7 @@ const MOCK_UES: UE[] = [
             maxValue: 20,
             coefficient: 1,
             date: '2024-03-15',
-            name: 'TP1 - React'
+            name: 'TP1 - React',
           },
           {
             id: 'grade2',
@@ -63,9 +63,9 @@ const MOCK_UES: UE[] = [
             maxValue: 20,
             coefficient: 2,
             date: '2024-03-20',
-            name: 'Contrôle Final'
-          }
-        ]
+            name: 'Contrôle Final',
+          },
+        ],
       },
       {
         id: 'mod2',
@@ -75,7 +75,7 @@ const MOCK_UES: UE[] = [
         hours: {
           CM: 15,
           TD: 15,
-          TP: 15
+          TP: 15,
         },
         grades: [
           {
@@ -84,7 +84,7 @@ const MOCK_UES: UE[] = [
             maxValue: 20,
             coefficient: 1,
             date: '2024-03-10',
-            name: 'TP1 - SQL'
+            name: 'TP1 - SQL',
           },
           {
             id: 'grade4',
@@ -92,41 +92,39 @@ const MOCK_UES: UE[] = [
             maxValue: 20,
             coefficient: 2,
             date: '2024-03-25',
-            name: 'Contrôle Final'
-          }
-        ]
-      }
-    ]
-  }
-];
+            name: 'Contrôle Final',
+          },
+        ],
+      },
+    ],
+  },
+]
 
 export function Grades() {
-  const [expandedUEs, setExpandedUEs] = useState<string[]>([]);
-  const [expandedModules, setExpandedModules] = useState<string[]>([]);
+  const [expandedUEs, setExpandedUEs] = useState<string[]>([])
+  const [expandedModules, setExpandedModules] = useState<string[]>([])
 
   const toggleUE = (ueId: string) => {
-    setExpandedUEs(prev =>
-      prev.includes(ueId)
-        ? prev.filter(id => id !== ueId)
-        : [...prev, ueId]
-    );
-  };
+    setExpandedUEs((prev) =>
+      prev.includes(ueId) ? prev.filter((id) => id !== ueId) : [...prev, ueId]
+    )
+  }
 
   const toggleModule = (moduleId: string) => {
-    setExpandedModules(prev =>
+    setExpandedModules((prev) =>
       prev.includes(moduleId)
-        ? prev.filter(id => id !== moduleId)
+        ? prev.filter((id) => id !== moduleId)
         : [...prev, moduleId]
-    );
-  };
+    )
+  }
 
   const handleExportXLSX = () => {
-    console.log('Exporting to XLSX...');
-  };
+    console.log('Exporting to XLSX...')
+  }
 
   const handleExportPDF = () => {
-    console.log('Exporting to PDF...');
-  };
+    console.log('Exporting to PDF...')
+  }
 
   return (
     <div className="h-full">
@@ -151,7 +149,7 @@ export function Grades() {
       </div>
 
       <div className="space-y-4">
-        {MOCK_UES.map(ue => (
+        {MOCK_UES.map((ue) => (
           <div key={ue.id} className="bg-white rounded-lg shadow-sm">
             <button
               onClick={() => toggleUE(ue.id)}
@@ -165,16 +163,18 @@ export function Grades() {
                   ECTS : {ue.ects} • Moyenne : {ue.average.toFixed(2)}/20
                 </p>
               </div>
-              <ChevronDown className={cn(
-                "w-5 h-5 transition-transform",
-                expandedUEs.includes(ue.id) && "transform rotate-180"
-              )} />
+              <ChevronDown
+                className={cn(
+                  'w-5 h-5 transition-transform',
+                  expandedUEs.includes(ue.id) && 'transform rotate-180'
+                )}
+              />
             </button>
 
             {expandedUEs.includes(ue.id) && (
               <div className="p-4 border-t">
                 <div className="space-y-4">
-                  {ue.modules.map(module => (
+                  {ue.modules.map((module) => (
                     <div key={module.id} className="bg-gray-50 rounded-lg">
                       <button
                         onClick={() => toggleModule(module.id)}
@@ -188,10 +188,13 @@ export function Grades() {
                             Moyenne : {module.average.toFixed(2)}/20
                           </p>
                         </div>
-                        <ChevronDown className={cn(
-                          "w-5 h-5 transition-transform",
-                          expandedModules.includes(module.id) && "transform rotate-180"
-                        )} />
+                        <ChevronDown
+                          className={cn(
+                            'w-5 h-5 transition-transform',
+                            expandedModules.includes(module.id) &&
+                              'transform rotate-180'
+                          )}
+                        />
                       </button>
 
                       {expandedModules.includes(module.id) && (
@@ -213,17 +216,27 @@ export function Grades() {
                           <table className="w-full">
                             <thead>
                               <tr className="text-left">
-                                <th className="pb-2 text-sm font-medium text-gray-500">Date</th>
-                                <th className="pb-2 text-sm font-medium text-gray-500">Évaluation</th>
-                                <th className="pb-2 text-sm font-medium text-gray-500">Note</th>
-                                <th className="pb-2 text-sm font-medium text-gray-500">Coefficient</th>
+                                <th className="pb-2 text-sm font-medium text-gray-500">
+                                  Date
+                                </th>
+                                <th className="pb-2 text-sm font-medium text-gray-500">
+                                  Évaluation
+                                </th>
+                                <th className="pb-2 text-sm font-medium text-gray-500">
+                                  Note
+                                </th>
+                                <th className="pb-2 text-sm font-medium text-gray-500">
+                                  Coefficient
+                                </th>
                               </tr>
                             </thead>
                             <tbody>
-                              {module.grades.map(grade => (
+                              {module.grades.map((grade) => (
                                 <tr key={grade.id} className="border-t">
                                   <td className="py-2 text-sm">
-                                    {new Date(grade.date).toLocaleDateString('fr-FR')}
+                                    {new Date(grade.date).toLocaleDateString(
+                                      'fr-FR'
+                                    )}
                                   </td>
                                   <td className="py-2">{grade.name}</td>
                                   <td className="py-2">
@@ -245,5 +258,5 @@ export function Grades() {
         ))}
       </div>
     </div>
-  );
+  )
 }
