@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from '../../styles/Class/AveragesStyles' // Import the styles
 
 // import { ChevronDown } from 'lucide-react-native'; // Assurez-vous que cette bibliothèque existe pour React Native
