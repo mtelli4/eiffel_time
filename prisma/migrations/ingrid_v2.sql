@@ -38,16 +38,13 @@ COMMENT ON SCHEMA ingrid IS 'standard ingrid schema';
 --
 
 CREATE TYPE ingrid.statut_utilisateur AS ENUM (
-    'étudiant',
-    'etudiant',
-    'enseignant',
-    'secrétaire',
-    'secretaire',
-    'directeur',
-    'gestionnaire',
-    'admin',
-    'indéfini',
-    'indefini'
+    'indefinite',
+    'student',
+    'teacher',
+    'secretary',
+    'director',
+    'manager',
+    'administrator'
 );
 
 
@@ -70,6 +67,24 @@ ALTER TYPE ingrid.type_cours OWNER TO postgres;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: _prisma_migrations; Type: TABLE; Schema: ingrid; Owner: postgres
+--
+
+CREATE TABLE ingrid._prisma_migrations (
+    id character varying(36) NOT NULL,
+    checksum character varying(64) NOT NULL,
+    finished_at timestamp with time zone,
+    migration_name character varying(255) NOT NULL,
+    logs text,
+    rolled_back_at timestamp with time zone,
+    started_at timestamp with time zone DEFAULT now() NOT NULL,
+    applied_steps_count integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE ingrid._prisma_migrations OWNER TO postgres;
 
 --
 -- Name: absence; Type: TABLE; Schema: ingrid; Owner: postgres
@@ -769,6 +784,15 @@ ALTER TABLE ONLY ingrid.utilisateurs_eav ALTER COLUMN id_user_eav SET DEFAULT ne
 
 
 --
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: ingrid; Owner: postgres
+--
+
+COPY ingrid._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
+6f8cae26-0877-4b59-b2c5-a6a26aef01e7	066280158a609145362a619a3c91c09f26130c9afbe7e658c2ce18fbde7110d9	2024-12-12 12:10:06.15293+01	0_init		\N	2024-12-12 12:10:06.15293+01	0
+\.
+
+
+--
 -- Data for Name: absence; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
@@ -917,7 +941,7 @@ COPY ingrid.sequelizemeta (name) FROM stdin;
 --
 
 COPY ingrid.utilisateur (id_utilisateur, nom, prenom, email, mdp, salt, premiereconnexion, statut, createdat, updatedat) FROM stdin;
-1	Mariya Constantine	Cédric	cedric.mc11@gmail.com	\N	\N	\N	etudiant	2024-12-08 14:35:09.035062	2024-12-08 14:35:09.035062
+1	Mariya Constantine	Cédric	cedric.mc11@gmail.com	\N	\N	\N	student	2024-12-08 14:35:09.035062	2024-12-08 14:35:09.035062
 \.
 
 
@@ -1011,6 +1035,14 @@ SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 2, true);
 --
 
 SELECT pg_catalog.setval('ingrid.utilisateurs_eav_id_user_eav_seq', 1, false);
+
+
+--
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: ingrid; Owner: postgres
+--
+
+ALTER TABLE ONLY ingrid._prisma_migrations
+    ADD CONSTRAINT _prisma_migrations_pkey PRIMARY KEY (id);
 
 
 --
