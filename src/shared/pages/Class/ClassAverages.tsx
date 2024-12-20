@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from '../../styles/Class/AveragesStyles' // Import the styles
 
 // import { ChevronDown } from 'lucide-react-native'; // Assurez-vous que cette bibliothèque existe pour React Native
@@ -154,7 +154,7 @@ const STUDENTS: Student[] = [
 export function ClassAverages() {
   const [selectedSemester, setSelectedSemester] = useState<number>()
   const [selectedGroup, setSelectedGroup] = useState<string>('A1')
-  const [expandedUEs, setExpandedUEs] = useState<string[]>(['UE51'])
+  const [expandedUEs, setExpandedUEs] = useState<string[]>([])
 
   const toggleUE = (ueCode: string) => {
     setExpandedUEs((prev) =>
@@ -177,8 +177,12 @@ export function ClassAverages() {
       <View style={styles.header}>
         <Text style={styles.title}>Moyennes</Text>
         <View style={styles.buttonGroup}>
-          <Button onPress={handleExportXLSX} title="Exporter XLSX" />
-          <Button onPress={handleExportPDF} title="Exporter PDF" />
+          <TouchableOpacity onPress={handleExportXLSX} style={styles.btnXLSX}>
+            <Text style={styles.btnText}>Exporter XLSX</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleExportPDF} style={styles.btnPDF}>
+            <Text style={styles.btnText}>Exporter PDF</Text>
+          </TouchableOpacity>
         </View>
       </View>
 

@@ -14,11 +14,29 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2C3E50',
+    color: '#2E3494',
   },
   buttonGroup: {
     flexDirection: 'row',
     gap: 10,
+  },
+  btnXLSX: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#2E3494',
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 5,
+  },
+  btnPDF: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#2E3494',
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 5,
+  },
+  btnText: {
+    color: '#2E3494',
+    fontWeight: 'bold',
   },
   content: {
     backgroundColor: 'white',
