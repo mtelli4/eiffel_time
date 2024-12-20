@@ -15,9 +15,15 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#2E3494',
+  },
+  lblAddbtn: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
   },
   addButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#2E3494',
     padding: 10,
     borderRadius: 5,
   },

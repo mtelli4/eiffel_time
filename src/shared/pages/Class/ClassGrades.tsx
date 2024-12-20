@@ -101,7 +101,7 @@ export function ClassGrades() {
         <Text style={styles.title}>Gestion des notes</Text>
         <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
           {/* Replace with appropriate icon */}
-          <Text>Nouvelle évaluation</Text>
+          <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
         </TouchableOpacity>
       </View>
 
