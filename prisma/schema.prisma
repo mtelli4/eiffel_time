@@ -205,10 +205,6 @@ model notification {
   etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model sequelizemeta {
-  name String @id @db.VarChar(255)
-}
 
 model utilisateur {
   id_utilisateur                         Int                     @id @default(autoincrement())
