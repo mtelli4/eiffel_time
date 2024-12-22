@@ -190,13 +190,6 @@ CREATE TABLE "notification" (
 );
 
 -- CreateTable
-CREATE TABLE "sequelizemeta" (
-    "name" VARCHAR(255) NOT NULL,
-
-    CONSTRAINT "sequelizemeta_pkey" PRIMARY KEY ("name")
-);
-
--- CreateTable
 CREATE TABLE "utilisateur" (
     "id_utilisateur" SERIAL NOT NULL,
     "nom" VARCHAR(255) NOT NULL,
