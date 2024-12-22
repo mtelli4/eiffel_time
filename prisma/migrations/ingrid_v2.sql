@@ -21,7 +21,7 @@ SET row_security = off;
 -- Name: ingrid; Type: SCHEMA; Schema: -; Owner: pg_database_owner
 --
 
-CREATE SCHEMA ingrid;
+CREATE SCHEMA IF NOT EXISTS ingrid;
 
 
 ALTER SCHEMA ingrid OWNER TO pg_database_owner;
@@ -603,24 +603,6 @@ ALTER SEQUENCE ingrid.notification_id_notif_seq OWNED BY ingrid.notification.id_
 
 
 --
--- Name: sequelizemeta; Type: TABLE; Schema: ingrid; Owner: postgres
---
-
-CREATE TABLE ingrid.sequelizemeta (
-    name character varying(255) NOT NULL
-);
-
-
-ALTER TABLE ingrid.sequelizemeta OWNER TO postgres;
-
---
--- Name: TABLE sequelizemeta; Type: COMMENT; Schema: ingrid; Owner: postgres
---
-
-COMMENT ON TABLE ingrid.sequelizemeta IS 'Sert de backup, pas toucher !';
-
-
---
 -- Name: utilisateur; Type: TABLE; Schema: ingrid; Owner: postgres
 --
 
@@ -861,6 +843,9 @@ COPY ingrid.evaluation (id_eval, libelle, coefficient, notemaximale, periode, cr
 --
 
 COPY ingrid.formation (id_formation, libelle, lien, trombinoscope) FROM stdin;
+2	BUT Informatique 2	https://edt.univ-eiffel.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=4899&projectId=26&calType=ical&nbWeeks=40	\N
+3	BUT Informatique 3	https://edt.univ-eiffel.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=1510&projectId=26&calType=ical&nbWeeks=40	\N
+1	BUT Informatique 1	https://edt.univ-eiffel.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=9299&projectId=26&calType=ical&nbWeeks=40	\N
 \.
 
 
@@ -877,6 +862,11 @@ COPY ingrid.formation_utilisateur (id_utilisateur, id_formation) FROM stdin;
 --
 
 COPY ingrid.groupe (id_grp, libelle) FROM stdin;
+1	TDA
+2	TDB
+3	TP Alpha
+4	TP Bêta
+5	TP Gamma
 \.
 
 
@@ -929,19 +919,17 @@ COPY ingrid.notification (id_notif, type, message, createdat, id_utilisateur) FR
 
 
 --
--- Data for Name: sequelizemeta; Type: TABLE DATA; Schema: ingrid; Owner: postgres
---
-
-COPY ingrid.sequelizemeta (name) FROM stdin;
-\.
-
-
---
 -- Data for Name: utilisateur; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
 COPY ingrid.utilisateur (id_utilisateur, nom, prenom, email, mdp, salt, premiereconnexion, statut, createdat, updatedat) FROM stdin;
-1	Mariya Constantine	Cédric	cedric.mc11@gmail.com	\N	\N	\N	student	2024-12-08 14:35:09.035062	2024-12-08 14:35:09.035062
+1	Acaster	Ula	uacaster0@latimes.com	\N	\N	f	administrator	2024-10-12 00:00:00	2024-09-09 00:00:00
+2	Herries	Karlik	kherries1@dion.ne.jp	\N	\N	f	indefinite	2024-10-11 00:00:00	2024-09-07 00:00:00
+3	Sherwell	Frankie	fsherwell2@virginia.edu	\N	\N	f	student	2024-11-09 00:00:00	2024-08-11 00:00:00
+4	Anstee	Gypsy	ganstee3@exblog.jp	\N	\N	t	director	2024-02-27 00:00:00	2024-07-24 00:00:00
+5	Parkins	Giustino	gparkins4@pinterest.com	\N	\N	t	teacher	2024-01-21 00:00:00	2024-10-19 00:00:00
+6	Gateley	Emalee	egateley5@addtoany.com	\N	\N	t	manager	2024-02-26 00:00:00	2024-04-27 00:00:00
+7	Elms	Diann	delms6@cdc.gov	\N	\N	f	secretary	2024-08-24 00:00:00	2023-12-21 00:00:00
 \.
 
 
@@ -992,14 +980,14 @@ SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 1, false);
 -- Name: formation_id_formation_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.formation_id_formation_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.formation_id_formation_seq', 3, true);
 
 
 --
 -- Name: groupe_id_grp_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.groupe_id_grp_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.groupe_id_grp_seq', 5, true);
 
 
 --
@@ -1187,14 +1175,6 @@ ALTER TABLE ONLY ingrid.notes
 
 ALTER TABLE ONLY ingrid.notification
     ADD CONSTRAINT notification_pkey PRIMARY KEY (id_notif);
-
-
---
--- Name: sequelizemeta sequelizemeta_pkey; Type: CONSTRAINT; Schema: ingrid; Owner: postgres
---
-
-ALTER TABLE ONLY ingrid.sequelizemeta
-    ADD CONSTRAINT sequelizemeta_pkey PRIMARY KEY (name);
 
 
 --
