@@ -14,5 +14,5 @@
       "@shared/*": ["packages/shared/src/*"]
     }
   },
-  "include": ["packages/**/*"]
+  "include": ["packages/**/*", "mobile", "src"]
 }
