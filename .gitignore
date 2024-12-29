@@ -16,6 +16,12 @@ dist-ssr
 /android/app/debug
 /android/app/release
 /ios/Pods/
+# Ignorer les builds du dossier mobile
+packages/mobile/node_modules/
+packages/mobile/android/
+packages/mobile/ios/
+packages/mobile/build/
+
 
 # Editor directories and files
 .vscode/*
@@ -107,3 +113,30 @@ tsconfig.tsbuildinfo
 .prettier-cache
 package-lock.json
 package-lock.json
+
+# Mobile-specific ignores
+packages/mobile/node_modules/
+packages/mobile/android/.gradle/
+packages/mobile/android/local.properties
+packages/mobile/android/app/build/
+packages/mobile/android/app/*.keystore
+packages/mobile/ios/Pods/
+packages/mobile/ios/build/
+packages/mobile/ios/DerivedData/
+packages/mobile/ios/*.xcodeproj/project.xcworkspace/
+packages/mobile/ios/*.xcodeproj/xcuserdata/
+packages/mobile/ios/*.xcworkspace/
+packages/mobile/ios/*.mobileprovision
+packages/mobile/ios/*.xcconfig
+packages/mobile/expo-settings.json
+
+# Cache
+packages/mobile/.tmp/
+packages/mobile/.cache/
+
+# Logs
+packages/mobile/*.log
+packages/mobile/npm-debug.log*
+packages/mobile/yarn-debug.log*
+packages/mobile/yarn-error.log*
+packages/mobile/metro-*.log
