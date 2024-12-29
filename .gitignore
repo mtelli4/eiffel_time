@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+**/node_modules
 dist
 dist-ssr
 *.local
@@ -24,8 +25,6 @@ dist-ssr
 *.sw?
 
 # React Native
-android/
-ios/
 *.keystore
 *.jks
 *.p8
