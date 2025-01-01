@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { MobileAddGradeModal } from '../../../../../src/components/AddGradeModal.native'
+import { MobileAddGradeModal } from '../../../../mobile/src/components/AddGradeModal.native'
 import { WebAddGradeModal } from '../../../../web/src/components/AddGradeModal.web'
 import type { AddGradeModalProps } from '../../types/types'
 
