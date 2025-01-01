@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/web",
+    "packages/mobile",
+    "packages/shared"
   ],
   "resolutions": {
     "@babel/runtime": "^7.26.0"
@@ -15,6 +17,7 @@
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx"
   },
   "devDependencies": {
+    "@react-native/gradle-plugin": "^0.76.5",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.6",

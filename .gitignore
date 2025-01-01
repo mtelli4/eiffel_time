@@ -1,3 +1,8 @@
+# Dependencies
+node_modules
+**/node_modules
+package-lock.json
+
 # Logs
 logs
 *.log
@@ -6,137 +11,71 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
-node_modules
-**/node_modules
-dist
-dist-ssr
-*.local
-
-/android/app/debug
-/android/app/release
-/ios/Pods/
-# Ignorer les builds du dossier mobile
-packages/mobile/node_modules/
-packages/mobile/android/
-packages/mobile/ios/
-packages/mobile/build/
-
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# React Native
-*.keystore
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
+metro-*.log
 
 # Build
+dist
+dist-ssr
 build/
 web-build/
-.gradle
-local.properties
+*.local
 
 # Environment
 .env
 .env.*
 !.env.example
 
-# Cache and temp files
+# Mobile - Android
+packages/mobile/android/app/debug/
+packages/mobile/android/app/release/
+packages/mobile/android/app/build/
+packages/mobile/android/app/.cxx/
+packages/mobile/android/.gradle/
+packages/mobile/android/.idea/
+packages/mobile/android/local.properties
+packages/mobile/android/app/debug.keystore
+
+# Mobile - iOS
+packages/mobile/ios/build/
+packages/mobile/ios/Pods/
+packages/mobile/ios/Podfile.lock
+packages/mobile/ios/DerivedData/
+packages/mobile/ios/*.xcodeproj/project.xcworkspace/
+packages/mobile/ios/*.xcodeproj/xcuserdata/
+packages/mobile/ios/*.xcworkspace/xcuserdata/
+packages/mobile/ios/*.mobileprovision
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# System
+.DS_Store
+Thumbs.db
+
+# Cache
 .cache/
 .expo/
 .tmp/
 coverage/
-
-# TypeScript
-*.tsbuildinfo
-
-# Testing
-__tests__/coverage/
-.jest/
-__snapshots__/
-
-# Production
-/src/web/build
-/src/mobile/build
-/dist
-
-# Mobile specific
-/android/app/debug
-/android/app/release
-/ios/Pods/
-*.mobileprovision
-*.certSigningRequest
-*.cer
-
-# Development
-.env.local
-.env.development
-.env.test
-.env.production
-
-# IDEs and editors
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-*.code-workspace
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Dependencies
-npm-debug.log
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-.yarn-integrity
-
-# TypeScript
-*.tsbuildinfo
-tsconfig.tsbuildinfo
-
-# Cache
 .eslintcache
 .prettier-cache
-package-lock.json
-package-lock.json
 
-# Mobile-specific ignores
-packages/mobile/node_modules/
-packages/mobile/android/.gradle/
-packages/mobile/android/local.properties
-packages/mobile/android/app/build/
-packages/mobile/android/app/*.keystore
-packages/mobile/ios/Pods/
-packages/mobile/ios/build/
-packages/mobile/ios/DerivedData/
-packages/mobile/ios/*.xcodeproj/project.xcworkspace/
-packages/mobile/ios/*.xcodeproj/xcuserdata/
-packages/mobile/ios/*.xcworkspace/
-packages/mobile/ios/*.mobileprovision
-packages/mobile/ios/*.xcconfig
-packages/mobile/expo-settings.json
-
-# Cache
-packages/mobile/.tmp/
-packages/mobile/.cache/
-
-# Logs
-packages/mobile/*.log
-packages/mobile/npm-debug.log*
-packages/mobile/yarn-debug.log*
-packages/mobile/yarn-error.log*
-packages/mobile/metro-*.log
+# TypeScript
+*.tsbuildinfo
