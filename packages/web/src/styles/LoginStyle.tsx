@@ -1,0 +1,67 @@
+import { StyleSheet } from 'react-native';
+export const styles = StyleSheet.create({
+    container: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        gap: 32,
+    },
+    title: {
+        fontFamily: "Montserrat",
+        fontWeight: "bold",
+        fontSize: 100,
+        color: '#2E3494',
+    },
+    inputContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 16,
+        width: "100%",
+    },
+    inputText: {
+        backgroundColor: '#2E3494',
+        color: 'white',
+        padding: 24,
+        paddingHorizontal: 32,
+        fontFamily: "Montserrat",
+        fontWeight: "bold",
+        fontSize: 24,
+        borderRadius: 100,
+        width: "25%",
+        borderWidth: 0,
+        textDecorationColor: 'red',
+    },
+    button: {
+        padding: 16,
+        paddingHorizontal: 64,
+        borderColor: "#2E3494",
+        borderWidth: 4,
+        borderRadius: 100,
+    },
+    buttonText: {
+        fontFamily: "Montserrat",
+        color: "#2E3494",
+        fontWeight: "bold",
+        fontSize: 24,
+    },
+    buttonText_bis: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        margin: 32,
+        fontFamily: "Montserrat",
+        color: "#2E3494",
+        fontWeight: "bold",
+        fontSize: 24,
+        textDecorationLine: 'underline',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 16,
+        marginTop: 8,
+        fontFamily: "Montserrat",
+        fontWeight: "bold"
+    },
+})
