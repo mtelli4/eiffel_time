@@ -6,6 +6,7 @@ import type { AddGradeModalProps } from '../../types/types'
 export function AddGradeModal(props: AddGradeModalProps) {
   if (Platform.OS === 'web') {
     return <WebAddGradeModal {...props} />
+  } else {
+    return <MobileAddGradeModal {...props} />
   }
-  return <MobileAddGradeModal {...props} />
 }
