@@ -86,15 +86,10 @@ export function ClassGrades() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const handleAddGrade = (e: any) => {
-    console.log('handleAddGrade called')
-    console.log('showAddGrade before:', showAddGrade)
     e.preventDefault()
     e.stopPropagation()
     setShowAddGrade(true)
-    console.log('showAddGrade after setState:', showAddGrade)
   }
-
-  console.log('ClassGrades rendering, showAddGrade:', showAddGrade)
 
   const filteredModules = MOCK_MODULES.filter(
     (module) =>
@@ -176,7 +171,6 @@ export function ClassGrades() {
         <AddGradeModal
           isOpen={showAddGrade}
           onClose={() => {
-            console.log('Modal onClose called')
             setShowAddGrade(false)
           }}
           modules={MOCK_MODULES}
