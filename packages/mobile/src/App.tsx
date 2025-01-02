@@ -1,27 +1,15 @@
-import React from 'react'
-import { View, Text, Button, StyleSheet } from 'react-native'
+import React from 'react';
+import {StatusBar} from 'react-native';
 
-function App() {
-  const [count, setCount] = React.useState(0)
+import RootNavigator from './navigation/RootNavigator';
 
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Vite + React Native</Text>
-      <Button title={`Count is ${count}`} onPress={() => setCount(count + 1)} />
-    </View>
-  )
-}
+    <>
+      <StatusBar hidden />
+      <RootNavigator />
+    </>
+  );
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-})
-
-export default App
+export default App;
