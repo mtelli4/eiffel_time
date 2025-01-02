@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useState} from 'react';
 import {
   Button,
   Modal,
@@ -7,8 +7,8 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native'
-import { AddGradeModalProps, FormData } from '../../shared/types/types'
+} from 'react-native';
+import {AddGradeModalProps, FormData} from '../../../shared/src/types/types';
 
 export function MobileAddGradeModal({
   isOpen,
@@ -22,17 +22,17 @@ export function MobileAddGradeModal({
     date: new Date().toISOString().split('T')[0],
     maxValue: 20,
     coefficient: 1,
-    grades: students.map((student) => ({
+    grades: students.map(student => ({
       studentId: student.id,
       value: null,
       status: 'ungraded',
     })),
-  })
+  });
 
   const handleSubmit = () => {
-    console.log('Submitting grades:', formData)
-    onClose()
-  }
+    console.log('Submitting grades:', formData);
+    onClose();
+  };
 
   return (
     <Modal visible={isOpen} transparent animationType="slide">
@@ -54,9 +54,7 @@ export function MobileAddGradeModal({
               <TextInput
                 style={styles.input}
                 value={formData.name}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, name: text })
-                }
+                onChangeText={text => setFormData({...formData, name: text})}
               />
             </View>
 
@@ -65,9 +63,7 @@ export function MobileAddGradeModal({
               <TextInput
                 style={styles.input}
                 value={formData.date}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, date: text })
-                }
+                onChangeText={text => setFormData({...formData, date: text})}
               />
             </View>
 
@@ -76,8 +72,8 @@ export function MobileAddGradeModal({
               <TextInput
                 style={styles.input}
                 value={formData.maxValue.toString()}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, maxValue: parseInt(text) })
+                onChangeText={text =>
+                  setFormData({...formData, maxValue: parseInt(text)})
                 }
                 keyboardType="numeric"
               />
@@ -88,8 +84,8 @@ export function MobileAddGradeModal({
               <TextInput
                 style={styles.input}
                 value={formData.coefficient.toString()}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, coefficient: parseFloat(text) })
+                onChangeText={text =>
+                  setFormData({...formData, coefficient: parseFloat(text)})
                 }
                 keyboardType="numeric"
               />
@@ -103,7 +99,7 @@ export function MobileAddGradeModal({
         </View>
       </View>
     </Modal>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -151,4 +147,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
   },
-})
+});
