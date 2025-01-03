@@ -33,7 +33,7 @@ export default Schedule;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f0f0f',
+    backgroundColor: '#FFFFFF',
   },
   contentContainer: {
     marginTop: 50,
