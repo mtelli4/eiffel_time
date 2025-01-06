@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 // import { Register } from '@shared/pages/Register'
 // import { Login } from './pages/Login'
+import { Schedule } from '@shared/pages/Schedule/Schedule'
 import Root, { Error } from './root'
 import './styles/App.css'
 import './styles/index.css'
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <Error />,
     children: [
+      {
+        path: '/schedule',
+        element: <Schedule />,
+      },
       {
         path: '/grades',
         element: <Grades />,

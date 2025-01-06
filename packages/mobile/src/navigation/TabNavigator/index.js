@@ -3,7 +3,7 @@ import React from 'react';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {ClassAverages} from '../../../../shared/src/pages/Class/ClassAverages';
 import {ClassGrades} from '../../../../shared/src/pages/Class/ClassGrades';
-import Schedule from '../../screens/Schedule';
+import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
 
 const Tab = createBottomTabNavigator();
 const screenOptions = (route, color) => {
