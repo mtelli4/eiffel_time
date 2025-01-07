@@ -1,9 +1,9 @@
-import { UserPlus, Users } from 'lucide-react'
+// import { UserPlus, Users } from 'lucide-react'
 import { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import { UserFilters } from '../../components/admin/UserFilters'
-import { UserForm } from '../../components/admin/UserForm'
-import { UserTable } from '../../components/admin/UserTable'
+import { UserFilters } from '../../../../web/src/components/Admin/UserFilters'
+import { UserForm } from '../../../../web/src/components/Admin/UserForm'
+import { UserTable } from '../../../../web/src/components/Admin/UserTable'
 import { styles } from '../../styles/Admin/AdminStyles' // Import the styles
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
@@ -42,7 +42,7 @@ export function Admin() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [users, setUsers] = useState<User[]>(MOCK_USERS)
 
-  const tabs = [{ id: 'users' as const, label: 'Utilisateurs', icon: Users }]
+  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' /*icon: Users*/ }]
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user)
@@ -79,7 +79,7 @@ export function Admin() {
                 : styles.inactiveTabButton,
             ]}
           >
-            <tab.icon style={styles.tabIcon} />
+            {/* <tab.icon style={styles.tabIcon} /> */}
             <Text
               style={
                 activeTab === tab.id
@@ -104,7 +104,7 @@ export function Admin() {
               }}
               style={styles.addButton}
             >
-              <UserPlus style={styles.addIcon} />
+              {/* <UserPlus style={styles.addIcon} /> */}
               <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
             </TouchableOpacity>
           </View>
