@@ -205,7 +205,6 @@ model notification {
   etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
-
 model utilisateur {
   id_utilisateur                         Int                     @id @default(autoincrement())
   nom                                    String                  @db.VarChar(255)
