@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { AddGradeModal } from '../../components/Teacher/AddGradeModal'
-import { styles } from '../../styles/Class/GradesStyles'
-import { GradeStatus } from '../../types/types'
+import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
+import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
+import { GradeStatus } from '../../../types/types'
 
 interface Student {
   id: string
@@ -100,7 +100,6 @@ export function ClassGrades() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Gestion des notes</Text>
         <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
           {/* Replace with appropriate icon */}
           <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>

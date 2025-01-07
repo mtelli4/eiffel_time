@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { CourseModal } from '../../components/CourseModal'
-import { styles } from '../../styles/Schedule/ScheduleStyle'
+import { CourseModal } from '../../components/Schedule/CourseModal'
+import { styles } from '../../styles/Schedule/ScheduleStyles'
 import { Course } from '../../types/types'
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi']
@@ -34,8 +34,6 @@ export function Schedule() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Emploi du temps</Text>
-
       <ScrollView style={styles.scheduleContainer}>
         <View style={styles.scheduleHeader}>
           <Text style={styles.headerCell}>Horaire</Text>

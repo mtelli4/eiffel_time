@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { styles } from '../../styles/Class/AveragesStyles' // Import the styles
+import { styles } from '../../styles/Averages/AveragesStyles' // Import the styles
 
 // import { ChevronDown } from 'lucide-react-native'; // Assurez-vous que cette bibliothèque existe pour React Native
 
@@ -175,7 +175,6 @@ export function ClassAverages() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Moyennes</Text>
         <View style={styles.buttonGroup}>
           <TouchableOpacity onPress={handleExportXLSX} style={styles.btnXLSX}>
             <Text style={styles.btnText}>Exporter XLSX</Text>

@@ -1,7 +1,7 @@
 import { AddGradeModalProps, FormData } from '@shared/types/types'
 import { useState } from 'react'
 
-export function WebAddGradeModal({
+export default function WebAddGradeModal({
   isOpen,
   onClose,
   modules,

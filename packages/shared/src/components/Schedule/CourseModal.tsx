@@ -1,11 +1,11 @@
-import { Platform } from 'react-native'
 import React from 'react'
-import type { CourseModalProps } from '../types/types'
+import { Platform } from 'react-native'
+import type { CourseModalProps } from '../../types/types'
 
 export function CourseModal(props: CourseModalProps) {
   if (Platform.OS === 'web') {
     const WebCourseModal = React.lazy(
-      () => import('../../../web/src/components/CourseModal.web')
+      () => import('../../../../web/src/components/Schedule/CourseModal.web')
     )
     return (
       <React.Suspense fallback={null}>
@@ -14,7 +14,8 @@ export function CourseModal(props: CourseModalProps) {
     )
   } else {
     const NativeCourseModal = React.lazy(
-      () => import('../../../mobile/src/components/CourseModal.native')
+      () =>
+        import('../../../../mobile/src/components/Schedule/CourseModal.native')
     )
     return (
       <React.Suspense fallback={null}>

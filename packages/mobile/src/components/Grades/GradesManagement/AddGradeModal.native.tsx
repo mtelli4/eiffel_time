@@ -1,9 +1,13 @@
+// import {Picker} from '@react-native-picker/picker';
 import {useState} from 'react';
 import {Button, Modal, ScrollView, Text, TextInput, View} from 'react-native';
-import {AddGradeModalProps, FormData} from '../../../shared/src/types/types';
-import {styles} from '../styles/AddGradeModal';
+import {
+  AddGradeModalProps,
+  FormData,
+} from '../../../../../shared/src/types/types';
+import {styles} from '../../../styles/Grades/GradesManagement/AddGradeModal';
 
-export function MobileAddGradeModal({
+export default function MobileAddGradeModal({
   isOpen,
   onClose,
   modules,
@@ -39,7 +43,21 @@ export function MobileAddGradeModal({
           <ScrollView style={styles.formContainer}>
             <View style={styles.formGroup}>
               <Text style={styles.label}>Module</Text>
-              {/* Add Picker component here */}
+              {/* <Picker
+                selectedValue={formData.moduleId}
+                onValueChange={itemValue =>
+                  setFormData({...formData, moduleId: itemValue})
+                }
+                // style={styles.picker}
+              >
+                {modules.map(module => (
+                  <Picker.Item
+                    key={module.id}
+                    label={module.name}
+                    value={module.id}
+                  />
+                ))}
+              </Picker> */}
             </View>
 
             <View style={styles.formGroup}>
