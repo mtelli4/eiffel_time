@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner de Code QR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .qr-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            display: inline-block;
+        }
+        .qr-image {
+            margin-top: 20px;
+        }
+        .scan-result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scanner de Code QR</h1>
+        <div>
+            <label for="name">Nom:</label>
+            <input type="text" id="name" placeholder="Entrez votre nom">
+            <label for="firstname">Prénom:</label>
+            <input type="text" id="firstname" placeholder="Entrez votre prénom">
+            <button onclick="login()">Se connecter</button>
+        </div>
+        <div id="user-info" style="display: none;">
+            <h2>Bienvenue, <span id="user-name"></span> <span id="user-firstname"></span>!</h2>
+            <div id="reader" style="width:300px"></div>
+            <p id="scan-result" class="scan-result"></p>
+        </div>
+    </div>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="scan.js"></script>
+</body>
+</html>

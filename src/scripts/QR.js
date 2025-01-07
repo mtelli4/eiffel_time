@@ -1,37 +1,9 @@
-// config du scanner de code QR
-const html5QrCodeScanner = new Html5QrcodeScanner(
-    "reader",
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    /* verbose= */ false
-);
-
-html5QrCodeScanner.render(onScanSuccess, onScanError);
-
-// variables pour indiquer l'état du code QR
-let currentState = 'non expiré';
-
-function onScanSuccess(decodedText, decodedResult) {
-    const [name, expiration] = decodedText.split('|');
-    const now = new Date();
-    const expirationDate = new Date(expiration);
-
-    if (now <= expirationDate) {
-        document.getElementById('scan-result').innerText = `Présence enregistrée pour: ${name} (Code QR: ${currentState})`;
-        currentState = 'non expiré';
-        // LIEN BDD ICI
-    } else {
-        document.getElementById('scan-result').innerText = `Code QR expiré pour: ${name} (Code QR: ${currentState})`;
-        currentState = 'expiré';
-    }
-}
-
-function onScanError(errorMessage) {
-    console.error(`Erreur de scan: ${errorMessage}`);
-}
+const { Pool } = require('./db_con.js'); // Importer la connexion à la base de données
 
 // variables pour la génération de code QR
 let qrCodeInterval;
 let currentQRCodeData = '';
+let presenceData = [];
 
 function startGeneratingQRCode() {                      // Fct pour démarrer la génération de code QR
     const name = document.getElementById('name').value;
@@ -46,11 +18,26 @@ function startGeneratingQRCode() {                      // Fct pour démarrer la
     }
 }
 
-function stopGeneratingQRCode() {                       // Fct pour arrêter la génération de code QR
+async function stopGeneratingQRCode() {                       // Fct pour arrêter la génération de code QR
+    console.log('Arrêt de la génération de code QR');
     if (qrCodeInterval) {
         clearInterval(qrCodeInterval);
         qrCodeInterval = null;
     }
+    // Nettoyer le code QR de la page
+    const qrcodeElement = document.getElementById("qrcode");
+    if (qrcodeElement) {
+        qrcodeElement.innerHTML = '';
+        console.log('Code QR nettoyé');
+    } else {
+        console.error('Élément qrcode non trouvé');
+    }
+
+    // Insérer les données de présence dans la base de données
+    for (const data of presenceData) {
+        await insertPresenceData(data.name, data.status);
+    }
+    presenceData = []; // Réinitialiser les données de présence
 }
 
 function generateQRCode(name) {                        // Fct pour générer un code QR
@@ -58,10 +45,8 @@ function generateQRCode(name) {                        // Fct pour générer un 
     const expiration = new Date(Date.now() + duration).toISOString();
     currentQRCodeData = `${name}|${expiration}`;
 
-
     const qrcodeElement = document.getElementById("qrcode");    // Nettoyer l'ancien code QR
     qrcodeElement.innerHTML = '';
-
 
     const qrcode = new QRCode(qrcodeElement, {         // Générer un nouveau code QR
         text: currentQRCodeData,
@@ -71,4 +56,33 @@ function generateQRCode(name) {                        // Fct pour générer un 
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
     });
+}
+
+function simulateScan() {                               // Fct pour simuler un scan réussi
+    const name = document.getElementById('name').value;
+    if (name) {
+        const now = new Date();
+        const [scannedName, expiration] = currentQRCodeData.split('|');
+        const expirationDate = new Date(expiration);
+
+        if (now <= expirationDate) {
+            addToScanList(scannedName, 'non expiré');
+            presenceData.push({ name: scannedName, status: 'non expiré' });
+        } else {
+            addToScanList(scannedName, 'expiré');
+            presenceData.push({ name: scannedName, status: 'expiré' });
+        }
+
+        // Effacer le nom entré
+        document.getElementById('name').value = '';
+    } else {
+        alert('Veuillez entrer un nom.');
+    }
+}
+
+function addToScanList(name, status) {                  // Fct pour ajouter un nom à la liste des scans
+    const scanResults = document.getElementById('scan-results');
+    const listItem = document.createElement('li');
+    listItem.textContent = `Présence enregistrée pour: ${name} (Code QR: ${status})`;
+    scanResults.appendChild(listItem);
 }
