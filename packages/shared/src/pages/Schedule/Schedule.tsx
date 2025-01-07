@@ -1,14 +1,8 @@
 import { useState } from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { CourseModal } from '../../components/CourseModal'
-import { Course } from '../../types/types'
 import { styles } from '../../styles/Schedule/ScheduleStyle'
+import { Course } from '../../types/types'
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi']
 const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i)
