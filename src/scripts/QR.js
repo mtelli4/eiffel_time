@@ -1,4 +1,4 @@
-const { Pool } = require('./db_con.js'); // Importer la connexion à la base de données
+const { insertPresenceData } = require('./db_con'); // Importer la connexion à la base de données
 
 // variables pour la génération de code QR
 let qrCodeInterval;

@@ -1,3 +1,5 @@
+const { insertPresenceData } = require('./db_con'); // Importer la connexion à la base de données
+
 let userName = '';
 let userFirstName = '';
 
@@ -33,7 +35,6 @@ function onScanSuccess(decodedText, decodedResult) {
 
     if (now <= expirationDate) {
         document.getElementById('scan-result').innerText = `Présence enregistrée pour: ${name} (Scanné par: ${userName} ${userFirstName})`;
-        // LIEN BDD ICI
         registerPresence(name);
     } else {
         document.getElementById('scan-result').innerText = `Code QR expiré pour: ${name} (Scanné par: ${userName} ${userFirstName})`;
@@ -47,20 +48,8 @@ function onScanError(errorMessage) {
 // Fonction pour enregistrer la présence dans la base de données
 async function registerPresence(name) {
     try {
-        const response = await fetch('https://votre-api.com/register-presence', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: name })
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erreur de réseau: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('Présence enregistrée avec succès:', result);
+        await insertPresenceData(name, `${userName} ${userFirstName}`);
+        console.log('Présence enregistrée avec succès');
     } catch (error) {
         console.error('Erreur lors de l\'enregistrement de la présence:', error);
         alert('Erreur lors de l\'enregistrement de la présence. Veuillez réessayer.');
