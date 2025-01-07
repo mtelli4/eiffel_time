@@ -67,8 +67,6 @@ export function Admin() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Administration</Text>
-
       <View style={styles.tabContainer}>
         {tabs.map((tab) => (
           <TouchableOpacity

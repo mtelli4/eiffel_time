@@ -129,7 +129,6 @@ export function Grades() {
   return (
     <div className="h-full">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-primary">Notes</h1>
         <div className="flex gap-3">
           <button
             onClick={handleExportXLSX}
