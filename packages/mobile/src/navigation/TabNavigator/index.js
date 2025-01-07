@@ -1,29 +1,38 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {ClassAverages} from '../../../../shared/src/pages/Class/ClassAverages';
 import {ClassGrades} from '../../../../shared/src/pages/Class/ClassGrades';
-import Schedule from '../../screens/Schedule';
+import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
 
 const Tab = createBottomTabNavigator();
 const screenOptions = (route, color) => {
   let iconName;
 
   switch (route.name) {
-    case 'Schedule':
+    case 'Emploi du temps':
       iconName = 'calendar';
       break;
-    case 'Notes':
+    case 'Gestion des notes':
       iconName = 'clipboard-list';
       break;
     case 'Moyennes':
       iconName = 'graduation-cap';
       break;
+    case 'Messagerie':
+      iconName = 'comment-dots';
+      break;
+    case 'Réglages':
+      iconName = 'gear';
+      break;
+    case 'Administration':
+      iconName = 'toolbox';
+      break;
     default:
       break;
   }
 
-  return <FontAwesome5 name={iconName} color={color} size={24} />;
+  return <FontAwesome6 name={iconName} color={color} size={24} />;
 };
 
 const TabNavigator = () => {
@@ -50,9 +59,12 @@ const TabNavigator = () => {
 
       // tabBar={props => <CustomTabBar {...props} />}
     >
-      <Tab.Screen name="Schedule" component={Schedule} />
-      <Tab.Screen name="Notes" component={ClassGrades} />
+      <Tab.Screen name="Emploi du temps" component={Schedule} />
+      <Tab.Screen name="Gestion des notes" component={ClassGrades} />
       <Tab.Screen name="Moyennes" component={ClassAverages} />
+      <Tab.Screen name="Messagerie" component={Schedule} />
+      <Tab.Screen name="Réglages" component={Schedule} />
+      <Tab.Screen name="Administration" component={Schedule} />
     </Tab.Navigator>
   );
 };

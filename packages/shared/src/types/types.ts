@@ -1,3 +1,8 @@
+export interface CourseModalProps {
+  course: Course
+  onClose: () => void
+  onPresenceCheck: () => void
+}
 export interface Course {
   id: number
   subject: string
@@ -10,7 +15,6 @@ export interface Course {
   startHour: number
   duration: number
 }
-
 export interface PlannedHours {
   CM: number
   TD: number
