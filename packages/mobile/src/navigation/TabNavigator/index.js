@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {Admin} from '../../../../shared/src/pages/Admin/Admin';
 import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages';
 import {ClassGrades} from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
 import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
@@ -114,7 +115,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Administration"
-        component={Schedule}
+        component={Admin}
         options={{
           headerTintColor: '#2E3494',
         }}

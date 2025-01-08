@@ -1,46 +1,38 @@
-import React from 'react';
-import Select from 'react-select';
-import { Search } from 'lucide-react';
-
-interface UserFiltersProps {
-  onRoleChange: (role: string | null) => void;
-  onGroupChange: (group: string | null) => void;
-  onFormationChange: (formation: string | null) => void;
-  onTypeChange: (type: string | null) => void;
-  onSearch: (query: string) => void;
-}
+import { UserFiltersProps } from '@shared/types/types'
+import { Search } from 'lucide-react'
+import Select from 'react-select'
 
 const ROLES = [
   { value: 'student', label: 'Élève' },
   { value: 'teacher', label: 'Professeur' },
   { value: 'manager', label: 'Gestionnaire' },
-  { value: 'admin', label: 'Administrateur' }
-];
+  { value: 'admin', label: 'Administrateur' },
+]
 
 const GROUPS = [
   { value: 'A1', label: 'Groupe A1' },
   { value: 'A2', label: 'Groupe A2' },
   { value: 'B1', label: 'Groupe B1' },
-  { value: 'B2', label: 'Groupe B2' }
-];
+  { value: 'B2', label: 'Groupe B2' },
+]
 
 const FORMATIONS = [
   { value: 'info', label: 'Informatique' },
   { value: 'gea', label: 'GEA' },
-  { value: 'tc', label: 'TC' }
-];
+  { value: 'tc', label: 'TC' },
+]
 
 const TEACHER_TYPES = [
   { value: 'permanent', label: 'Titulaire' },
-  { value: 'temporary', label: 'Vacataire' }
-];
+  { value: 'temporary', label: 'Vacataire' },
+]
 
 export function UserFilters({
   onRoleChange,
   onGroupChange,
   onFormationChange,
   onTypeChange,
-  onSearch
+  onSearch,
 }: UserFiltersProps) {
   return (
     <div className="space-y-4 bg-white p-4 rounded-lg shadow-sm">
@@ -60,9 +52,9 @@ export function UserFilters({
                 ...base,
                 borderColor: '#E2E8F0',
                 '&:hover': {
-                  borderColor: '#3498DB'
-                }
-              })
+                  borderColor: '#3498DB',
+                },
+              }),
             }}
           />
         </div>
@@ -82,9 +74,9 @@ export function UserFilters({
                 ...base,
                 borderColor: '#E2E8F0',
                 '&:hover': {
-                  borderColor: '#3498DB'
-                }
-              })
+                  borderColor: '#3498DB',
+                },
+              }),
             }}
           />
         </div>
@@ -104,9 +96,9 @@ export function UserFilters({
                 ...base,
                 borderColor: '#E2E8F0',
                 '&:hover': {
-                  borderColor: '#3498DB'
-                }
-              })
+                  borderColor: '#3498DB',
+                },
+              }),
             }}
           />
         </div>
@@ -126,9 +118,9 @@ export function UserFilters({
                 ...base,
                 borderColor: '#E2E8F0',
                 '&:hover': {
-                  borderColor: '#3498DB'
-                }
-              })
+                  borderColor: '#3498DB',
+                },
+              }),
             }}
           />
         </div>
@@ -144,5 +136,5 @@ export function UserFilters({
         <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
       </div>
     </div>
-  );
+  )
 }

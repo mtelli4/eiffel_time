@@ -1,13 +1,12 @@
-import React from 'react';
-import { X } from 'lucide-react';
-import Select from 'react-select';
+import { X } from 'lucide-react'
+import Select from 'react-select'
 
 interface UserFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
-  isEdit?: boolean;
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: any) => void
+  initialData?: any
+  isEdit?: boolean
 }
 
 export function UserForm({
@@ -15,9 +14,9 @@ export function UserForm({
   onClose,
   onSubmit,
   initialData,
-  isEdit
+  isEdit,
 }: UserFormProps) {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -77,9 +76,12 @@ export function UserForm({
                 { value: 'student', label: 'Élève' },
                 { value: 'teacher', label: 'Professeur' },
                 { value: 'manager', label: 'Gestionnaire' },
-                { value: 'admin', label: 'Administrateur' }
+                { value: 'admin', label: 'Administrateur' },
               ]}
-              defaultValue={{ value: initialData?.role, label: initialData?.role }}
+              defaultValue={{
+                value: initialData?.role,
+                label: initialData?.role,
+              }}
               className="text-sm"
             />
           </div>
@@ -94,7 +96,7 @@ export function UserForm({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-[#3498DB] hover:bg-[#2980B9] rounded-lg transition-colors"
+              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] rounded-lg transition-colors"
             >
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>
@@ -102,5 +104,5 @@ export function UserForm({
         </form>
       </div>
     </div>
-  );
+  )
 }
