@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {Absences} from '../../../../shared/src/pages/Absences/StudentAbsences';
 import {Admin} from '../../../../shared/src/pages/Admin/Admin';
 import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages';
 import {ClassGrades} from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
@@ -23,7 +24,7 @@ const TABS_CONFIG = {
     },
     {
       name: 'Absences',
-      component: Schedule,
+      component: Absences,
       icon: {name: 'user-check', source: 'Feather'},
     },
     {
