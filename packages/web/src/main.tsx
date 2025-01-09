@@ -1,7 +1,7 @@
 import { Admin } from '@shared/pages/Admin/Admin'
 import { ClassAverages } from '@shared/pages/Averages/ClassAverages'
 import { ClassGrades } from '@shared/pages/Grades/GradesManagement/ClassGrades'
-import { Grades } from '@shared/pages/Student/Grades'
+import { Grades } from '@shared/pages/Grades/StudentGrades'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'

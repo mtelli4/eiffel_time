@@ -1,14 +1,12 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
-
+import {UserProvider} from './context/UserContext';
 import RootNavigator from './navigation/RootNavigator';
 
 const App = () => {
   return (
-    <>
-      <StatusBar hidden />
+    <UserProvider>
       <RootNavigator />
-    </>
+    </UserProvider>
   );
 };
 
