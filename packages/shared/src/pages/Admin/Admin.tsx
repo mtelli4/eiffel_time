@@ -1,10 +1,6 @@
-// import { UserPlus, Users } from 'lucide-react'
-import { useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { UserFilters } from '../../../../web/src/components/Admin/UserFilters'
-import { UserForm } from '../../../../web/src/components/Admin/UserForm'
-import { UserTable } from '../../../../web/src/components/Admin/UserTable'
-import { styles } from '../../styles/Admin/AdminStyles' // Import the styles
+import { useEffect, useState } from 'react'
+import { Platform, Text, TouchableOpacity, View } from 'react-native'
+import { styles } from '../../styles/Admin/AdminStyles'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
@@ -42,7 +38,45 @@ export function Admin() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [users, setUsers] = useState<User[]>(MOCK_USERS)
 
-  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' /*icon: Users*/ }]
+  const [UserFilters, setUserFilters] = useState<any>(null)
+  const [UserForm, setUserForm] = useState<any>(null)
+  const [UserTable, setUserTable] = useState<any>(null)
+
+  useEffect(() => {
+    const loadComponents = async () => {
+      if (Platform.OS === 'web') {
+        const { UserFilters } = await import(
+          '../../../../web/src/components/Admin/UserFilters.web'
+        )
+        const { UserForm } = await import(
+          '../../../../web/src/components/Admin/UserForm.web'
+        )
+        const { UserTable } = await import(
+          '../../../../web/src/components/Admin/UserTable.web'
+        )
+        setUserFilters(() => UserFilters)
+        setUserForm(() => UserForm)
+        setUserTable(() => UserTable)
+      } else {
+        const { UserFilters } = await import(
+          '../../../../mobile/src/components/Admin/UserFilters.native'
+        )
+        const { UserForm } = await import(
+          '../../../../mobile/src/components/Admin/UserForm.native'
+        )
+        const { UserTable } = await import(
+          '../../../../mobile/src/components/Admin/UserTable.native'
+        )
+        setUserFilters(() => UserFilters)
+        setUserForm(() => UserForm)
+        setUserTable(() => UserTable)
+      }
+    }
+
+    loadComponents()
+  }, [])
+
+  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' }]
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user)
@@ -65,6 +99,10 @@ export function Admin() {
     setSelectedUser(null)
   }
 
+  if (!UserFilters || !UserForm || !UserTable) {
+    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.tabContainer}>
@@ -79,7 +117,6 @@ export function Admin() {
                 : styles.inactiveTabButton,
             ]}
           >
-            {/* <tab.icon style={styles.tabIcon} /> */}
             <Text
               style={
                 activeTab === tab.id
@@ -104,7 +141,6 @@ export function Admin() {
               }}
               style={styles.addButton}
             >
-              {/* <UserPlus style={styles.addIcon} /> */}
               <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
             </TouchableOpacity>
           </View>

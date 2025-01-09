@@ -76,3 +76,11 @@ export interface FormData {
     status: GradeStatus
   }>
 }
+
+export interface UserFiltersProps {
+  onRoleChange: (role: string | null) => void
+  onGroupChange: (group: string | null) => void
+  onFormationChange: (formation: string | null) => void
+  onTypeChange: (type: string | null) => void
+  onSearch: (query: string) => void
+}
