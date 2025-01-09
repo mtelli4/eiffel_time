@@ -1,3 +1,4 @@
+import { Absences } from '@shared/pages/Absences/StudentAbsences'
 import { Admin } from '@shared/pages/Admin/Admin'
 import { ClassAverages } from '@shared/pages/Averages/ClassAverages'
 import { ClassGrades } from '@shared/pages/Grades/GradesManagement/ClassGrades'
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/grades',
         element: <Grades />,
+      },
+      {
+        path: '/absences',
+        element: <Absences />,
       },
       {
         path: '/class-grades',

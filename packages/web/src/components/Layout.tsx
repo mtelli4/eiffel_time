@@ -13,6 +13,8 @@ const getPageTitle = (pathname: string): string => {
       return 'Emploi du temps'
     case '/grades':
       return 'Notes'
+    case '/absences':
+      return 'Absences et retards'
     case '/class-grades':
       return 'Gestion des notes'
     case '/class-averages':
