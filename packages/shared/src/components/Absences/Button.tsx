@@ -59,10 +59,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textPrimary: {
-    color: '#2E3494',
+    color: '#FFFFFF',
   },
   textOutline: {
-    color: '#2E3494',
+    color: '#FFFFFF',
   },
   textDisabled: {
     color: '#FFFFFF',
