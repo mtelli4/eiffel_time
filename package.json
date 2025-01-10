@@ -23,7 +23,7 @@
     "ios": "react-native run-ios"
   },
   "dependencies": {
-    "@prisma/client": "^6.2.0",
+    "@prisma/client": "^6.2.1",
     "@tanstack/react-query": "^5.0.0",
     "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.4.20",
