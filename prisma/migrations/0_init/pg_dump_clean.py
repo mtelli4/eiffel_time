@@ -29,11 +29,15 @@ def clean_dump_file(input_file, output_file):
         exit(1)
     
     print("Nettoyage du fichier dump...")
-    with open(input_file, "r") as infile, open(output_file, "w") as outfile:
-        for line in infile:
+    with open(input_file, "r") as infile:
+        lines = infile.readlines()
+
+    with open(output_file, "w") as outfile:
+        for line in lines:
             # Exclure les lignes commençant par "SET" ou contenant "pg_catalog.set_config"
             if not line.startswith("SET ") and "pg_catalog.set_config('search_path', '', false);" not in line:
                 outfile.write(line)
+
     print(f"Fichier nettoyé enregistré sous {output_file}.")
 
 # Fonction principale
