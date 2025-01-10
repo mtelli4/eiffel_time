@@ -10,7 +10,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 // import { Login } from './pages/Login'
 import { Schedule } from '@shared/pages/Schedule/Schedule'
 import Root, { Error } from './root'
-import './styles/App.css'
 import './styles/index.css'
 
 const router = createBrowserRouter([
