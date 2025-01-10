@@ -1,8 +1,3 @@
-import { Badge } from '../../components/Absences/Badge'
-import { Button } from '../../components/Absences/Button'
-import { Card } from '../../components/Absences/Card'
-import { Input } from '../../components/Absences/Input'
-// import { AlertCircle, CheckCircle, Clock, FileText, Upload } from 'lucide-react'
 import { useState } from 'react'
 import {
   ScrollView,
@@ -11,6 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import { Badge } from '../../components/Absences/Badge'
+import { Button } from '../../components/Absences/Button'
+import { Card } from '../../components/Absences/Card'
+import { Input } from '../../components/Absences/Input'
 
 interface Absence {
   id: string
@@ -73,36 +72,22 @@ export function Absences() {
     const statusConfig = {
       justified: {
         variant: 'success' as const,
-        // icon: CheckCircle,
         text: 'Justifiée',
       },
       unjustified: {
         variant: 'error' as const,
-        // icon: AlertCircle,
         text: 'Non justifiée',
       },
       pending: {
         variant: 'warning' as const,
-        // icon: Clock,
         text: 'En attente',
       },
     }
 
     const config = statusConfig[status]
-    // const Icon = config.icon
 
     return (
       <View style={styles.badgeContainer}>
-        {/* <Icon
-          size={16}
-          color={
-            status === 'justified'
-              ? '#065F46'
-              : status === 'pending'
-              ? '#92400E'
-              : '#991B1B'
-          }
-        /> */}
         <Badge variant={config.variant}>{config.text}</Badge>
       </View>
     )
@@ -136,7 +121,6 @@ export function Absences() {
                       }}
                       style={styles.documentButton}
                     >
-                      {/* <FileText size={16} color="#2E3494" /> */}
                       <Text style={styles.documentText}>
                         Voir le justificatif
                       </Text>
@@ -172,7 +156,6 @@ export function Absences() {
                             /* Implement file upload */
                           }}
                         >
-                          {/* <Upload size={16} color="#2E3494" /> */}
                           <Text style={styles.uploadText}>
                             Ajouter un justificatif
                           </Text>
@@ -206,12 +189,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
   },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 24,
-  },
   cardContainer: {
     gap: 16,
   },
@@ -222,11 +199,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+    flexWrap: 'wrap', // Allows content to wrap
   },
   moduleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flexWrap: 'wrap',
   },
   moduleText: {
     fontWeight: '600',
@@ -242,6 +221,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flexShrink: 1, // Ensures the button shrinks as needed
+    maxWidth: '100%', // Prevents overflow
   },
   documentText: {
     fontSize: 14,
@@ -251,6 +232,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    flexShrink: 1, // Prevents overflow
+    maxWidth: '100%',
   },
   justificationText: {
     fontSize: 14,
