@@ -150,18 +150,29 @@ INSERT INTO ingrid.etudiant VALUES (17, '428081', false, false);
 -- Data for Name: notification; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.notification VALUES (1, 'Absence', 'Vous avez été noté absent au cours de :cours, du :date de :heure_debut à :heure_fin.', '2025-01-08 11:30:00');
-INSERT INTO ingrid.notification VALUES (2, 'Rappel', 'N’oubliez pas de rendre votre votre devoir avant le :date.', '2025-01-09 09:00:00');
-INSERT INTO ingrid.notification VALUES (3, 'Evaluation', 'Votre note pour l’examen de :module a été publiée.', '2025-01-10 14:45:00');
-INSERT INTO ingrid.notification VALUES (4, 'Rappel', 'Pensez à remplir le questionnaire de satisfaction sur le module :module.', '2025-01-12 12:15:00');
-INSERT INTO ingrid.notification VALUES (5, 'Information', 'La salle pour le cours de :cours a changé. Nouveau lieu : :nouvelle_salle.', '2025-01-14 08:30:00');
-INSERT INTO ingrid.notification VALUES (6, 'Information', 'La plateforme d''Eiffel Time sera inaccessible pour maintenance le :date.', '2025-01-18 13:45:00');
+INSERT INTO ingrid.notification VALUES (1, 'Absence', 'Vous avez été noté absent au cours de :cours, du :date de :heure_debut à :heure_fin.');
+INSERT INTO ingrid.notification VALUES (3, 'Evaluation', 'Votre note pour l’examen de :module a été publiée.');
+INSERT INTO ingrid.notification VALUES (4, 'Rappel', 'Pensez à remplir le questionnaire de satisfaction sur le module :module.');
+INSERT INTO ingrid.notification VALUES (5, 'Information', 'La salle pour le cours de :cours a changé. Nouveau lieu : :nouvelle_salle.');
+INSERT INTO ingrid.notification VALUES (6, 'Information', 'La plateforme d''Eiffel Time sera inaccessible pour maintenance le :date.');
+INSERT INTO ingrid.notification VALUES (2, 'Message', 'Vous avez reçu un message de :personne.');
 
 
 --
 -- Data for Name: absence; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.absence VALUES (1, 'justificatif1.pdf', 'Absent pour cause de maladie.', true, NULL, true, '2025-01-01 09:00:00', '2025-01-01 12:00:00', 1, 3, 1);
+INSERT INTO ingrid.absence VALUES (2, NULL, 'Absent sans justificatif. Retard de 15 minutes.', false, 15, true, '2025-01-02 10:00:00', '2025-01-02 11:30:00', 1, 8, 2);
+INSERT INTO ingrid.absence VALUES (3, 'justificatif2.pdf', 'Accident de transport, justificatif envoyé.', true, NULL, false, '2025-01-03 08:00:00', '2025-01-03 13:00:00', 1, 9, 3);
+INSERT INTO ingrid.absence VALUES (4, NULL, 'Présence signalée avec un retard de 10 minutes.', false, 10, true, '2025-01-04 09:15:00', '2025-01-04 10:00:00', 1, 10, 4);
+INSERT INTO ingrid.absence VALUES (5, NULL, 'Absent sans explication.', false, NULL, false, '2025-01-05 11:00:00', '2025-01-05 15:00:00', 1, 11, 5);
+INSERT INTO ingrid.absence VALUES (6, 'justificatif3.pdf', 'Absence validée pour raisons familiales.', true, NULL, true, '2025-01-06 10:30:00', '2025-01-06 14:30:00', 1, 12, 6);
+INSERT INTO ingrid.absence VALUES (7, NULL, 'Retard non signalé, 20 minutes.', false, 20, false, '2025-01-07 09:45:00', '2025-01-07 12:15:00', 1, 13, 7);
+INSERT INTO ingrid.absence VALUES (8, NULL, 'Justificatif en attente pour cette absence.', false, NULL, false, '2025-01-08 08:30:00', '2025-01-08 11:30:00', 1, 14, 8);
+INSERT INTO ingrid.absence VALUES (9, NULL, 'Absence pour toute la durée avec un retard initial non justifié.', false, 25, true, '2025-01-09 07:00:00', '2025-01-09 13:00:00', 1, 15, 9);
+INSERT INTO ingrid.absence VALUES (10, 'justificatif4.pdf', 'Absence validée avec un retard de 30 minutes.', true, 30, true, '2025-01-10 09:30:00', '2025-01-10 14:00:00', 1, 16, 10);
+INSERT INTO ingrid.absence VALUES (11, NULL, 'Absence déclarée mais non validée.', false, NULL, true, '2025-01-11 10:00:00', '2025-01-11 12:00:00', 1, 17, 11);
 
 
 --
@@ -415,13 +426,37 @@ INSERT INTO ingrid.module_bloc_competence VALUES (39, 6, 'Semestre 1');
 -- Data for Name: utilisateurs_eav; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.utilisateurs_eav VALUES (1, 'adresse', '123 Rue des Lilas', '2025-01-01 10:00:00', 1);
+INSERT INTO ingrid.utilisateurs_eav VALUES (2, 'téléphone', '0654321098', '2025-01-02 11:30:00', 1);
+INSERT INTO ingrid.utilisateurs_eav VALUES (3, 'langue', 'Français', '2025-01-03 14:15:00', 1);
+INSERT INTO ingrid.utilisateurs_eav VALUES (4, 'adresse', '45 Avenue de la République', '2025-01-02 09:00:00', 2);
+INSERT INTO ingrid.utilisateurs_eav VALUES (5, 'téléphone', '0778456123', '2025-01-04 13:00:00', 2);
+INSERT INTO ingrid.utilisateurs_eav VALUES (6, 'spécialité', 'Informatique', '2025-01-05 08:45:00', 2);
+INSERT INTO ingrid.utilisateurs_eav VALUES (7, 'adresse', '9 Boulevard Haussmann', '2025-01-03 16:00:00', 3);
+INSERT INTO ingrid.utilisateurs_eav VALUES (8, 'téléphone', '0667348291', '2025-01-04 10:00:00', 3);
+INSERT INTO ingrid.utilisateurs_eav VALUES (9, 'hobby', 'Photographie', '2025-01-06 17:30:00', 3);
+INSERT INTO ingrid.utilisateurs_eav VALUES (10, 'adresse', '78 Rue de la Paix', '2025-01-01 12:00:00', 4);
+INSERT INTO ingrid.utilisateurs_eav VALUES (11, 'téléphone', '0687123456', '2025-01-03 15:00:00', 4);
+INSERT INTO ingrid.utilisateurs_eav VALUES (12, 'langue', 'Anglais', '2025-01-05 09:30:00', 4);
+INSERT INTO ingrid.utilisateurs_eav VALUES (13, 'adresse', '23 Impasse des Fleurs', '2025-01-02 14:00:00', 5);
+INSERT INTO ingrid.utilisateurs_eav VALUES (14, 'téléphone', '0698123476', '2025-01-03 16:30:00', 5);
+INSERT INTO ingrid.utilisateurs_eav VALUES (15, 'préférence', 'Travail en équipe', '2025-01-06 11:00:00', 5);
+INSERT INTO ingrid.utilisateurs_eav VALUES (16, 'adresse', '12 Place Bellecour', '2025-01-01 18:00:00', 6);
+INSERT INTO ingrid.utilisateurs_eav VALUES (17, 'téléphone', '0678564912', '2025-01-04 08:00:00', 6);
+INSERT INTO ingrid.utilisateurs_eav VALUES (18, 'langue', 'Espagnol', '2025-01-06 13:15:00', 6);
+INSERT INTO ingrid.utilisateurs_eav VALUES (19, 'adresse', '50 Rue Principale', '2025-01-07 14:00:00', 7);
+INSERT INTO ingrid.utilisateurs_eav VALUES (20, 'téléphone', '0765432189', '2025-01-07 15:30:00', 7);
+INSERT INTO ingrid.utilisateurs_eav VALUES (21, 'adresse', '89 Chemin des Pins', '2025-01-08 16:00:00', 8);
+INSERT INTO ingrid.utilisateurs_eav VALUES (22, 'téléphone', '0751234897', '2025-01-08 17:00:00', 8);
+INSERT INTO ingrid.utilisateurs_eav VALUES (23, 'adresse', '67 Rue du Bac', '2025-01-09 11:00:00', 9);
+INSERT INTO ingrid.utilisateurs_eav VALUES (24, 'téléphone', '0645781239', '2025-01-09 12:30:00', 9);
 
 
 --
 -- Name: absence_id_absence_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.absence_id_absence_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.absence_id_absence_seq', 11, true);
 
 
 --
@@ -498,7 +533,7 @@ SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 2, true);
 -- Name: utilisateurs_eav_id_user_eav_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.utilisateurs_eav_id_user_eav_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.utilisateurs_eav_id_user_eav_seq', 24, true);
 
 
 --
