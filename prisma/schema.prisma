@@ -27,7 +27,7 @@ model absence {
 
 model bloc_competence {
   id_bloc_comp           Int                      @id @default(autoincrement())
-  libelle                String?                  @db.VarChar(50)
+  libelle                String?                  @db.VarChar(100)
   id_formation           Int
   formation              formation                @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
   module_bloc_competence module_bloc_competence[]
@@ -50,7 +50,6 @@ model cours {
   libelle      String?       @db.VarChar(50)
   debut        DateTime?     @db.Timestamp(6)
   fin          DateTime?     @db.Timestamp(6)
-  batiment     String        @db.VarChar(50)
   salle        String?       @db.VarChar(10)
   createdat    DateTime?     @db.Timestamp(6)
   updatedat    DateTime?     @db.Timestamp(6)
@@ -84,16 +83,14 @@ model enseignant_module {
 }
 
 model etudiant {
-  id_utilisateur Int            @id
-  numeroetudiant String?        @unique @db.VarChar(50)
-  tierstemps     Boolean?
-  delegue        Boolean?
-  id_grp         Int
-  absence        absence[]
-  groupe         groupe         @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
-  utilisateur    utilisateur    @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
-  notes          notes[]
-  notification   notification[]
+  id_utilisateur  Int               @id
+  numeroetudiant  String?           @unique @db.VarChar(50)
+  tierstemps      Boolean?
+  delegue         Boolean?
+  absence         absence[]
+  utilisateur     utilisateur       @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+  groupe_etudiant groupe_etudiant[]
+  notes           notes[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -121,7 +118,6 @@ model formation {
   bloc_competence       bloc_competence[]
   cours                 cours[]
   formation_utilisateur formation_utilisateur[]
-  groupe_formation      groupe_formation[]
 }
 
 model formation_utilisateur {
@@ -134,20 +130,10 @@ model formation_utilisateur {
 }
 
 model groupe {
-  id_grp           Int                @id @default(autoincrement())
-  libelle          String?            @db.VarChar(50)
-  cours            cours[]
-  etudiant         etudiant[]
-  groupe_formation groupe_formation[]
-}
-
-model groupe_formation {
-  id_formation Int
-  id_grp       Int
-  formation    formation @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
-  groupe       groupe    @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([id_formation, id_grp])
+  id_grp          Int               @id @default(autoincrement())
+  libelle         String?           @db.VarChar(50)
+  cours           cours[]
+  groupe_etudiant groupe_etudiant[]
 }
 
 model message {
@@ -164,7 +150,7 @@ model message {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model module {
   id_module              Int                      @id @default(autoincrement())
-  libelle                String?                  @db.VarChar(50)
+  libelle                String?                  @db.VarChar(100)
   codeapogee             String?                  @db.VarChar(50)
   heures                 String?                  @db.VarChar(50)
   cours                  cours[]
@@ -175,6 +161,7 @@ model module {
 model module_bloc_competence {
   id_module       Int
   id_bloc_comp    Int
+  periode         periode?
   bloc_competence bloc_competence @relation(fields: [id_bloc_comp], references: [id_bloc_comp], onDelete: NoAction, onUpdate: NoAction)
   module          module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
 
@@ -195,21 +182,18 @@ model notes {
 }
 
 model notification {
-  id_notif       Int          @id @default(autoincrement())
-  type           String?      @db.VarChar(50)
-  message        String?
-  createdat      DateTime?    @db.Timestamp(6)
-  id_utilisateur Int
-  absence        absence[]
-  evaluation     evaluation[]
-  etudiant       etudiant     @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+  id_notif   Int          @id @default(autoincrement())
+  type       String?      @db.VarChar(50)
+  message    String?
+  absence    absence[]
+  evaluation evaluation[]
 }
 
 model utilisateur {
   id_utilisateur                         Int                     @id @default(autoincrement())
   nom                                    String                  @db.VarChar(255)
   prenom                                 String                  @db.VarChar(255)
-  email                                  String?                 @db.VarChar(255)
+  email                                  String?                 @unique(map: "utilisateur_email") @db.VarChar(255)
   mdp                                    String?                 @db.VarChar(255)
   salt                                   String?                 @db.VarBit(16)
   premiereconnexion                      Boolean?
@@ -234,6 +218,15 @@ model utilisateurs_eav {
   utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model groupe_etudiant {
+  id_utilisateur Int
+  id_grp         Int
+  etudiant       etudiant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction, map: "fk_etudiant")
+  groupe         groupe   @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction, map: "fk_groupe")
+
+  @@id([id_utilisateur, id_grp], map: "groupe_etudiant_id_utilisateur_id_grp")
+}
+
 enum statut_utilisateur {
   indefinite
   student
@@ -249,4 +242,13 @@ enum type_cours {
   TD
   TP
   EMPTY_ENUM_VALUE @map("")
+}
+
+enum periode {
+  Semestre_1 @map("Semestre 1")
+  Semestre_2 @map("Semestre 2")
+  Semestre_3 @map("Semestre 3")
+  Semestre_4 @map("Semestre 4")
+  Semestre_5 @map("Semestre 5")
+  Semestre_6 @map("Semestre 6")
 }

@@ -5,6 +5,25 @@
 -- Dumped from database version 17.2 (Ubuntu 17.2-1.pgdg24.04+1)
 -- Dumped by pg_dump version 17.2 (Ubuntu 17.2-1.pgdg24.04+1)
 
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: ingrid; Owner: postgres
+--
+
+INSERT INTO ingrid._prisma_migrations VALUES ('6f8cae26-0877-4b59-b2c5-a6a26aef01e7', '066280158a609145362a619a3c91c09f26130c9afbe7e658c2ce18fbde7110d9', '2024-12-12 12:10:06.15293+01', '0_init', '', NULL, '2024-12-12 12:10:06.15293+01', 0);
+
+
 --
 -- Data for Name: formation; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
@@ -74,6 +93,17 @@ INSERT INTO ingrid.module VALUES (39, 'R1.08 : Gestion de projet & des organisat
 -- Data for Name: cours; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.cours VALUES (1, 'CM', 'Introduction à la programmation', '2025-01-08 09:00:00', '2025-01-08 11:00:00', 'B101', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P01', 1, 1, NULL);
+INSERT INTO ingrid.cours VALUES (2, 'TD', 'Algèbre linéaire', '2025-01-09 14:00:00', '2025-01-09 16:00:00', 'C202', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P02', 5, 1, NULL);
+INSERT INTO ingrid.cours VALUES (3, 'TP', 'Bases de données', '2025-01-10 08:00:00', '2025-01-10 10:00:00', 'A303', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P03', 12, 1, NULL);
+INSERT INTO ingrid.cours VALUES (4, 'CM', 'Mathématiques avancées', '2025-01-08 13:00:00', '2025-01-08 15:00:00', 'D404', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P01', 7, 1, 1);
+INSERT INTO ingrid.cours VALUES (5, 'TD', 'Programmation orientée objets', '2025-01-11 11:00:00', '2025-01-11 13:00:00', 'E505', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P02', 8, 1, 2);
+INSERT INTO ingrid.cours VALUES (6, 'TP', 'Développement web', '2025-01-12 10:00:00', '2025-01-12 12:00:00', 'F606', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P03', 15, 1, 3);
+INSERT INTO ingrid.cours VALUES (7, 'CM', 'Systèmes d''exploitation', '2025-01-13 08:00:00', '2025-01-13 10:00:00', 'G707', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P04', 18, 1, NULL);
+INSERT INTO ingrid.cours VALUES (8, 'TD', 'Réseaux informatiques', '2025-01-14 14:00:00', '2025-01-14 16:00:00', 'H808', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P05', 22, 1, NULL);
+INSERT INTO ingrid.cours VALUES (9, 'TP', 'Sécurité informatique', '2025-01-15 09:00:00', '2025-01-15 11:00:00', 'I909', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P06', 30, 1, NULL);
+INSERT INTO ingrid.cours VALUES (10, 'CM', 'Projet de fin d''études', '2025-01-16 10:00:00', '2025-01-16 12:00:00', 'J010', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P07', 33, 1, 4);
+INSERT INTO ingrid.cours VALUES (11, 'TD', 'Anglais technique', '2025-01-17 13:00:00', '2025-01-17 15:00:00', 'K111', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P08', 39, 1, 5);
 
 
 --
@@ -120,6 +150,12 @@ INSERT INTO ingrid.etudiant VALUES (17, '428081', false, false);
 -- Data for Name: notification; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.notification VALUES (1, 'Absence', 'Vous avez été noté absent au cours de :cours, du :date de :heure_debut à :heure_fin.', '2025-01-08 11:30:00');
+INSERT INTO ingrid.notification VALUES (2, 'Rappel', 'N’oubliez pas de rendre votre votre devoir avant le :date.', '2025-01-09 09:00:00');
+INSERT INTO ingrid.notification VALUES (3, 'Evaluation', 'Votre note pour l’examen de :module a été publiée.', '2025-01-10 14:45:00');
+INSERT INTO ingrid.notification VALUES (4, 'Rappel', 'Pensez à remplir le questionnaire de satisfaction sur le module :module.', '2025-01-12 12:15:00');
+INSERT INTO ingrid.notification VALUES (5, 'Information', 'La salle pour le cours de :cours a changé. Nouveau lieu : :nouvelle_salle.', '2025-01-14 08:30:00');
+INSERT INTO ingrid.notification VALUES (6, 'Information', 'La plateforme d''Eiffel Time sera inaccessible pour maintenance le :date.', '2025-01-18 13:45:00');
 
 
 --
@@ -144,6 +180,28 @@ INSERT INTO ingrid.bloc_competence VALUES (6, 'BC6 : Travailler dans une équipe
 -- Data for Name: communiquer; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.communiquer VALUES (1, 'Introduction au sujet du cours.', '2025-01-08 09:10:00', 1, 3);
+INSERT INTO ingrid.communiquer VALUES (2, 'Mise à jour sur le planning.', '2025-01-09 10:00:00', 2, 8);
+INSERT INTO ingrid.communiquer VALUES (3, 'Partage des notes et documents.', '2025-01-10 11:30:00', 3, 9);
+INSERT INTO ingrid.communiquer VALUES (4, 'Informations complémentaires.', '2025-01-11 14:00:00', 4, 10);
+INSERT INTO ingrid.communiquer VALUES (5, 'Annonce d''un changement de salle.', '2025-01-12 15:00:00', 5, 11);
+INSERT INTO ingrid.communiquer VALUES (6, 'Rappel des exercices à rendre.', '2025-01-13 08:45:00', 6, 12);
+INSERT INTO ingrid.communiquer VALUES (7, 'Invitation à une session de révision.', '2025-01-14 16:00:00', 7, 13);
+INSERT INTO ingrid.communiquer VALUES (8, 'Retour sur la dernière séance.', '2025-01-15 09:30:00', 8, 14);
+INSERT INTO ingrid.communiquer VALUES (9, 'Partage des supports de cours.', '2025-01-16 10:45:00', 9, 15);
+INSERT INTO ingrid.communiquer VALUES (10, 'Annonce d''un invité spécial.', '2025-01-17 11:20:00', 10, 16);
+INSERT INTO ingrid.communiquer VALUES (11, 'Rappel sur les consignes du projet.', '2025-01-18 13:30:00', 11, 17);
+INSERT INTO ingrid.communiquer VALUES (12, 'Salut tout le monde, quelqu’un a compris le dernier exercice sur les matrices ? J’ai un doute sur la méthode.', '2025-01-08 09:30:00', 1, 3);
+INSERT INTO ingrid.communiquer VALUES (13, 'Est-ce qu’il y a un changement de salle pour le prochain TP ? Je crois que le prof a dit quelque chose mais je suis pas sûr.', '2025-01-09 10:15:00', 2, 8);
+INSERT INTO ingrid.communiquer VALUES (14, 'Voici un résumé rapide de la séance d’aujourd’hui, si ça peut aider ceux qui n’étaient pas là. Dites-moi si j’ai oublié quelque chose !', '2025-01-10 12:00:00', 3, 9);
+INSERT INTO ingrid.communiquer VALUES (15, 'Quelqu’un aurait un lien ou le document pour les consignes du projet ? Impossible de le retrouver dans les mails.', '2025-01-11 14:30:00', 4, 10);
+INSERT INTO ingrid.communiquer VALUES (16, 'Hello ! Pour ceux qui veulent, on fait une session de révision au bâtiment A demain à 10h. Tout le monde est le bienvenu !', '2025-01-12 15:45:00', 5, 11);
+INSERT INTO ingrid.communiquer VALUES (17, 'Est-ce que le prof a donné des pistes pour l’exercice 3 ? Je suis complètement bloqué...', '2025-01-13 09:00:00', 6, 12);
+INSERT INTO ingrid.communiquer VALUES (18, 'Salut, j’ai trouvé un super tuto pour l’exo sur les boucles, je vous partage le lien ici : https://example.com/tuto-boucles', '2025-01-14 16:30:00', 7, 13);
+INSERT INTO ingrid.communiquer VALUES (19, 'Quelqu’un sait si on doit rendre le rapport en version papier ou uniquement sur Moodle ?', '2025-01-15 10:00:00', 8, 14);
+INSERT INTO ingrid.communiquer VALUES (20, 'J’ai noté que le prochain cours est annulé, vous confirmez ? Sinon, on se retrouve où ?', '2025-01-16 11:15:00', 9, 15);
+INSERT INTO ingrid.communiquer VALUES (21, 'Petite astuce pour ceux qui galèrent avec l’exercice 5 : il faut d’abord vérifier les types de données avant d’exécuter le reste.', '2025-01-17 11:50:00', 10, 16);
+INSERT INTO ingrid.communiquer VALUES (22, 'Je propose qu’on se répartisse les tâches pour le projet, ce sera plus simple. Qui est dispo pour faire la partie sur les interfaces ?', '2025-01-18 14:00:00', 11, 17);
 
 
 --
@@ -157,6 +215,8 @@ INSERT INTO ingrid.enseignant VALUES (5, true);
 -- Data for Name: enseignant_module; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.enseignant_module VALUES (10, 5);
+INSERT INTO ingrid.enseignant_module VALUES (3, 5);
 
 
 --
@@ -258,6 +318,16 @@ INSERT INTO ingrid.message VALUES (47, 'Aliquam non mauris. Morbi non lectus. Al
 INSERT INTO ingrid.message VALUES (48, 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', '2024-07-07 07:44:06', 9, 10);
 INSERT INTO ingrid.message VALUES (49, 'Morbi non quam nec dui luctus rutrum. Nulla tellus. In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti. In eleifend quam a odio.', '2024-09-10 06:46:49', 9, 5);
 INSERT INTO ingrid.message VALUES (50, 'Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', '2024-11-20 20:34:19', 7, 7);
+INSERT INTO ingrid.message VALUES (51, 'Salut, tu as compris le dernier exercice sur les matrices ?', '2025-01-08 10:00:00', 3, 8);
+INSERT INTO ingrid.message VALUES (52, 'Non, pas vraiment. Tu as des idées pour le résoudre ?', '2025-01-08 10:05:00', 8, 3);
+INSERT INTO ingrid.message VALUES (53, 'Je pense qu''il faut d''abord décomposer le problème en étapes. Peut-être qu''on devrait revoir les bases sur les matrices.', '2025-01-08 10:10:00', 3, 8);
+INSERT INTO ingrid.message VALUES (54, 'Bonne idée, je vais regarder le cours à nouveau. Tu veux qu''on réessaie ensemble après ? ', '2025-01-08 10:15:00', 8, 3);
+INSERT INTO ingrid.message VALUES (55, 'Oui, ça me va. On peut se retrouver à la bibliothèque à 14h ?', '2025-01-08 10:20:00', 3, 8);
+INSERT INTO ingrid.message VALUES (56, 'Ok, c''est parfait. À tout à l''heure !', '2025-01-08 10:25:00', 8, 3);
+INSERT INTO ingrid.message VALUES (57, 'Alors, tu penses que la méthode de Gauss est la bonne approche pour résoudre ce système ?', '2025-01-08 14:05:00', 3, 8);
+INSERT INTO ingrid.message VALUES (58, 'Oui, exactement ! Ça semble bien fonctionner avec l''exercice. Tu veux qu''on passe à l''étape suivante ?', '2025-01-08 14:10:00', 8, 3);
+INSERT INTO ingrid.message VALUES (59, 'Je crois que c''est bon, on a tout résolu. Tu veux qu''on en parle en classe ?', '2025-01-08 14:15:00', 3, 8);
+INSERT INTO ingrid.message VALUES (60, 'Oui, c’est une bonne idée. À plus tard alors.', '2025-01-08 14:20:00', 8, 3);
 
 
 --
@@ -365,14 +435,14 @@ SELECT pg_catalog.setval('ingrid.bloc_competence_id_bloc_comp_seq', 6, true);
 -- Name: communiquer_id_communiquer_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.communiquer_id_communiquer_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.communiquer_id_communiquer_seq', 22, true);
 
 
 --
 -- Name: cours_id_cours_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 11, true);
 
 
 --
@@ -400,7 +470,7 @@ SELECT pg_catalog.setval('ingrid.groupe_id_grp_seq', 5, true);
 -- Name: message_id_message_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.message_id_message_seq', 50, true);
+SELECT pg_catalog.setval('ingrid.message_id_message_seq', 60, true);
 
 
 --
@@ -414,7 +484,7 @@ SELECT pg_catalog.setval('ingrid.module_id_module_seq', 39, true);
 -- Name: notification_id_notif_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.notification_id_notif_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.notification_id_notif_seq', 11, true);
 
 
 --

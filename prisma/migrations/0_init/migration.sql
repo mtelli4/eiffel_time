@@ -4,6 +4,9 @@ CREATE TYPE "statut_utilisateur" AS ENUM ('indefinite', 'student', 'teacher', 's
 -- CreateEnum
 CREATE TYPE "type_cours" AS ENUM ('CM', 'TD', 'TP', '');
 
+-- CreateEnum
+CREATE TYPE "periode" AS ENUM ('Semestre 1', 'Semestre 2', 'Semestre 3', 'Semestre 4', 'Semestre 5', 'Semestre 6');
+
 -- CreateTable
 CREATE TABLE "absence" (
     "id_absence" SERIAL NOT NULL,
@@ -24,7 +27,7 @@ CREATE TABLE "absence" (
 -- CreateTable
 CREATE TABLE "bloc_competence" (
     "id_bloc_comp" SERIAL NOT NULL,
-    "libelle" VARCHAR(50),
+    "libelle" VARCHAR(100),
     "id_formation" INTEGER NOT NULL,
 
     CONSTRAINT "bloc_competence_pkey" PRIMARY KEY ("id_bloc_comp")
@@ -48,7 +51,6 @@ CREATE TABLE "cours" (
     "libelle" VARCHAR(50),
     "debut" TIMESTAMP(6),
     "fin" TIMESTAMP(6),
-    "batiment" VARCHAR(50) NOT NULL,
     "salle" VARCHAR(10),
     "createdat" TIMESTAMP(6),
     "updatedat" TIMESTAMP(6),
@@ -83,7 +85,6 @@ CREATE TABLE "etudiant" (
     "numeroetudiant" VARCHAR(50),
     "tierstemps" BOOLEAN,
     "delegue" BOOLEAN,
-    "id_grp" INTEGER NOT NULL,
 
     CONSTRAINT "etudiant_pkey" PRIMARY KEY ("id_utilisateur")
 );
@@ -130,14 +131,6 @@ CREATE TABLE "groupe" (
 );
 
 -- CreateTable
-CREATE TABLE "groupe_formation" (
-    "id_formation" INTEGER NOT NULL,
-    "id_grp" INTEGER NOT NULL,
-
-    CONSTRAINT "groupe_formation_pkey" PRIMARY KEY ("id_formation","id_grp")
-);
-
--- CreateTable
 CREATE TABLE "message" (
     "id_message" SERIAL NOT NULL,
     "contenu" TEXT,
@@ -151,7 +144,7 @@ CREATE TABLE "message" (
 -- CreateTable
 CREATE TABLE "module" (
     "id_module" SERIAL NOT NULL,
-    "libelle" VARCHAR(50),
+    "libelle" VARCHAR(100),
     "codeapogee" VARCHAR(50),
     "heures" VARCHAR(50),
 
@@ -162,6 +155,7 @@ CREATE TABLE "module" (
 CREATE TABLE "module_bloc_competence" (
     "id_module" INTEGER NOT NULL,
     "id_bloc_comp" INTEGER NOT NULL,
+    "periode" "periode",
 
     CONSTRAINT "module_bloc_competence_pkey" PRIMARY KEY ("id_module","id_bloc_comp")
 );
@@ -183,8 +177,6 @@ CREATE TABLE "notification" (
     "id_notif" SERIAL NOT NULL,
     "type" VARCHAR(50),
     "message" TEXT,
-    "createdat" TIMESTAMP(6),
-    "id_utilisateur" INTEGER NOT NULL,
 
     CONSTRAINT "notification_pkey" PRIMARY KEY ("id_notif")
 );
@@ -216,8 +208,19 @@ CREATE TABLE "utilisateurs_eav" (
     CONSTRAINT "utilisateurs_eav_pkey" PRIMARY KEY ("id_user_eav")
 );
 
+-- CreateTable
+CREATE TABLE "groupe_etudiant" (
+    "id_utilisateur" INTEGER NOT NULL,
+    "id_grp" INTEGER NOT NULL,
+
+    CONSTRAINT "groupe_etudiant_id_utilisateur_id_grp" PRIMARY KEY ("id_utilisateur","id_grp")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "etudiant_numeroetudiant_key" ON "etudiant"("numeroetudiant");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "utilisateur_email" ON "utilisateur"("email");
 
 -- AddForeignKey
 ALTER TABLE "absence" ADD CONSTRAINT "absence_id_cours_fkey" FOREIGN KEY ("id_cours") REFERENCES "cours"("id_cours") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -256,9 +259,6 @@ ALTER TABLE "enseignant_module" ADD CONSTRAINT "enseignant_module_id_module_fkey
 ALTER TABLE "enseignant_module" ADD CONSTRAINT "enseignant_module_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "enseignant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "etudiant" ADD CONSTRAINT "etudiant_id_grp_fkey" FOREIGN KEY ("id_grp") REFERENCES "groupe"("id_grp") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "etudiant" ADD CONSTRAINT "etudiant_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
@@ -272,12 +272,6 @@ ALTER TABLE "formation_utilisateur" ADD CONSTRAINT "formation_utilisateur_id_for
 
 -- AddForeignKey
 ALTER TABLE "formation_utilisateur" ADD CONSTRAINT "formation_utilisateur_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "groupe_formation" ADD CONSTRAINT "groupe_formation_id_formation_fkey" FOREIGN KEY ("id_formation") REFERENCES "formation"("id_formation") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "groupe_formation" ADD CONSTRAINT "groupe_formation_id_grp_fkey" FOREIGN KEY ("id_grp") REFERENCES "groupe"("id_grp") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "message" ADD CONSTRAINT "message_emetteur_fkey" FOREIGN KEY ("emetteur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -298,8 +292,11 @@ ALTER TABLE "notes" ADD CONSTRAINT "notes_id_eval_fkey" FOREIGN KEY ("id_eval") 
 ALTER TABLE "notes" ADD CONSTRAINT "notes_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "notification" ADD CONSTRAINT "notification_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "utilisateurs_eav" ADD CONSTRAINT "utilisateurs_eav_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "utilisateurs_eav" ADD CONSTRAINT "utilisateurs_eav_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_etudiant" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_groupe" FOREIGN KEY ("id_grp") REFERENCES "groupe"("id_grp") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
