@@ -223,6 +223,17 @@ INSERT INTO ingrid.enseignant_module VALUES (3, 5);
 -- Data for Name: evaluation; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.evaluation VALUES (1, 'Examen final', 3, 20, 'Semestre 1', '2025-01-01 10:00:00', '2025-01-02 10:00:00', 1, 3);
+INSERT INTO ingrid.evaluation VALUES (2, 'Test intermédiaire', 2, 10, 'Semestre 1', '2025-01-05 14:00:00', '2025-01-06 14:00:00', 2, 3);
+INSERT INTO ingrid.evaluation VALUES (3, 'Projet de groupe', 4, 20, 'Semestre 2', '2025-01-10 09:00:00', '2025-01-11 09:00:00', 3, 3);
+INSERT INTO ingrid.evaluation VALUES (4, 'Rapport écrit', 1, 15, 'Semestre 2', '2025-01-15 16:00:00', '2025-01-16 16:00:00', 4, 3);
+INSERT INTO ingrid.evaluation VALUES (5, 'Présentation orale', 2, 10, 'Semestre 3', '2025-01-20 11:00:00', '2025-01-21 11:00:00', 5, 3);
+INSERT INTO ingrid.evaluation VALUES (6, 'Examen pratique', 3, 20, 'Semestre 3', '2025-01-25 15:00:00', '2025-01-26 15:00:00', 6, 3);
+INSERT INTO ingrid.evaluation VALUES (7, 'Mini-test', 1, 5, 'Semestre 4', '2025-02-01 08:00:00', '2025-02-01 09:00:00', 7, 3);
+INSERT INTO ingrid.evaluation VALUES (8, 'Devoir surveillé', 2, 15, 'Semestre 4', '2025-02-05 10:00:00', '2025-02-06 10:00:00', 8, 3);
+INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2025-02-10 13:00:00', '2025-02-11 13:00:00', 9, 3);
+INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3);
+INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3);
 
 
 --
@@ -409,6 +420,28 @@ INSERT INTO ingrid.module_bloc_competence VALUES (39, 6, 'Semestre 1');
 -- Data for Name: notes; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid.notes VALUES (3, 1, 15.00, 'Bonne performance sur l’examen.', '2025-01-01 12:00:00', '2025-01-02 12:00:00');
+INSERT INTO ingrid.notes VALUES (8, 1, 18.50, 'Excellente maîtrise du sujet.', '2025-01-01 12:30:00', '2025-01-02 12:30:00');
+INSERT INTO ingrid.notes VALUES (9, 2, 9.00, 'Besoin de travailler sur les détails.', '2025-01-05 14:10:00', '2025-01-06 14:10:00');
+INSERT INTO ingrid.notes VALUES (10, 2, 7.50, 'Des erreurs sur les questions clés.', '2025-01-05 14:30:00', '2025-01-06 14:30:00');
+INSERT INTO ingrid.notes VALUES (11, 3, 20.00, 'Excellent travail en équipe.', '2025-01-10 09:00:00', '2025-01-11 09:00:00');
+INSERT INTO ingrid.notes VALUES (12, 3, 19.50, 'Très bon leadership.', '2025-01-10 09:15:00', '2025-01-11 09:15:00');
+INSERT INTO ingrid.notes VALUES (13, 4, 14.00, 'Bon rapport mais manque de structure.', '2025-01-15 16:00:00', '2025-01-16 16:00:00');
+INSERT INTO ingrid.notes VALUES (14, 4, 13.50, 'Doit améliorer la clarté.', '2025-01-15 16:20:00', '2025-01-16 16:20:00');
+INSERT INTO ingrid.notes VALUES (15, 5, 10.00, 'Présentation correcte, manque de profondeur.', '2025-01-20 11:00:00', '2025-01-21 11:00:00');
+INSERT INTO ingrid.notes VALUES (16, 5, 12.00, 'Bonne organisation.', '2025-01-20 11:10:00', '2025-01-21 11:10:00');
+INSERT INTO ingrid.notes VALUES (17, 6, 16.00, 'Excellente application des concepts.', '2025-01-25 15:00:00', '2025-01-26 15:00:00');
+INSERT INTO ingrid.notes VALUES (8, 6, 17.50, 'Résultats impressionnants.', '2025-01-25 15:20:00', '2025-01-26 15:20:00');
+INSERT INTO ingrid.notes VALUES (9, 7, 4.50, 'Manque de préparation.', '2025-02-01 08:00:00', '2025-02-01 09:00:00');
+INSERT INTO ingrid.notes VALUES (10, 7, 5.00, 'Performance correcte.', '2025-02-01 08:10:00', '2025-02-01 09:10:00');
+INSERT INTO ingrid.notes VALUES (11, 8, 13.50, 'Très bon devoir.', '2025-02-05 10:00:00', '2025-02-06 10:00:00');
+INSERT INTO ingrid.notes VALUES (12, 8, 14.00, 'Bonne compréhension globale.', '2025-02-05 10:20:00', '2025-02-06 10:20:00');
+INSERT INTO ingrid.notes VALUES (13, 9, 19.00, 'Projet excellent.', '2025-02-10 13:00:00', '2025-02-11 13:00:00');
+INSERT INTO ingrid.notes VALUES (14, 9, 18.50, 'Très bonne gestion de projet.', '2025-02-10 13:10:00', '2025-02-11 13:10:00');
+INSERT INTO ingrid.notes VALUES (15, 10, 16.00, 'Bonne préparation.', '2025-02-15 14:00:00', '2025-02-16 14:00:00');
+INSERT INTO ingrid.notes VALUES (16, 10, 15.50, 'Quelques lacunes dans les détails.', '2025-02-15 14:20:00', '2025-02-16 14:20:00');
+INSERT INTO ingrid.notes VALUES (17, 11, 4.00, 'Manque de révision.', '2025-02-20 12:00:00', '2025-02-21 12:00:00');
+INSERT INTO ingrid.notes VALUES (8, 11, 5.00, 'Réponse correcte, mais incomplète.', '2025-02-20 12:30:00', '2025-02-21 12:30:00');
 
 
 --

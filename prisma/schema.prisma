@@ -99,7 +99,7 @@ model evaluation {
   libelle      String?      @db.VarChar(50)
   coefficient  Int?
   notemaximale Decimal?     @db.Decimal(20, 0)
-  periode      String?      @db.VarChar(50)
+  periode      periode?
   createdat    DateTime?    @db.Timestamp(6)
   updatedat    DateTime?    @db.Timestamp(6)
   id_cours     Int

@@ -95,7 +95,7 @@ CREATE TABLE "evaluation" (
     "libelle" VARCHAR(50),
     "coefficient" INTEGER,
     "notemaximale" DECIMAL(20,0),
-    "periode" VARCHAR(50),
+    "periode" "periode",
     "createdat" TIMESTAMP(6),
     "updatedat" TIMESTAMP(6),
     "id_cours" INTEGER NOT NULL,
