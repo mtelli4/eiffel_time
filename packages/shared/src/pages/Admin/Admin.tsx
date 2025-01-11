@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from '../../styles/Admin/AdminStyles'
 import { Utilisateur } from '../../../../../backend/classes'
-import { formation, utilisateur } from '@prisma/client'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
