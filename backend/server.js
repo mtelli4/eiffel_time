@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');  // Import des routes définies dans routes.js

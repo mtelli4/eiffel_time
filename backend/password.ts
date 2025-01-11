@@ -47,5 +47,5 @@ function isPasswordValid(password: string): {
     if (!/[^A-Za-z0-9]/.test(password)) {
         errors.push('password-no-special')
     }
-    return { isValid: errors.length === 0, error: errors }
+    return { isValid: errors.length === 0, errors }
 }

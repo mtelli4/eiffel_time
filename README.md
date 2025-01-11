@@ -10,6 +10,8 @@ Run the following command at root of the project : `npm install`
 
 Run the following command at root of the project : `npm run start:web`
 
+For the server, open a second terminal and run : `npm run start:server`
+
 ### Mobile :
 
 Open a terminal and run : `cd packages/mobile && npm run start`
