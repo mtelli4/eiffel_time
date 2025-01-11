@@ -249,6 +249,14 @@ INSERT INTO ingrid.formation_utilisateur VALUES (12, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (13, 1);
 INSERT INTO ingrid.formation_utilisateur VALUES (14, 2);
 INSERT INTO ingrid.formation_utilisateur VALUES (15, 3);
+INSERT INTO ingrid.formation_utilisateur VALUES (7, 2);
+INSERT INTO ingrid.formation_utilisateur VALUES (7, 3);
+INSERT INTO ingrid.formation_utilisateur VALUES (7, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (6, 2);
+INSERT INTO ingrid.formation_utilisateur VALUES (6, 3);
+INSERT INTO ingrid.formation_utilisateur VALUES (6, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (4, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (5, 1);
 
 
 --
