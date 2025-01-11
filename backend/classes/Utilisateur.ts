@@ -1,43 +1,60 @@
-import { capitalizeWords } from '../../utils/stringUtils.ts'
-import { statut_utilisateur } from '@prisma/client'
+import { capitalizeWords } from '../../utils/stringUtils';
+import { formation, statut_utilisateur, utilisateur } from '@prisma/client'
+import { Formation } from './Formation'
 
 export class Utilisateur {
-    id_utilisateur: number;
-    nom: string;
-    prenom: string;
-    email: string | null;
-    statut: string | null;
+    utilisateur: utilisateur;
+    formations: Formation[] = [];
 
-    constructor(data: any) {
-        this.id_utilisateur = data.id_utilisateur;
-        this.nom = capitalizeWords(data.nom);
-        this.prenom = capitalizeWords(data.prenom);
-        this.email = data.email;
-        this.statut = Object.values(statut_utilisateur).includes(data.statut) ? data.statut : statut_utilisateur.indefinite;
+    constructor(utilisateur: utilisateur, formations?: formation[]) {
+        // Capitalisation des noms et prénoms
+        utilisateur.nom = capitalizeWords(utilisateur.nom);
+        utilisateur.prenom = capitalizeWords(utilisateur.prenom);
+        this.utilisateur = utilisateur;
+
+        // Si l'utilisateur a des formations, on en extrait les objets Formation
+        if (formations) {
+            this.formations = formations.map(f => new Formation(f));
+        }
     }
 
+    // Retourne l'ID de l'utilisateur
     getId(): number {
-        return this.id_utilisateur;
+        return this.utilisateur.id_utilisateur;
     }
 
+    // Retourne le nom de l'utilisateur
     getNom(): string {
-        return this.nom;
+        return this.utilisateur.nom || 'Nom non défini';
     }
 
+    // Retourne le prénom de l'utilisateur
     getPrenom(): string {
-        return this.prenom;
+        return this.utilisateur.prenom || 'Prénom non défini';
     }
 
-    getEmail(): string | null {
-        return this.email;
+    // Retourne le nom complet (prénom + nom)
+    getFullName(): string {
+        return `${this.getPrenom()} ${this.getNom()}`;
     }
 
-    getStatut(): string | null {
-        return this.statut;
+    // Retourne l'email de l'utilisateur
+    getEmail(): string {
+        return this.utilisateur.email || 'Email non défini';
     }
 
+    // Retourne le statut de l'utilisateur
+    getStatut(): statut_utilisateur {
+        return this.utilisateur.statut || statut_utilisateur.indefinite;
+    }
+
+    getFormations(): Formation[] {
+        return this.formations;
+    }
+
+    // Retourne le nom complet du statut de l'utilisateur
     getStatutName(): string {
-        switch (this.statut) {
+        switch (this.utilisateur.statut) {
             case statut_utilisateur.indefinite: return 'Indéfini';
             case statut_utilisateur.administrator: return 'Administrateur';
             case statut_utilisateur.director: return 'Directeur';
