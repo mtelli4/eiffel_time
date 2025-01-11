@@ -1,15 +1,18 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@shared/*": ["src/shared/*"],
-            "@web/*": ["src/web/*"],
-            "@mobile/*": ["src/mobile/*"]
-        }
-    },
-    "files": [],
-    "references": [
-        { "path": "./tsconfig.app.json" },
-        { "path": "./tsconfig.node.json" }
-    ]
+  "compilerOptions": {
+    "types": ["react-native", "jest"],
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-jsx",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["packages/shared/src/*"]
+    }
+  },
+  "include": ["packages/**/*", "mobile", "src"]
 }
