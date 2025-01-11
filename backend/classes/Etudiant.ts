@@ -5,7 +5,7 @@ export class Etudiant extends Utilisateur {
     etudiant: etudiant;
 
     constructor(utilisateur: Utilisateur, etudiant: etudiant) {
-        super(utilisateur.utilisateur, utilisateur.formations);
+        super(utilisateur.utilisateur);
         this.etudiant = etudiant;
     }
 
