@@ -27,11 +27,11 @@ export class Evaluation {
         return this.evaluation.periode || 'Période non définie';
     }
 
-    getCreatedAt(): /* DateTime */ Date {
+    getCreatedAt(): Date {
         return this.evaluation.createdat || new Date();
     }
 
-    getUpdatedAt(): /* DateTime */ Date {
+    getUpdatedAt(): Date {
         return this.evaluation.updatedat || new Date();
     }
 
