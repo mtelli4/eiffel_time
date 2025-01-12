@@ -1,10 +1,13 @@
 import { evaluation } from '@prisma/client';
+import { Note } from './Note'
 
 export class Evaluation {
     evaluation: evaluation;
+    notes: Note[] = [];
 
-    constructor(evaluation: evaluation) {
+    constructor(evaluation: evaluation, notes: Note[]) {
         this.evaluation = evaluation;
+        this.notes = notes;
     }
 
     getId(): number {
@@ -37,5 +40,9 @@ export class Evaluation {
 
     getCoursId(): number {
         return this.evaluation.id_cours || 0;
+    }
+
+    getNotes(): Note[] {
+        return this.notes;
     }
 }
