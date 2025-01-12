@@ -51,7 +51,7 @@ const navigationConfig = {
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
-    { icon: UserCheck, label: 'Absences et retards', path: '/manage-absences' },
+    { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     {
       icon: Users,
       label: 'Suivi des présences des professeurs',
@@ -104,9 +104,8 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
 
   return (
     <div
-      className={`sidebar h-screen w-[280px] bg-[#2E3494] text-white fixed top-0 p-4 flex flex-col justify-between transition-transform ${
-        isVisible ? 'left-0' : '-left-[280px]'
-      }`}
+      className={`sidebar h-screen w-[280px] bg-[#2E3494] text-white fixed top-0 p-4 flex flex-col justify-between transition-transform ${isVisible ? 'left-0' : '-left-[280px]'
+        }`}
     >
       <div>
         <div className="flex items-center justify-start mb-8 pt-4 ml-9">
