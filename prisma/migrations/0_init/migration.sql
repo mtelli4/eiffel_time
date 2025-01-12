@@ -7,6 +7,9 @@ CREATE TYPE "type_cours" AS ENUM ('CM', 'TD', 'TP', '');
 -- CreateEnum
 CREATE TYPE "periode" AS ENUM ('Semestre 1', 'Semestre 2', 'Semestre 3', 'Semestre 4', 'Semestre 5', 'Semestre 6');
 
+-- CreateEnum
+CREATE TYPE "cours_presence" AS ENUM ('présentiel', 'distanciel');
+
 -- CreateTable
 CREATE TABLE "absence" (
     "id_absence" SERIAL NOT NULL,
@@ -55,7 +58,7 @@ CREATE TABLE "cours" (
     "createdat" TIMESTAMP(6),
     "updatedat" TIMESTAMP(6),
     "appel" BOOLEAN,
-    "presence" VARCHAR(10),
+    "presence" "cours_presence",
     "id_module" INTEGER NOT NULL,
     "id_formation" INTEGER NOT NULL,
     "id_grp" INTEGER,

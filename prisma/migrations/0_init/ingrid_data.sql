@@ -82,17 +82,17 @@ INSERT INTO ingrid.module VALUES (39, 'R1.08 : Gestion de projet & des organisat
 -- Data for Name: cours; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.cours VALUES (1, 'CM', 'Introduction à la programmation', '2025-01-08 09:00:00', '2025-01-08 11:00:00', 'B101', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P01', 1, 1, NULL);
-INSERT INTO ingrid.cours VALUES (2, 'TD', 'Algèbre linéaire', '2025-01-09 14:00:00', '2025-01-09 16:00:00', 'C202', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P02', 5, 1, NULL);
-INSERT INTO ingrid.cours VALUES (3, 'TP', 'Bases de données', '2025-01-10 08:00:00', '2025-01-10 10:00:00', 'A303', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P03', 12, 1, NULL);
-INSERT INTO ingrid.cours VALUES (4, 'CM', 'Mathématiques avancées', '2025-01-08 13:00:00', '2025-01-08 15:00:00', 'D404', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P01', 7, 1, 1);
-INSERT INTO ingrid.cours VALUES (5, 'TD', 'Programmation orientée objets', '2025-01-11 11:00:00', '2025-01-11 13:00:00', 'E505', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P02', 8, 1, 2);
-INSERT INTO ingrid.cours VALUES (6, 'TP', 'Développement web', '2025-01-12 10:00:00', '2025-01-12 12:00:00', 'F606', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P03', 15, 1, 3);
-INSERT INTO ingrid.cours VALUES (7, 'CM', 'Systèmes d''exploitation', '2025-01-13 08:00:00', '2025-01-13 10:00:00', 'G707', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P04', 18, 1, NULL);
-INSERT INTO ingrid.cours VALUES (8, 'TD', 'Réseaux informatiques', '2025-01-14 14:00:00', '2025-01-14 16:00:00', 'H808', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P05', 22, 1, NULL);
-INSERT INTO ingrid.cours VALUES (9, 'TP', 'Sécurité informatique', '2025-01-15 09:00:00', '2025-01-15 11:00:00', 'I909', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P06', 30, 1, NULL);
-INSERT INTO ingrid.cours VALUES (10, 'CM', 'Projet de fin d''études', '2025-01-16 10:00:00', '2025-01-16 12:00:00', 'J010', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'P07', 33, 1, 4);
-INSERT INTO ingrid.cours VALUES (11, 'TD', 'Anglais technique', '2025-01-17 13:00:00', '2025-01-17 15:00:00', 'K111', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'P08', 39, 1, 5);
+INSERT INTO ingrid.cours VALUES (1, 'CM', 'Introduction à la programmation', '2025-01-08 09:00:00', '2025-01-08 11:00:00', 'B101', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 1, 1, NULL);
+INSERT INTO ingrid.cours VALUES (2, 'TD', 'Algèbre linéaire', '2025-01-09 14:00:00', '2025-01-09 16:00:00', 'C202', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 5, 1, NULL);
+INSERT INTO ingrid.cours VALUES (3, 'TP', 'Bases de données', '2025-01-10 08:00:00', '2025-01-10 10:00:00', 'A303', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'présentiel', 12, 1, NULL);
+INSERT INTO ingrid.cours VALUES (4, 'CM', 'Mathématiques avancées', '2025-01-08 13:00:00', '2025-01-08 15:00:00', 'D404', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 7, 1, 1);
+INSERT INTO ingrid.cours VALUES (5, 'TD', 'Programmation orientée objets', '2025-01-11 11:00:00', '2025-01-11 13:00:00', 'E505', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 8, 1, 2);
+INSERT INTO ingrid.cours VALUES (6, 'TP', 'Développement web', '2025-01-12 10:00:00', '2025-01-12 12:00:00', 'F606', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'présentiel', 15, 1, 3);
+INSERT INTO ingrid.cours VALUES (7, 'CM', 'Systèmes d''exploitation', '2025-01-13 08:00:00', '2025-01-13 10:00:00', 'G707', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 18, 1, NULL);
+INSERT INTO ingrid.cours VALUES (8, 'TD', 'Réseaux informatiques', '2025-01-14 14:00:00', '2025-01-14 16:00:00', 'H808', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 22, 1, NULL);
+INSERT INTO ingrid.cours VALUES (9, 'TP', 'Sécurité informatique', '2025-01-15 09:00:00', '2025-01-15 11:00:00', 'I909', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'présentiel', 30, 1, NULL);
+INSERT INTO ingrid.cours VALUES (10, 'CM', 'Projet de fin d''études', '2025-01-16 10:00:00', '2025-01-16 12:00:00', 'J010', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'présentiel', 33, 1, 4);
+INSERT INTO ingrid.cours VALUES (11, 'TD', 'Anglais technique', '2025-01-17 13:00:00', '2025-01-17 15:00:00', 'K111', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 39, 1, 5);
 
 
 --
