@@ -21,7 +21,7 @@ Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 4. `port` by port of the database (default : 5432);
 5. `dbname` by database name;
 6. `schemaname` by schema name;
-`
+
 ```
 npx prisma
 npx prisma db pull
