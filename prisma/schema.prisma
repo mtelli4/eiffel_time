@@ -98,7 +98,7 @@ model evaluation {
   id_eval      Int          @id @default(autoincrement())
   libelle      String?      @db.VarChar(50)
   coefficient  Int?
-  notemaximale Decimal?     @db.Decimal(20, 0)
+  notemaximale Int?
   periode      periode?
   createdat    DateTime?    @db.Timestamp(6)
   updatedat    DateTime?    @db.Timestamp(6)
@@ -142,8 +142,11 @@ model message {
   createdat                                  DateTime?   @db.Timestamp(6)
   emetteur                                   Int
   recepteur                                  Int
+  reponse                                    Int?
   utilisateur_message_emetteurToutilisateur  utilisateur @relation("message_emetteurToutilisateur", fields: [emetteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
   utilisateur_message_recepteurToutilisateur utilisateur @relation("message_recepteurToutilisateur", fields: [recepteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+  message                                    message?    @relation("messageTomessage", fields: [reponse], references: [id_message], onDelete: NoAction, onUpdate: NoAction)
+  other_message                              message[]   @relation("messageTomessage")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.

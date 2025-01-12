@@ -94,7 +94,7 @@ CREATE TABLE "evaluation" (
     "id_eval" SERIAL NOT NULL,
     "libelle" VARCHAR(50),
     "coefficient" INTEGER,
-    "notemaximale" DECIMAL(20,0),
+    "notemaximale" INTEGER,
     "periode" "periode",
     "createdat" TIMESTAMP(6),
     "updatedat" TIMESTAMP(6),
@@ -137,6 +137,7 @@ CREATE TABLE "message" (
     "createdat" TIMESTAMP(6),
     "emetteur" INTEGER NOT NULL,
     "recepteur" INTEGER NOT NULL,
+    "reponse" INTEGER,
 
     CONSTRAINT "message_pkey" PRIMARY KEY ("id_message")
 );
@@ -278,6 +279,9 @@ ALTER TABLE "message" ADD CONSTRAINT "message_emetteur_fkey" FOREIGN KEY ("emett
 
 -- AddForeignKey
 ALTER TABLE "message" ADD CONSTRAINT "message_recepteur_fkey" FOREIGN KEY ("recepteur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "message" ADD CONSTRAINT "message_reponse_fkey" FOREIGN KEY ("reponse") REFERENCES "message"("id_message") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "module_bloc_competence" ADD CONSTRAINT "module_bloc_competence_id_bloc_comp_fkey" FOREIGN KEY ("id_bloc_comp") REFERENCES "bloc_competence"("id_bloc_comp") ON DELETE NO ACTION ON UPDATE NO ACTION;
