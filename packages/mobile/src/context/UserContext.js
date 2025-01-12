@@ -14,7 +14,7 @@ export const UserProvider = ({children}) => {
       const simulatedUser = {
         id: 1,
         name: 'John Doe',
-        role: 'student', // Changez pour 'student', 'teacher', ou 'admin'
+        role: 'admin', // Changez pour 'student', 'teacher', ou 'admin'
       };
       setUser(simulatedUser);
     };
