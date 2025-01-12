@@ -25,6 +25,8 @@ Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 ```
 npx prisma
 npx prisma db pull
+psql -U <username> -d <database_name> -f prisma/migrations/0_init/migration.sql
+psql -U <username> -d <database_name> -f prisma/migrations/0_init/ingrid_data.sql
 ```
 
 For the server, open a second terminal and run : `npm run start:server`
