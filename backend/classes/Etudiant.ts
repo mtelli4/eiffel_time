@@ -9,6 +9,10 @@ export class Etudiant extends Utilisateur {
         this.etudiant = etudiant;
     }
 
+    getNumeroEtudiant(): string {
+        return this.etudiant.numeroetudiant || 'Numéro étudiant non défini';
+    }
+
     isDelegue(): boolean {
         return this.etudiant.delegue || false;
     }

@@ -7,6 +7,9 @@ CREATE TYPE "type_cours" AS ENUM ('CM', 'TD', 'TP', '');
 -- CreateEnum
 CREATE TYPE "periode" AS ENUM ('Semestre 1', 'Semestre 2', 'Semestre 3', 'Semestre 4', 'Semestre 5', 'Semestre 6');
 
+-- CreateEnum
+CREATE TYPE "cours_presence" AS ENUM ('présentiel', 'distanciel');
+
 -- CreateTable
 CREATE TABLE "absence" (
     "id_absence" SERIAL NOT NULL,
@@ -55,7 +58,7 @@ CREATE TABLE "cours" (
     "createdat" TIMESTAMP(6),
     "updatedat" TIMESTAMP(6),
     "appel" BOOLEAN,
-    "presence" VARCHAR(10),
+    "presence" "cours_presence",
     "id_module" INTEGER NOT NULL,
     "id_formation" INTEGER NOT NULL,
     "id_grp" INTEGER,
@@ -94,7 +97,7 @@ CREATE TABLE "evaluation" (
     "id_eval" SERIAL NOT NULL,
     "libelle" VARCHAR(50),
     "coefficient" INTEGER,
-    "notemaximale" DECIMAL(20,0),
+    "notemaximale" INTEGER,
     "periode" "periode",
     "createdat" TIMESTAMP(6),
     "updatedat" TIMESTAMP(6),
@@ -137,6 +140,7 @@ CREATE TABLE "message" (
     "createdat" TIMESTAMP(6),
     "emetteur" INTEGER NOT NULL,
     "recepteur" INTEGER NOT NULL,
+    "reponse" INTEGER,
 
     CONSTRAINT "message_pkey" PRIMARY KEY ("id_message")
 );
@@ -278,6 +282,9 @@ ALTER TABLE "message" ADD CONSTRAINT "message_emetteur_fkey" FOREIGN KEY ("emett
 
 -- AddForeignKey
 ALTER TABLE "message" ADD CONSTRAINT "message_recepteur_fkey" FOREIGN KEY ("recepteur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "message" ADD CONSTRAINT "message_reponse_fkey" FOREIGN KEY ("reponse") REFERENCES "message"("id_message") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "module_bloc_competence" ADD CONSTRAINT "module_bloc_competence_id_bloc_comp_fkey" FOREIGN KEY ("id_bloc_comp") REFERENCES "bloc_competence"("id_bloc_comp") ON DELETE NO ACTION ON UPDATE NO ACTION;

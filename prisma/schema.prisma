@@ -45,24 +45,24 @@ model communiquer {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model cours {
-  id_cours     Int           @id @default(autoincrement())
+  id_cours     Int             @id @default(autoincrement())
   type         type_cours?
-  libelle      String?       @db.VarChar(50)
-  debut        DateTime?     @db.Timestamp(6)
-  fin          DateTime?     @db.Timestamp(6)
-  salle        String?       @db.VarChar(10)
-  createdat    DateTime?     @db.Timestamp(6)
-  updatedat    DateTime?     @db.Timestamp(6)
+  libelle      String?         @db.VarChar(50)
+  debut        DateTime?       @db.Timestamp(6)
+  fin          DateTime?       @db.Timestamp(6)
+  salle        String?         @db.VarChar(10)
+  createdat    DateTime?       @db.Timestamp(6)
+  updatedat    DateTime?       @db.Timestamp(6)
   appel        Boolean?
-  presence     String?       @db.VarChar(10)
+  presence     cours_presence?
   id_module    Int
   id_formation Int
   id_grp       Int?
   absence      absence[]
   communiquer  communiquer[]
-  formation    formation     @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
-  groupe       groupe?       @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
-  module       module        @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
+  formation    formation       @relation(fields: [id_formation], references: [id_formation], onDelete: NoAction, onUpdate: NoAction)
+  groupe       groupe?         @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
+  module       module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   evaluation   evaluation[]
 }
 
@@ -98,7 +98,7 @@ model evaluation {
   id_eval      Int          @id @default(autoincrement())
   libelle      String?      @db.VarChar(50)
   coefficient  Int?
-  notemaximale Decimal?     @db.Decimal(20, 0)
+  notemaximale Int?
   periode      periode?
   createdat    DateTime?    @db.Timestamp(6)
   updatedat    DateTime?    @db.Timestamp(6)
@@ -142,8 +142,11 @@ model message {
   createdat                                  DateTime?   @db.Timestamp(6)
   emetteur                                   Int
   recepteur                                  Int
+  reponse                                    Int?
   utilisateur_message_emetteurToutilisateur  utilisateur @relation("message_emetteurToutilisateur", fields: [emetteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
   utilisateur_message_recepteurToutilisateur utilisateur @relation("message_recepteurToutilisateur", fields: [recepteur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+  message                                    message?    @relation("messageTomessage", fields: [reponse], references: [id_message], onDelete: NoAction, onUpdate: NoAction)
+  other_message                              message[]   @relation("messageTomessage")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -251,4 +254,9 @@ enum periode {
   Semestre_4 @map("Semestre 4")
   Semestre_5 @map("Semestre 5")
   Semestre_6 @map("Semestre 6")
+}
+
+enum cours_presence {
+  pr_sentiel @map("présentiel")
+  distanciel
 }

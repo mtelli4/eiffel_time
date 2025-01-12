@@ -1,3 +1,5 @@
+import { Module } from '../../../../backend/classes'
+
 export interface CourseModalProps {
   course: Course
   onClose: () => void
@@ -43,12 +45,6 @@ export type GradeStatus =
   | 'not_submitted'
   | 'exempted'
   | 'pending_makeup'
-
-export interface Module {
-  id: string
-  code: string
-  name: string
-}
 
 export interface Student {
   id: string
