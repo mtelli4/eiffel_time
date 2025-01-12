@@ -1,10 +1,13 @@
 import { module } from '@prisma/client';
+import { Cours } from './Cours'
 
 export class Module {
     module: module;
+    cours: Cours[];
 
-    constructor(module: module) {
+    constructor(module: module, cours: Cours[]) {
         this.module = module;
+        this.cours = cours;
     }
 
     getId(): number {
@@ -32,5 +35,9 @@ export class Module {
     getHeuresTP(): number {
         const heures = this.module.heures || '0,0,0';
         return parseInt(heures.split(',')[2]);
+    }
+
+    getCours(): Cours[] {
+        return this.cours;
     }
 }
