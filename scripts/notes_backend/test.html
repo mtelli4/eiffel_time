@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Étudiants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        select,
+        input,
+        button,
+        textarea {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .container {
+            margin-bottom: 20px;
+        }
+
+        .note {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<script>
+    const apiUrl = 'http://127.0.0.1:5000'; // L'URL de l'API backend
+
+    async function fetchPromotions() {
+        const response = await fetch(`${apiUrl}/promotions`);
+        const promotions = await response.json();
+        const promoSelect = document.getElementById('promo');
+
+        promotions.forEach(promo => {
+            const option = document.createElement('option');
+            option.value = promo.id;
+            option.textContent = promo.nom;
+            promoSelect.appendChild(option);
+        });
+    }
+
+    async function fetchClasses() {
+        const promoId = document.getElementById('promo').value;
+        const classeSelect = document.getElementById('classe');
+
+        classeSelect.innerHTML = '<option value="">-- Sélectionnez une classe --</option>';
+        document.getElementById('etudiant').innerHTML = '<option value="">-- Sélectionnez un étudiant --</option>';
+        classeSelect.disabled = true;
+
+        if (!promoId) return;
+
+        const response = await fetch(`${apiUrl}/promotions/${promoId}/classes`);
+        const classes = await response.json();
+
+        classes.forEach(classe => {
+            const option = document.createElement('option');
+            option.value = classe.id;
+            option.textContent = classe.nom;
+            classeSelect.appendChild(option);
+        });
+
+        classeSelect.disabled = false;
+    }
+
+    async function fetchStudents() {
+        const classeId = document.getElementById('classe').value;
+        const etudiantSelect = document.getElementById('etudiant');
+
+        etudiantSelect.innerHTML = '<option value="">-- Sélectionnez un étudiant --</option>';
+        etudiantSelect.disabled = true;
+
+        if (!classeId) return;
+
+        const response = await fetch(`${apiUrl}/classes/${classeId}/etudiants`);
+        const etudiants = await response.json();
+
+        etudiants.forEach(etudiant => {
+            const option = document.createElement('option');
+            option.value = etudiant.id;
+            option.textContent = `${etudiant.prenom} ${etudiant.nom}`;
+            etudiantSelect.appendChild(option);
+        });
+
+        etudiantSelect.disabled = false;
+    }
+
+    async function fetchNotes() {
+        const etudiantId = document.getElementById('etudiant').value;
+        const notesList = document.getElementById('notes-list');
+
+        notesList.innerHTML = '';
+
+        if (!etudiantId) return;
+
+        const response = await fetch(`${apiUrl}/etudiants/${etudiantId}/notes`);
+        const notes = await response.json();
+
+        notes.forEach(note => {
+            const noteDiv = document.createElement('div');
+            noteDiv.className = 'note';
+            noteDiv.innerHTML = `
+                    <p><strong>Matière :</strong> ${note.matiere}</p>
+                    <p><strong>Note :</strong> ${note.note}</p>
+                    <p><strong>Commentaire :</strong> ${note.commentaire || 'Aucun commentaire'}</p>
+                    <button onclick="editNote(${note.id})">Modifier</button>
+                `;
+            notesList.appendChild(noteDiv);
+        });
+    }
+
+    async function addNote() {
+        const etudiantId = document.getElementById('etudiant').value;
+        const matiere = document.getElementById('matiere').value;
+        const note = document.getElementById('note').value;
+        const commentaire = document.getElementById('commentaire').value;
+
+        if (!etudiantId || !matiere || !note) {
+            alert('Veuillez remplir tous les champs requis.');
+            return;
+        }
+
+        const response = await fetch(`${apiUrl}/etudiants/${etudiantId}/notes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ matiere, note, commentaire })
+        });
+
+        if (response.ok) {
+            alert('Note ajoutée avec succès !');
+            fetchNotes();
+        } else {
+            alert('Erreur lors de l\'ajout de la note.');
+        }
+    }
+
+    async function editNote(noteId) {
+        alert(`Modification de la note ${noteId}`);
+        // Ajoutez une logique pour modifier la note existante.
+    }
+
+    // Charger les promotions au démarrage
+    fetchPromotions();
+</script>
+
+<body>
+    <h1>Gestion des Étudiants</h1>
+
+    <div class="container">
+        <label for="promo">Choisissez une promotion :</label>
+        <select id="promo" onchange="fetchClasses()">
+            <option value="">-- Sélectionnez une promotion --</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <label for="classe">Choisissez une classe :</label>
+        <select id="classe" onchange="fetchStudents()" disabled>
+            <option value="">-- Sélectionnez une classe --</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <label for="etudiant">Choisissez un étudiant :</label>
+        <select id="etudiant" onchange="fetchNotes()" disabled>
+            <option value="">-- Sélectionnez un étudiant --</option>
+        </select>
+    </div>
+
+    <div id="notes" class="container">
+        <h2>Notes</h2>
+        <div id="notes-list">
+            <!-- Les notes seront affichées ici -->
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Ajouter une note</h2>
+        <label for="matiere">Matière :</label>
+        <input type="text" id="matiere" placeholder="Ex: Mathématiques">
+
+        <label for="note">Note :</label>
+        <input type="number" id="note" placeholder="Ex: 15" step="0.01">
+
+        <label for="commentaire">Commentaire :</label>
+        <textarea id="commentaire" placeholder="Ex: Excellent travail"></textarea>
+
+        <button onclick="addNote()">Ajouter la note</button>
+    </div>
+
+
+</body>
+
+</html>
