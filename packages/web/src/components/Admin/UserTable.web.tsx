@@ -15,7 +15,7 @@ DataTable.use(DT);
 export function UserTable({ users, isAdmin, onEdit, onDelete, }: UserTableProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <DataTable className="w-full" options={{ paging: false, searching: false, info: false, language: { info: 'Affichage de _START_ à _END_ sur _TOTAL_ utilisateurs' } }}>
+            <DataTable className="w-full display" options={{ paging: false, searching: false, info: false/*, language: { info: 'Affichage de _START_ à _END_ sur _TOTAL_ utilisateurs' }*/ }}>
                 <thead>
                 <tr className="bg-[#ECF0F1] border-b border-gray-200">
                     <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">

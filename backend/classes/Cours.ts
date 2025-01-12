@@ -5,6 +5,7 @@ export class Cours {
     cours: cours;
     evaluations: Evaluation[];
 
+
     constructor(cours: cours, evaluations: Evaluation[]) {
         this.cours = cours;
         this.evaluations = evaluations;

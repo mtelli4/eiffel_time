@@ -6,3 +6,4 @@ export * from './Note';
 export * from './Formation';
 export * from './Groupe';
 export * from './Cours';
+export * from './Absence';

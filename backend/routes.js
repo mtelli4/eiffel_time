@@ -155,4 +155,79 @@ router.get('/modules', async (req, res) => {
     }
 });
 
+// Route pour récupérer la liste des absences des étudiants
+router.get('/absences', async (req, res) => {
+    try {
+        // Récupération de toutes les absences des étudiants
+        const absences = await prisma.absence.findMany({
+            include: {
+                etudiant: {
+                    include: {
+                        utilisateur: true,  // Inclure les informations de l'utilisateur
+                    }
+                },
+                cours: {
+                    include: {
+                        module: true,  // Inclure les informations du module
+                    }
+                }
+            },
+            where: {
+                id_utilisateur: 3,  // Filtre par id d'utilisateur (3 = étudiant)
+            },
+            orderBy: {
+                id_absence: 'asc',  // Tri par id d'absence
+            }
+        });
+
+        const absencesList = data.map(a => ({
+            id_absence: a.id_absence,
+            justificatif: a.justificatif,
+            message: a.message,
+            valide: a.valide,
+            retard: a.retard,
+            envoye: a.envoye,
+            createdat: a.createdat,
+            updatedat: a.updatedat,
+            etudiant: {
+                numeroetudiant: a.etudiant.numeroetudiant,
+                tierstemps: a.etudiant.tierstemps,
+                delegue: a.etudiant.delegue,
+                utilisateur: {
+                    id_utilisateur: a.etudiant.id_utilisateur,
+                    nom: a.etudiant.utilisateur.nom,
+                    prenom: a.etudiant.utilisateur.prenom,
+                    email: a.etudiant.utilisateur.email,
+                    statut: a.etudiant.utilisateur.statut
+                }
+            },
+            cours: {
+                id_cours: a.cours.id_cours,
+                type: a.cours.type,
+                libelle: a.cours.libelle,
+                debut: a.cours.debut,
+                fin: a.cours.fin,
+                salle: a.cours.salle,
+                createdat: a.cours.createdat,
+                updatedat: a.cours.updatedat,
+                appel: a.cours.appel,
+                evaluations: a.evaluations,
+                module: {
+                    id_module: a.cours.module.id_module,
+                    libelle: a.cours.module.libelle,
+                    codeapogee: a.cours.module.codeapogee,
+                    heures: a.cours.module.heures
+                }
+            }
+        }))
+
+        res.json(absencesList);
+
+    } catch (error) {
+        console.error(error);  // Log de l'erreur pour déboguer
+        // Retour de l'erreur en cas de problème
+        res.status(500).json({ error: 'Erreur lors de la récupération des absences.' });
+    }
+});
+
 module.exports = router;  // Exporte le routeur pour l'utiliser dans d'autres fichiers
