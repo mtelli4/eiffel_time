@@ -21,7 +21,6 @@ export function ClassGrades() {
                 return response.json()
             })
             .then((data) => {
-                console.log(data)
                 const modules = data.map((m: any) => {
                     const cours = m.cours.map((c: any) => {
                         const evaluations = c.evaluations.map((e: any) => {
@@ -41,7 +40,6 @@ export function ClassGrades() {
                 }
                 )
                 setModules(modules)
-                console.log(modules)
                 setLoading(false)
             }
             )
@@ -92,7 +90,7 @@ export function ClassGrades() {
                     <View key={module.getId()} style={styles.moduleCard}>
                         <View style={styles.moduleHeader}>
                             <Text style={styles.moduleTitle}>
-                                {module.getCodeApogee()} - {module.getLibelle()}
+                                {module.getName()}
                             </Text>
                         </View>
 
