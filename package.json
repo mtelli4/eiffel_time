@@ -5,7 +5,8 @@
     "workspaces": [
         "packages/web",
         "packages/mobile",
-        "packages/shared"
+        "packages/shared",
+        "backend/classes"
     ],
     "resolutions": {
         "@babel/runtime": "^7.26.0"
