@@ -5,6 +5,7 @@ export * from './EnseignatModule';
 export * from './Etudiant';
 export * from './Evaluation';
 export * from './Formation';
+export * from './FormationUtilisateur';
 export * from './Groupe';
 export * from './Module';
 export * from './Note';
