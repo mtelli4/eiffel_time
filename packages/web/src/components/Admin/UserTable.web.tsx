@@ -1,5 +1,5 @@
 import { Edit2, Trash2 } from 'lucide-react';
-import { Formation, FormationUtilisateur, Utilisateur } from 'classes'
+import { Formation, FormationUtilisateur, Utilisateur } from '@backend/classes'
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { useEffect, useState } from 'react'

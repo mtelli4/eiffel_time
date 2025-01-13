@@ -4,7 +4,7 @@ import { Badge } from '../../components/Absences/Badge'
 import { Button } from '../../components/Absences/Button'
 import { Card } from '../../components/Absences/Card'
 import { Input } from '../../components/Absences/Input'
-import { Absence, Cours, Enseignant, EnseignatModule, Etudiant, Module } from 'classes'
+import { Absence, Cours, Enseignant, EnseignatModule, Etudiant, Module } from '@backend/classes'
 
 export function Absences() {
     const [absences, setAbsences] = useState<Absence[]>([]);

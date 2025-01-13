@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { Utilisateur } from 'classes'
+import { Utilisateur } from '@backend/classes'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
