@@ -9,9 +9,14 @@ export function Admin() {
     const [activeTab, setActiveTab] = useState<Tab>('users');
     const [showUserForm, setShowUserForm] = useState(false);
 
+    const [searchTerm, setSearchTerm] = useState(''); // État local pour la recherche
+
+    const handleSearch = (searchTerm: string) => {
+        setSearchTerm(searchTerm);
+    }
+
     const [users, setUsers] = useState<Utilisateur[]>([]);
     const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Effectuer la requête GET pour récupérer les utilisateurs
@@ -26,11 +31,9 @@ export function Admin() {
             .then((data) => {
                 const utilisateurs = data.utilisateurs.map((u: any) => new Utilisateur(u));
                 setUsers(utilisateurs);
-                setLoading(false);  // Changer l'état de chargement à false
             })
             .catch((error) => {
                 console.error('Erreur lors de la récupération des utilisateurs:', error);
-                setLoading(false);  // Changer l'état de chargement à false
             });
     }, []);  // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
 
@@ -99,11 +102,6 @@ export function Admin() {
         return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
     }
 
-    // Affichage du contenu
-    if (loading) {
-        return <div>Chargement...</div>;  // Affichage pendant le chargement
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.tabContainer}>
@@ -155,8 +153,7 @@ export function Admin() {
                         }}
                         onTypeChange={() => {
                         }}
-                        onSearch={() => {
-                        }}
+                        onSearch={handleSearch}
                     />
 
                     <UserTable
@@ -164,6 +161,7 @@ export function Admin() {
                         isAdmin={true}
                         onEdit={handleEditUser}
                         onDelete={handleDeleteUser}
+                        searchTerm={searchTerm}
                     />
                 </View>
             )}
