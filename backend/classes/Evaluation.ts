@@ -1,9 +1,8 @@
-import { evaluation } from '@prisma/client';
+import { evaluation, periode } from '@prisma/client'
 import { Note } from './Note'
 
 export class Evaluation {
     evaluation: evaluation;
-    notes: Note[] = [];
 
     constructor(evaluation: evaluation) {
         this.evaluation = evaluation;
@@ -26,7 +25,7 @@ export class Evaluation {
     }
 
     getPeriode(): string {
-        return this.evaluation.periode || 'Période non définie';
+        return periode[this.evaluation.periode as keyof typeof periode] || 'Période non définie';
     }
 
     getCreatedAt(): Date {
