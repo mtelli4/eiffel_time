@@ -6,15 +6,9 @@ import { View } from 'react-native'
 
 export class Absence {
     absence: absence;
-    etudiant: Etudiant;
-    cours: Cours;
-    status: 'justified' | 'unjustified' | 'pending' = 'unjustified';
 
-    constructor(absence: absence, etudiant: Etudiant, cours: Cours) {
+    constructor(absence: absence) {
         this.absence = absence;
-        this.etudiant = etudiant;
-        this.cours = cours;
-        this.setStatus();
     }
 
     getId(): number {
@@ -61,25 +55,38 @@ export class Absence {
         return this.absence.id_cours;
     }
 
-    getEtudiant(): Etudiant {
-        return this.etudiant;
-    }
-
-    getCours(): Cours {
-        return this.cours;
-    }
-
-    setStatus() {
+    getStatus(): 'justified' | 'unjustified' | 'pending' | 'undefined' {
         if (this.isValide() && this.isEnvoye()) {
-            this.status = 'justified';
+            return 'justified';
         } else if (!this.isEnvoye()) {
-            this.status = 'unjustified';
+            return 'unjustified';
         } else if (this.isEnvoye() && !this.isValide()) {
-            this.status = 'pending';
+            return 'pending';
+        } else {
+            return 'undefined';
         }
     }
 
-    getStatus() {
-        return this.status;
+    getStatusConfig() {
+        const statusConfig = {
+            justified: {
+                variant: 'success' as const,
+                text: 'Justifiée',
+            },
+            unjustified: {
+                variant: 'error' as const,
+                text: 'Non justifiée',
+            },
+            pending: {
+                variant: 'warning' as const,
+                text: 'En attente',
+            },
+            undefined: {
+                variant: 'default' as const,
+                text: 'Indéfini',
+            },
+        };
+
+        return statusConfig[this.getStatus()] || { variant: 'default', text: 'Indéfini' };
     }
 }
