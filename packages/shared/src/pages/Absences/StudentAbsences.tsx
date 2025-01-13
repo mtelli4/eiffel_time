@@ -96,20 +96,17 @@ export function Absences() {
                                     <View>
                                         {/* TODO: Afficher le nom de l'étudiant côté admin */}
                                         <Text style={styles.moduleText}>
-                                            {etudiants.find((e) => e.getId() === absence.getIdUtilisateur())?.getFullName()}
+                                            {etudiants.find((e) => e.getId() === absence.getIdUtilisateur())?.getFullName() || 'Étudiant inconnu'}
                                         </Text>
                                         <View style={styles.moduleContainer}>
                                             <Text style={styles.moduleText}>
-                                                {getModuleFromAbsence(absence)}
+                                                {getModuleFromAbsence(absence) || 'Module inconnu'}
                                             </Text>
                                             {getStatusBadge(absence)}
                                         </View>
                                         <Text style={styles.professorText}>
-                                            {
-                                                /* TODO: Modifier pour afficher le nom du module si existant */
-                                                cours.find((c) => c.getId() === absence.getIdCours())?.getDebut().toLocaleDateString('fr-FR')
-                                            } •{' '}
-                                            {getEnseignantFromAbsence(absence)}
+                                            {cours.find((c) => c.getId() === absence.getIdCours())?.getDebut()?.toLocaleDateString('fr-FR') || 'Date inconnue'} •{' '}
+                                            {getEnseignantFromAbsence(absence) || 'Enseignant inconnu'}
                                         </Text>
                                     </View>
 
