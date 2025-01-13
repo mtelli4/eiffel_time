@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 interface BadgeProps {
   children: React.ReactNode
-  variant: 'success' | 'warning' | 'error'
+  variant: 'success' | 'warning' | 'error' | 'default'
   style?: object
 }
 
@@ -11,6 +11,10 @@ export function Badge({ children, variant, style }: BadgeProps) {
     success: styles.success,
     warning: styles.warning,
     error: styles.error,
+    default: {
+        backgroundColor: '#E5E7EB',
+        color: '#374151',
+    }
   }
 
   return (
