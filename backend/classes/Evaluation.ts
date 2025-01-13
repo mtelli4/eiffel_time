@@ -5,9 +5,8 @@ export class Evaluation {
     evaluation: evaluation;
     notes: Note[] = [];
 
-    constructor(evaluation: evaluation, notes: Note[]) {
+    constructor(evaluation: evaluation) {
         this.evaluation = evaluation;
-        this.notes = notes;
     }
 
     getId(): number {
@@ -40,9 +39,5 @@ export class Evaluation {
 
     getCoursId(): number {
         return this.evaluation.id_cours || 0;
-    }
-
-    getNotes(): Note[] {
-        return this.notes;
     }
 }
