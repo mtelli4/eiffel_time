@@ -1,7 +1,8 @@
 import { Edit2, Trash2 } from 'lucide-react';
-import { Utilisateur } from '../../../../../backend/classes';
+import { Formation, FormationUtilisateur, Utilisateur } from 'classes'
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+import { useEffect, useState } from 'react'
 
 interface UserTableProps {
     users: Utilisateur[]
@@ -13,6 +14,31 @@ interface UserTableProps {
 DataTable.use(DT);
 
 export function UserTable({ users, isAdmin, onEdit, onDelete, }: UserTableProps) {
+    const [formations, setFormations] = useState<Formation[]>([]);
+    const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>([]);
+
+    useEffect(() => {
+        // Effectuer la requête GET pour récupérer les utilisateurs
+        fetch('http://localhost:4000/api/data')  // URL de votre API
+            .then((response) => {
+                // Vérifier si la réponse est correcte
+                if (!response.ok) {
+                    throw new Error('Erreur réseau');
+                }
+                return response.json();  // Convertir la réponse en JSON
+            })
+            .then((data) => {
+                const formations = data.formations.map((f: any) => new Formation(f));
+                setFormations(formations);
+
+                const formationUsers = data.formation_utilisateur.map((fu: any) => new FormationUtilisateur(fu));
+                setFormationUsers(formationUsers);
+            })
+            .catch((error) => {
+                console.error('Erreur lors de la récupération des utilisateurs:', error);
+            });
+    }, []);  // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
+
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <DataTable className="w-full display" options={{ paging: false, searching: false, info: false/*, language: { info: 'Affichage de _START_ à _END_ sur _TOTAL_ utilisateurs' }*/ }}>
@@ -54,7 +80,15 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, }: UserTableProps)
                         <td className="py-3 px-4">{user.getFullName()}</td>
                         <td className="py-3 px-4">{user.getEmail()}</td>
                         <td className="py-3 px-4">{user.getStatutName()}</td>
-                        <td className="py-3 px-4">{user.getFormations().map(f => f.getLibelle()).join(', ') || '-'}</td>
+                        <td className="py-3 px-4">
+                            {formationUsers
+                                .filter((fu) => fu.getIdUtilisateur() === user.getId())
+                                .map((fu) => {
+                                    const formation = formations.find((f) => f.getId() === fu.getIdFormation());
+                                    return formation ? formation.getLibelle() : '';
+                                })
+                                .join(', ') || '-'}
+                        </td>
                         {/*<td className="py-3 px-4">{user.group || '-'}</td>*/}
                         {/*<td className="py-3 px-4">{user.type || '-'}</td>*/}
                         <td className="py-3 px-4">

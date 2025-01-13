@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { Utilisateur } from '../../../../../backend/classes'
+import { Formation, Utilisateur } from 'classes'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
@@ -10,12 +10,13 @@ export function Admin() {
     const [showUserForm, setShowUserForm] = useState(false);
 
     const [users, setUsers] = useState<Utilisateur[]>([]);
+    const [formations, setFormations] = useState<Formation[]>([]);
     const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Effectuer la requête GET pour récupérer les utilisateurs
-        fetch('http://localhost:4000/api/utilisateurs')  // URL de votre API
+        fetch('http://localhost:4000/api/data')  // URL de votre API
             .then((response) => {
                 // Vérifier si la réponse est correcte
                 if (!response.ok) {
@@ -24,8 +25,11 @@ export function Admin() {
                 return response.json();  // Convertir la réponse en JSON
             })
             .then((data) => {
-                const utilisateurs = data.map((u: any) => new Utilisateur(u, u.formations));
+                const utilisateurs = data.utilisateurs.map((u: any) => new Utilisateur(u));
                 setUsers(utilisateurs);
+
+                const formations = data.formations.map((f: any) => new Formation(f));
+                setFormations(formations);
                 setLoading(false);  // Changer l'état de chargement à false
             })
             .catch((error) => {
