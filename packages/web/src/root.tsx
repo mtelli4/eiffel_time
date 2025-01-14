@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { Layout } from "./components/Layout";
 
 const user: { role: 'admin' | 'student' | 'teacher' | 'secretary' | 'manager' } = {
-    role: 'admin'
+    role: 'student'
   };
 
 export default function Root() {

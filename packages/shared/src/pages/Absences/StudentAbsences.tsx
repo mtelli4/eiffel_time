@@ -95,9 +95,9 @@ export function Absences() {
                                 <View style={styles.cardHeader}>
                                     <View>
                                         {/* TODO: Afficher le nom de l'étudiant côté admin */}
-                                        <Text style={styles.moduleText}>
+                                        {/*<Text style={styles.moduleText}>
                                             {etudiants.find((e) => e.getId() === absence.getIdUtilisateur())?.getFullName() || 'Étudiant inconnu'}
-                                        </Text>
+                                        </Text>*/}
                                         <View style={styles.moduleContainer}>
                                             <Text style={styles.moduleText}>
                                                 {getModuleFromAbsence(absence) || 'Module inconnu'}
