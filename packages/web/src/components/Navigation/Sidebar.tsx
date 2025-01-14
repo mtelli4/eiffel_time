@@ -51,7 +51,7 @@ const navigationConfig = {
         { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
         { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
         { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
-        { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
+        { icon: UserCheck, label: 'Absences et retards', path: '/manage-absences' },
         {
             icon: Users,
             label: 'Suivi des présences des professeurs',
