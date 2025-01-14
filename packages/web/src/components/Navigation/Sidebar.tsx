@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../context/UserContext'
 
 interface SidebarProps {
     userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin'
@@ -46,13 +46,16 @@ const navigationConfig = {
         { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
         { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
         { icon: UserCheck, label: 'Absences', path: '/absences' },
-        { icon: Settings, label: 'Paramètres', path: '/settings' },
     ],
     admin: [
         { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
         { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
         { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
-        { icon: UserCheck, label: 'Absences et retards', path: '/manage-absences' },
+        {
+            icon: UserCheck,
+            label: 'Absences et retards',
+            path: '/manage-absences',
+        },
         {
             icon: Users,
             label: 'Suivi des présences des professeurs',
@@ -65,11 +68,18 @@ const navigationConfig = {
 export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
     const [isManuallyOpened, setIsManuallyOpened] = useState(false)
     const navigation = navigationConfig[userRole]
-    const {role, setRole} = useUser();
+    const { role, setRole } = useUser()
 
     const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setRole(event.target.value as 'admin' | 'student' | 'teacher' | 'secretary' | 'manager');
-    };
+        setRole(
+            event.target.value as
+                | 'admin'
+                | 'student'
+                | 'teacher'
+                | 'secretary'
+                | 'manager'
+        )
+    }
 
     useEffect(() => {
         const handleMouseEnter = () => {
@@ -103,7 +113,10 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
             leftEdge.removeEventListener('mouseenter', handleMouseEnter)
             document.body.removeChild(leftEdge)
             if (sidebarElement) {
-                sidebarElement.removeEventListener('mouseleave', handleMouseLeave)
+                sidebarElement.removeEventListener(
+                    'mouseleave',
+                    handleMouseLeave
+                )
             }
         }
     }, [isVisible, isManuallyOpened, setIsVisible])
@@ -117,7 +130,9 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
             <div>
                 <div className="flex items-center justify-start mb-8 pt-4 ml-9">
                     <img src={logo} alt="Logo" className="w-10 h-10" />
-                    <span className="ml-3 text-xl font-semibold">Eiffel Time</span>
+                    <span className="ml-3 text-xl font-semibold">
+                        Eiffel Time
+                    </span>
                 </div>
 
                 <nav className="space-y-2">
@@ -129,29 +144,29 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                                 cn(
                                     'flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors',
                                     'hover:bg-white/10',
-                                    isActive ? 'bg-white/20' : 'text-white/80',
+                                    isActive ? 'bg-white/20' : 'text-white/80'
                                 )
                             }
                         >
                             <item.icon className="w-6 h-6 flex-shrink-0" />
                             <span className="text-[15px] font-medium text-left">
-                {item.label}
-              </span>
+                                {item.label}
+                            </span>
                         </NavLink>
                     ))}
                 </nav>
             </div>
-            <div className='text-black'>
-                <select 
-                className='w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primar'
-                value={role}
-                onChange={handleRoleChange}
+            <div className="text-black">
+                <select
+                    className="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primar"
+                    value={role}
+                    onChange={handleRoleChange}
                 >
-                    <option value={"admin"}>Admin</option>
-                    <option value={"student"}>Etudiant</option>
-                    <option value={"teacher"}>Enseignant</option>
-                    <option value={"secretary"}>Secrétaire</option>
-                    <option value={"manager"}>Gestionnaire</option>
+                    <option value={'admin'}>Admin</option>
+                    <option value={'student'}>Etudiant</option>
+                    <option value={'teacher'}>Enseignant</option>
+                    <option value={'secretary'}>Secrétaire</option>
+                    <option value={'manager'}>Gestionnaire</option>
                 </select>
             </div>
             <div className="flex justify-between items-end p-2">
