@@ -1,28 +1,44 @@
+// web/src/root.tsx
 import { Outlet, useLocation } from "react-router-dom";
 import { Layout } from "./components/Layout";
-
-const user: { role: 'admin' | 'student' | 'teacher' | 'secretary' | 'manager' } = {
-    role: 'admin'
-  };
+import { UserProvider, useUser } from "./context/UserContext";
 
 export default function Root() {
-      return (
-        <>
-        <Layout userRole={user.role}>
-            <Outlet/>
-        </Layout>
-        </>
-      )
+  return (
+    <UserProvider>
+      <InnerRoot />
+    </UserProvider>
+  );
+}
+
+function InnerRoot() {
+  const { role } = useUser();
+  return (
+    <>
+      <Layout userRole={role}>
+        <Outlet />
+      </Layout>
+    </>
+  );
 }
 
 export function Error() {
-    const location = useLocation();
+  return (
+    <UserProvider>
+      <InnerError />
+    </UserProvider>
+  );
+}
 
-    return (
-        <>
-        <Layout userRole={user.role}>
-            Aie une erreur s'est produite ! La page {location.pathname} est introuvable.
-        </Layout>
-        </>
-      )
+function InnerError() {
+  const location = useLocation();
+  const { role } = useUser();
+
+  return (
+    <>
+      <Layout userRole={role}>
+        Aie une erreur s'est produite ! La page {location.pathname} est introuvable.
+      </Layout>
+    </>
+  );
 }

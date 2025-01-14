@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useUser } from '../../context/UserContext';
 
 interface SidebarProps {
     userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin'
@@ -64,6 +65,11 @@ const navigationConfig = {
 export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
     const [isManuallyOpened, setIsManuallyOpened] = useState(false)
     const navigation = navigationConfig[userRole]
+    const {role, setRole} = useUser();
+
+    const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setRole(event.target.value as 'admin' | 'student' | 'teacher' | 'secretary' | 'manager');
+    };
 
     useEffect(() => {
         const handleMouseEnter = () => {
@@ -134,6 +140,19 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                         </NavLink>
                     ))}
                 </nav>
+            </div>
+            <div className='text-black'>
+                <select 
+                className='w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primar'
+                value={role}
+                onChange={handleRoleChange}
+                >
+                    <option value={"admin"}>Admin</option>
+                    <option value={"student"}>Etudiant</option>
+                    <option value={"teacher"}>Enseignant</option>
+                    <option value={"secretary"}>Secrétaire</option>
+                    <option value={"manager"}>Gestionnaire</option>
+                </select>
             </div>
             <div className="flex justify-between items-end p-2">
                 <Settings className="w-6 h-6 cursor-pointer" />
