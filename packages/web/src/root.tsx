@@ -23,6 +23,14 @@ function InnerRoot() {
 }
 
 export function Error() {
+  return (
+    <UserProvider>
+      <InnerError />
+    </UserProvider>
+  );
+}
+
+function InnerError() {
   const location = useLocation();
   const { role } = useUser();
 
