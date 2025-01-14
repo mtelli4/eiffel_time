@@ -34,6 +34,9 @@ export function UserFilters({
   onTypeChange,
   onSearch,
 }: UserFiltersProps) {
+    const handleSearchChange = (e: any) => {
+        onSearch(e.target.value)
+    }
   return (
     <div className="space-y-4 bg-white p-4 rounded-lg shadow-sm">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -133,7 +136,7 @@ export function UserFilters({
           onChange={(e) => onSearch(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3498DB] focus:border-transparent"
         />
-        <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+        <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" onChange={handleSearchChange} />
       </div>
     </div>
   )

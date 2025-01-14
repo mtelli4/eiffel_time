@@ -1,4 +1,4 @@
-import { Module } from '../../../../backend/classes'
+import { Module } from '@backend/classes'
 
 export interface CourseModalProps {
   course: Course

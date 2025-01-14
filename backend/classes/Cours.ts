@@ -1,13 +1,10 @@
-import { cours } from '@prisma/client'
-import { Module, Formation, Groupe, Evaluation } from './index'
+import { cours } from '@prisma/client';
 
 export class Cours {
     cours: cours;
-    evaluations: Evaluation[];
 
-    constructor(cours: cours, evaluations: Evaluation[]) {
+    constructor(cours: cours) {
         this.cours = cours;
-        this.evaluations = evaluations;
     }
 
     getId(): number {
@@ -23,11 +20,11 @@ export class Cours {
     }
 
     getDebut(): Date {
-        return this.cours.debut || new Date();
+        return new Date(this.cours.debut || new Date());
     }
 
     getFin(): Date {
-        return this.cours.fin || new Date();
+        return new Date(this.cours.fin || new Date());
     }
 
     getSalle(): string {
@@ -35,18 +32,18 @@ export class Cours {
     }
 
     getCreatedAt(): Date {
-        return this.cours.createdat || new Date();
+        return new Date(this.cours.createdat || new Date());
     }
 
     getUpdatedAt(): Date {
-        return this.cours.updatedat || new Date();
+        return new Date(this.cours.updatedat || new Date());
     }
 
     isAppel(): boolean {
         return this.cours.appel || false;
     }
 
-    getEvaluations(): Evaluation[] {
-        return this.evaluations;
+    getIdModule(): number {
+        return this.cours.id_module;
     }
 }

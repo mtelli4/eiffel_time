@@ -1,21 +1,14 @@
 import { capitalizeWords } from '../../utils/stringUtils';
-import { formation, statut_utilisateur, utilisateur } from '@prisma/client'
-import { Formation } from './Formation'
+import { statut_utilisateur, utilisateur } from '@prisma/client';
 
 export class Utilisateur {
     utilisateur: utilisateur;
-    formations: Formation[] = [];
 
-    constructor(utilisateur: utilisateur, formations?: formation[]) {
+    constructor(utilisateur: utilisateur) {
         // Capitalisation des noms et prénoms
         utilisateur.nom = capitalizeWords(utilisateur.nom);
         utilisateur.prenom = capitalizeWords(utilisateur.prenom);
         this.utilisateur = utilisateur;
-
-        // Si l'utilisateur a des formations, on en extrait les objets Formation
-        if (formations) {
-            this.formations = formations.map(f => new Formation(f));
-        }
     }
 
     // Retourne l'ID de l'utilisateur
@@ -46,10 +39,6 @@ export class Utilisateur {
     // Retourne le statut de l'utilisateur
     getStatut(): statut_utilisateur {
         return this.utilisateur.statut || statut_utilisateur.indefinite;
-    }
-
-    getFormations(): Formation[] {
-        return this.formations;
     }
 
     // Retourne le nom complet du statut de l'utilisateur

@@ -1,13 +1,10 @@
 import { notes, Prisma } from '@prisma/client';
-import { Etudiant } from './index';
 
 export class Note {
     note: notes;
-    etudiant: Etudiant;
 
-    constructor(note: notes, etudiant: Etudiant) {
+    constructor(note: notes) {
         this.note = note;
-        this.etudiant = etudiant;
     }
 
     getUtilisateurId(): number {
@@ -32,9 +29,5 @@ export class Note {
 
     getUpdatedAt(): Date {
         return this.note.updatedat || new Date();
-    }
-
-    getEtudiant(): Etudiant {
-        return this.etudiant;
     }
 }

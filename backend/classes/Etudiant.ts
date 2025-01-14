@@ -1,11 +1,11 @@
-import { Utilisateur } from './Utilisateur';
-import { etudiant } from '@prisma/client';
+import { etudiant, utilisateur } from '@prisma/client';
+import { Utilisateur } from './Utilisateur'
 
 export class Etudiant extends Utilisateur {
     etudiant: etudiant;
 
-    constructor(utilisateur: Utilisateur, etudiant: etudiant) {
-        super(utilisateur.utilisateur);
+    constructor(etudiant: etudiant, utilisateur: utilisateur) {
+        super(utilisateur);
         this.etudiant = etudiant;
     }
 
