@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -7,6 +7,10 @@ import {
   View,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import {
+  Formation,
+  FormationUtilisateur,
+} from '../../../../shared/src/backend/classes';
 
 interface User {
   id: string;
@@ -26,6 +30,36 @@ interface UserTableProps {
 }
 
 export function UserTable({users, isAdmin, onEdit, onDelete}: UserTableProps) {
+  const [formations, setFormations] = useState<Formation[]>([]);
+  const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>(
+    [],
+  );
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/data') // URL de votre API
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur réseau');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const formations = data.formations.map((f: any) => new Formation(f));
+        setFormations(formations);
+
+        const formationUsers = data.formation_utilisateur.map(
+          (fu: any) => new FormationUtilisateur(fu),
+        );
+        setFormationUsers(formationUsers);
+      })
+      .catch(error => {
+        console.error(
+          'Erreur lors de la récupération des utilisateurs:',
+          error,
+        );
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
@@ -46,21 +80,34 @@ export function UserTable({users, isAdmin, onEdit, onDelete}: UserTableProps) {
               <Text style={styles.cell}>{user.name}</Text>
               <Text style={styles.cell}>{user.email}</Text>
               <Text style={styles.cell}>{user.role}</Text>
-              <Text style={styles.cell}>{user.formation || '-'}</Text>
+              <Text style={styles.cell}>
+                {formationUsers
+                  .filter(fu => fu.getIdUtilisateur().toString() === user.id)
+                  .map(fu => {
+                    const formation = formations.find(
+                      f =>
+                        f.getId().toString() === fu.getIdFormation().toString(),
+                    );
+                    return formation ? formation.getLibelle() : '';
+                  })
+                  .join(', ') || '-'}
+              </Text>
               <Text style={styles.cell}>{user.group || '-'}</Text>
               <Text style={styles.cell}>{user.type || '-'}</Text>
               <View style={styles.actionsCell}>
-                <TouchableOpacity
-                  onPress={() => onEdit(user)}
-                  style={styles.iconButton}>
-                  <Feather name="edit-2" size={16} color="#3498DB" />
-                </TouchableOpacity>
                 {isAdmin && (
-                  <TouchableOpacity
-                    onPress={() => onDelete(user)}
-                    style={styles.iconButton}>
-                    <Feather name="trash-2" size={16} color="#E74C3C" />
-                  </TouchableOpacity>
+                  <>
+                    <TouchableOpacity
+                      key={`edit-${user.id}`}
+                      onPress={() => onEdit(user)}>
+                      <Feather name="edit" size={16} color="#3498DB" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      key={`delete-${user.id}`}
+                      onPress={() => onDelete(user)}>
+                      <Feather name="trash-2" size={16} color="#E74C3C" />
+                    </TouchableOpacity>
+                  </>
                 )}
               </View>
             </View>

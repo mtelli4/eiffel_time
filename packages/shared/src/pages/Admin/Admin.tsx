@@ -1,41 +1,46 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
+import { Utilisateur } from '../../backend/classes'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { Utilisateur } from '@backend/classes'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
 export function Admin() {
-    const [activeTab, setActiveTab] = useState<Tab>('users');
-    const [showUserForm, setShowUserForm] = useState(false);
+    const [activeTab, setActiveTab] = useState<Tab>('users')
+    const [showUserForm, setShowUserForm] = useState(false)
 
-    const [searchTerm, setSearchTerm] = useState(''); // État local pour la recherche
+    const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
 
     const handleSearch = (searchTerm: string) => {
-        setSearchTerm(searchTerm);
+        setSearchTerm(searchTerm)
     }
 
-    const [users, setUsers] = useState<Utilisateur[]>([]);
-    const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null);
+    const [users, setUsers] = useState<Utilisateur[]>([])
+    const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
     useEffect(() => {
         // Effectuer la requête GET pour récupérer les utilisateurs
-        fetch('http://localhost:4000/api/data')  // URL de votre API
+        fetch('http://localhost:4000/api/data') // URL de votre API
             .then((response) => {
                 // Vérifier si la réponse est correcte
                 if (!response.ok) {
-                    throw new Error('Erreur réseau');
+                    throw new Error('Erreur réseau')
                 }
-                return response.json();  // Convertir la réponse en JSON
+                return response.json() // Convertir la réponse en JSON
             })
             .then((data) => {
-                const utilisateurs = data.utilisateurs.map((u: any) => new Utilisateur(u));
-                setUsers(utilisateurs);
+                const utilisateurs = data.utilisateurs.map(
+                    (u: any) => new Utilisateur(u)
+                )
+                setUsers(utilisateurs)
             })
             .catch((error) => {
-                console.error('Erreur lors de la récupération des utilisateurs:', error);
-            });
-    }, []);  // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
+                console.error(
+                    'Erreur lors de la récupération des utilisateurs:',
+                    error
+                )
+            })
+    }, []) // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
 
     const [UserFilters, setUserFilters] = useState<any>(null)
     const [UserForm, setUserForm] = useState<any>(null)
@@ -46,26 +51,26 @@ export function Admin() {
             if (Platform.OS === 'web') {
                 const { UserFilters } = await import(
                     '../../../../web/src/components/Admin/UserFilters.web'
-                    )
+                )
                 const { UserForm } = await import(
                     '../../../../web/src/components/Admin/UserForm.web'
-                    )
+                )
                 const { UserTable } = await import(
                     '../../../../web/src/components/Admin/UserTable.web'
-                    )
+                )
                 setUserFilters(() => UserFilters)
                 setUserForm(() => UserForm)
                 setUserTable(() => UserTable)
             } else {
                 const { UserFilters } = await import(
                     '../../../../mobile/src/components/Admin/UserFilters.native'
-                    )
+                )
                 const { UserForm } = await import(
                     '../../../../mobile/src/components/Admin/UserForm.native'
-                    )
+                )
                 const { UserTable } = await import(
                     '../../../../mobile/src/components/Admin/UserTable.native'
-                    )
+                )
                 setUserFilters(() => UserFilters)
                 setUserForm(() => UserForm)
                 setUserTable(() => UserTable)
@@ -89,7 +94,9 @@ export function Admin() {
     const handleSubmitUser = (data: any) => {
         if (selectedUser) {
             setUsers(
-                users.map((u) => (u.getId() === selectedUser.getId() ? { ...u, ...data } : u)),
+                users.map((u) =>
+                    u.getId() === selectedUser.getId() ? { ...u, ...data } : u
+                )
             )
         } else {
             setUsers([...users, { ...data, id: `U${Date.now()}` }])
@@ -132,7 +139,9 @@ export function Admin() {
             {activeTab === 'users' && (
                 <View style={styles.content}>
                     <View style={styles.header}>
-                        <Text style={styles.subtitle}>Gestion des utilisateurs</Text>
+                        <Text style={styles.subtitle}>
+                            Gestion des utilisateurs
+                        </Text>
                         <TouchableOpacity
                             onPress={() => {
                                 setSelectedUser(null)
@@ -140,19 +149,17 @@ export function Admin() {
                             }}
                             style={styles.addButton}
                         >
-                            <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
+                            <Text style={styles.addButtonText}>
+                                Ajouter un utilisateur
+                            </Text>
                         </TouchableOpacity>
                     </View>
 
                     <UserFilters
-                        onRoleChange={() => {
-                        }}
-                        onGroupChange={() => {
-                        }}
-                        onFormationChange={() => {
-                        }}
-                        onTypeChange={() => {
-                        }}
+                        onRoleChange={() => {}}
+                        onGroupChange={() => {}}
+                        onFormationChange={() => {}}
+                        onTypeChange={() => {}}
                         onSearch={handleSearch}
                     />
 
