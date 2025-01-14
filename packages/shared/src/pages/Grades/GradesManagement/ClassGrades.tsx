@@ -154,6 +154,7 @@ export function ClassGrades() {
                     }}
                     modules={modules}
                     students={[]}
+                    cours={cours}
                 />
             )}
         </View>
