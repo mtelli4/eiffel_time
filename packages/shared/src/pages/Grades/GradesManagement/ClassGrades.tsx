@@ -102,7 +102,12 @@ export function ClassGrades() {
                                         <View style={styles.evaluationHeader}>
                                             <Text style={styles.evaluationTitle}>{e.getLibelle()}</Text>
                                             <Text style={styles.evaluationSubtitle}>
-                                                Date :{' '}{e.getPeriode()} -{' '} {/* TODO: La date du cours */}
+                                                Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
+                                                Date :{' '}
+                                                {
+                                                    cours.find((c) => c.getId() === e.getCoursId())
+                                                        ?.getDebut().toLocaleDateString('fr-FR')
+                                                } -{' '} {/* TODO: La date du cours */}
                                                 Coefficient : {e.getCoefficient()}
                                             </Text>
                                         </View>
