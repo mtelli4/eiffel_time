@@ -39,7 +39,7 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
             const result = await response.json()
             console.log('Évaluation créée avec succès:', result)
             onClose() // Ferme la modal après succès
-        } catch (error) {
+        } catch (error : any) {
             console.error('Erreur:', error)
             alert('Une erreur s\'est produite lors de l\'insertion: ' + error.message)
         }
