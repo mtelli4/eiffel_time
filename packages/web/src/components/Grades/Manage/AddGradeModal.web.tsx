@@ -12,6 +12,18 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
     })
 
     const handleSubmit = () => {
+        if (!formData.libelle) {
+            alert('Le nom de l\'évaluation est requis')
+            return
+        }
+        if (!formData.id_module || formData.id_module === 0) {
+            alert('Le module est requis')
+            return
+        }
+        if (!formData.id_cours || formData.id_cours === 0) {
+            alert('Le cours est requis')
+            return
+        }
         console.log('formData', formData)
         onClose()
     }
