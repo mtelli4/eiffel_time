@@ -102,3 +102,4 @@ tsconfig.tsbuildinfo
 # Cache
 .eslintcache
 .prettier-cache
+src/scripts/bdd.sql

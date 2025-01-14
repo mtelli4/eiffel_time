@@ -1,4 +1,4 @@
-const { insertPresenceData } = require('./db_con'); // Importer la connexion à la base de données
+//const { insertPresenceData } = require('./db_con'); // Importer la connexion à la base de données
 
 // variables pour la génération de code QR
 let qrCodeInterval;
@@ -66,11 +66,11 @@ function simulateScan() {                               // Fct pour simuler un s
         const expirationDate = new Date(expiration);
 
         if (now <= expirationDate) {
-            addToScanList(scannedName, 'non expiré');
-            presenceData.push({ name: scannedName, status: 'non expiré' });
+            addToScanList(name, 'non expiré');
+            presenceData.push({ name: name, status: 'non expiré' });
         } else {
-            addToScanList(scannedName, 'expiré');
-            presenceData.push({ name: scannedName, status: 'expiré' });
+            addToScanList(name, 'expiré');
+            presenceData.push({ name: name, status: 'expiré' });
         }
 
         // Effacer le nom entré
