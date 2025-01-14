@@ -1,19 +1,36 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native'
+import {
+    Absence,
+    Cours,
+    Enseignant,
+    EnseignatModule,
+    Etudiant,
+    Module,
+} from '../../backend/classes'
 import { Badge } from '../../components/Absences/Badge'
 import { Button } from '../../components/Absences/Button'
 import { Card } from '../../components/Absences/Card'
 import { Input } from '../../components/Absences/Input'
-import { Absence, Cours, Enseignant, EnseignatModule, Etudiant, Module } from '@backend/classes'
 
 export function Absences() {
-    const [absences, setAbsences] = useState<Absence[]>([]);
-    const [modules, setModules] = useState<Module[]>([]);
-    const [etudiants, setEtudiants] = useState<Etudiant[]>([]);
-    const [enseignants, setEnseignants] = useState<Enseignant[]>([]);
-    const [enseignant_modules, setEnseignantModules] = useState<EnseignatModule[]>([]);
-    const [cours, setCours] = useState<Cours[]>([]);
-    const [justification, setJustification] = useState<Record<string, string>>({});
+    const [absences, setAbsences] = useState<Absence[]>([])
+    const [modules, setModules] = useState<Module[]>([])
+    const [etudiants, setEtudiants] = useState<Etudiant[]>([])
+    const [enseignants, setEnseignants] = useState<Enseignant[]>([])
+    const [enseignant_modules, setEnseignantModules] = useState<
+        EnseignatModule[]
+    >([])
+    const [cours, setCours] = useState<Cours[]>([])
+    const [justification, setJustification] = useState<Record<string, string>>(
+        {}
+    )
 
     useEffect(() => {
         fetch('http://localhost:4000/api/data')
@@ -25,32 +42,37 @@ export function Absences() {
             })
             .then((data) => {
                 const absences = data.absences.map((a: any) => {
-                    return new Absence(a);
-                });
+                    return new Absence(a)
+                })
                 const cours = data.cours.map((c: any) => {
-                    return new Cours(c);
-                });
+                    return new Cours(c)
+                })
                 const enseignants = data.enseignants.map((e: any) => {
-                    return new Enseignant(e, e.utilisateur);
-                });
-                const enseignant_modules = data.enseignant_module.map((em: any) => {
-                    return new EnseignatModule(em);
-                });
+                    return new Enseignant(e, e.utilisateur)
+                })
+                const enseignant_modules = data.enseignant_module.map(
+                    (em: any) => {
+                        return new EnseignatModule(em)
+                    }
+                )
                 const etudiants = data.etudiants.map((e: any) => {
-                    return new Etudiant(e, e.utilisateur);
-                });
+                    return new Etudiant(e, e.utilisateur)
+                })
                 const modules = data.modules.map((m: any) => {
-                    return new Module(m);
-                });
-                setAbsences(absences);
-                setCours(cours);
-                setEnseignants(enseignants);
-                setEnseignantModules(enseignant_modules);
-                setEtudiants(etudiants);
-                setModules(modules);
+                    return new Module(m)
+                })
+                setAbsences(absences)
+                setCours(cours)
+                setEnseignants(enseignants)
+                setEnseignantModules(enseignant_modules)
+                setEtudiants(etudiants)
+                setModules(modules)
             })
             .catch((error) => {
-                console.error('Erreur lors de la récupération des absences:', error)
+                console.error(
+                    'Erreur lors de la récupération des absences:',
+                    error
+                )
             })
     }, [])
 
@@ -70,19 +92,39 @@ export function Absences() {
     }
 
     const getModuleFromAbsence = (absence: Absence) => {
-        return modules.find((m) => cours.find((c) => c.getId() === absence.getIdCours())?.getIdModule() === m.getId())?.getName()
+        return modules
+            .find(
+                (m) =>
+                    cours
+                        .find((c) => c.getId() === absence.getIdCours())
+                        ?.getIdModule() === m.getId()
+            )
+            ?.getName()
     }
 
     const getEnseignantFromAbsence = (absence: Absence) => {
-        return enseignants.find((e) =>
-            enseignant_modules.find((em) =>
-                modules.find((m) =>
-                    cours.find((c) =>
-                        c.getId() === absence.getIdCours()
-                    )?.getIdModule() === m.getId()
-                )?.getId() === em.getIdModule()
-            )?.getIdEnseignant() === e.getId()
-        )?.getFullName()
+        return enseignants
+            .find(
+                (e) =>
+                    enseignant_modules
+                        .find(
+                            (em) =>
+                                modules
+                                    .find(
+                                        (m) =>
+                                            cours
+                                                .find(
+                                                    (c) =>
+                                                        c.getId() ===
+                                                        absence.getIdCours()
+                                                )
+                                                ?.getIdModule() === m.getId()
+                                    )
+                                    ?.getId() === em.getIdModule()
+                        )
+                        ?.getIdEnseignant() === e.getId()
+            )
+            ?.getFullName()
     }
 
     return (
@@ -100,13 +142,26 @@ export function Absences() {
                                         </Text>*/}
                                         <View style={styles.moduleContainer}>
                                             <Text style={styles.moduleText}>
-                                                {getModuleFromAbsence(absence) || 'Module inconnu'}
+                                                {getModuleFromAbsence(
+                                                    absence
+                                                ) || 'Module inconnu'}
                                             </Text>
                                             {getStatusBadge(absence)}
                                         </View>
                                         <Text style={styles.professorText}>
-                                            {cours.find((c) => c.getId() === absence.getIdCours())?.getDebut()?.toLocaleDateString('fr-FR') || 'Date inconnue'} •{' '}
-                                            {getEnseignantFromAbsence(absence) || 'Enseignant inconnu'}
+                                            {cours
+                                                .find(
+                                                    (c) =>
+                                                        c.getId() ===
+                                                        absence.getIdCours()
+                                                )
+                                                ?.getDebut()
+                                                ?.toLocaleDateString('fr-FR') ||
+                                                'Date inconnue'}{' '}
+                                            •{' '}
+                                            {getEnseignantFromAbsence(
+                                                absence
+                                            ) || 'Enseignant inconnu'}
                                         </Text>
                                     </View>
 
@@ -134,7 +189,11 @@ export function Absences() {
                                     <View style={styles.justificationContainer}>
                                         <Input
                                             label="Motif de l'absence"
-                                            value={justification[absence.getId()] || ''}
+                                            value={
+                                                justification[
+                                                    absence.getId()
+                                                ] || ''
+                                            }
                                             onChangeText={(text) =>
                                                 setJustification((prev) => ({
                                                     ...prev,
@@ -144,15 +203,25 @@ export function Absences() {
                                             placeholder="Saisissez le motif de l'absence"
                                         />
 
-                                        <View style={styles.actionButtonsContainer}>
+                                        <View
+                                            style={
+                                                styles.actionButtonsContainer
+                                            }
+                                        >
                                             <View style={styles.uploadButton}>
                                                 <TouchableOpacity
-                                                    style={styles.uploadTouchable}
+                                                    style={
+                                                        styles.uploadTouchable
+                                                    }
                                                     onPress={() => {
                                                         /* Implement file upload */
                                                     }}
                                                 >
-                                                    <Text style={styles.uploadText}>
+                                                    <Text
+                                                        style={
+                                                            styles.uploadText
+                                                        }
+                                                    >
                                                         Ajouter un justificatif
                                                     </Text>
                                                 </TouchableOpacity>
@@ -160,8 +229,16 @@ export function Absences() {
 
                                             <Button
                                                 variant="primary"
-                                                onPress={() => handleJustificationSubmit(absence.getId())}
-                                                disabled={!justification[absence.getId()]}
+                                                onPress={() =>
+                                                    handleJustificationSubmit(
+                                                        absence.getId()
+                                                    )
+                                                }
+                                                disabled={
+                                                    !justification[
+                                                        absence.getId()
+                                                    ]
+                                                }
                                             >
                                                 Soumettre
                                             </Button>
