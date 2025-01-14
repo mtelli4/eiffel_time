@@ -1,7 +1,6 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();  // Créez une instance de PrismaClient
+const { PrismaClient } = require('@prisma/client');  // Import du client Prisma
+const prisma = new PrismaClient();  // Initialisation du client Prisma
 const router = express.Router();    // Initialisation du routeur Express
 
 // Route pour récupérer l'ensemble des données en une seule requête
