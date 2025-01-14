@@ -1,6 +1,10 @@
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Search, Trash2 } from 'lucide-react';
 import { Formation, FormationUtilisateur, Utilisateur } from '@backend/classes'
 import { useEffect, useState } from 'react'
+import DataTable from 'datatables.net-react'
+import DT from 'datatables.net-dt'
+
+DataTable.use(DT);
 
 interface UserTableProps {
     users: Utilisateur[]
@@ -13,6 +17,7 @@ interface UserTableProps {
 export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: UserTableProps) {
     const [formations, setFormations] = useState<Formation[]>([]);
     const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>([]);
+
     useEffect(() => {
         // Effectuer la requête GET pour récupérer les utilisateurs
         fetch('http://localhost:4000/api/data')  // URL de votre API
@@ -37,7 +42,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
 
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="w-full">
+            <DataTable options={{searching: true, info: false, paging: false}} className="w-full">
                 <thead>
                 <tr className="bg-[#ECF0F1] border-b border-gray-200">
                     <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
@@ -109,7 +114,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
                 ))}
                 </tbody>
                 {/*<br/>*/}
-            </table>
+            </DataTable>
         </div>
     )
 }
