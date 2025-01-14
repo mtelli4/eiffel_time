@@ -1,7 +1,7 @@
 import { AddGradeModalProps, FormEvaluation } from '@shared/types/types'
 import { useState } from 'react'
 
-export default function WebAddGradeModal({ isOpen, onClose, modules, students, cours, }: AddGradeModalProps) {
+export default function WebAddGradeModal({ isOpen, onClose, modules, students, cours }: AddGradeModalProps) {
     const [formData, setFormData] = useState<FormEvaluation>({
         libelle: '',
         coefficient: 1,
@@ -11,7 +11,7 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
         id_module: 0,
     })
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!formData.libelle) {
             alert('Le nom de l\'évaluation est requis')
             return
@@ -24,8 +24,25 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
             alert('Le cours est requis')
             return
         }
-        console.log('formData', formData)
-        onClose()
+        try {
+            const response = await fetch('http://localhost:4000/api/insert-evaluation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || 'Erreur lors de l\'insertion de l\'évaluation.')
+            }
+
+            const result = await response.json()
+            console.log('Évaluation créée avec succès:', result)
+            onClose() // Ferme la modal après succès
+        } catch (error) {
+            console.error('Erreur:', error)
+            alert('Une erreur s\'est produite lors de l\'insertion: ' + error.message)
+        }
     }
 
     if (!isOpen) return null
