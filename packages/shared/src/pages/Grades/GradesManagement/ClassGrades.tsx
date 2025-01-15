@@ -125,7 +125,7 @@ export function ClassGrades() {
                                                 {
                                                     cours.find((c) => c.getId() === e.getCoursId())
                                                         ?.getTime()
-                                                } -{' '} {/* TODO: La date du cours */}
+                                                } -{' '}
                                                 Coefficient : {e.getCoefficient()}
                                             </Text>
                                         </View>
