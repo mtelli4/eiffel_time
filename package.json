@@ -16,8 +16,8 @@
         "start:web": "npm run dev --workspace web",
         "start:mobile": "npm run start --workspace mobile",
         "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-        "dev:server": "nodemon backend/server.js",
-        "start:server": "node backend/server.js"
+        "dev:server": "nodemon packages/shared/src/backend/server.js",
+        "start:server": "node packages/shared/src/backend/server.js"
     },
     "devDependencies": {
         "@react-native/gradle-plugin": "^0.76.5",

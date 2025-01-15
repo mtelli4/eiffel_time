@@ -4,8 +4,21 @@ export interface CourseModalProps {
     course: Course
     onClose: () => void
     onPresenceCheck: () => void
+    course: Course
+    onClose: () => void
+    onPresenceCheck: () => void
 }
 export interface Course {
+    id: number
+    subject: string
+    professor: string
+    room: string
+    startTime: string
+    endTime: string
+    day: string
+    type: string
+    startHour: number
+    duration: number
     id: number
     subject: string
     professor: string
@@ -21,6 +34,9 @@ export interface PlannedHours {
     CM: number
     TD: number
     TP: number
+    CM: number
+    TD: number
+    TP: number
 }
 
 export interface ModuleHours {
@@ -28,9 +44,17 @@ export interface ModuleHours {
     name: string
     planned: PlannedHours
     completed: PlannedHours
+    code: string
+    name: string
+    planned: PlannedHours
+    completed: PlannedHours
 }
 
 export interface TeacherPlanning {
+    id: string
+    firstName: string
+    lastName: string
+    modules: ModuleHours[]
     id: string
     firstName: string
     lastName: string
@@ -45,8 +69,19 @@ export type GradeStatus =
     | 'not_submitted'
     | 'exempted'
     | 'pending_makeup'
+    | 'graded'
+    | 'absent'
+    | 'makeup'
+    | 'ungraded'
+    | 'not_submitted'
+    | 'exempted'
+    | 'pending_makeup'
 
 export interface Student {
+    id: string
+    firstName: string
+    lastName: string
+    group: string
     id: string
     firstName: string
     lastName: string
@@ -72,9 +107,24 @@ export interface FormData {
         value: number | null
         status: GradeStatus
     }>
+    moduleId: string
+    name: string
+    date: string
+    maxValue: number
+    coefficient: number
+    grades: Array<{
+        studentId: string
+        value: number | null
+        status: GradeStatus
+    }>
 }
 
 export interface UserFiltersProps {
+    onRoleChange: (role: string | null) => void
+    onGroupChange: (group: string | null) => void
+    onFormationChange: (formation: string | null) => void
+    onTypeChange: (type: string | null) => void
+    onSearch: (query: string) => void
     onRoleChange: (role: string | null) => void
     onGroupChange: (group: string | null) => void
     onFormationChange: (formation: string | null) => void
