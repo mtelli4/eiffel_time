@@ -1,10 +1,8 @@
-import { Edit2, Trash2 } from 'lucide-react'
+import { Edit2, Search, Trash2 } from 'lucide-react';
+import { Formation, FormationUtilisateur, Utilisateur } from '@shared/backend/classes';
 import { useEffect, useState } from 'react'
-import {
-    Formation,
-    FormationUtilisateur,
-    Utilisateur,
-} from '../../../../shared/src/backend/classes'
+import DataTable from 'datatables.net-react'
+import DT from 'datatables.net-dt'
 
 interface UserTableProps {
     users: Utilisateur[]
@@ -14,17 +12,12 @@ interface UserTableProps {
     searchTerm: string
 }
 
-export function UserTable({
-    users,
-    isAdmin,
-    onEdit,
-    onDelete,
-    searchTerm,
-}: UserTableProps) {
-    const [formations, setFormations] = useState<Formation[]>([])
-    const [formationUsers, setFormationUsers] = useState<
-        FormationUtilisateur[]
-    >([])
+DataTable.use(DT);
+
+export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: UserTableProps) {
+    const [formations, setFormations] = useState<Formation[]>([]);
+    const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>([]);
+
     useEffect(() => {
         // Effectuer la requête GET pour récupérer les utilisateurs
         fetch('http://localhost:4000/api/data') // URL de votre API

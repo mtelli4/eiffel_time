@@ -46,4 +46,11 @@ export class Cours {
     getIdModule(): number {
         return this.cours.id_module;
     }
+
+    getTime(): string {
+        const date = this.getDebut().toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+        const debut = this.getDebut().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const fin = this.getFin().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        return `${date} : ${debut} - ${fin}`;
+    }
 }

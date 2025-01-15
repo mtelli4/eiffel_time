@@ -1,0 +1,10 @@
+{
+    "name": "@backend/scripts",
+    "version": "1.0.0",
+    "description": "",
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "git@github-personnel:mtelli4/eiffel_time.git"
+    }
+}

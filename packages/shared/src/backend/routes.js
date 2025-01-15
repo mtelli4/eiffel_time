@@ -1,7 +1,6 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();  // Créez une instance de PrismaClient
+const { PrismaClient } = require('@prisma/client');  // Import du client Prisma
+const prisma = new PrismaClient();  // Initialisation du client Prisma
 const router = express.Router();    // Initialisation du routeur Express
 
 // Route pour récupérer l'ensemble des données en une seule requête
@@ -345,6 +344,37 @@ router.get('/absences', async (req, res) => {
         console.error(error);  // Log de l'erreur pour déboguer
         // Retour de l'erreur en cas de problème
         res.status(500).json({ error: 'Erreur lors de la récupération des absences. ' + error });
+    }
+});
+
+async function insertEvaluationAndGrades(formData) {
+    return prisma.$transaction(async (prisma) => {
+        const evaluation = await prisma.evaluation.create({
+            data: {
+                id_eval: 100,
+                libelle: formData.libelle,
+                coefficient: formData.coefficient,
+                notemaximale: formData.notemaximale,
+                periode: formData.periode,
+                createdat: new Date(),
+                id_cours: formData.id_cours,
+                id_notif: 3, // Par exemple, une notification par défaut
+                id_module: formData.id_module,
+            },
+        });
+
+        return evaluation; // Retourne l'évaluation créée
+    });
+}
+
+router.post('/insert-evaluation', async (req, res) => {
+    try {
+        const formData = req.body; // Les données du formulaire envoyées par le frontend
+        const result = await insertEvaluationAndGrades(formData);
+        res.status(201).json(result); // Réponse JSON contenant l'évaluation créée
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Une erreur s\'est produite lors de la création de l\'évaluation.', details: error });
     }
 });
 
