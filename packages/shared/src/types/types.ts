@@ -1,4 +1,5 @@
 import { Cours, Module } from '@backend/classes'
+import { Etudiant } from '@shared/backend/classes'
 
 export interface CourseModalProps {
     course: Course
@@ -92,7 +93,7 @@ export interface AddGradeModalProps {
     isOpen: boolean
     onClose: () => void
     modules: Module[]
-    students: Student[]
+    students: Etudiant[]
     cours: Cours[]
 }
 
