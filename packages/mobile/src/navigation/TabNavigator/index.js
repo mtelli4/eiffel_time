@@ -32,16 +32,16 @@ const TABS_CONFIG = {
       component: Grades,
       icon: {name: 'clipboard', source: 'Feather'},
     },
-    {
-      name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
-    },
-    {
-      name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
-    },
+    // {
+    //   name: 'Messagerie',
+    //   component: Schedule,
+    //   icon: {name: 'message1', source: 'AntDesign'},
+    // },
+    // {
+    //   name: 'Réglages',
+    //   component: Schedule,
+    //   icon: {name: 'settings', source: 'Feather'},
+    // },
   ],
   teacher: [
     {
@@ -59,16 +59,16 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    {
-      name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
-    },
-    {
-      name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
-    },
+    // {
+    //   name: 'Messagerie',
+    //   component: Schedule,
+    //   icon: {name: 'message1', source: 'AntDesign'},
+    // },
+    // {
+    //   name: 'Réglages',
+    //   component: Schedule,
+    //   icon: {name: 'settings', source: 'Feather'},
+    // },
   ],
   secretary: [
     {
@@ -76,26 +76,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    {
-      name: 'Absences et Retards',
-      component: ClassGrades,
-      icon: {name: 'user-check', source: 'Feather'},
-    },
-    {
-      name: 'Présences professeurs',
-      component: ClassAverages,
-      icon: {name: 'users', source: 'Feather'},
-    },
-    {
-      name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
-    },
-    {
-      name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
-    },
+    // {
+    //   name: 'Absences et Retards',
+    //   component: ClassGrades,
+    //   icon: {name: 'user-check', source: 'Feather'},
+    // },
+    // {
+    //   name: 'Présences professeurs',
+    //   component: ClassAverages,
+    //   icon: {name: 'users', source: 'Feather'},
+    // },
+    // {
+    //   name: 'Messagerie',
+    //   component: Schedule,
+    //   icon: {name: 'message1', source: 'AntDesign'},
+    // },
+    // {
+    //   name: 'Réglages',
+    //   component: Schedule,
+    //   icon: {name: 'settings', source: 'Feather'},
+    // },
   ],
   manager: [
     {
@@ -113,26 +113,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    {
-      name: 'Absences et Retards',
-      component: ClassGrades,
-      icon: {name: 'user-check', source: 'Feather'},
-    },
-    {
-      name: 'Présences professeurs',
-      component: ClassAverages,
-      icon: {name: 'users', source: 'Feather'},
-    },
-    {
-      name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
-    },
-    {
-      name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
-    },
+    // {
+    //   name: 'Absences et Retards',
+    //   component: ClassGrades,
+    //   icon: {name: 'user-check', source: 'Feather'},
+    // },
+    // {
+    //   name: 'Présences professeurs',
+    //   component: ClassAverages,
+    //   icon: {name: 'users', source: 'Feather'},
+    // },
+    // {
+    //   name: 'Messagerie',
+    //   component: Schedule,
+    //   icon: {name: 'message1', source: 'AntDesign'},
+    // },
+    // {
+    //   name: 'Réglages',
+    //   component: Schedule,
+    //   icon: {name: 'settings', source: 'Feather'},
+    // },
     {
       name: 'Gestion des utilisateurs',
       component: Admin,
@@ -156,26 +156,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    {
-      name: 'Absences et Retards',
-      component: ClassGrades,
-      icon: {name: 'user-check', source: 'Feather'},
-    },
-    {
-      name: 'Présences professeurs',
-      component: ClassAverages,
-      icon: {name: 'users', source: 'Feather'},
-    },
-    {
-      name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
-    },
-    {
-      name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
-    },
+    // {
+    //   name: 'Absences et Retards',
+    //   component: ClassGrades,
+    //   icon: {name: 'user-check', source: 'Feather'},
+    // },
+    // {
+    //   name: 'Présences professeurs',
+    //   component: ClassAverages,
+    //   icon: {name: 'users', source: 'Feather'},
+    // },
+    // {
+    //   name: 'Messagerie',
+    //   component: Schedule,
+    //   icon: {name: 'message1', source: 'AntDesign'},
+    // },
+    // {
+    //   name: 'Réglages',
+    //   component: Schedule,
+    //   icon: {name: 'settings', source: 'Feather'},
+    // },
     {
       name: 'Gestion des utilisateurs',
       component: Admin,
