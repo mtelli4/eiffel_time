@@ -1,10 +1,8 @@
 import { Edit2, Search, Trash2 } from 'lucide-react';
-import { Formation, FormationUtilisateur, Utilisateur } from '@backend/classes'
+import { Formation, FormationUtilisateur, Utilisateur } from '@shared/backend/classes';
 import { useEffect, useState } from 'react'
 import DataTable from 'datatables.net-react'
 import DT from 'datatables.net-dt'
-
-DataTable.use(DT);
 
 interface UserTableProps {
     users: Utilisateur[]
@@ -13,6 +11,8 @@ interface UserTableProps {
     onDelete: (user: Utilisateur) => void
     searchTerm: string
 }
+
+DataTable.use(DT);
 
 export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: UserTableProps) {
     const [formations, setFormations] = useState<Formation[]>([]);
@@ -49,7 +49,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
 
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <DataTable options={{searching: true, info: false, paging: false}} className="w-full">
+            <table className="w-full">
                 <thead>
                     <tr className="bg-[#ECF0F1] border-b border-gray-200">
                         <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
@@ -133,7 +133,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
                     ))}
                 </tbody>
                 {/*<br/>*/}
-            </DataTable>
+            </table>
         </div>
     )
 }
