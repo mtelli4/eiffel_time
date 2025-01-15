@@ -8,6 +8,7 @@ router.get('/data', async (req, res) => {
     try {
         // Récupération de toutes les absences
         const absences = await prisma.absence.findMany({
+            
             orderBy: {
                 createdat: 'asc',  // Tri par date de création
             }

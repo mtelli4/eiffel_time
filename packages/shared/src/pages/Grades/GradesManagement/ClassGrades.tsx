@@ -124,7 +124,7 @@ export function ClassGrades() {
                                                 Date :{' '}
                                                 {
                                                     cours.find((c) => c.getId() === e.getCoursId())
-                                                        ?.getDebut().toLocaleDateString('fr-FR')
+                                                        ?.getTime()
                                                 } -{' '} {/* TODO: La date du cours */}
                                                 Coefficient : {e.getCoefficient()}
                                             </Text>

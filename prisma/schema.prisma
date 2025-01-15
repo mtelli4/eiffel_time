@@ -104,6 +104,7 @@ model evaluation {
   updatedat    DateTime?    @db.Timestamp(6)
   id_cours     Int
   id_notif     Int
+  id_module    Int
   cours        cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
   notification notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
   notes        notes[]

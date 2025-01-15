@@ -1,5 +1,4 @@
-import { Cours, Module } from '@backend/classes'
-import { Etudiant } from '@shared/backend/classes'
+import { Cours, Etudiant, Module } from '@shared/backend/classes'
 
 export interface CourseModalProps {
     course: Course
@@ -39,29 +38,6 @@ export interface PlannedHours {
     TD: number
     TP: number
 }
-
-export interface ModuleHours {
-    code: string
-    name: string
-    planned: PlannedHours
-    completed: PlannedHours
-    code: string
-    name: string
-    planned: PlannedHours
-    completed: PlannedHours
-}
-
-export interface TeacherPlanning {
-    id: string
-    firstName: string
-    lastName: string
-    modules: ModuleHours[]
-    id: string
-    firstName: string
-    lastName: string
-    modules: ModuleHours[]
-}
-
 export type GradeStatus =
     | 'graded'
     | 'absent'
@@ -77,17 +53,6 @@ export type GradeStatus =
     | 'not_submitted'
     | 'exempted'
     | 'pending_makeup'
-
-export interface Student {
-    id: string
-    firstName: string
-    lastName: string
-    group: string
-    id: string
-    firstName: string
-    lastName: string
-    group: string
-}
 
 export interface AddGradeModalProps {
     isOpen: boolean
