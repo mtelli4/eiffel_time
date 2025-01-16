@@ -69,23 +69,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
     let filteredData = users.filter(
         (user) =>
             user.getFullName().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.getEmail().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.getStatutName().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            formationUsers
-                .filter(
-                    (fu) => fu.getIdUtilisateur() === user.getId()
-                )
-                .map((fu) => {
-                    const formation = formations.find(
-                        (f) =>
-                            f.getId() ===
-                            fu.getIdFormation()
-                    )
-                    return formation
-                        ? formation.getLibelle()
-                        : ''
-                })
-                .join(', ').toLowerCase().includes(searchTerm.toLowerCase())
+            user.getEmail().toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     filteredData.sort((a, b) => a.getId() - b.getId());
