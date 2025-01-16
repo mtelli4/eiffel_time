@@ -9,7 +9,12 @@ export function Admin() {
     const [activeTab, setActiveTab] = useState<Tab>('users')
     const [showUserForm, setShowUserForm] = useState(false)
 
+    const [role, setRole] = useState('') // État local pour le filtre par rôle
     const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
+
+    const handleRole = (role: string) => {
+        setRole(role)
+    }
 
     const handleSearch = (searchTerm: string) => {
         setSearchTerm(searchTerm)
@@ -156,7 +161,7 @@ export function Admin() {
                     </View>
 
                     <UserFilters
-                        onRoleChange={() => {}}
+                        onRoleChange={handleRole}
                         onGroupChange={() => {}}
                         onFormationChange={() => {}}
                         onTypeChange={() => {}}
@@ -168,6 +173,7 @@ export function Admin() {
                         isAdmin={true}
                         onEdit={handleEditUser}
                         onDelete={handleDeleteUser}
+                        roleSelected={role}
                         searchTerm={searchTerm}
                     />
                 </View>

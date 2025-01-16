@@ -1,22 +1,27 @@
 import { Edit2, Search, Trash2 } from 'lucide-react';
 import { Formation, FormationUtilisateur, Utilisateur } from '@shared/backend/classes';
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DataTable from 'datatables.net-react'
 import DT from 'datatables.net-dt'
+import $ from 'jquery'
+import 'datatables.net-dt/js/dataTables.dataTables.js'
 
 interface UserTableProps {
     users: Utilisateur[]
     isAdmin: boolean
     onEdit: (user: Utilisateur) => void
     onDelete: (user: Utilisateur) => void
+    roleSelected: string
     searchTerm: string
 }
 
 DataTable.use(DT);
 
-export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: UserTableProps) {
+export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm, roleSelected }: UserTableProps) {
     const [formations, setFormations] = useState<Formation[]>([]);
     const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>([]);
+
+    /* roleSelected: string */
 
     useEffect(() => {
         // Effectuer la requête GET pour récupérer les utilisateurs
@@ -46,10 +51,48 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
                 )
             })
     }, []) // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
+   
+    const searchRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        if (searchRef.current) {
+            searchRef.current.id = 'search_box';
+            $('#search_box').detach().appendTo('#new-search-area');
+        }
+    }, [searchRef.current]);
+
+    let filteredData = users.filter(
+        (user) =>
+            user.getFullName().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.getEmail().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.getStatutName().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            formationUsers
+                .filter(
+                    (fu) => fu.getIdUtilisateur() === user.getId()
+                )
+                .map((fu) => {
+                    const formation = formations.find(
+                        (f) =>
+                            f.getId() ===
+                            fu.getIdFormation()
+                    )
+                    return formation
+                        ? formation.getLibelle()
+                        : ''
+                })
+                .join(', ').toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    filteredData.sort((a, b) => a.getId() - b.getId());
+
+    if (roleSelected) {
+        filteredData = filteredData.filter((user) =>
+            user.getStatut().toLowerCase() === roleSelected.toLowerCase()
+        );
+    }
 
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="w-full">
+            <DataTable className="w-full" options={{ searching: false, search: { search: searchTerm }, paging: false, info: false, language: { emptyTable: 'Aucun utilisateur trouvé' }}}>
                 <thead>
                     <tr className="bg-[#ECF0F1] border-b border-gray-200">
                         <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
@@ -79,7 +122,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => (
+                    {filteredData.map((user) => (
                         <tr
                             key={user.getId()}
                             className="border-b border-gray-100 hover:bg-[#ECF0F1]"
@@ -87,9 +130,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
                             <td className="py-3 px-4">{user.getId()}</td>
                             <td className="py-3 px-4">{user.getFullName()}</td>
                             <td className="py-3 px-4">{user.getEmail()}</td>
-                            <td className="py-3 px-4">
-                                {user.getStatutName()}
-                            </td>
+                            <td className="py-3 px-4">{user.getStatutName()}</td>
                             <td className="py-3 px-4">
                                 {formationUsers
                                     .filter(
@@ -133,7 +174,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, searchTerm }: User
                     ))}
                 </tbody>
                 {/*<br/>*/}
-            </table>
+            </DataTable>
         </div>
     )
 }
