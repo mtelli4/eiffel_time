@@ -119,7 +119,7 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
 
                 <div>
                     <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                        Type de professeur
+                        Type d'enseignant
                     </label>
                     <Select
                         options={TEACHER_TYPES}

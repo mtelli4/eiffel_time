@@ -1,11 +1,11 @@
 import { Edit2, Search, Trash2 } from 'lucide-react';
-import { Formation, FormationUtilisateur, Groupe, GroupeEtudiant, Utilisateur } from '@shared/backend/classes'
+import { Enseignant, Formation, FormationUtilisateur, Groupe, GroupeEtudiant, Utilisateur } from '@shared/backend/classes'
 import { useEffect, useRef, useState } from 'react'
 import DataTable from 'datatables.net-react'
 import DT from 'datatables.net-dt'
 import $ from 'jquery'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
-import { groupe_etudiant, statut_utilisateur } from '@prisma/client'
+import { enseignant, groupe_etudiant, statut_utilisateur } from '@prisma/client'
 
 interface UserTableProps {
     users: Utilisateur[]
@@ -25,6 +25,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
     const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>([]);
     const [etudiantGroupe, setEtudiantGroupe] = useState<GroupeEtudiant[]>([]);
     const [groupes, setGroupes] = useState<Groupe[]>([]);
+    const [enseignants, setEnseignants] = useState<Enseignant[]>([]);
     const [loading, setLoading] = useState(true);
 
     /* roleSelected: string */
@@ -57,6 +58,11 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
 
                 const groupes = data.groupes.map((g: any) => { return new Groupe(g) })
                 setGroupes(groupes)
+
+                const enseignants = data.enseignants.map(
+                    (e: any) => new Enseignant(e, e.utilisateur)
+                )
+                setEnseignants(enseignants)
 
                 setLoading(false)
             })
@@ -132,9 +138,9 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
                         <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
                             Groupes
                         </th>
-                        {/*<th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
-                        Type
-                    </th>*/}
+                        <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
+                            Type
+                        </th>
                         <th className="text-right py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
                             Actions
                         </th>
@@ -191,7 +197,17 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
                                     .sort()
                                     .join(', ') || '-'}
                             </td>
-                            {/*<td className="py-3 px-4">{user.type || '-'}</td>*/}
+                            <td className="py-3 px-4">
+                                {
+                                    enseignants
+                                        .filter(
+                                            (e) =>
+                                                e.getId() ===
+                                                user.getId()
+                                        )
+                                        .map((e) => e.isVacataire())
+                                }
+                            </td>
                             <td className="py-3 px-4">
                                 <div className="flex justify-end gap-2">
                                     <button
