@@ -10,10 +10,20 @@ export function Admin() {
     const [showUserForm, setShowUserForm] = useState(false)
 
     const [role, setRole] = useState('') // État local pour le filtre par rôle
+    const [groupe, setGroupe] = useState('') // État local pour le filtre par groupe
+    const [formation, setFormation] = useState('') // État local pour le filtre par formation
     const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
 
     const handleRole = (role: string) => {
         setRole(role)
+    }
+
+    const handleGroup = (group: string) => {
+        setGroupe(group)
+    }
+
+    const handleFormation = (formation: string) => {
+        setFormation(formation)
     }
 
     const handleSearch = (searchTerm: string) => {
@@ -162,8 +172,8 @@ export function Admin() {
 
                     <UserFilters
                         onRoleChange={handleRole}
-                        onGroupChange={() => {}}
-                        onFormationChange={() => {}}
+                        onGroupChange={handleGroup}
+                        onFormationChange={handleFormation}
                         onTypeChange={() => {}}
                         onSearch={handleSearch}
                     />
@@ -174,6 +184,8 @@ export function Admin() {
                         onEdit={handleEditUser}
                         onDelete={handleDeleteUser}
                         roleSelected={role}
+                        groupSelected={groupe}
+                        formationSelected={formation}
                         searchTerm={searchTerm}
                     />
                 </View>

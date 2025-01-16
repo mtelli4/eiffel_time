@@ -3,7 +3,6 @@ import { Search } from 'lucide-react'
 import Select from 'react-select'
 import { ROLES } from '@shared/types/types'
 import { useEffect, useState } from 'react'
-import { Groupe } from '@shared/backend/classes'
 import { formation, groupe } from '@prisma/client'
 
 const FORMATIONS = [
