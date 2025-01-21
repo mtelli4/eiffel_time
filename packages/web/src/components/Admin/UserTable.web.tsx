@@ -198,15 +198,16 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
                                     .join(', ') || '-'}
                             </td>
                             <td className="py-3 px-4">
-                                {
-                                    enseignants
-                                        .filter(
-                                            (e) =>
-                                                e.getId() ===
-                                                user.getId()
-                                        )
-                                        .map((e) => e.isVacataire())
-                                }
+                                {enseignants
+                                    .filter(
+                                        (e) =>
+                                            e.getId() ===
+                                            user.getId()
+                                    )
+                                    .map((e) => {
+                                        return e.isVacataire() ? 'Vacataire' : 'Titulaire'
+                                    })
+                                    .join(', ') || '-'}
                             </td>
                             <td className="py-3 px-4">
                                 <div className="flex justify-end gap-2">
