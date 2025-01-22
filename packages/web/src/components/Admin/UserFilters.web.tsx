@@ -5,15 +5,9 @@ import { ROLES } from '@shared/types/types'
 import { useEffect, useState } from 'react'
 import { formation, groupe } from '@prisma/client'
 
-const FORMATIONS = [
-    { value: 'info', label: 'Informatique' },
-    { value: 'gea', label: 'GEA' },
-    { value: 'tc', label: 'TC' },
-]
-
 const TEACHER_TYPES = [
-    { value: 'permanent', label: 'Titulaire' },
-    { value: 'temporary', label: 'Vacataire' },
+    { value: 'Titulaire', label: 'Titulaire' },
+    { value: 'Vacataire', label: 'Vacataire' },
 ]
 
 export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, onTypeChange, onSearch, }: UserFiltersProps) {
@@ -75,13 +69,13 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
 
                 <div>
                     <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                        Groupe
+                        Formation
                     </label>
                     <Select
-                        options={groupes}
+                        options={formations}
                         isClearable
-                        placeholder="Tous les groupes"
-                        onChange={(option: any) => onGroupChange(option?.value || null)}
+                        placeholder="Toutes les formations"
+                        onChange={(option: any) => onFormationChange(option?.value || null)}
                         className="text-sm"
                         styles={{
                             control: (base) => ({
@@ -97,14 +91,15 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
 
                 <div>
                     <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                        Formation
+                        Groupe
                     </label>
                     <Select
-                        options={formations}
+                        options={groupes}
                         isClearable
-                        placeholder="Toutes les formations"
-                        onChange={(option: any) => onFormationChange(option?.value || null)}
+                        placeholder="Tous les groupes"
+                        onChange={(option: any) => onGroupChange(option?.value || null)}
                         className="text-sm"
+
                         styles={{
                             control: (base) => ({
                                 ...base,
