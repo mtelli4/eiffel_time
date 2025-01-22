@@ -105,6 +105,7 @@ CREATE TABLE "evaluation" (
     "updatedat" TIMESTAMP(6),
     "id_cours" INTEGER NOT NULL,
     "id_notif" INTEGER NOT NULL,
+    "id_module" INTEGER NOT NULL,
 
     CONSTRAINT "evaluation_pkey" PRIMARY KEY ("id_eval")
 );

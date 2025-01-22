@@ -1,24 +1,13 @@
 import { UserFiltersProps } from '@shared/types/types'
 import { Search } from 'lucide-react'
 import Select from 'react-select'
-import { ROLES } from '@shared/types/types'
+import { ROLES, TEACHER_TYPES } from '@shared/types/types'
 import { useEffect, useState } from 'react'
-import { Groupe } from '@shared/backend/classes'
-import { groupe } from '@prisma/client'
-
-const FORMATIONS = [
-    { value: 'info', label: 'Informatique' },
-    { value: 'gea', label: 'GEA' },
-    { value: 'tc', label: 'TC' },
-]
-
-const TEACHER_TYPES = [
-    { value: 'permanent', label: 'Titulaire' },
-    { value: 'temporary', label: 'Vacataire' },
-]
+import { formation, groupe } from '@prisma/client'
 
 export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, onTypeChange, onSearch, }: UserFiltersProps) {
     const [groupes, setGroupes] = useState([])
+    const [formations, setFormations] = useState([])
 
     const handleSearchChange = (e: any) => {
         onSearch(e.target.value)
@@ -35,8 +24,10 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                 return response.json() // Convertir la réponse en JSON
             })
             .then((data) => {
-                const groupes = data.groupes.map((g: groupe) => { const groupe = new Groupe(g); return { value: groupe.getId(), label: groupe.getLibelle() }})
+                const groupes = data.groupes.map((g: groupe) => { return { value: g.id_grp, label: g.libelle }})
                 setGroupes(groupes)
+                const formations = data.formations.map((f: formation) => { return { value: f.id_formation, label: f.libelle }})
+                setFormations(formations)
             })
             .catch((error) => {
                 console.error(
@@ -73,6 +64,28 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
 
                 <div>
                     <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                        Formation
+                    </label>
+                    <Select
+                        options={formations}
+                        isClearable
+                        placeholder="Toutes les formations"
+                        onChange={(option: any) => onFormationChange(option?.value || null)}
+                        className="text-sm"
+                        styles={{
+                            control: (base) => ({
+                                ...base,
+                                borderColor: '#E2E8F0',
+                                '&:hover': {
+                                    borderColor: '#3498DB',
+                                },
+                            }),
+                        }}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-[#2C3E50] mb-1">
                         Groupe
                     </label>
                     <Select
@@ -81,6 +94,7 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                         placeholder="Tous les groupes"
                         onChange={(option: any) => onGroupChange(option?.value || null)}
                         className="text-sm"
+
                         styles={{
                             control: (base) => ({
                                 ...base,
@@ -95,29 +109,7 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
 
                 <div>
                     <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                        Formation
-                    </label>
-                    <Select
-                        options={FORMATIONS}
-                        isClearable
-                        placeholder="Toutes les formations"
-                        onChange={(option) => onFormationChange(option?.value || null)}
-                        className="text-sm"
-                        styles={{
-                            control: (base) => ({
-                                ...base,
-                                borderColor: '#E2E8F0',
-                                '&:hover': {
-                                    borderColor: '#3498DB',
-                                },
-                            }),
-                        }}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                        Type de professeur
+                        Type d'enseignant
                     </label>
                     <Select
                         options={TEACHER_TYPES}
