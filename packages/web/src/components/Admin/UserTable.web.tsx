@@ -15,12 +15,13 @@ interface UserTableProps {
     roleSelected: string
     groupSelected: string
     formationSelected: string
+    typeTeachingSelected: string
     searchTerm: string
 }
 
 DataTable.use(DT);
 
-export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, groupSelected, formationSelected, searchTerm }: UserTableProps) {
+export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, groupSelected, formationSelected, typeTeachingSelected, searchTerm }: UserTableProps) {
     const [formations, setFormations] = useState<Formation[]>([]);
     const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>([]);
     const [etudiantGroupe, setEtudiantGroupe] = useState<GroupeEtudiant[]>([]);
@@ -101,6 +102,14 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
                 .filter(
                     (fu) => fu.getIdUtilisateur() === user.getId() && fu.getIdFormation() === parseInt(formationSelected)
                 ).length > 0
+        );
+    }
+
+    if (typeTeachingSelected) {
+        filteredData = filteredData.filter((user) =>
+            enseignants
+                .filter((e) => e.getId() === user.getId())
+                .map((e) => e.isVacataire() ? 'Vacataire' : 'Titulaire')[0] === typeTeachingSelected
         );
     }
 
@@ -199,17 +208,9 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, roleSelected, grou
                             </td>
                             <td className="py-3 px-4">
                                 {
-                                    /* isVacataire of the actual user */
                                     enseignants
-                                        .filter(
-                                            (e) =>
-                                                e.getId() === user.getId()
-                                        )
-                                        .map((e) =>
-                                            e.isVacataire()
-                                                ? 'Vacataire'
-                                                : 'Titulaire'
-                                        )[0] || '-'
+                                        .filter((e) => e.getId() === user.getId())
+                                        .map((e) => e.isVacataire() ? 'Vacataire' : 'Titulaire')[0] || '-'
                                 }
                             </td>
                             <td className="py-3 px-4">
