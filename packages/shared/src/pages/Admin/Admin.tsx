@@ -12,6 +12,7 @@ export function Admin() {
     const [role, setRole] = useState('') // État local pour le filtre par rôle
     const [groupe, setGroupe] = useState('') // État local pour le filtre par groupe
     const [formation, setFormation] = useState('') // État local pour le filtre par formation
+    const [typeTeacherFilter, setTypeTeacherFilter] = useState('') // État local pour le filtre par type d'enseignant
     const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
 
     const handleRole = (role: string) => {
@@ -24,6 +25,10 @@ export function Admin() {
 
     const handleFormation = (formation: string) => {
         setFormation(formation)
+    }
+
+    const handleTypeTeacher = (type: string) => {
+        setTypeTeacherFilter(type)
     }
 
     const handleSearch = (searchTerm: string) => {
@@ -92,7 +97,7 @@ export function Admin() {
             }
         }
 
-        loadComponents()
+        loadComponents().then(r => r)
     }, [])
 
     const tabs = [{ id: 'users' as const, label: 'Utilisateurs' }]
@@ -174,7 +179,7 @@ export function Admin() {
                         onRoleChange={handleRole}
                         onGroupChange={handleGroup}
                         onFormationChange={handleFormation}
-                        onTypeChange={() => {}}
+                        onTypeChange={handleTypeTeacher}
                         onSearch={handleSearch}
                     />
 
@@ -186,6 +191,7 @@ export function Admin() {
                         roleSelected={role}
                         groupSelected={groupe}
                         formationSelected={formation}
+                        typeTeachingSelected={typeTeacherFilter}
                         searchTerm={searchTerm}
                     />
                 </View>
