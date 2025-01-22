@@ -1,14 +1,9 @@
 import { UserFiltersProps } from '@shared/types/types'
 import { Search } from 'lucide-react'
 import Select from 'react-select'
-import { ROLES } from '@shared/types/types'
+import { ROLES, TEACHER_TYPES } from '@shared/types/types'
 import { useEffect, useState } from 'react'
 import { formation, groupe } from '@prisma/client'
-
-const TEACHER_TYPES = [
-    { value: 'Titulaire', label: 'Titulaire' },
-    { value: 'Vacataire', label: 'Vacataire' },
-]
 
 export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, onTypeChange, onSearch, }: UserFiltersProps) {
     const [groupes, setGroupes] = useState([])

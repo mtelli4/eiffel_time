@@ -1,11 +1,10 @@
-import { Edit2, Search, Trash2 } from 'lucide-react';
+import { Edit2, Trash2 } from 'lucide-react';
 import { Enseignant, Formation, FormationUtilisateur, Groupe, GroupeEtudiant, Utilisateur } from '@shared/backend/classes'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import DataTable from 'datatables.net-react'
 import DT from 'datatables.net-dt'
-import $ from 'jquery'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
-import { enseignant, groupe_etudiant, statut_utilisateur } from '@prisma/client'
+import { groupe_etudiant } from '@prisma/client'
 
 interface UserTableProps {
     users: Utilisateur[]

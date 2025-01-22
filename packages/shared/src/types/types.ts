@@ -9,6 +9,11 @@ export const ROLES = [
     { value: 'administrator', label: 'Administrateur' },
 ]
 
+export const TEACHER_TYPES = [
+    { value: 'Titulaire', label: 'Titulaire' },
+    { value: 'Vacataire', label: 'Vacataire' },
+]
+
 export interface CourseModalProps {
     course: Course
     onClose: () => void
