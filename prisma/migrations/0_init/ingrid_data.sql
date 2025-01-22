@@ -93,13 +93,14 @@ INSERT INTO ingrid.cours VALUES (8, 'TD', 'Réseaux informatiques', '2025-01-14 
 INSERT INTO ingrid.cours VALUES (9, 'TP', 'Sécurité informatique', '2025-01-15 09:00:00', '2025-01-15 11:00:00', 'I909', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'présentiel', 30, 1, NULL);
 INSERT INTO ingrid.cours VALUES (10, 'CM', 'Projet de fin d''études', '2025-01-16 10:00:00', '2025-01-16 12:00:00', 'J010', '2025-01-01 10:00:00', '2025-01-01 10:00:00', false, 'présentiel', 33, 1, 4);
 INSERT INTO ingrid.cours VALUES (11, 'TD', 'Anglais technique', '2025-01-17 13:00:00', '2025-01-17 15:00:00', 'K111', '2025-01-01 10:00:00', '2025-01-01 10:00:00', true, 'présentiel', 39, 1, 5);
+INSERT INTO ingrid.cours VALUES (12, 'CM', '', '2025-02-20 14:00:00', '2025-02-20 16:00:00', NULL, '2025-01-14 17:08:15.947216', '2025-01-14 17:08:15.947216', NULL, NULL, 23, 1, NULL);
+INSERT INTO ingrid.cours VALUES (13, 'CM', '', '2025-02-18 14:00:00', '2025-02-18 16:00:00', NULL, '2025-01-14 17:08:15.947216', '2025-01-14 17:08:15.947216', NULL, NULL, 23, 1, NULL);
 
 
 --
 -- Data for Name: utilisateur; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, false, 'administrator', '2024-10-12 00:00:00', '2024-09-09 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (2, 'Herries', 'Karlik', 'kherries1@dion.ne.jp', NULL, NULL, false, 'indefinite', '2024-10-11 00:00:00', '2024-09-07 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, false, 'student', '2024-11-09 00:00:00', '2024-08-11 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (4, 'Anstee', 'Gypsy', 'ganstee3@exblog.jp', NULL, NULL, true, 'director', '2024-02-27 00:00:00', '2024-07-24 00:00:00');
@@ -116,6 +117,8 @@ INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@you
 INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, true, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, true, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, false, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, true, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
+INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, false, 'administrator', '2024-10-12 00:00:00', '2024-09-09 00:00:00');
 
 
 --
@@ -162,6 +165,7 @@ INSERT INTO ingrid.absence VALUES (8, NULL, 'Justificatif en attente pour cette 
 INSERT INTO ingrid.absence VALUES (9, NULL, 'Absence pour toute la durée avec un retard initial non justifié.', false, 25, true, '2025-01-09 07:00:00', '2025-01-09 13:00:00', 1, 15, 9);
 INSERT INTO ingrid.absence VALUES (10, 'justificatif4.pdf', 'Absence validée avec un retard de 30 minutes.', true, 30, true, '2025-01-10 09:30:00', '2025-01-10 14:00:00', 1, 16, 10);
 INSERT INTO ingrid.absence VALUES (11, NULL, 'Absence déclarée mais non validée.', false, NULL, true, '2025-01-11 10:00:00', '2025-01-11 12:00:00', 1, 17, 11);
+INSERT INTO ingrid.absence VALUES (12, 'justificatif_absence_2025_01_10.pdf', 'Absent pour raison médicale.', true, 0, true, '2025-01-10 08:00:00', '2025-01-10 08:30:00', 1, 3, 1);
 
 
 --
@@ -209,6 +213,7 @@ INSERT INTO ingrid.communiquer VALUES (22, 'Je propose qu’on se répartisse le
 --
 
 INSERT INTO ingrid.enseignant VALUES (5, true);
+INSERT INTO ingrid.enseignant VALUES (18, false);
 
 
 --
@@ -217,23 +222,60 @@ INSERT INTO ingrid.enseignant VALUES (5, true);
 
 INSERT INTO ingrid.enseignant_module VALUES (10, 5);
 INSERT INTO ingrid.enseignant_module VALUES (3, 5);
+INSERT INTO ingrid.enseignant_module VALUES (1, 18);
+INSERT INTO ingrid.enseignant_module VALUES (2, 18);
+INSERT INTO ingrid.enseignant_module VALUES (4, 18);
+INSERT INTO ingrid.enseignant_module VALUES (5, 18);
+INSERT INTO ingrid.enseignant_module VALUES (6, 18);
+INSERT INTO ingrid.enseignant_module VALUES (7, 18);
+INSERT INTO ingrid.enseignant_module VALUES (8, 18);
+INSERT INTO ingrid.enseignant_module VALUES (9, 18);
+INSERT INTO ingrid.enseignant_module VALUES (11, 18);
+INSERT INTO ingrid.enseignant_module VALUES (12, 18);
+INSERT INTO ingrid.enseignant_module VALUES (13, 18);
+INSERT INTO ingrid.enseignant_module VALUES (14, 18);
+INSERT INTO ingrid.enseignant_module VALUES (15, 18);
+INSERT INTO ingrid.enseignant_module VALUES (16, 18);
+INSERT INTO ingrid.enseignant_module VALUES (17, 18);
+INSERT INTO ingrid.enseignant_module VALUES (18, 18);
+INSERT INTO ingrid.enseignant_module VALUES (20, 18);
+INSERT INTO ingrid.enseignant_module VALUES (21, 18);
+INSERT INTO ingrid.enseignant_module VALUES (22, 18);
+INSERT INTO ingrid.enseignant_module VALUES (23, 18);
+INSERT INTO ingrid.enseignant_module VALUES (24, 18);
+INSERT INTO ingrid.enseignant_module VALUES (25, 18);
+INSERT INTO ingrid.enseignant_module VALUES (26, 18);
+INSERT INTO ingrid.enseignant_module VALUES (27, 18);
+INSERT INTO ingrid.enseignant_module VALUES (28, 18);
+INSERT INTO ingrid.enseignant_module VALUES (29, 18);
+INSERT INTO ingrid.enseignant_module VALUES (30, 18);
+INSERT INTO ingrid.enseignant_module VALUES (31, 18);
+INSERT INTO ingrid.enseignant_module VALUES (32, 18);
+INSERT INTO ingrid.enseignant_module VALUES (33, 18);
+INSERT INTO ingrid.enseignant_module VALUES (34, 18);
+INSERT INTO ingrid.enseignant_module VALUES (35, 18);
+INSERT INTO ingrid.enseignant_module VALUES (36, 18);
+INSERT INTO ingrid.enseignant_module VALUES (37, 18);
+INSERT INTO ingrid.enseignant_module VALUES (38, 18);
+INSERT INTO ingrid.enseignant_module VALUES (19, 18);
+INSERT INTO ingrid.enseignant_module VALUES (39, 18);
 
 
 --
 -- Data for Name: evaluation; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.evaluation VALUES (1, 'Examen final', 3, 20, 'Semestre 1', '2025-01-01 10:00:00', '2025-01-02 10:00:00', 1, 3);
-INSERT INTO ingrid.evaluation VALUES (2, 'Test intermédiaire', 2, 10, 'Semestre 1', '2025-01-05 14:00:00', '2025-01-06 14:00:00', 2, 3);
-INSERT INTO ingrid.evaluation VALUES (3, 'Projet de groupe', 4, 20, 'Semestre 2', '2025-01-10 09:00:00', '2025-01-11 09:00:00', 3, 3);
-INSERT INTO ingrid.evaluation VALUES (4, 'Rapport écrit', 1, 15, 'Semestre 2', '2025-01-15 16:00:00', '2025-01-16 16:00:00', 4, 3);
-INSERT INTO ingrid.evaluation VALUES (5, 'Présentation orale', 2, 10, 'Semestre 3', '2025-01-20 11:00:00', '2025-01-21 11:00:00', 5, 3);
-INSERT INTO ingrid.evaluation VALUES (6, 'Examen pratique', 3, 20, 'Semestre 3', '2025-01-25 15:00:00', '2025-01-26 15:00:00', 6, 3);
-INSERT INTO ingrid.evaluation VALUES (7, 'Mini-test', 1, 5, 'Semestre 4', '2025-02-01 08:00:00', '2025-02-01 09:00:00', 7, 3);
-INSERT INTO ingrid.evaluation VALUES (8, 'Devoir surveillé', 2, 15, 'Semestre 4', '2025-02-05 10:00:00', '2025-02-06 10:00:00', 8, 3);
-INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2025-02-10 13:00:00', '2025-02-11 13:00:00', 9, 3);
-INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3);
-INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3);
+INSERT INTO ingrid.evaluation VALUES (1, 'Examen final', 3, 20, 'Semestre 1', '2025-01-01 10:00:00', '2025-01-02 10:00:00', 1, 3, 1);
+INSERT INTO ingrid.evaluation VALUES (2, 'Test intermédiaire', 2, 10, 'Semestre 1', '2025-01-05 14:00:00', '2025-01-06 14:00:00', 2, 3, 5);
+INSERT INTO ingrid.evaluation VALUES (3, 'Projet de groupe', 4, 20, 'Semestre 2', '2025-01-10 09:00:00', '2025-01-11 09:00:00', 3, 3, 12);
+INSERT INTO ingrid.evaluation VALUES (4, 'Rapport écrit', 1, 15, 'Semestre 2', '2025-01-15 16:00:00', '2025-01-16 16:00:00', 4, 3, 7);
+INSERT INTO ingrid.evaluation VALUES (5, 'Présentation orale', 2, 10, 'Semestre 3', '2025-01-20 11:00:00', '2025-01-21 11:00:00', 5, 3, 8);
+INSERT INTO ingrid.evaluation VALUES (6, 'Examen pratique', 3, 20, 'Semestre 3', '2025-01-25 15:00:00', '2025-01-26 15:00:00', 6, 3, 15);
+INSERT INTO ingrid.evaluation VALUES (7, 'Mini-test', 1, 5, 'Semestre 4', '2025-02-01 08:00:00', '2025-02-01 09:00:00', 7, 3, 18);
+INSERT INTO ingrid.evaluation VALUES (8, 'Devoir surveillé', 2, 15, 'Semestre 4', '2025-02-05 10:00:00', '2025-02-06 10:00:00', 8, 3, 22);
+INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2025-02-10 13:00:00', '2025-02-11 13:00:00', 9, 3, 30);
+INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3, 33);
+INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3, 39);
 
 
 --
@@ -486,7 +528,7 @@ INSERT INTO ingrid.utilisateurs_eav VALUES (24, 'téléphone', '0645781239', '20
 -- Name: absence_id_absence_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.absence_id_absence_seq', 11, true);
+SELECT pg_catalog.setval('ingrid.absence_id_absence_seq', 12, true);
 
 
 --
@@ -507,7 +549,7 @@ SELECT pg_catalog.setval('ingrid.communiquer_id_communiquer_seq', 22, true);
 -- Name: cours_id_cours_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 11, true);
+SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 13, true);
 
 
 --
@@ -556,7 +598,7 @@ SELECT pg_catalog.setval('ingrid.notification_id_notif_seq', 11, true);
 -- Name: utilisateur_id_utilisateur_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 2, true);
+SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 18, true);
 
 
 --
