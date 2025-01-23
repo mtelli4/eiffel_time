@@ -1,6 +1,6 @@
-import { ROLES } from '@shared/types/types'
 import { X } from 'lucide-react'
 import Select from 'react-select'
+import { ROLES } from '../../../../shared/src/types/types'
 
 interface UserFormProps {
     isOpen: boolean
@@ -24,7 +24,9 @@ export function UserForm({
             <div className="bg-white rounded-lg max-w-2xl w-full p-6">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-[#2C3E50]">
-                        {isEdit ? 'Modifier un utilisateur' : 'Ajouter un utilisateur'}
+                        {isEdit
+                            ? 'Modifier un utilisateur'
+                            : 'Ajouter un utilisateur'}
                     </h2>
                     <button
                         onClick={onClose}

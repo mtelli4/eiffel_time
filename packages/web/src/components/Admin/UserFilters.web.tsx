@@ -1,11 +1,20 @@
-import { UserFiltersProps } from '@shared/types/types'
-import { Search } from 'lucide-react'
-import Select from 'react-select'
-import { ROLES, TEACHER_TYPES } from '@shared/types/types'
-import { useEffect, useState } from 'react'
 import { formation, groupe } from '@prisma/client'
+import { Search } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import Select from 'react-select'
+import {
+    ROLES,
+    TEACHER_TYPES,
+    UserFiltersProps,
+} from '../../../../shared/src/types/types'
 
-export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, onTypeChange, onSearch, }: UserFiltersProps) {
+export function UserFilters({
+    onRoleChange,
+    onGroupChange,
+    onFormationChange,
+    onTypeChange,
+    onSearch,
+}: UserFiltersProps) {
     const [groupes, setGroupes] = useState([])
     const [formations, setFormations] = useState([])
 
@@ -24,9 +33,13 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                 return response.json() // Convertir la réponse en JSON
             })
             .then((data) => {
-                const groupes = data.groupes.map((g: groupe) => { return { value: g.id_grp, label: g.libelle }})
+                const groupes = data.groupes.map((g: groupe) => {
+                    return { value: g.id_grp, label: g.libelle }
+                })
                 setGroupes(groupes)
-                const formations = data.formations.map((f: formation) => { return { value: f.id_formation, label: f.libelle }})
+                const formations = data.formations.map((f: formation) => {
+                    return { value: f.id_formation, label: f.libelle }
+                })
                 setFormations(formations)
             })
             .catch((error) => {
@@ -48,7 +61,9 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                         options={ROLES}
                         isClearable
                         placeholder="Tous les rôles"
-                        onChange={(option) => onRoleChange(option?.value || null)}
+                        onChange={(option) =>
+                            onRoleChange(option?.value || null)
+                        }
                         className="text-sm"
                         styles={{
                             control: (base) => ({
@@ -70,7 +85,9 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                         options={formations}
                         isClearable
                         placeholder="Toutes les formations"
-                        onChange={(option: any) => onFormationChange(option?.value || null)}
+                        onChange={(option: any) =>
+                            onFormationChange(option?.value || null)
+                        }
                         className="text-sm"
                         styles={{
                             control: (base) => ({
@@ -92,9 +109,10 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                         options={groupes}
                         isClearable
                         placeholder="Tous les groupes"
-                        onChange={(option: any) => onGroupChange(option?.value || null)}
+                        onChange={(option: any) =>
+                            onGroupChange(option?.value || null)
+                        }
                         className="text-sm"
-
                         styles={{
                             control: (base) => ({
                                 ...base,
@@ -115,7 +133,9 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                         options={TEACHER_TYPES}
                         isClearable
                         placeholder="Tous les types"
-                        onChange={(option) => onTypeChange(option?.value || null)}
+                        onChange={(option) =>
+                            onTypeChange(option?.value || null)
+                        }
                         className="text-sm"
                         styles={{
                             control: (base) => ({
@@ -139,7 +159,10 @@ export function UserFilters({ onRoleChange, onGroupChange, onFormationChange, on
                     onChange={(e) => onSearch(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3498DB] focus:border-transparent"
                 />
-                <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" onChange={handleSearchChange} />
+                <Search
+                    className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"
+                    onChange={handleSearchChange}
+                />
             </div>
         </div>
     )

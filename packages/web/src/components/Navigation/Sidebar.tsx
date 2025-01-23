@@ -1,5 +1,3 @@
-import logo from '@shared/assets/logo.svg'
-import { cn } from '@shared/lib/utils'
 import {
     ArrowLeftToLine,
     ArrowRightToLine,
@@ -13,6 +11,8 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import logo from '../../../../shared/src/assets/logo.svg'
+import { cn } from '../../../../shared/src/lib/utils'
 import { useUser } from '../../context/UserContext'
 
 interface SidebarProps {
