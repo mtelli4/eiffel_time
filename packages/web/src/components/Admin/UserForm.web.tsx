@@ -1,12 +1,17 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
 import { ROLES } from '../../../../shared/src/types/types'
+import { Utilisateur } from '../../../../shared/src/backend/classes'
+import { useState } from 'react'
+import { statut_utilisateur } from '@prisma/client'
+
+const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
 
 interface UserFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: any) => void
-  initialData?: any
+  initialData?: Utilisateur
   isEdit?: boolean
 }
 
@@ -17,6 +22,7 @@ export function UserForm({
   initialData,
   isEdit,
 }: UserFormProps) {
+  const [role, setRole] = useState(initialData ? initialData.getStatut() : null)
   if (!isOpen) return null
 
   return (
@@ -53,7 +59,7 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.nom}
+              defaultValue={initialData?.getNom()}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -64,7 +70,7 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.prenom}
+              defaultValue={initialData?.getPrenom()}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -75,7 +81,7 @@ export function UserForm({
             </label>
             <input
               type="email"
-              defaultValue={initialData?.email}
+              defaultValue={initialData?.getEmail()}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -85,10 +91,15 @@ export function UserForm({
               Rôle
             </label>
             <Select
-              options={ROLES}
+              options={roleOptions}
               isClearable
               placeholder="Sélectionner un rôle"
-              defaultValue={initialData?.statut}
+              defaultValue={
+                initialData
+                  ? { value: initialData.getStatut(), label: initialData.getStatutName() }
+                  : null
+              }
+              onChange={(option) => setRole(option ? option.value : null)}
               className="text-sm"
             />
           </div>
