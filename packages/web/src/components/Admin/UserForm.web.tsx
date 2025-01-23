@@ -35,6 +35,7 @@ export function UserForm({
         </div>
 
         <form onSubmit={onSubmit} className="space-y-4">
+          {/* TODO: Est-ce que ce champ doit être possible ?
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] mb-1">
               ID
@@ -44,7 +45,7 @@ export function UserForm({
               defaultValue={initialData?.id}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] mb-1">
@@ -52,7 +53,7 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.name}
+              defaultValue={initialData?.nom}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -63,7 +64,7 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.firstname}
+              defaultValue={initialData?.prenom}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -85,10 +86,9 @@ export function UserForm({
             </label>
             <Select
               options={ROLES}
-              defaultValue={{
-                value: initialData?.role,
-                label: initialData?.role,
-              }}
+              isClearable
+              placeholder="Sélectionner un rôle"
+              defaultValue={initialData?.statut}
               className="text-sm"
             />
           </div>
