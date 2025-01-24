@@ -8,7 +8,6 @@ router.get('/data', async (req, res) => {
   try {
     // Récupération de toutes les absences
     const absences = await prisma.absence.findMany({
-
       orderBy: {
         createdat: 'asc',  // Tri par date de création
       }
@@ -118,6 +117,21 @@ router.get('/data', async (req, res) => {
     console.error(error);  // Log de l'erreur pour déboguer
     // Retour de l'erreur en cas de problème
     res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
+  }
+});
+
+router.get('/users', async (req, res) => {
+  try {
+    const users = await prisma.utilisateur.findMany({
+      orderBy: {
+        id_utilisateur: 'asc',  // Tri par id d'utilisateur
+      }
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
   }
 });
 

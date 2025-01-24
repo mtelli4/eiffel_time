@@ -9,6 +9,7 @@ export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
 
+  /* Filtres */
   const [role, setRole] = useState('') // État local pour le filtre par rôle
   const [groupe, setGroupe] = useState('') // État local pour le filtre par groupe
   const [formation, setFormation] = useState('') // État local pour le filtre par formation

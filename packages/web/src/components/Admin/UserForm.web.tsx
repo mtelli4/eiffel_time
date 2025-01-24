@@ -41,17 +41,18 @@ export function UserForm({
         </div>
 
         <form onSubmit={onSubmit} className="space-y-4">
-          {/* TODO: Est-ce que ce champ doit être possible ?
-          <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-              ID
-            </label>
-            <input
-              type="text"
-              defaultValue={initialData?.id}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
-            />
-          </div> */}
+          {!isEdit && (
+            <div>
+              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                ID
+              </label>
+              <input
+                type="text"
+                defaultValue={initialData?.getId()}
+                className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              />
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] mb-1">

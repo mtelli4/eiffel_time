@@ -1,6 +1,6 @@
 import { enseignant_module } from '@prisma/client';
 
-export class EnseignatModule {
+export class EnseignantModule {
     enseignant_module: enseignant_module;
 
     constructor(enseignant_module: enseignant_module) {
