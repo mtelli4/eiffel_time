@@ -12,18 +12,41 @@ import {
   GroupeEtudiant,
   Utilisateur,
 } from '../../../../shared/src/backend/classes'
+import { ROLES } from '@shared/types/types'
 
 interface UserTableProps {
-  users: Utilisateur[]
+  users: UtilisateurProps[]
   isAdmin: boolean
-  onEdit: (user: Utilisateur) => void
-  onDelete: (user: Utilisateur) => void
+  onEdit: (user: UtilisateurProps) => void
+  onDelete: (user: UtilisateurProps) => void
   roleSelected: string
   groupSelected: string
   formationSelected: string
   typeTeachingSelected: string
   searchTerm: string
+  filters: any
 }
+
+type FormationProps = {
+  id_formation: number;
+  libelle: string;
+}
+
+type GroupeProps = {
+  id_groupe: number;
+  libelle: string;
+}
+
+type UtilisateurProps = {
+  id_utilisateur: number;
+  nom: string;
+  prenom: string;
+  email: string;
+  statut: string;
+  formations: FormationProps[];
+  groupes: GroupeProps[];
+  vacataire: boolean;
+};
 
 DataTable.use(DT)
 
@@ -37,21 +60,16 @@ export function UserTable({
   formationSelected,
   typeTeachingSelected,
   searchTerm,
+  filters,
 }: UserTableProps) {
-  const [formations, setFormations] = useState<Formation[]>([])
-  const [formationUsers, setFormationUsers] = useState<
-    FormationUtilisateur[]
-  >([])
-  const [etudiantGroupe, setEtudiantGroupe] = useState<GroupeEtudiant[]>([])
-  const [groupes, setGroupes] = useState<Groupe[]>([])
-  const [enseignants, setEnseignants] = useState<Enseignant[]>([])
   const [loading, setLoading] = useState(true)
+
+  const [utilisateurs, setUtilisateurs] = useState<UtilisateurProps[]>([]);
 
   /* roleSelected: string */
 
   useEffect(() => {
-    // Effectuer la requête GET pour récupérer les utilisateurs
-    fetch('http://localhost:4000/api/data') // URL de votre API
+    fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
         // Vérifier si la réponse est correcte
         if (!response.ok) {
@@ -60,31 +78,17 @@ export function UserTable({
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
-        const formations = data.formations.map(
-          (f: any) => new Formation(f)
-        )
-        setFormations(formations)
-
-        const formationUsers = data.formation_utilisateur.map(
-          (fu: any) => new FormationUtilisateur(fu)
-        )
-        setFormationUsers(formationUsers)
-
-        const etudiantGroupe = data.groupe_etudiant.map(
-          (eg: groupe_etudiant) => new GroupeEtudiant(eg)
-        )
-        setEtudiantGroupe(etudiantGroupe)
-
-        const groupes = data.groupes.map((g: any) => {
-          return new Groupe(g)
-        })
-        setGroupes(groupes)
-
-        const enseignants = data.enseignants.map(
-          (e: any) => new Enseignant(e, e.utilisateur)
-        )
-        setEnseignants(enseignants)
-
+        const utilisateurs = data.map((user: any) => ({
+            id_utilisateur: user.id_utilisateur,
+            nom: user.nom,
+            prenom: user.prenom,
+            email: user.email,
+            formations: user.formation_utilisateur.map((f: any) => f.formation),
+            groupes: user.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+            vacataire: user.enseignant?.vacataire || null,
+        }));
+        setUtilisateurs(utilisateurs)
+        console.log(utilisateurs)
         setLoading(false)
       })
       .catch((error) => {
@@ -94,56 +98,47 @@ export function UserTable({
         )
         setLoading(false)
       })
-  }, []) // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
+  }, []);
 
-  let filteredData = users.filter(
-    (user) =>
-      user
-        .getFullName()
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      user.getEmail().toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  let filteredData = utilisateurs.filter((user) =>
+    user.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  filteredData.sort((a, b) => a.getId() - b.getId())
+  filteredData.sort((a, b) => a.id_utilisateur - b.id_utilisateur);
 
   if (roleSelected) {
     filteredData = filteredData.filter(
-      (user) =>
-        user.getStatut().toLowerCase() === roleSelected.toLowerCase()
+      (utilisateur) =>
+        utilisateur.statut.toLowerCase() === roleSelected.toLowerCase()
     )
   }
 
   if (groupSelected) {
     filteredData = filteredData.filter(
-      (user) =>
-        etudiantGroupe.filter(
-          (eg) =>
-            eg.getIdUtilisateur() === user.getId() &&
-            eg.getIdGroupe() === parseInt(groupSelected)
+      (utilisateur) =>
+        utilisateur.groupes.filter(
+          (g) =>
+            g.id_groupe === parseInt(groupSelected)
         ).length > 0
     )
   }
-
+  
   if (formationSelected) {
     filteredData = filteredData.filter(
-      (user) =>
-        formationUsers.filter(
-          (fu) =>
-            fu.getIdUtilisateur() === user.getId() &&
-            fu.getIdFormation() === parseInt(formationSelected)
+      (utilisateur) =>
+        utilisateur.formations.filter(
+          (f) =>
+            f.id_formation === parseInt(formationSelected)
         ).length > 0
     )
   }
-
+  
   if (typeTeachingSelected) {
     filteredData = filteredData.filter(
-      (user) =>
-        enseignants
-          .filter((e) => e.getId() === user.getId())
-          .map((e) =>
-            e.isVacataire() ? 'Vacataire' : 'Titulaire'
-          )[0] === typeTeachingSelected
+      (utilisateur) => 
+        utilisateur.vacataire ? 'Vacataire' : 'Titulaire' === typeTeachingSelected
     )
   }
 
@@ -203,68 +198,31 @@ export function UserTable({
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((user) => (
+          {filteredData.map((utilisateur) => (
             <tr
-              key={user.getId()}
+              key={utilisateur.id_utilisateur}
               className="border-b border-gray-100 hover:bg-[#ECF0F1]"
             >
-              <td className="py-3 px-4">{user.getId()}</td>
-              <td className="py-3 px-4">{user.getNom()}</td>
-              <td className="py-3 px-4">{user.getPrenom()}</td>
-              <td className="py-3 px-4">{user.getEmail()}</td>
+              <td className="py-3 px-4">{utilisateur.id_utilisateur}</td>
+              <td className="py-3 px-4">{utilisateur.nom}</td>
+              <td className="py-3 px-4">{utilisateur.prenom}</td>
+              <td className="py-3 px-4">{utilisateur.email}</td>
               <td className="py-3 px-4">
-                {user.getStatutName()}
+                {ROLES.find((role) => role.value === utilisateur.statut)?.label || '-'}
               </td>
               <td className="py-3 px-4">
-                {formationUsers
-                  .filter(
-                    (fu) =>
-                      fu.getIdUtilisateur() ===
-                      user.getId()
-                  )
-                  .map((fu) => {
-                    const formation = formations.find(
-                      (f) =>
-                        f.getId() ===
-                        fu.getIdFormation()
-                    )
-                    return formation
-                      ? formation.getLibelle()
-                      : ''
-                  })
-                  .sort()
-                  .join(', ') || '-'}
+                {utilisateur.formations.map((f) => f.libelle).join(', ') || '-'}
               </td>
               <td className="py-3 px-4">
-                {etudiantGroupe
-                  .filter(
-                    (eg) =>
-                      eg.getIdUtilisateur() ===
-                      user.getId()
-                  )
-                  .map((eg) => {
-                    const groupe = groupes.find(
-                      (g) =>
-                        g.getId() === eg.getIdGroupe()
-                    )
-                    return groupe ? groupe.getLibelle() : ''
-                  })
-                  .sort()
-                  .join(', ') || '-'}
+                {utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}
               </td>
               <td className="py-3 px-4">
-                {enseignants
-                  .filter((e) => e.getId() === user.getId())
-                  .map((e) =>
-                    e.isVacataire()
-                      ? 'Vacataire'
-                      : 'Titulaire'
-                  )[0] || '-'}
+                {utilisateur.vacataire ? 'Vacataire' : 'Titulaire'}
               </td>
               <td className="py-3 px-4">
                 <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => onEdit(user)}
+                    onClick={() => onEdit(utilisateur)}
                     className="p-1 text-[#3498DB] hover:text-[#2980B9] transition-colors"
                     title="Modifier"
                   >
@@ -272,7 +230,7 @@ export function UserTable({
                   </button>
                   {isAdmin && (
                     <button
-                      onClick={() => onDelete(user)}
+                      onClick={() => onDelete(utilisateur)}
                       className="p-1 text-[#E74C3C] hover:text-[#C0392B] transition-colors"
                       title="Supprimer"
                     >
