@@ -123,6 +123,42 @@ router.get('/data', async (req, res) => {
 router.get('/users', async (req, res) => {
   try {
     const users = await prisma.utilisateur.findMany({
+      select: {
+        id_utilisateur: true,
+        nom: true,
+        prenom: true,
+        email: true,
+        statut: true,
+        formation_utilisateur: {
+          select: {
+            formation: {
+              select: {
+                id_formation: true,
+                libelle: true,
+              },
+            },
+          },
+        },
+        etudiant: {
+          select: {
+            groupe_etudiant: {
+              select: {
+                groupe: {
+                  select: {
+                    id_grp: true,
+                    libelle: true,
+                  }
+                }
+              }
+            }
+          }
+        },
+        enseignant: {
+          select: {
+            vacataire: true,
+          }
+        },
+      },
       orderBy: {
         id_utilisateur: 'asc',  // Tri par id d'utilisateur
       }
