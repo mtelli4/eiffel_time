@@ -32,7 +32,7 @@ export type Utilisateur = {
   statut: string;
   formations: Formation[];
   groupes: Groupe[];
-  vacataire: boolean | null;
+  vacataire?: boolean;
 };
 
 export interface CourseModalProps {
