@@ -34,6 +34,7 @@ export function UserFilters({
           return { value: g.id_grp, label: g.libelle }
         })
         setGroupes(groupes)
+        
         const formations = data.formations.map((f: formation) => {
           return { value: f.id_formation, label: f.libelle }
         })
@@ -131,7 +132,7 @@ export function UserFilters({
             isClearable
             placeholder="Tous les types"
             onChange={(option: any) =>
-              handleFilterChange('typeTeacherFilter', option?.value || null)
+              handleFilterChange('type', option?.value || null)
             }
             className="text-sm"
             styles={{
