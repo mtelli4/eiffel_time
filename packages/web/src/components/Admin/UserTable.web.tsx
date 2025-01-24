@@ -67,7 +67,7 @@ type UtilisateurProps = {
   statut: string;
   formations: FormationProps[];
   groupes: GroupeProps[];
-  vacataire: boolean;
+  vacataire: boolean | null;
 };
 
 DataTable.use(DT)
@@ -108,7 +108,7 @@ export function UserTable({
             statut: utilisateur.statut,
             formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
             groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-            vacataire: utilisateur.enseignant?.vacataire || null,
+            vacataire: utilisateur.enseignant?.vacataire,
         }));
         setUtilisateurs(utilisateurs)
         console.log(utilisateurs)
@@ -240,7 +240,7 @@ export function UserTable({
                 {utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}
               </td>
               <td className="py-3 px-4">
-                {utilisateur.vacataire === null 
+                {/*utilisateur.statut != statut_utilisateur.teacher && */utilisateur.vacataire === undefined 
                   ? '-' // Si vacataire est null, afficher un tiret
                   : utilisateur.vacataire 
                     ? 'Vacataire' // Si vacataire est true, afficher "Vacataire"

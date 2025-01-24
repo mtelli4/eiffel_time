@@ -161,7 +161,7 @@ router.get('/users', async (req, res) => {
       },
       orderBy: {
         id_utilisateur: 'asc',  // Tri par id d'utilisateur
-      }
+      },
     });
 
     res.json(users);
