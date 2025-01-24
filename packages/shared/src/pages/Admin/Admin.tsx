@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { Utilisateur } from '../../backend/classes'
+import { Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
@@ -8,21 +8,15 @@ type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
-
-  /* Filtres */
-  const [role, setRole] = useState('') // État local pour le filtre par rôle
-  const [groupe, setGroupe] = useState('') // État local pour le filtre par groupe
-  const [formation, setFormation] = useState('') // État local pour le filtre par formation
-  const [typeTeacherFilter, setTypeTeacherFilter] = useState('') // État local pour le filtre par type d'enseignant
-  const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
+  const [loading, setLoading] = useState(false)
 
   // État unique pour les filtres
   const [filters, setFilters] = useState({
     role: '',
     groupe: '',
     formation: '',
-    typeTeacherFilter: '',
-    searchTerm: ''
+    type: '',
+    search: ''
   })
 
   const handleFilterChange = (filterName: string, value: string) => {
@@ -32,12 +26,11 @@ export function Admin() {
     }))
   }
 
-  const [users, setUsers] = useState<Utilisateur[]>([])
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
   useEffect(() => {
-    // Effectuer la requête GET pour récupérer les utilisateurs
-    fetch('http://localhost:4000/api/data') // URL de votre API
+    fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
         // Vérifier si la réponse est correcte
         if (!response.ok) {
@@ -46,18 +39,27 @@ export function Admin() {
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
-        const utilisateurs = data.utilisateurs.map(
-          (u: any) => new Utilisateur(u)
-        )
-        setUsers(utilisateurs)
+        const utilisateurs = data.map((utilisateur: any) => ({
+            id_utilisateur: utilisateur.id_utilisateur,
+            nom: utilisateur.nom,
+            prenom: utilisateur.prenom,
+            email: utilisateur.email,
+            statut: utilisateur.statut,
+            formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+            groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+            vacataire: utilisateur.enseignant?.vacataire,
+        }));
+        setUtilisateurs(utilisateurs)
+        setLoading(false)
       })
       .catch((error) => {
         console.error(
           'Erreur lors de la récupération des utilisateurs:',
           error
         )
+        setLoading(false)
       })
-  }, []) // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
+  }, []);
 
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
@@ -105,18 +107,18 @@ export function Admin() {
   }
 
   const handleDeleteUser = (user: Utilisateur) => {
-    setUsers(users.filter((u) => u.getId() !== user.getId()))
+    setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
   }
 
   const handleSubmitUser = (data: any) => {
     if (selectedUser) {
-      setUsers(
-        users.map((u) =>
-          u.getId() === selectedUser.getId() ? { ...u, ...data } : u
+      setUtilisateurs(
+        utilisateurs.map((u) =>
+          u.id_utilisateur === selectedUser.id_utilisateur ? { ...u, ...data } : u
         )
       )
     } else {
-      setUsers([...users, { ...data, id: `U${Date.now()}` }])
+      setUtilisateurs([...utilisateurs, { ...data, id: `U${Date.now()}` }])
     }
     setShowUserForm(false)
     setSelectedUser(null)
@@ -173,24 +175,17 @@ export function Admin() {
           </View>
 
           <UserFilters
-            onRoleChange={(role: string) => handleFilterChange('role', role)}
-            onGroupChange={(group: string) => handleFilterChange('groupe', group)}
-            onFormationChange={(formation: string) => handleFilterChange('formation', formation)}
-            onTypeChange={(type: string) => handleFilterChange('typeTeacherFilter', type)}
-            onSearch={(searchTerm: string) => handleFilterChange('searchTerm', searchTerm)}
+            filters={filters}
+            onFilterChange={handleFilterChange}
           />
 
           <UserTable
-            users={users}
+            users={utilisateurs}
             isAdmin={true}
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
-            roleSelected={filters.role}
-            groupSelected={filters.groupe}
-            formationSelected={filters.formation}
-            typeTeachingSelected={filters.typeTeacherFilter}
-            searchTerm={filters.searchTerm}
             filters={filters}
+            loading={loading}
           />
         </View>
       )}
