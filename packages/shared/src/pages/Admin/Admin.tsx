@@ -8,13 +8,13 @@ type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // État unique pour les filtres
   const [filters, setFilters] = useState({
     role: '',
-    groupe: '',
     formation: '',
+    groupe: '',
     type: '',
     search: ''
   })
@@ -47,7 +47,7 @@ export function Admin() {
             statut: utilisateur.statut,
             formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
             groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-            vacataire: utilisateur.enseignant?.vacataire,
+            vacataire: utilisateur.enseignant?.vacataire
         }));
         setUtilisateurs(utilisateurs)
         setLoading(false)
