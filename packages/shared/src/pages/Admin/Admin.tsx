@@ -16,24 +16,20 @@ export function Admin() {
   const [typeTeacherFilter, setTypeTeacherFilter] = useState('') // État local pour le filtre par type d'enseignant
   const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
 
-  const handleRole = (role: string) => {
-    setRole(role)
-  }
+  // État unique pour les filtres
+  const [filters, setFilters] = useState({
+    role: '',
+    groupe: '',
+    formation: '',
+    typeTeacherFilter: '',
+    searchTerm: ''
+  })
 
-  const handleGroup = (group: string) => {
-    setGroupe(group)
-  }
-
-  const handleFormation = (formation: string) => {
-    setFormation(formation)
-  }
-
-  const handleTypeTeacher = (type: string) => {
-    setTypeTeacherFilter(type)
-  }
-
-  const handleSearch = (searchTerm: string) => {
-    setSearchTerm(searchTerm)
+  const handleFilterChange = (filterName: string, value: string) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [filterName]: value
+    }))
   }
 
   const [users, setUsers] = useState<Utilisateur[]>([])
@@ -177,11 +173,11 @@ export function Admin() {
           </View>
 
           <UserFilters
-            onRoleChange={handleRole}
-            onGroupChange={handleGroup}
-            onFormationChange={handleFormation}
-            onTypeChange={handleTypeTeacher}
-            onSearch={handleSearch}
+            onRoleChange={(role: string) => handleFilterChange('role', role)}
+            onGroupChange={(group: string) => handleFilterChange('groupe', group)}
+            onFormationChange={(formation: string) => handleFilterChange('formation', formation)}
+            onTypeChange={(type: string) => handleFilterChange('typeTeacherFilter', type)}
+            onSearch={(searchTerm: string) => handleFilterChange('searchTerm', searchTerm)}
           />
 
           <UserTable
@@ -189,11 +185,12 @@ export function Admin() {
             isAdmin={true}
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
-            roleSelected={role}
-            groupSelected={groupe}
-            formationSelected={formation}
-            typeTeachingSelected={typeTeacherFilter}
-            searchTerm={searchTerm}
+            roleSelected={filters.role}
+            groupSelected={filters.groupe}
+            formationSelected={filters.formation}
+            typeTeachingSelected={filters.typeTeacherFilter}
+            searchTerm={filters.searchTerm}
+            filters={filters}
           />
         </View>
       )}
