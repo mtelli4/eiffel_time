@@ -46,7 +46,13 @@ interface UserTableProps {
   formationSelected: string
   typeTeachingSelected: string
   searchTerm: string
-  filters: any
+  filters: {
+    role: string
+    groupe: string
+    formation: string
+    typeTeacherFilter: string
+    searchTerm: string
+  }
 }
 
 type FormationProps = {
@@ -131,37 +137,37 @@ export function UserTable({
 
   filteredData.sort((a, b) => a.id_utilisateur - b.id_utilisateur);
 
-  if (roleSelected) {
+  if (filters.role) {
     filteredData = filteredData.filter(
       (utilisateur) =>
-        utilisateur.statut.toLowerCase() === roleSelected.toLowerCase()
+        utilisateur.statut.toLowerCase() === filters.role.toLowerCase()
     )
   }
 
-  if (groupSelected) {
+  if (filters.groupe) {
     filteredData = filteredData.filter(
       (utilisateur) =>
         utilisateur.groupes.filter(
           (g) =>
-            g.id_groupe === parseInt(groupSelected)
+            g.id_groupe === parseInt(filters.groupe)
         ).length > 0
     )
   }
   
-  if (formationSelected) {
+  if (filters.formation) {
     filteredData = filteredData.filter(
       (utilisateur) =>
         utilisateur.formations.filter(
           (f) =>
-            f.id_formation === parseInt(formationSelected)
+            f.id_formation === parseInt(filters.formation)
         ).length > 0
     )
   }
   
-  if (typeTeachingSelected) {
+  if (filters.typeTeacherFilter) {
     filteredData = filteredData.filter(
       (utilisateur) => 
-        utilisateur.vacataire ? 'Vacataire' : 'Titulaire' === typeTeachingSelected
+        utilisateur.vacataire ? 'Vacataire' : 'Titulaire' === filters.typeTeacherFilter
     )
   }
 
