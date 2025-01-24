@@ -9,17 +9,14 @@ import {
 } from '../../../../shared/src/types/types'
 
 export function UserFilters({
-  onRoleChange,
-  onGroupChange,
-  onFormationChange,
-  onTypeChange,
-  onSearch,
+  filters,
+  onFilterChange,
 }: UserFiltersProps) {
   const [groupes, setGroupes] = useState([])
   const [formations, setFormations] = useState([])
 
-  const handleSearchChange = (e: any) => {
-    onSearch(e.target.value)
+  const handleFilterChange = (filterName: string, value: string) => {
+    onFilterChange(filterName, value)
   }
 
   useEffect(() => {
@@ -61,8 +58,8 @@ export function UserFilters({
             options={ROLES}
             isClearable
             placeholder="Tous les rôles"
-            onChange={(option) =>
-              onRoleChange(option?.value || null)
+            onChange={(option: any) =>
+              handleFilterChange('role', option?.value || null)
             }
             className="text-sm"
             styles={{
@@ -86,7 +83,7 @@ export function UserFilters({
             isClearable
             placeholder="Toutes les formations"
             onChange={(option: any) =>
-              onFormationChange(option?.value || null)
+              handleFilterChange('formation', option?.value || null)
             }
             className="text-sm"
             styles={{
@@ -110,7 +107,7 @@ export function UserFilters({
             isClearable
             placeholder="Tous les groupes"
             onChange={(option: any) =>
-              onGroupChange(option?.value || null)
+              handleFilterChange('groupe', option?.value || null)
             }
             className="text-sm"
             styles={{
@@ -133,8 +130,8 @@ export function UserFilters({
             options={TEACHER_TYPES}
             isClearable
             placeholder="Tous les types"
-            onChange={(option) =>
-              onTypeChange(option?.value || null)
+            onChange={(option: any) =>
+              handleFilterChange('typeTeacherFilter', option?.value || null)
             }
             className="text-sm"
             styles={{
@@ -156,12 +153,12 @@ export function UserFilters({
           id="search_box"
           type="text"
           placeholder="Rechercher un utilisateur..."
-          onChange={(e) => onSearch(e.target.value)}
+          onChange={(e) => handleFilterChange('search', e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3498DB] focus:border-transparent"
         />
         <Search
           className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"
-          onChange={handleSearchChange}
+          onChange={(e) => onFilterChange}
         />
       </div>
     </div>
