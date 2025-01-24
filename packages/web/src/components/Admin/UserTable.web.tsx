@@ -1,4 +1,4 @@
-import { groupe_etudiant } from '@prisma/client'
+import { groupe_etudiant, statut_utilisateur } from '@prisma/client'
 import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
@@ -12,7 +12,29 @@ import {
   GroupeEtudiant,
   Utilisateur,
 } from '../../../../shared/src/backend/classes'
-import { ROLES } from '@shared/types/types'
+
+function roleFinder(role: string): string {
+  /* caster le role en statut_utilisateur */
+  const prismaRole = role as statut_utilisateur
+  switch (prismaRole) {
+    case statut_utilisateur.indefinite:
+      return 'Indéfini'
+    case statut_utilisateur.administrator:
+      return 'Administrateur'
+    case statut_utilisateur.director:
+      return 'Directeur'
+    case statut_utilisateur.teacher:
+      return 'Enseignant'
+    case statut_utilisateur.student:
+      return 'Étudiant'
+    case statut_utilisateur.manager:
+      return 'Gestionnaire'
+    case statut_utilisateur.secretary:
+      return 'Secrétaire'
+    default:
+      return 'Indéfini'
+  }
+}
 
 interface UserTableProps {
   users: UtilisateurProps[]
@@ -78,14 +100,15 @@ export function UserTable({
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
-        const utilisateurs = data.map((user: any) => ({
-            id_utilisateur: user.id_utilisateur,
-            nom: user.nom,
-            prenom: user.prenom,
-            email: user.email,
-            formations: user.formation_utilisateur.map((f: any) => f.formation),
-            groupes: user.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-            vacataire: user.enseignant?.vacataire || null,
+        const utilisateurs = data.map((utilisateur: any) => ({
+            id_utilisateur: utilisateur.id_utilisateur,
+            nom: utilisateur.nom,
+            prenom: utilisateur.prenom,
+            email: utilisateur.email,
+            statut: utilisateur.statut,
+            formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+            groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+            vacataire: utilisateur.enseignant?.vacataire || null,
         }));
         setUtilisateurs(utilisateurs)
         console.log(utilisateurs)
@@ -208,7 +231,7 @@ export function UserTable({
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>
               <td className="py-3 px-4">
-                {ROLES.find((role) => role.value === utilisateur.statut)?.label || '-'}
+                {roleFinder(utilisateur.statut)}
               </td>
               <td className="py-3 px-4">
                 {utilisateur.formations.map((f) => f.libelle).join(', ') || '-'}
@@ -217,7 +240,12 @@ export function UserTable({
                 {utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}
               </td>
               <td className="py-3 px-4">
-                {utilisateur.vacataire ? 'Vacataire' : 'Titulaire'}
+                {utilisateur.vacataire === null 
+                  ? '-' // Si vacataire est null, afficher un tiret
+                  : utilisateur.vacataire 
+                    ? 'Vacataire' // Si vacataire est true, afficher "Vacataire"
+                    : 'Titulaire' // Sinon, afficher "Titulaire"
+                }
               </td>
               <td className="py-3 px-4">
                 <div className="flex justify-end gap-2">
