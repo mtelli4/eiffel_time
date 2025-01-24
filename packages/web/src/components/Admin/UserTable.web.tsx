@@ -1,20 +1,11 @@
-import { groupe_etudiant, statut_utilisateur } from '@prisma/client'
+import { statut_utilisateur } from '@prisma/client'
 import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import { Edit2, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import {
-  Enseignant,
-  Formation,
-  FormationUtilisateur,
-  Groupe,
-  GroupeEtudiant,
-  Utilisateur,
-} from '../../../../shared/src/backend/classes'
+import { Utilisateur } from '../../../../shared/src/types/types'
 
 function roleFinder(role: string): string {
-  /* caster le role en statut_utilisateur */
   const prismaRole = role as statut_utilisateur
   switch (prismaRole) {
     case statut_utilisateur.indefinite:
@@ -37,44 +28,19 @@ function roleFinder(role: string): string {
 }
 
 interface UserTableProps {
-  users: UtilisateurProps[]
+  users: Utilisateur[]
   isAdmin: boolean
-  onEdit: (user: UtilisateurProps) => void
-  onDelete: (user: UtilisateurProps) => void
-  roleSelected: string
-  groupSelected: string
-  formationSelected: string
-  typeTeachingSelected: string
-  searchTerm: string
+  onEdit: (user: Utilisateur) => void
+  onDelete: (user: Utilisateur) => void
   filters: {
     role: string
     groupe: string
     formation: string
-    typeTeacherFilter: string
-    searchTerm: string
-  }
+    type: string
+    search: string
+  },
+  loading: boolean
 }
-
-type FormationProps = {
-  id_formation: number;
-  libelle: string;
-}
-
-type GroupeProps = {
-  id_groupe: number;
-  libelle: string;
-}
-
-type UtilisateurProps = {
-  id_utilisateur: number;
-  nom: string;
-  prenom: string;
-  email: string;
-  statut: string;
-  formations: FormationProps[];
-  groupes: GroupeProps[];
-  vacataire: boolean | null;
-};
 
 DataTable.use(DT)
 
@@ -83,56 +49,16 @@ export function UserTable({
   isAdmin,
   onEdit,
   onDelete,
-  roleSelected,
-  groupSelected,
-  formationSelected,
-  typeTeachingSelected,
-  searchTerm,
   filters,
+  loading,
 }: UserTableProps) {
-  const [loading, setLoading] = useState(true)
-
-  const [utilisateurs, setUtilisateurs] = useState<UtilisateurProps[]>([]);
 
   /* roleSelected: string */
 
-  useEffect(() => {
-    fetch('http://localhost:4000/api/users') // URL de votre API
-      .then((response) => {
-        // Vérifier si la réponse est correcte
-        if (!response.ok) {
-          throw new Error('Erreur réseau')
-        }
-        return response.json() // Convertir la réponse en JSON
-      })
-      .then((data) => {
-        const utilisateurs = data.map((utilisateur: any) => ({
-            id_utilisateur: utilisateur.id_utilisateur,
-            nom: utilisateur.nom,
-            prenom: utilisateur.prenom,
-            email: utilisateur.email,
-            statut: utilisateur.statut,
-            formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-            groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-            vacataire: utilisateur.enseignant?.vacataire,
-        }));
-        setUtilisateurs(utilisateurs)
-        console.log(utilisateurs)
-        setLoading(false)
-      })
-      .catch((error) => {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error
-        )
-        setLoading(false)
-      })
-  }, []);
-
-  let filteredData = utilisateurs.filter((user) =>
-    user.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  let filteredData = users.filter((user) =>
+    user.nom.toLowerCase().includes(filters.search.toLowerCase()) ||
+    user.prenom.toLowerCase().includes(filters.search.toLowerCase()) ||
+    user.email.toLowerCase().includes(filters.search.toLowerCase())
   );
 
   filteredData.sort((a, b) => a.id_utilisateur - b.id_utilisateur);
@@ -164,18 +90,10 @@ export function UserTable({
     )
   }
   
-  if (filters.typeTeacherFilter) {
+  if (filters.type) {
     filteredData = filteredData.filter(
       (utilisateur) => 
-        utilisateur.vacataire ? 'Vacataire' : 'Titulaire' === filters.typeTeacherFilter
-    )
-  }
-
-  if (loading) {
-    return (
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <p className="text-center py-4">Chargement des données...</p>
-      </div>
+        utilisateur.vacataire ? 'Vacataire' : 'Titulaire' === filters.type
     )
   }
 
