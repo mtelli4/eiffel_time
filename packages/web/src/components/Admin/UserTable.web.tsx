@@ -34,8 +34,8 @@ interface UserTableProps {
   onDelete: (user: Utilisateur) => void
   filters: {
     role: string
-    groupe: string
     formation: string
+    groupe: string
     type: string
     search: string
   },
@@ -67,33 +67,38 @@ export function UserTable({
     filteredData = filteredData.filter(
       (utilisateur) =>
         utilisateur.statut.toLowerCase() === filters.role.toLowerCase()
-    )
+    );
+  }
+
+  if (filters.formation) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.formations.some(
+          (f) => f.id_formation === parseInt(filters.formation)
+        )
+    );
   }
 
   if (filters.groupe) {
     filteredData = filteredData.filter(
       (utilisateur) =>
-        utilisateur.groupes.filter(
-          (g) =>
-            g.id_groupe === parseInt(filters.groupe)
-        ).length > 0
-    )
+        utilisateur.groupes.map(
+          (g) => g.id_groupe === parseInt(filters.groupe)
+        ) /* && utilisateur.statut === statut_utilisateur.student */
+    );
   }
-  
-  if (filters.formation) {
-    filteredData = filteredData.filter(
-      (utilisateur) =>
-        utilisateur.formations.filter(
-          (f) =>
-            f.id_formation === parseInt(filters.formation)
-        ).length > 0
-    )
-  }
-  
+
   if (filters.type) {
     filteredData = filteredData.filter(
-      (utilisateur) => 
-        utilisateur.vacataire ? 'Vacataire' : 'Titulaire' === filters.type
+      (utilisateur) => (utilisateur.vacataire ? 'Vacataire' : 'Titulaire') === filters.type && utilisateur.statut === statut_utilisateur.teacher
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <p className="text-center py-4">Chargement des données...</p>
+      </div>
     )
   }
 
@@ -154,23 +159,10 @@ export function UserTable({
               <td className="py-3 px-4">{utilisateur.nom}</td>
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>
-              <td className="py-3 px-4">
-                {roleFinder(utilisateur.statut)}
-              </td>
-              <td className="py-3 px-4">
-                {utilisateur.formations.map((f) => f.libelle).join(', ') || '-'}
-              </td>
-              <td className="py-3 px-4">
-                {utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}
-              </td>
-              <td className="py-3 px-4">
-                {/*utilisateur.statut != statut_utilisateur.teacher && */utilisateur.vacataire === undefined 
-                  ? '-' // Si vacataire est null, afficher un tiret
-                  : utilisateur.vacataire 
-                    ? 'Vacataire' // Si vacataire est true, afficher "Vacataire"
-                    : 'Titulaire' // Sinon, afficher "Titulaire"
-                }
-              </td>
+              <td className="py-3 px-4">{roleFinder(utilisateur.statut)}</td>
+              <td className="py-3 px-4">{utilisateur.formations.map((f) => f.libelle).join(', ') || '-'}</td>
+              <td className="py-3 px-4">{utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}</td>
+              <td className="py-3 px-4">{utilisateur.vacataire === undefined ? '-' : utilisateur.vacataire ? 'Vacataire' : 'Titulaire'}</td>
               <td className="py-3 px-4">
                 <div className="flex justify-end gap-2">
                   <button
