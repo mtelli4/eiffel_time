@@ -3,6 +3,19 @@ const { PrismaClient } = require('@prisma/client');  // Import du client Prisma
 const prisma = new PrismaClient();  // Initialisation du client Prisma
 const router = express.Router();    // Initialisation du routeur Express
 
+router.post('/login', async (req, res) => {
+  try {
+    const user = await prisma.utilisateur.findUnique({
+      where: {
+        email: req.body.email,
+      }
+    });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+  }
+});
+
 // Route pour récupérer l'ensemble des données en une seule requête
 router.get('/data', async (req, res) => {
   try {
@@ -435,14 +448,14 @@ router.put('/update-user/:id', async (req, res) => {
   const { nom, prenom, email, statut } = req.body;
 
   try {
-      res.json(await prisma.$transaction(async (prisma) => {
-          return await prisma.utilisateur.update({
-              where: { id: parseInt(id) },
-              data: { nom, prenom, email, statut }
-          })
-      }));
+    res.json(await prisma.$transaction(async (prisma) => {
+      return await prisma.utilisateur.update({
+        where: { id: parseInt(id) },
+        data: { nom, prenom, email, statut }
+      })
+    }));
   } catch (error) {
-      res.status(500).json({ error: `Impossible de mettre à jour l'utilisateur ${id}` });
+    res.status(500).json({ error: `Impossible de mettre à jour l'utilisateur ${id}` });
   }
 });
 
