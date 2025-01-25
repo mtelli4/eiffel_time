@@ -39,6 +39,24 @@ const styles = StyleSheet.create({
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+
+  const handleSubmitUser = async (user: any) => {
+    try {
+      const response = await fetch('http://localhost:4000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      setUser(data);
+      console.log(data);
+    } catch {
+      console.log('error')
+    }
+  }
 
   return (
     <View style={styles.root}>
@@ -47,7 +65,7 @@ export function Login() {
         <Text style={styles.title}>Eiffel TIME</Text>
         <Input placeholder='Adresse mail' onChangeText={setEmail} />
         <Input placeholder='Mot de passe' type='password' onChangeText={setPassword} />
-        <Button label="Connexion" onpress={() => { console.log(email), console.log(password) }} />
+        <Button label="Connexion" onpress={handleSubmitUser} />
       </View>
     </View>
 
