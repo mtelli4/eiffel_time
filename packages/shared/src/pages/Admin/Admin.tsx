@@ -110,13 +110,26 @@ export function Admin() {
     setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
   }
 
-  const handleSubmitUser = (data: any) => {
+  const handleSubmitUser = async (data: any) => {
     if (selectedUser) {
-      setUtilisateurs(
-        utilisateurs.map((u) =>
-          u.id_utilisateur === selectedUser.id_utilisateur ? { ...u, ...data } : u
-        )
-      )
+      try {
+        const response = await fetch('https://localhost:4000/api/update-user/${selectedUser.id_utilisateur}', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error("Erreur lors de la mise à jour de l'utilisateur");
+        }
+
+        const updatedUser = await response.json();
+        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u));
+      } catch (error) {
+        console.error("Erreur lors de la modification de l'utilisateur : ", error)
+      }
     } else {
       setUtilisateurs([...utilisateurs, { ...data, id: `U${Date.now()}` }])
     }
