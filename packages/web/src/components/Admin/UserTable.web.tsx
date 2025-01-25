@@ -4,28 +4,7 @@ import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import { Edit2, Trash2 } from 'lucide-react'
 import { Utilisateur } from '../../../../shared/src/types/types'
-
-function roleFinder(role: string): string {
-  const prismaRole = role as statut_utilisateur
-  switch (prismaRole) {
-    case statut_utilisateur.indefinite:
-      return 'Indéfini'
-    case statut_utilisateur.administrator:
-      return 'Administrateur'
-    case statut_utilisateur.director:
-      return 'Directeur'
-    case statut_utilisateur.teacher:
-      return 'Enseignant'
-    case statut_utilisateur.student:
-      return 'Étudiant'
-    case statut_utilisateur.manager:
-      return 'Gestionnaire'
-    case statut_utilisateur.secretary:
-      return 'Secrétaire'
-    default:
-      return 'Indéfini'
-  }
-}
+import { roleFinder } from '../../../../shared/src/lib/utils'
 
 interface UserTableProps {
   users: Utilisateur[]
@@ -52,7 +31,6 @@ export function UserTable({
   filters,
   loading,
 }: UserTableProps) {
-
   /* roleSelected: string */
 
   let filteredData = users.filter((user) =>
@@ -62,6 +40,8 @@ export function UserTable({
   );
 
   filteredData.sort((a, b) => a.id_utilisateur - b.id_utilisateur);
+  /* sort in the formation names when */
+  filteredData.sort((a, b) => a.formations.length - b.formations.length);
 
   if (filters.role) {
     filteredData = filteredData.filter(
@@ -82,9 +62,9 @@ export function UserTable({
   if (filters.groupe) {
     filteredData = filteredData.filter(
       (utilisateur) =>
-        utilisateur.groupes.map(
+        utilisateur.groupes.some(
           (g) => g.id_groupe === parseInt(filters.groupe)
-        ) /* && utilisateur.statut === statut_utilisateur.student */
+        )
     );
   }
 
@@ -160,7 +140,7 @@ export function UserTable({
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>
               <td className="py-3 px-4">{roleFinder(utilisateur.statut)}</td>
-              <td className="py-3 px-4">{utilisateur.formations.map((f) => f.libelle).join(', ') || '-'}</td>
+              <td className="py-3 px-4">{utilisateur.formations.map((f) => f.libelle).sort().join(', ') || '-'}</td>
               <td className="py-3 px-4">{utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}</td>
               <td className="py-3 px-4">{utilisateur.vacataire === undefined ? '-' : utilisateur.vacataire ? 'Vacataire' : 'Titulaire'}</td>
               <td className="py-3 px-4">

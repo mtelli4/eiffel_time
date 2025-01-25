@@ -1,9 +1,10 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
 import { ROLES } from '../../../../shared/src/types/types'
-import { Utilisateur } from '../../../../shared/src/backend/classes'
+import { Utilisateur } from '../../../../shared/src/types/types'
 import { useState } from 'react'
 import { statut_utilisateur } from '@prisma/client'
+import { roleFinder } from '../../../../shared/src/lib/utils'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
 
@@ -22,7 +23,7 @@ export function UserForm({
   initialData,
   isEdit,
 }: UserFormProps) {
-  const [role, setRole] = useState(initialData ? initialData.getStatut() : null)
+  const [role, setRole] = useState(initialData ? initialData.statut : null)
   if (!isOpen) return null
 
   return (
@@ -48,7 +49,7 @@ export function UserForm({
               </label>
               <input
                 type="text"
-                defaultValue={initialData?.getId()}
+                defaultValue={initialData?.id_utilisateur}
                 className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
               />
             </div>
@@ -60,7 +61,7 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.getNom()}
+              defaultValue={initialData?.nom}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -71,7 +72,7 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.getPrenom()}
+              defaultValue={initialData?.prenom}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -82,7 +83,7 @@ export function UserForm({
             </label>
             <input
               type="email"
-              defaultValue={initialData?.getEmail()}
+              defaultValue={initialData?.email}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -97,7 +98,7 @@ export function UserForm({
               placeholder="Sélectionner un rôle"
               defaultValue={
                 initialData
-                  ? { value: initialData.getStatut(), label: initialData.getStatutName() }
+                  ? { value: initialData.statut, label: roleFinder(initialData.statut) }
                   : null
               }
               onChange={(option) => setRole(option ? option.value : null)}
