@@ -2,20 +2,21 @@ import express from 'express';
 import prisma from '../client.js'; // Chemin vers votre Prisma client
 const router = express.Router();
 
-async function updateUser(formData) {
-    return prisma.$transaction(async (prisma) => {
-        const user = await prisma.user.update({
-            where: {
-                id: formData.id,
-            },
-            data: {
-                nom: formData.nom,
-                prenom: formData.prenom,
-                email: formData.email,
-                statut: formData.statut,
-            },
-        });
+// Route pour mettre à jour un utilisateur
+router.put('/update-user/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nom, prenom, email, statut } = req.body;
 
-        return user; // Retourne l'utilisateur mis à jour
-    });
-}
+    try {
+        res.json(await prisma.$transaction(async (prisma) => {
+            return await prisma.utilisateur.update({
+                where: { id: parseInt(id) },
+                data: { nom, prenom, email, statut }
+            })
+        }));
+    } catch (error) {
+        res.status(500).json({ error: "Impossible de mettre à jour l'utilisateur ${id}" });
+    }
+});
+
+module.exports = router;
