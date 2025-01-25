@@ -101,23 +101,23 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
         leftEdge.style.width = '10px'
         leftEdge.style.height = '100vh'
         leftEdge.style.zIndex = '9999'
-        leftEdge.addEventListener('mouseenter', handleMouseEnter)
+        // leftEdge.addEventListener('mouseenter', handleMouseEnter)
         document.body.appendChild(leftEdge)
 
-        const sidebarElement = document.querySelector('.sidebar')
-        if (sidebarElement) {
-            sidebarElement.addEventListener('mouseleave', handleMouseLeave)
-        }
+        // const sidebarElement = document.querySelector('.sidebar')
+        // if (sidebarElement) {
+        //     sidebarElement.addEventListener('mouseleave', handleMouseLeave)
+        // }
 
         return () => {
             leftEdge.removeEventListener('mouseenter', handleMouseEnter)
             document.body.removeChild(leftEdge)
-            if (sidebarElement) {
-                sidebarElement.removeEventListener(
-                    'mouseleave',
-                    handleMouseLeave
-                )
-            }
+            // if (sidebarElement) {
+            //     sidebarElement.removeEventListener(
+            //         'mouseleave',
+            //         handleMouseLeave
+            //     )
+            // }
         }
     }, [isVisible, isManuallyOpened, setIsVisible])
 
@@ -175,8 +175,8 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                     <ArrowLeftToLine
                         className="w-6 h-6 cursor-pointer"
                         onClick={() => {
-                            setIsVisible(false)
-                            setIsManuallyOpened(false)
+                            setIsVisible(true)
+                            setIsManuallyOpened(true)
                         }}
                     />
                 ) : (

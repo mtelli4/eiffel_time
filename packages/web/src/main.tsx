@@ -6,8 +6,8 @@ import { Grades } from '@shared/pages/Grades/StudentGrades'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-// import { Register } from '@shared/pages/Register'
-// import { Login } from './pages/Login'
+import { Login } from '@shared/pages/Login/Login'
+import { Register } from '@shared/pages/Login/Register'
 import { Schedule } from '@shared/pages/Schedule/Schedule'
 import Root, { Error } from './root'
 import './styles/index.css'
@@ -44,14 +44,14 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // {
-  //   path: '/login',
-  //   element: <Login />,
-  // },
-  // {
-  //   path: '/register',
-  //   element: <Register />,
-  // },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/register',
+    element: <Register />,
+  },
 ])
 
 const rootElement = document.getElementById('root') as HTMLElement
