@@ -23,7 +23,26 @@ export function UserForm({
   initialData,
   isEdit,
 }: UserFormProps) {
-  const [role, setRole] = useState(initialData ? initialData.statut : null)
+  const [formData, setFormData] = useState({
+    id_utilisateur: initialData?.id_utilisateur,
+    nom: initialData?.nom,
+    prenom: initialData?.prenom,
+    email: initialData?.email,
+    statut: initialData?.statut,
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prevState => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    onSubmit(formData)
+  }
+
   if (!isOpen) return null
 
   return (
@@ -49,7 +68,9 @@ export function UserForm({
               </label>
               <input
                 type="text"
-                defaultValue={initialData?.id_utilisateur}
+                name="id_utilisateur"
+                value={formData.id_utilisateur}
+                onChange={handleChange}
                 className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
               />
             </div>
@@ -61,7 +82,9 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.nom}
+              name="nom"
+              value={formData.nom}
+              onChange={handleChange}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -72,7 +95,9 @@ export function UserForm({
             </label>
             <input
               type="text"
-              defaultValue={initialData?.prenom}
+              name="prenom"
+              value={formData.prenom}
+              onChange={handleChange}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -83,7 +108,9 @@ export function UserForm({
             </label>
             <input
               type="email"
-              defaultValue={initialData?.email}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
@@ -96,17 +123,17 @@ export function UserForm({
               options={roleOptions}
               isClearable
               placeholder="Sélectionner un rôle"
-              defaultValue={
-                initialData
-                  ? { value: initialData.statut, label: roleFinder(initialData.statut) }
-                  : null
-              }
-              onChange={(option) => setRole(option ? option.value : null)}
+              value={roleOptions.find(option => option.value === formData.statut)}
+              onChange={(option: any) => setFormData(prevState => ({
+                ...prevState,
+                statut: option?.value || null,
+              }))}
               className="text-sm"
             />
           </div>
 
           <div className="flex justify-end gap-3">
+            {/* TODO: demander à Mohamed pourquoi le bouton annuler alors qu'il y a déjà un bouton fermer */}
             <button
               type="button"
               onClick={onClose}

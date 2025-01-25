@@ -113,7 +113,7 @@ export function Admin() {
   const handleSubmitUser = async (data: any) => {
     if (selectedUser) {
       try {
-        const response = await fetch('https://localhost:4000/api/update-user/${selectedUser.id_utilisateur}', {
+        const response = await fetch(`https://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -125,7 +125,16 @@ export function Admin() {
           throw new Error("Erreur lors de la mise à jour de l'utilisateur");
         }
 
-        const updatedUser = await response.json();
+        const updatedUser: Utilisateur = {
+          id_utilisateur: selectedUser.id_utilisateur,
+          nom: data.nom,
+          prenom: data.prenom,
+          email: data.email,
+          statut: data.statut,
+          formations: data.formations,
+          groupes: data.groupes,
+          vacataire: data.vacataire
+        }
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u));
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
