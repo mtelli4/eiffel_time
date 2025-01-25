@@ -442,7 +442,7 @@ router.put('/update-user/:id', async (req, res) => {
           })
       }));
   } catch (error) {
-      res.status(500).json({ error: "Impossible de mettre à jour l'utilisateur ${id}" });
+      res.status(500).json({ error: `Impossible de mettre à jour l'utilisateur ${id}` });
   }
 });
 
