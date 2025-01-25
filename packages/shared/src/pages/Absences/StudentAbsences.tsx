@@ -10,7 +10,7 @@ import {
     Absence,
     Cours,
     Enseignant,
-    EnseignatModule,
+    EnseignantModule,
     Etudiant,
     Module,
 } from '../../backend/classes'
@@ -25,7 +25,7 @@ export function Absences() {
     const [etudiants, setEtudiants] = useState<Etudiant[]>([])
     const [enseignants, setEnseignants] = useState<Enseignant[]>([])
     const [enseignant_modules, setEnseignantModules] = useState<
-        EnseignatModule[]
+        EnseignantModule[]
     >([])
     const [cours, setCours] = useState<Cours[]>([])
     const [justification, setJustification] = useState<Record<string, string>>(
@@ -52,7 +52,7 @@ export function Absences() {
                 })
                 const enseignant_modules = data.enseignant_module.map(
                     (em: any) => {
-                        return new EnseignatModule(em)
+                        return new EnseignantModule(em)
                     }
                 )
                 const etudiants = data.etudiants.map((e: any) => {
