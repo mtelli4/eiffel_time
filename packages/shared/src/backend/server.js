@@ -4,10 +4,14 @@ const routes = require('./routes');  // Import des routes définies dans routes.
 
 const app = express();
 
-app.use(cors({
-    origin: '*', // Accepter toutes les origines
-    methods: 'GET,POST,PUT,DELETE', // Méthodes autorisées
-}));
+const corsOptions = {
+  origin: '*', // Accepter toutes les origines
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
+  allowedHeaders: ['Content-Type', 'Authorization'], // En-tête autorisées dans les requêtes
+  credentials: true, // Nécessaire pour les requêtes avec des cookies ou des sessions
+}
+
+app.use(cors(corsOptions));
 
 // Middleware pour analyser le corps des requêtes en JSON
 app.use(express.json());
@@ -17,5 +21,5 @@ app.use('/api', routes);  // Assurez-vous que les routes sont préfixées par "/
 
 // Lancer le serveur sur le port 4000
 app.listen(4000, () => {
-    console.log('Serveur démarré sur http://localhost:4000');
+  console.log('Serveur démarré sur http://localhost:4000');
 });

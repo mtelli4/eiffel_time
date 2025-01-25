@@ -1,14 +1,14 @@
-import { Absences } from '@shared/pages/Absences/StudentAbsences'
-import { Admin } from '@shared/pages/Admin/Admin'
-import { ClassAverages } from '@shared/pages/Averages/ClassAverages'
-import { ClassGrades } from '@shared/pages/Grades/GradesManagement/ClassGrades'
-import { Grades } from '@shared/pages/Grades/StudentGrades'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Login } from '@shared/pages/Login/Login'
-import { Register } from '@shared/pages/Login/Register'
-import { Schedule } from '@shared/pages/Schedule/Schedule'
+import { Absences } from '../../shared/src/pages/Absences/StudentAbsences'
+import { Admin } from '../../shared/src/pages/Admin/Admin'
+import { ClassAverages } from '../../shared/src/pages/Averages/ClassAverages'
+import { ClassGrades } from '../../shared/src/pages/Grades/GradesManagement/ClassGrades'
+import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
+import { Login } from '../../shared/src/pages/Login/Login'
+import { Register } from '../../shared/src/pages/Login/Register'
+import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
 import Root, { Error } from './root'
 import './styles/index.css'
 
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
 
 const rootElement = document.getElementById('root') as HTMLElement
 createRoot(rootElement).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
 )

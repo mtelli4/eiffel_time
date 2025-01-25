@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { Utilisateur } from '../../backend/classes'
+import { Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
@@ -8,39 +8,29 @@ type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  const [role, setRole] = useState('') // État local pour le filtre par rôle
-  const [groupe, setGroupe] = useState('') // État local pour le filtre par groupe
-  const [formation, setFormation] = useState('') // État local pour le filtre par formation
-  const [typeTeacherFilter, setTypeTeacherFilter] = useState('') // État local pour le filtre par type d'enseignant
-  const [searchTerm, setSearchTerm] = useState('') // État local pour la recherche
+  // État unique pour les filtres
+  const [filters, setFilters] = useState({
+    role: '',
+    formation: '',
+    groupe: '',
+    type: '',
+    search: ''
+  })
 
-  const handleRole = (role: string) => {
-    setRole(role)
+  const handleFilterChange = (filterName: string, value: string) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [filterName]: value
+    }))
   }
 
-  const handleGroup = (group: string) => {
-    setGroupe(group)
-  }
-
-  const handleFormation = (formation: string) => {
-    setFormation(formation)
-  }
-
-  const handleTypeTeacher = (type: string) => {
-    setTypeTeacherFilter(type)
-  }
-
-  const handleSearch = (searchTerm: string) => {
-    setSearchTerm(searchTerm)
-  }
-
-  const [users, setUsers] = useState<Utilisateur[]>([])
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
   useEffect(() => {
-    // Effectuer la requête GET pour récupérer les utilisateurs
-    fetch('http://localhost:4000/api/data') // URL de votre API
+    fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
         // Vérifier si la réponse est correcte
         if (!response.ok) {
@@ -49,18 +39,27 @@ export function Admin() {
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
-        const utilisateurs = data.utilisateurs.map(
-          (u: any) => new Utilisateur(u)
-        )
-        setUsers(utilisateurs)
+        const utilisateurs = data.map((utilisateur: any) => ({
+            id_utilisateur: utilisateur.id_utilisateur,
+            nom: utilisateur.nom,
+            prenom: utilisateur.prenom,
+            email: utilisateur.email,
+            statut: utilisateur.statut,
+            formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+            groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+            vacataire: utilisateur.enseignant?.vacataire
+        }));
+        setUtilisateurs(utilisateurs)
+        setLoading(false)
       })
       .catch((error) => {
         console.error(
           'Erreur lors de la récupération des utilisateurs:',
           error
         )
+        setLoading(false)
       })
-  }, []) // Le tableau vide [] signifie que l'effet se déclenche une seule fois, lors du premier rendu du composant
+  }, []);
 
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
@@ -108,18 +107,40 @@ export function Admin() {
   }
 
   const handleDeleteUser = (user: Utilisateur) => {
-    setUsers(users.filter((u) => u.getId() !== user.getId()))
+    setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
   }
 
-  const handleSubmitUser = (data: any) => {
+  const handleSubmitUser = async (data: any) => {
     if (selectedUser) {
-      setUsers(
-        users.map((u) =>
-          u.getId() === selectedUser.getId() ? { ...u, ...data } : u
-        )
-      )
+      try {
+        const response = await fetch(`https://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error("Erreur lors de la mise à jour de l'utilisateur");
+        }
+
+        const updatedUser: Utilisateur = {
+          id_utilisateur: selectedUser.id_utilisateur,
+          nom: data.nom,
+          prenom: data.prenom,
+          email: data.email,
+          statut: data.statut,
+          formations: data.formations,
+          groupes: data.groupes,
+          vacataire: data.vacataire
+        }
+        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u));
+      } catch (error) {
+        console.error("Erreur lors de la modification de l'utilisateur : ", error)
+      }
     } else {
-      setUsers([...users, { ...data, id: `U${Date.now()}` }])
+      setUtilisateurs([...utilisateurs, { ...data, id: `U${Date.now()}` }])
     }
     setShowUserForm(false)
     setSelectedUser(null)
@@ -176,23 +197,17 @@ export function Admin() {
           </View>
 
           <UserFilters
-            onRoleChange={handleRole}
-            onGroupChange={handleGroup}
-            onFormationChange={handleFormation}
-            onTypeChange={handleTypeTeacher}
-            onSearch={handleSearch}
+            filters={filters}
+            onFilterChange={handleFilterChange}
           />
 
           <UserTable
-            users={users}
+            users={utilisateurs}
             isAdmin={true}
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
-            roleSelected={role}
-            groupSelected={groupe}
-            formationSelected={formation}
-            typeTeachingSelected={typeTeacherFilter}
-            searchTerm={searchTerm}
+            filters={filters}
+            loading={loading}
           />
         </View>
       )}

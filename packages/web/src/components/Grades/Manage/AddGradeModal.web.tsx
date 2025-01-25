@@ -1,7 +1,16 @@
-import { AddGradeModalProps, FormEvaluation } from '@shared/types/types'
 import { useState } from 'react'
+import {
+    AddGradeModalProps,
+    FormEvaluation,
+} from '../../../../../shared/src/types/types'
 
-export default function WebAddGradeModal({ isOpen, onClose, modules, students, cours }: AddGradeModalProps) {
+export default function WebAddGradeModal({
+    isOpen,
+    onClose,
+    modules,
+    students,
+    cours,
+}: AddGradeModalProps) {
     const [formData, setFormData] = useState<FormEvaluation>({
         libelle: '',
         coefficient: 1,
@@ -13,7 +22,7 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
 
     const handleSubmit = async () => {
         if (!formData.libelle) {
-            alert('Le nom de l\'évaluation est requis')
+            alert("Le nom de l'évaluation est requis")
             return
         }
         if (!formData.id_module || formData.id_module === 0) {
@@ -25,23 +34,32 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
             return
         }
         try {
-            const response = await fetch('http://localhost:4000/api/insert-evaluation', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            })
+            const response = await fetch(
+                'http://localhost:4000/api/insert-evaluation',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                }
+            )
 
             if (!response.ok) {
                 const errorData = await response.json()
-                throw new Error(errorData.message || 'Erreur lors de l\'insertion de l\'évaluation.')
+                throw new Error(
+                    errorData.message ||
+                        "Erreur lors de l'insertion de l'évaluation."
+                )
             }
 
             const result = await response.json()
             console.log('Évaluation créée avec succès:', result)
             onClose() // Ferme la modal après succès
-        } catch (error : any) {
+        } catch (error: any) {
             console.error('Erreur:', error)
-            alert('Une erreur s\'est produite lors de l\'insertion: ' + error.message)
+            alert(
+                "Une erreur s'est produite lors de l'insertion: " +
+                    error.message
+            )
         }
     }
 
@@ -62,17 +80,25 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Module</label>
+                        <label className="block text-sm font-medium mb-1">
+                            Module
+                        </label>
                         <select
                             value={formData.id_module}
                             onChange={(e) =>
-                                setFormData({ ...formData, id_module: parseInt(e.target.value) })
+                                setFormData({
+                                    ...formData,
+                                    id_module: parseInt(e.target.value),
+                                })
                             }
                             className="w-full p-2 border rounded"
                         >
                             <option value="">Sélectionner un module</option>
                             {modules.map((module) => (
-                                <option key={module.getId()} value={module.getId()}>
+                                <option
+                                    key={module.getId()}
+                                    value={module.getId()}
+                                >
                                     {module.getName()}
                                 </option>
                             ))}
@@ -87,31 +113,39 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
                             type="text"
                             value={formData.libelle}
                             onChange={(e) =>
-                                setFormData({ ...formData, libelle: e.target.value })
+                                setFormData({
+                                    ...formData,
+                                    libelle: e.target.value,
+                                })
                             }
                             className="w-full p-2 border rounded"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1">Cours</label>
+                        <label className="block text-sm font-medium mb-1">
+                            Cours
+                        </label>
                         <select
                             value={formData.id_cours}
                             onChange={(e) =>
-                                setFormData({ ...formData, id_cours: parseInt(e.target.value) })
+                                setFormData({
+                                    ...formData,
+                                    id_cours: parseInt(e.target.value),
+                                })
                             }
                             className="w-full p-2 border rounded"
                         >
                             <option value="">Sélectionner un cours</option>
                             {cours.map((c) => {
-                                    if (c.getIdModule() !== formData.id_module) return null
-                                    return (
-                                        <option key={c.getId()} value={c.getId()}>
-                                            {c.getTime()}
-                                        </option>
-                                    )
-                                },
-                            )}
+                                if (c.getIdModule() !== formData.id_module)
+                                    return null
+                                return (
+                                    <option key={c.getId()} value={c.getId()}>
+                                        {c.getTime()}
+                                    </option>
+                                )
+                            })}
                         </select>
                     </div>
 
@@ -140,18 +174,26 @@ export default function WebAddGradeModal({ isOpen, onClose, modules, students, c
                             type="number"
                             value={formData.notemaximale}
                             onChange={(e) =>
-                                setFormData({ ...formData, notemaximale: parseInt(e.target.value) })
+                                setFormData({
+                                    ...formData,
+                                    notemaximale: parseInt(e.target.value),
+                                })
                             }
                             className="w-full p-2 border rounded"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1">Période</label>
+                        <label className="block text-sm font-medium mb-1">
+                            Période
+                        </label>
                         <select
                             value={formData.periode}
                             onChange={(e) =>
-                                setFormData({ ...formData, periode: e.target.value })
+                                setFormData({
+                                    ...formData,
+                                    periode: e.target.value,
+                                })
                             }
                             className="w-full p-2 border rounded"
                         >
