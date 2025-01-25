@@ -30,7 +30,7 @@ export function Admin() {
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
   useEffect(() => {
-    document.title = 'Administration - Gestion des utilisateurs'
+    document.title = 'Eiffel Time | Administration - Gestion des utilisateurs' // TODO: Inverser entre les deux et mettre un titre partout
     fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
         // Vérifier si la réponse est correcte
