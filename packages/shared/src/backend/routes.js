@@ -133,57 +133,6 @@ router.get('/data', async (req, res) => {
   }
 });
 
-router.get('/users', async (req, res) => {
-  try {
-    const users = await prisma.utilisateur.findMany({
-      select: {
-        id_utilisateur: true,
-        nom: true,
-        prenom: true,
-        email: true,
-        statut: true,
-        formation_utilisateur: {
-          select: {
-            formation: {
-              select: {
-                id_formation: true,
-                libelle: true,
-              },
-            },
-          },
-        },
-        etudiant: {
-          select: {
-            groupe_etudiant: {
-              select: {
-                groupe: {
-                  select: {
-                    id_grp: true,
-                    libelle: true,
-                  }
-                }
-              }
-            }
-          }
-        },
-        enseignant: {
-          select: {
-            vacataire: true,
-          }
-        },
-      },
-      orderBy: {
-        id_utilisateur: 'asc',  // Tri par id d'utilisateur
-      },
-    });
-
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
-  }
-});
-
 // Route pour récupérer la liste des utilisateurs avec leurs formations
 router.get('/utilisateurs', async (req, res) => {
   try {
@@ -442,20 +391,84 @@ router.post('/insert-evaluation', async (req, res) => {
   }
 });
 
+// Route pour récupérer la liste des utilisateurs
+router.get('/users', async (req, res) => {
+  try {
+    const users = await prisma.utilisateur.findMany({
+      select: {
+        id_utilisateur: true,
+        nom: true,
+        prenom: true,
+        email: true,
+        statut: true,
+        formation_utilisateur: {
+          select: {
+            formation: {
+              select: {
+                id_formation: true,
+                libelle: true,
+              },
+            },
+          },
+        },
+        etudiant: {
+          select: {
+            groupe_etudiant: {
+              select: {
+                groupe: {
+                  select: {
+                    id_grp: true,
+                    libelle: true,
+                  }
+                }
+              }
+            }
+          }
+        },
+        enseignant: {
+          select: {
+            vacataire: true,
+          }
+        },
+      },
+      orderBy: {
+        id_utilisateur: 'asc',  // Tri par id d'utilisateur
+      },
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
+  }
+});
+
 // Route pour mettre à jour un utilisateur
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
-  const { nom, prenom, email, statut } = req.body;
+  const data = req.body;
 
   try {
-    res.json(await prisma.$transaction(async (prisma) => {
-      return await prisma.utilisateur.update({
-        where: { id: parseInt(id) },
-        data: { nom, prenom, email, statut }
-      })
-    }));
+    const updateUser = await prisma.$transaction(async (tx) => {
+      const user = await tx.utilisateur.update({
+        where: { id_utilisateur: parseInt(id) },
+        data: {
+          nom: data.nom,
+          prenom: data.prenom,
+          email: data.email,
+          statut: data.statut,
+        },
+      });
+
+      // TODO: Ajouter les formations, groupes, etc. à mettre à jour
+
+      return user;
+    });
+
+    res.json(updateUser);
   } catch (error) {
-    res.status(500).json({ error: `Impossible de mettre à jour l'utilisateur ${id}` });
+    console.error(error);
+    res.status(500).json({ error: `Erreur lors de la mise à jour de l'utilisateur ${id} ; ${error}.` });
   }
 });
 
