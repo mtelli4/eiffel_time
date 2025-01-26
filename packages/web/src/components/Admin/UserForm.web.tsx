@@ -1,17 +1,16 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
-import { ROLES } from '../../../../shared/src/types/types'
+import { ROLES, UserUpdate } from '../../../../shared/src/types/types'
 import { Utilisateur } from '../../../../shared/src/types/types'
 import { useState } from 'react'
 import { statut_utilisateur } from '@prisma/client'
-import { roleFinder } from '../../../../shared/src/lib/utils'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
 
 interface UserFormProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (data: any) => void
+  onSubmit: (data: UserUpdate) => void
   initialData?: Utilisateur
   isEdit?: boolean
 }
@@ -23,12 +22,12 @@ export function UserForm({
   initialData,
   isEdit,
 }: UserFormProps) {
-  const [formData, setFormData] = useState({
-    id_utilisateur: initialData?.id_utilisateur,
-    nom: initialData?.nom,
-    prenom: initialData?.prenom,
-    email: initialData?.email,
-    statut: initialData?.statut,
+  const [formData, setFormData] = useState<UserUpdate>({
+    id_utilisateur: initialData?.id_utilisateur || 0,
+    nom: initialData?.nom || '',
+    prenom: initialData?.prenom || '',
+    email: initialData?.email || '',
+    statut: initialData?.statut || '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +39,24 @@ export function UserForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!formData.nom.trim()) {
+      alert('Le nom est obligatoire')
+      return
+    }
+    if (!formData.prenom.trim()) {
+      alert('Le prénom est obligatoire')
+      return
+    }
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      alert("Veuillez saisir une adresse email valide")
+      return
+    }
+    if (!formData.statut) {
+      alert('Le rôle est obligatoire')
+      return
+    }
+
     onSubmit(formData)
   }
 
@@ -60,7 +77,7 @@ export function UserForm({
           </button>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {!isEdit && (
             <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
