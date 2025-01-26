@@ -33,7 +33,15 @@ export type Utilisateur = {
   formations: Formation[];
   groupes: Groupe[];
   vacataire?: boolean;
-};
+}
+
+export interface UserUpdate {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+}
 
 export interface CourseModalProps {
   course: Course
