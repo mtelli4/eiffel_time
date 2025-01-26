@@ -30,7 +30,7 @@ export function Admin() {
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
   useEffect(() => {
-    document.title = 'Eiffel Time | Administration - Gestion des utilisateurs' // TODO: Inverser entre les deux et mettre un titre partout
+    /* document.title = 'Eiffel Time | Administration - Gestion des utilisateurs' */ // TODO: Inverser entre les deux et mettre un titre partout
     fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
         // Vérifier si la réponse est correcte
@@ -114,29 +114,19 @@ export function Admin() {
   const handleSubmitUser = async (data: any) => {
     if (selectedUser) {
       try {
-        const response = await fetch(`https://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
+        const response = await fetch(`http://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
-        });
-
+        })
         if (!response.ok) {
-          throw new Error("Erreur lors de la mise à jour de l'utilisateur");
+          throw new Error('Erreur réseau')
         }
-
-        const updatedUser: Utilisateur = {
-          id_utilisateur: selectedUser.id_utilisateur,
-          nom: data.nom,
-          prenom: data.prenom,
-          email: data.email,
-          statut: data.statut,
-          formations: data.formations,
-          groupes: data.groupes,
-          vacataire: data.vacataire
-        }
-        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u));
+        
+        const updatedUser = await response.json()
+        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
       }
