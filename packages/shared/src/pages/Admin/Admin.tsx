@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { Utilisateur } from '../../types/types'
+import { UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
@@ -111,7 +111,7 @@ export function Admin() {
     setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
   }
 
-  const handleSubmitUser = async (data: any) => {
+  const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
       try {
         const response = await fetch(`http://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
@@ -131,7 +131,7 @@ export function Admin() {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
       }
     } else {
-      setUtilisateurs([...utilisateurs, { ...data, id: `U${Date.now()}` }])
+      console.log('Création d\'un utilisateur')
     }
     setShowUserForm(false)
     setSelectedUser(null)
