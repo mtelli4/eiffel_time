@@ -132,8 +132,18 @@ export function Admin() {
         selectedUser.email = updatedUser.email
         selectedUser.statut = updatedUser.statut
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
+        /* if (Platform.OS === 'web') {
+          toast.success(`Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès`)
+        } else {
+          Toast.show({ type: 'success', text1: 'Succès', text2: `Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès` })
+        } */
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
+        /* if (Platform.OS === 'web') {
+          toast.error(`Une erreur est survenue lors de la modification de l'utilisateur ${selectedUser.nom} ${selectedUser.prenom}`)
+        } else {
+          Toast.show({ type: 'error', text1: 'Erreur', text2: `Une erreur est survenue lors de la modification de l'utilisateur ${selectedUser.nom} ${selectedUser.prenom}` })
+        } */
       }
     } else {
       console.log('Création d\'un utilisateur')
