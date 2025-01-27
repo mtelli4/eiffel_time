@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
+import { ToastContainer, toast } from 'react-toastify'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
@@ -182,6 +183,8 @@ export function Admin() {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
   }
 
+  const notify = () => toast("Wow so easy !", { position: 'top-center' });
+
   return (
     <View style={styles.container}>
       <View style={styles.tabContainer}>
@@ -226,6 +229,12 @@ export function Admin() {
                 Ajouter un utilisateur
               </Text>
             </TouchableOpacity>
+            {Platform.OS === 'web' && (
+              <Text>
+                <button onClick={notify}>Notify !</button>
+                <ToastContainer />
+              </Text>
+            )}
           </View>
 
           <UserFilters

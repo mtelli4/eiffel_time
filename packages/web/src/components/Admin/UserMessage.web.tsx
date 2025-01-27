@@ -8,7 +8,7 @@ interface UserMessageProps {
 }
 
 export function UserMessage({ isOpen, pastUser, newUser }: UserMessageProps) {
-    const notify = () => toast("Wow so easy !");
+    const notify = () => toast("Wow so easy !", { position: 'top-center' });
 
     if (!isOpen) return null
 
