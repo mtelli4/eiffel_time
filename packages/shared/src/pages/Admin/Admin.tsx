@@ -8,6 +8,7 @@ type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
+  const [showUserMessage, setShowUserMessage] = useState(false)
   const [loading, setLoading] = useState(true)
 
   // État unique pour les filtres
@@ -28,6 +29,7 @@ export function Admin() {
 
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
+  const [newUser, setNewUser] = useState<Utilisateur | null>(null)
 
   useEffect(() => {
     /* document.title = 'Eiffel Time | Administration - Gestion des utilisateurs' */ // TODO: Inverser entre les deux et mettre un titre partout
@@ -65,6 +67,7 @@ export function Admin() {
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
   const [UserTable, setUserTable] = useState<any>(null)
+  const [UserMessage, setUserMessage] = useState<any>(null)
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -78,9 +81,13 @@ export function Admin() {
         const { UserTable } = await import(
           '../../../../web/src/components/Admin/UserTable.web'
         )
+        const { UserMessage } = await import(
+          '../../../../web/src/components/Admin/UserMessage.web'
+        )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
         setUserTable(() => UserTable)
+        setUserMessage(() => UserMessage)
       } else {
         const { UserFilters } = await import(
           '../../../../mobile/src/components/Admin/UserFilters.native'
@@ -91,9 +98,13 @@ export function Admin() {
         const { UserTable } = await import(
           '../../../../mobile/src/components/Admin/UserTable.native'
         )
+        const { UserMessage } = await import(
+          '../../../../mobile/src/components/Admin/UserMessage.native'
+        )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
         setUserTable(() => UserTable)
+        setUserMessage(() => UserMessage)
       }
     }
 
@@ -126,6 +137,18 @@ export function Admin() {
         }
         
         const updatedUser = await response.json()
+        // Créer un nouvel objet utilisateur avec les données mises à jour
+        setNewUser({
+          id_utilisateur: updatedUser.id_utilisateur,
+          nom: updatedUser.nom,
+          prenom: updatedUser.prenom,
+          email: updatedUser.email,
+          statut: updatedUser.statut,
+          formations: updatedUser.formation_utilisateur.map((f: any) => f.formation),
+          groupes: updatedUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: updatedUser.enseignant?.vacataire
+        })
+        setShowUserMessage(true)
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
@@ -139,6 +162,7 @@ export function Admin() {
         } */
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
+        setShowUserMessage(true)
         /* if (Platform.OS === 'web') {
           toast.error(`Une erreur est survenue lors de la modification de l'utilisateur ${selectedUser.nom} ${selectedUser.prenom}`)
         } else {
@@ -149,6 +173,7 @@ export function Admin() {
       console.log('Création d\'un utilisateur')
     }
     setShowUserForm(false)
+    setShowUserMessage(false)
     setSelectedUser(null)
   }
 
@@ -227,6 +252,15 @@ export function Admin() {
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
           isEdit={!!selectedUser}
+        />
+      )}
+
+      {showUserMessage && (
+        <UserMessage
+          isOpen={showUserMessage}
+          // onClose={() => setShowUserMessage(false)}
+          pastUser={selectedUser}
+          newUser={newUser}
         />
       )}
     </View>

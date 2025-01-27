@@ -104,13 +104,6 @@ export interface FormData {
 }
 
 export interface UserFiltersProps {
-  filters: {
-    role: string
-    groupe: string
-    formation: string
-    type: string
-    search: string
-  },
   onFilterChange: (filterName: string, value: string) => void
 }
 
