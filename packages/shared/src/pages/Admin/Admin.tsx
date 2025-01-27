@@ -138,7 +138,7 @@ export function Admin() {
         
         const updatedUser = await response.json()
         // Créer un nouvel objet utilisateur avec les données mises à jour
-        setNewUser({
+        /* setNewUser({
           id_utilisateur: updatedUser.id_utilisateur,
           nom: updatedUser.nom,
           prenom: updatedUser.prenom,
@@ -147,13 +147,14 @@ export function Admin() {
           formations: updatedUser.formation_utilisateur.map((f: any) => f.formation),
           groupes: updatedUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
           vacataire: updatedUser.enseignant?.vacataire
-        })
-        setShowUserMessage(true)
+        }) */
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
         selectedUser.email = updatedUser.email
         selectedUser.statut = updatedUser.statut
+        setNewUser(updatedUser)
+        setShowUserMessage(true)
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
         /* if (Platform.OS === 'web') {
           toast.success(`Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès`)
