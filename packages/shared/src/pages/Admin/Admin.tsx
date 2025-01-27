@@ -126,7 +126,12 @@ export function Admin() {
         }
         
         const updatedUser = await response.json()
-        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u))
+        selectedUser.id_utilisateur = updatedUser.id_utilisateur
+        selectedUser.nom = updatedUser.nom
+        selectedUser.prenom = updatedUser.prenom
+        selectedUser.email = updatedUser.email
+        selectedUser.statut = updatedUser.statut
+        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
       }
