@@ -447,6 +447,7 @@ router.get('/users', async (req, res) => {
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
   const data = req.body;
+  const now = new Date();
 
   try {
     const updateUser = await prisma.$transaction(async (tx) => {
@@ -457,6 +458,7 @@ router.put('/update-user/:id', async (req, res) => {
           prenom: data.prenom,
           email: data.email,
           statut: data.statut,
+          updatedat: new Date(),
         },
       });
 
