@@ -9,11 +9,10 @@ import {
 } from '../../../../shared/src/types/types'
 
 export function UserFilters({
-  filters,
   onFilterChange,
 }: UserFiltersProps) {
-  const [groupes, setGroupes] = useState([])
   const [formations, setFormations] = useState([])
+  const [groupes, setGroupes] = useState([])
 
   const handleFilterChange = (filterName: string, value: string) => {
     onFilterChange(filterName, value)
@@ -30,15 +29,13 @@ export function UserFilters({
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
-        const groupes = data.groupes.map((g: groupe) => {
-          return { value: g.id_grp, label: g.libelle }
-        })
-        setGroupes(groupes)
+        setGroupes(data.groupes.map((g: groupe) => {
+          return { value: g.libelle, label: g.libelle }
+        }))
         
-        const formations = data.formations.map((f: formation) => {
+        setFormations(data.formations.map((f: formation) => {
           return { value: f.id_formation, label: f.libelle }
-        })
-        setFormations(formations)
+        }))
       })
       .catch((error) => {
         console.error(

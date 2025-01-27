@@ -17,7 +17,7 @@ interface UserTableProps {
     groupe: string
     type: string
     search: string
-  },
+  }
   loading: boolean
 }
 
@@ -40,8 +40,8 @@ export function UserTable({
   );
 
   filteredData.sort((a, b) => a.id_utilisateur - b.id_utilisateur);
-  /* sort in the formation names when */
   filteredData.sort((a, b) => a.formations.length - b.formations.length);
+  filteredData.sort((a, b) => a.groupes.length - b.groupes.length);
 
   if (filters.role) {
     filteredData = filteredData.filter(
@@ -59,11 +59,14 @@ export function UserTable({
     );
   }
 
+  // le filtre groupe ne fonctionne pas correctement, lorsque je choisis un groupe, il montre aucun utilisateur
+  // comment je peux le corriger?
+
   if (filters.groupe) {
     filteredData = filteredData.filter(
       (utilisateur) =>
         utilisateur.groupes.some(
-          (g) => g.id_groupe === parseInt(filters.groupe)
+          (g) => g.libelle === filters.groupe
         )
     );
   }

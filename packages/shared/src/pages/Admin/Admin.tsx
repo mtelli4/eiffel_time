@@ -203,7 +203,6 @@ export function Admin() {
           </View>
 
           <UserFilters
-            filters={filters}
             onFilterChange={handleFilterChange}
           />
 
