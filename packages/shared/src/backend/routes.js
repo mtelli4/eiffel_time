@@ -1,5 +1,5 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');  // Import du client Prisma
+const { PrismaClient, periode } = require('@prisma/client');  // Import du client Prisma
 const prisma = new PrismaClient();  // Initialisation du client Prisma
 const router = express.Router();    // Initialisation du routeur Express
 
@@ -135,29 +135,34 @@ router.get('/data', async (req, res) => {
 
 // Route pour insérer une nouvelle évaluation
 router.post('/insert-evaluation', async (req, res) => {
+  const formData = req.body; // Les données du formulaire envoyées par le frontend
+
   try {
-    const formData = req.body; // Les données du formulaire envoyées par le frontend
-    const result = await prisma.$transaction(async (prisma) => {
-      const evaluation = await prisma.evaluation.create({
+    const result = await prisma.$transaction(async (tx) => {
+      const evaluation = await tx.evaluation.create({
         data: {
           id_eval: 100,
           libelle: formData.libelle,
-          coefficient: formData.coefficient,
-          notemaximale: formData.notemaximale,
-          periode: formData.periode,
+          coefficient: parseFloat(formData.coefficient), // Convertir en float si nécessaire
+          notemaximale: parseFloat(formData.notemaximale), // Convertir en float si nécessaire
+          periode: periode[formData.periode], // Convertir en enum
           createdat: new Date(),
-          id_cours: formData.id_cours,
-          id_notif: 3, // Par exemple, une notification par défaut
-          id_module: formData.id_module,
+          id_cours: parseInt(formData.id_cours, 10), // Convertir en entier
+          id_notif: 3, // Exemple : une notification par défaut
+          id_module: parseInt(formData.id_module, 10), // Convertir en entier
         },
       });
-  
+
       return evaluation; // Retourne l'évaluation créée
     });
-    res.status(201).json(result); // Réponse JSON contenant l'évaluation créée
+
+    res.status(201).json(result); // Réponse JSON avec un statut HTTP 201 (Created)
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Une erreur s\'est produite lors de la création de l\'évaluation.', details: error });
+    console.error("Erreur lors de la création de l'évaluation :", error);
+    res.status(500).json({
+      error: "Une erreur s'est produite lors de la création de l'évaluation.",
+      details: error.message,
+    });
   }
 });
 
