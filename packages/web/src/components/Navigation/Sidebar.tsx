@@ -17,7 +17,7 @@ import { useUser } from '../../context/UserContext'
 import { ROLES } from '../../../../shared/src/types/types'
 
 interface SidebarProps {
-    userRole: 'student' | 'teacher' | 'secretary' | 'director' | 'manager' | 'admin'
+    userRole: 'student' | 'teacher' | 'secretary' | 'director' | 'manager' | 'administrator'
     isVisible: boolean
     setIsVisible: (isVisible: boolean) => void
 }
@@ -54,7 +54,7 @@ const navigationConfig = {
         { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
         { icon: UserCheck, label: 'Absences', path: '/absences' },
     ],
-    admin: [
+    administrator: [
         { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
         { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
         { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
@@ -79,13 +79,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
 
     const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setRole(
-            event.target.value as
-                | 'admin'
-                | 'student'
-                | 'teacher'
-                | 'secretary'
-                | 'director'
-                | 'manager'
+            event.target.value as 'student' | 'teacher' | 'secretary' | 'director' | 'manager' | 'administrator'
         )
     }
 
@@ -170,7 +164,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                     value={role}
                     onChange={handleRoleChange}
                 >
-                    { ROLES.map((role) => (<option value={role.value}>{role.label}</option>)) }
+                    { ROLES.map((role) => (<option value={role.value} key={role.value}>{role.label}</option>)) }
                 </select>
             </div>
             <div className="flex justify-between items-end p-2">
