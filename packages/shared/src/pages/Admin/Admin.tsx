@@ -183,7 +183,7 @@ export function Admin() {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
   }
 
-  const notify = () => toast("Wow so easy !", { position: 'top-center' });
+  const notify = () => toast("Wow so easy !", { position: 'bottom-right' });
 
   return (
     <View style={styles.container}>
