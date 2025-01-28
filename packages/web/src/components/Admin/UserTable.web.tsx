@@ -5,6 +5,7 @@ import DataTable from 'datatables.net-react'
 import { Edit2, Trash2 } from 'lucide-react'
 import { Utilisateur } from '../../../../shared/src/types/types'
 import { roleFinder } from '../../../../shared/src/lib/utils'
+import '../../styles/dataTables.dataTables.min.css'
 
 interface UserTableProps {
   users: Utilisateur[]
