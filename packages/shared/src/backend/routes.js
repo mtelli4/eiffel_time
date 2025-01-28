@@ -139,9 +139,11 @@ router.post('/insert-evaluation', async (req, res) => {
 
   try {
     const result = await prisma.$transaction(async (tx) => {
+      const lastEvaluation = await tx.evaluation.lastEvaluation(); // Récupère la dernière évaluation
+
       const evaluation = await tx.evaluation.create({
         data: {
-          id_eval: 100,
+          id_eval: lastEvaluation.id_eval + 1, // Incrémente l'id de l'évaluation
           libelle: formData.libelle,
           coefficient: parseFloat(formData.coefficient), // Convertir en float si nécessaire
           notemaximale: parseFloat(formData.notemaximale), // Convertir en float si nécessaire
