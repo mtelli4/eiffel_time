@@ -82,13 +82,9 @@ export function Admin() {
         const { UserTable } = await import(
           '../../../../web/src/components/Admin/UserTable.web'
         )
-        const { UserMessage } = await import(
-          '../../../../web/src/components/Admin/UserMessage.web'
-        )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
         setUserTable(() => UserTable)
-        setUserMessage(() => UserMessage)
       } else {
         const { UserFilters } = await import(
           '../../../../mobile/src/components/Admin/UserFilters.native'
@@ -99,13 +95,9 @@ export function Admin() {
         const { UserTable } = await import(
           '../../../../mobile/src/components/Admin/UserTable.native'
         )
-        const { UserMessage } = await import(
-          '../../../../mobile/src/components/Admin/UserMessage.native'
-        )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
         setUserTable(() => UserTable)
-        setUserMessage(() => UserMessage)
       }
     }
 
@@ -149,6 +141,9 @@ export function Admin() {
           groupes: updatedUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
           vacataire: updatedUser.enseignant?.vacataire
         }) */
+        if (Platform.OS === 'web') {
+          toast.success(`Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès`, { position: 'bottom-right' })
+        }
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
@@ -157,19 +152,13 @@ export function Admin() {
         setNewUser(updatedUser)
         setShowUserMessage(true)
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
-        /* if (Platform.OS === 'web') {
-          toast.success(`Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès`)
-        } else {
-          Toast.show({ type: 'success', text1: 'Succès', text2: `Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès` })
-        } */
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
         setShowUserMessage(true)
-        /* if (Platform.OS === 'web') {
+
+        if (Platform.OS === 'web') {
           toast.error(`Une erreur est survenue lors de la modification de l'utilisateur ${selectedUser.nom} ${selectedUser.prenom}`)
-        } else {
-          Toast.show({ type: 'error', text1: 'Erreur', text2: `Une erreur est survenue lors de la modification de l'utilisateur ${selectedUser.nom} ${selectedUser.prenom}` })
-        } */
+        }
       }
     } else {
       console.log('Création d\'un utilisateur')
@@ -183,7 +172,9 @@ export function Admin() {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
   }
 
-  const notify = () => toast("Wow so easy !", { position: 'bottom-right' });
+  const notify = () => toast.success("Wow so easy !", { 
+    position: 'bottom-right'
+  })
 
   return (
     <View style={styles.container}>
@@ -232,7 +223,6 @@ export function Admin() {
             {Platform.OS === 'web' && (
               <Text>
                 <button onClick={notify}>Notify !</button>
-                <ToastContainer />
               </Text>
             )}
           </View>
@@ -273,6 +263,8 @@ export function Admin() {
           newUser={newUser}
         />
       )}
+      <ToastContainer />
     </View>
+    
   )
 }
