@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
-  const [showUserMessage, setShowUserMessage] = useState(false)
   const [loading, setLoading] = useState(true)
 
   // État unique pour les filtres
@@ -20,6 +19,14 @@ export function Admin() {
     type: '',
     search: ''
   })
+  const [toastMsg, setToastMsg] = useState('')
+  const [typeToast, setTypeToast] = useState<'success' | 'error' | 'info'>('info')
+  const [showToast, setShowToast] = useState(false)
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
+  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
+  const [UserFilters, setUserFilters] = useState<any>(null)
+  const [UserForm, setUserForm] = useState<any>(null)
+  const [UserTable, setUserTable] = useState<any>(null)
 
   const handleFilterChange = (filterName: string, value: string) => {
     setFilters(prevFilters => ({
@@ -28,12 +35,7 @@ export function Admin() {
     }))
   }
 
-  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
-  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
-  const [newUser, setNewUser] = useState<Utilisateur | null>(null)
-
   useEffect(() => {
-    /* document.title = 'Eiffel Time | Administration - Gestion des utilisateurs' */ // TODO: Inverser entre les deux et mettre un titre partout
     fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
         // Vérifier si la réponse est correcte
@@ -63,14 +65,6 @@ export function Admin() {
         )
         setLoading(false)
       })
-  }, []);
-
-  const [UserFilters, setUserFilters] = useState<any>(null)
-  const [UserForm, setUserForm] = useState<any>(null)
-  const [UserTable, setUserTable] = useState<any>(null)
-  const [UserMessage, setUserMessage] = useState<any>(null)
-
-  useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
         const { UserFilters } = await import(
@@ -128,53 +122,58 @@ export function Admin() {
         if (!response.ok) {
           throw new Error('Erreur réseau')
         }
-        
         const updatedUser = await response.json()
-        // Créer un nouvel objet utilisateur avec les données mises à jour
-        /* setNewUser({
-          id_utilisateur: updatedUser.id_utilisateur,
-          nom: updatedUser.nom,
-          prenom: updatedUser.prenom,
-          email: updatedUser.email,
-          statut: updatedUser.statut,
-          formations: updatedUser.formation_utilisateur.map((f: any) => f.formation),
-          groupes: updatedUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: updatedUser.enseignant?.vacataire
-        }) */
-        if (Platform.OS === 'web') {
-          toast.success(`Utilisateur ${selectedUser.nom} ${selectedUser.prenom} modifié avec succès`, { position: 'bottom-right' })
+
+        const message = []
+        if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
+          message.push(`ID : ${selectedUser.id_utilisateur} -> ${updatedUser.id_utilisateur}`)
         }
+        if (updatedUser.nom !== selectedUser.nom) {
+          message.push(`Nom : ${selectedUser.nom} -> ${updatedUser.nom}`)
+        }
+        if (updatedUser.prenom !== selectedUser.prenom) {
+          message.push(`Prénom : ${selectedUser.prenom} -> ${updatedUser.prenom}`)
+        }
+        if (updatedUser.email !== selectedUser.email) {
+          message.push(`Email : ${selectedUser.email} -> ${updatedUser.email}`)
+        }
+        if (updatedUser.statut !== selectedUser.statut) {
+          message.push(`Rôle : ${selectedUser.statut} -> ${updatedUser.statut}`)
+        }
+        setToastMsg('L\'utilisateur a été modifié avec succès : ' + message.join(', '))
+        setTypeToast('success')
+        setShowToast(true)
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
         selectedUser.email = updatedUser.email
         selectedUser.statut = updatedUser.statut
-        setNewUser(updatedUser)
-        setShowUserMessage(true)
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
-        setShowUserMessage(true)
-
-        if (Platform.OS === 'web') {
-          toast.error(`Une erreur est survenue lors de la modification de l'utilisateur ${selectedUser.nom} ${selectedUser.prenom}`)
-        }
+        setTypeToast('error')
+        setToastMsg('Erreur lors de la modification de l\'utilisateur')
+        setShowToast(true)
       }
     } else {
       console.log('Création d\'un utilisateur')
     }
     setShowUserForm(false)
-    setShowUserMessage(false)
     setSelectedUser(null)
   }
+
+  useEffect(() => {
+    if (showToast) {
+      toast[typeToast](toastMsg, {
+        position: 'bottom-right',
+        onClose: () => setShowToast(false),
+      });
+    }
+  }, [showToast, toastMsg, typeToast]);
 
   if (!UserFilters || !UserForm || !UserTable) {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
   }
-
-  const notify = () => toast.success("Wow so easy !", { 
-    position: 'bottom-right'
-  })
 
   return (
     <View style={styles.container}>
@@ -220,11 +219,6 @@ export function Admin() {
                 Ajouter un utilisateur
               </Text>
             </TouchableOpacity>
-            {Platform.OS === 'web' && (
-              <Text>
-                <button onClick={notify}>Notify !</button>
-              </Text>
-            )}
           </View>
 
           <UserFilters
@@ -252,15 +246,6 @@ export function Admin() {
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
           isEdit={!!selectedUser}
-        />
-      )}
-
-      {showUserMessage && (
-        <UserMessage
-          isOpen={showUserMessage}
-          // onClose={() => setShowUserMessage(false)}
-          pastUser={selectedUser}
-          newUser={newUser}
         />
       )}
       <ToastContainer />
