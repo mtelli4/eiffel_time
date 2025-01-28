@@ -118,7 +118,7 @@ INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@micr
 INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, true, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, false, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, true, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
-INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, false, 'administrator', '2024-10-12 00:00:00', '2024-09-09 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, false, 'administrator', '2024-10-12 00:00:00', '2025-01-27 20:32:51.166');
 
 
 --
@@ -212,8 +212,8 @@ INSERT INTO ingrid.communiquer VALUES (22, 'Je propose qu’on se répartisse le
 -- Data for Name: enseignant; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.enseignant VALUES (5, true);
-INSERT INTO ingrid.enseignant VALUES (18, false);
+INSERT INTO ingrid.enseignant VALUES (18, true);
+INSERT INTO ingrid.enseignant VALUES (5, false);
 
 
 --
@@ -276,6 +276,7 @@ INSERT INTO ingrid.evaluation VALUES (8, 'Devoir surveillé', 2, 15, 'Semestre 4
 INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2025-02-10 13:00:00', '2025-02-11 13:00:00', 9, 3, 30);
 INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3, 33);
 INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3, 39);
+INSERT INTO ingrid.evaluation VALUES (100, 'test', 1, 20, NULL, '2025-01-27 21:39:05.254', NULL, 1, 3, 1);
 
 
 --
@@ -556,7 +557,7 @@ SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 13, true);
 -- Name: evaluation_id_eval_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 1, false);
+SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 1, true);
 
 
 --
