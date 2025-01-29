@@ -41,6 +41,7 @@ export interface UserUpdate {
   prenom: string
   email: string
   statut: string
+  formations: Formation[]
 }
 
 export interface CourseModalProps {

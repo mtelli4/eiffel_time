@@ -1,11 +1,18 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
-import { ROLES, UserUpdate } from '../../../../shared/src/types/types'
+import { Formation, ROLES, UserUpdate } from '../../../../shared/src/types/types'
 import { Utilisateur } from '../../../../shared/src/types/types'
-import { useState } from 'react'
-import { statut_utilisateur } from '@prisma/client'
+import { useEffect, useState } from 'react'
+import { formation, statut_utilisateur } from '@prisma/client'
+import { getFormations } from '../../../../shared/src/backend/services'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
+
+type FormationOption = {
+  value: number
+  label: string
+  statut: boolean
+}
 
 interface UserFormProps {
   isOpen: boolean
@@ -28,6 +35,21 @@ export function UserForm({
     prenom: initialData?.prenom || '',
     email: initialData?.email || '',
     statut: initialData?.statut || '',
+    formations: initialData?.formations || [],
+  })
+  const [formations, setFormations] = useState<FormationOption[]>([])
+
+  useEffect(() => {
+    getFormations()
+      .then((data) => {
+        const formations = data.map((formation: formation) => ({
+          value: formation.id_formation,
+          label: formation.libelle,
+          statut: initialData?.formations?.find(f => f.id_formation === formation.id_formation) ? true : false,
+        }))
+        setFormations(formations)
+      })
+      .catch(console.error)
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,6 +170,26 @@ export function UserForm({
               className="text-sm"
             />
           </div>
+
+          {isEdit && (
+            <div>
+              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                Formation(s)
+              </label>
+              <Select
+                defaultValue={formations.filter(f => f.statut)}
+                isMulti
+                options={formations}
+                // value={formations.filter(f => f.statut)}
+                onChange={(options: any) => setFormData(prevState => ({
+                  ...prevState,
+                  formations: options,
+                }))}
+                placeholder="Aucune formation"
+                className="text-sm"
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-3">
             {/* TODO: demander à Mohamed pourquoi le bouton annuler alors qu'il y a déjà un bouton fermer */}

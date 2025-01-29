@@ -306,4 +306,20 @@ router.delete('/delete-user/:id', async (req, res) => {
   }
 })
 
+// Route pour récupérer la liste des formations
+router.get('/formations', async (req, res) => {
+  try {
+    const formations = await prisma.formation.findMany({
+      orderBy: {
+        id_formation: 'asc',  // Tri par id de formation
+      },
+    });
+
+    res.json(formations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des formations.' });
+  }
+});
+
 module.exports = router;  // Exporte le routeur pour l'utiliser dans d'autres fichiers
