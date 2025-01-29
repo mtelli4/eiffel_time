@@ -48,7 +48,7 @@ export function UserForm({
       alert('Le prénom est obligatoire')
       return
     }
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
       alert("Veuillez saisir une adresse email valide")
       return
     }
@@ -78,10 +78,10 @@ export function UserForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {!isEdit && (
+          {/* {!isEdit && (
             <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                ID
+                ID {!isEdit ? '' : 'utilisateur (optionnel)'}
               </label>
               <input
                 type="text"
@@ -91,7 +91,7 @@ export function UserForm({
                 className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
               />
             </div>
-          )}
+          )} */}
 
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] mb-1">
