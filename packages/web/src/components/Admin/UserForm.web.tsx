@@ -78,7 +78,7 @@ export function UserForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* {!isEdit && (
+          {/* TODO: Demander à l'équipe s'il faut garder {!isEdit && (
             <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
                 ID {!isEdit ? '' : 'utilisateur (optionnel)'}
