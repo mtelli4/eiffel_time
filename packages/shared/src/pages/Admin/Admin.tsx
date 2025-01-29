@@ -104,7 +104,28 @@ export function Admin() {
   }
 
   const handleDeleteUser = (user: Utilisateur) => {
-    setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
+    if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
+      fetch(`http://localhost:4000/api/delete-user/${user.id_utilisateur}`, {
+        method: 'DELETE'
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Erreur réseau')
+          }
+          setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
+          toast.success(`L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`, {
+            position: 'bottom-right',
+            // toastId: 'delete-user' + user.id_utilisateur,
+          });
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la suppression de l\'utilisateur:', error)
+          toast.error('Erreur lors de la suppression de l\'utilisateur', {
+            position: 'bottom-right',
+            // toastId: 'delete-user' + user.id_utilisateur,
+          });
+        })
+    }
   }
 
   const handleSubmitUser = async (data: UserUpdate) => {
@@ -140,7 +161,7 @@ export function Admin() {
         }
         toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
           position: 'bottom-right',
-          toastId: 'update-user' + selectedUser.id_utilisateur,
+          // toastId: 'update-user' + selectedUser.id_utilisateur,
         });
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
@@ -152,11 +173,47 @@ export function Admin() {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
         toast.error('Erreur lors de la modification de l\'utilisateur', {
           position: 'bottom-right',
-          toastId: 'update-user' + selectedUser.id_utilisateur,
+          // toastId: 'update-user' + selectedUser.id_utilisateur,
         });
       }
     } else {
       console.log('Création d\'un utilisateur')
+      try {
+        const response = await fetch('http://localhost:4000/api/create-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+          throw new Error('Erreur réseau')
+        }
+
+        const newUser = await response.json()
+        const utilisateur: Utilisateur = {
+          id_utilisateur: newUser.id_utilisateur,
+          nom: newUser.nom,
+          prenom: newUser.prenom,
+          email: newUser.email,
+          statut: newUser.statut,
+          formations: newUser.formation_utilisateur.map((f: any) => f.formation),
+          groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: newUser.enseignant?.vacataire
+        }
+        setUtilisateurs([...utilisateurs, utilisateur])
+        toast.success('L\'utilisateur a été créé avec succès', {
+          position: 'bottom-right',
+          // toastId: 'create-user' + newUser.id_utilisateur,
+        });
+      } catch (error) {
+        console.error("Erreur lors de la création de l'utilisateur : ", error)
+        toast.error('Erreur lors de la création de l\'utilisateur', {
+          position: 'bottom-right',
+          // toastId: 'create-user',
+        });
+      }
     }
     setShowUserForm(false)
     setSelectedUser(null)
