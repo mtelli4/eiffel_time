@@ -220,6 +220,41 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// Route pour créer un nouvel utilisateur
+router.post('/create-user', async (req, res) => {
+  const data = req.body;
+  const now = new Date();
+
+  try {
+    const createUser = await prisma.$transaction(async (tx) => {
+      const lastUser = await tx.utilisateur.aggregate({
+        _max: {
+          id_utilisateur: true,
+        },
+      });
+
+      const user = await tx.utilisateur.create({
+        data: {
+          id_utilisateur: lastUser._max.id_utilisateur + 1,
+          nom: data.nom,
+          prenom: data.prenom,
+          email: data.email,
+          statut: data.statut,
+          createdat: now,
+          updatedat: now,
+        },
+      });
+
+      return user;
+    });
+
+    res.json(createUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: `Erreur lors de la création de l'utilisateur ; ${error}.` });
+  }
+});
+
 // Route pour mettre à jour un utilisateur
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
@@ -250,5 +285,25 @@ router.put('/update-user/:id', async (req, res) => {
     res.status(500).json({ error: `Erreur lors de la mise à jour de l'utilisateur ${id} ; ${error}.` });
   }
 });
+
+// Route pour supprimer un utilisateur
+router.delete('/delete-user/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const deleteUser = await prisma.$transaction(async (tx) => {
+      const user = await tx.utilisateur.delete({
+        where: { id_utilisateur: parseInt(id) },
+      });
+
+      return user;
+    });
+
+    res.json(deleteUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: `Erreur lors de la suppression de l'utilisateur ${id} ; ${error}.` });
+  }
+})
 
 module.exports = router;  // Exporte le routeur pour l'utiliser dans d'autres fichiers
