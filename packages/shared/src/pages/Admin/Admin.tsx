@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { toast, ToastContainer } from 'react-toastify'
+import { CloseButton, toast, ToastContainer, ToastContentProps } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
+
 
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
@@ -19,9 +21,6 @@ export function Admin() {
     type: '',
     search: ''
   })
-  const [toastMsg, setToastMsg] = useState('')
-  const [typeToast, setTypeToast] = useState<'success' | 'error' | 'info'>('info')
-  const [showToast, setShowToast] = useState(false)
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
   const [UserFilters, setUserFilters] = useState<any>(null)
@@ -140,9 +139,10 @@ export function Admin() {
         if (updatedUser.statut !== selectedUser.statut) {
           message.push(`Rôle : ${selectedUser.statut} -> ${updatedUser.statut}`)
         }
-        setToastMsg('L\'utilisateur a été modifié avec succès : ' + message.join(', '))
-        setTypeToast('success')
-        setShowToast(true)
+        toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
+          position: 'bottom-right',
+          toastId: 'update-user' + selectedUser.id_utilisateur,
+        });
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
@@ -151,9 +151,10 @@ export function Admin() {
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
-        setTypeToast('error')
-        setToastMsg('Erreur lors de la modification de l\'utilisateur')
-        setShowToast(true)
+        toast.error('Erreur lors de la modification de l\'utilisateur', {
+          position: 'bottom-right',
+          toastId: 'update-user' + selectedUser.id_utilisateur,
+        });
       }
     } else {
       console.log('Création d\'un utilisateur')
@@ -161,15 +162,6 @@ export function Admin() {
     setShowUserForm(false)
     setSelectedUser(null)
   }
-
-  useEffect(() => {
-    if (showToast) {
-      toast[typeToast](toastMsg, {
-        position: 'bottom-right',
-        onClose: () => setShowToast(false),
-      });
-    }
-  }, [showToast, toastMsg, typeToast]);
 
   if (!UserFilters || !UserForm || !UserTable) {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
