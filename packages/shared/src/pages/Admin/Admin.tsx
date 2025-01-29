@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { CloseButton, toast, ToastContainer, ToastContentProps } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
-
 
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
