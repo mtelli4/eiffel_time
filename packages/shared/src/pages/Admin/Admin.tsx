@@ -198,12 +198,12 @@ export function Admin() {
           prenom: newUser.prenom,
           email: newUser.email,
           statut: newUser.statut,
-          formations: newUser.formation_utilisateur.map((f: any) => f.formation),
+          formations: newUser.formation_utilisateur?.map((f: any) => f.formation) || [],
           groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
           vacataire: newUser.enseignant?.vacataire
         }
-        setUtilisateurs([...utilisateurs, utilisateur])
-        toast.success('L\'utilisateur a été créé avec succès', {
+        setUtilisateurs((prev) => [...prev, utilisateur])
+        toast.success(`L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`, {
           position: 'bottom-right',
           // toastId: 'create-user' + newUser.id_utilisateur,
         });
@@ -218,6 +218,7 @@ export function Admin() {
     setShowUserForm(false)
     setSelectedUser(null)
   }
+
 
   if (!UserFilters || !UserForm || !UserTable) {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
