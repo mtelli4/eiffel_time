@@ -2,15 +2,19 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');  // Import du client Prisma
 const prisma = new PrismaClient();  // Initialisation du client Prisma
 const router = express.Router();    // Initialisation du routeur Express
+const { hashPassword, comparePasswords } = require('./password');
 
 router.post('/login', async (req, res) => {
   try {
+    const password = req.body.password;
     const user = await prisma.utilisateur.findUnique({
       where: {
         email: req.body.email,
       }
     });
-    res.json(user);
+    const valid = comparePasswords(password, user.salt, user.mdp);
+    res.json(valid);
+
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
   }

@@ -2,7 +2,9 @@ import { Input } from '@shared/components/Input'
 import { Button } from '@shared/components/Button'
 import { StyleSheet, View, Text, Image } from 'react-native'
 import logo from '../../assets/logo.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+
 
 const styles = StyleSheet.create({
   root: {
@@ -33,30 +35,38 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 64,
     left: 64,
-  }
+  } 
 })
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const [valid, setValid] = useState(false)
 
-  const handleSubmitUser = async (user: any) => {
+  const handleSubmitUser = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/login', {
+      const response = await fetch(`http://localhost:4000/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      setUser(data);
-      console.log(data);
+      setValid(data)
+
     } catch {
       console.log('error')
     }
   }
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (valid) {
+      navigate('/schedule');
+    }
+  }, [valid, navigate]);
 
   return (
     <View style={styles.root}>
