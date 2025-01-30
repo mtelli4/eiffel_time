@@ -1,17 +1,23 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
-import { ROLES } from '../../../../shared/src/types/types'
+import { Formation, ROLES, UserUpdate } from '../../../../shared/src/types/types'
 import { Utilisateur } from '../../../../shared/src/types/types'
-import { useState } from 'react'
-import { statut_utilisateur } from '@prisma/client'
-import { roleFinder } from '../../../../shared/src/lib/utils'
+import { useEffect, useState } from 'react'
+import { formation, statut_utilisateur } from '@prisma/client'
+import { getFormations } from '../../../../shared/src/backend/services'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
+
+type FormationOption = {
+  value: number
+  label: string
+  statut: boolean
+}
 
 interface UserFormProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (data: any) => void
+  onSubmit: (data: UserUpdate) => void
   initialData?: Utilisateur
   isEdit?: boolean
 }
@@ -23,12 +29,27 @@ export function UserForm({
   initialData,
   isEdit,
 }: UserFormProps) {
-  const [formData, setFormData] = useState({
-    id_utilisateur: initialData?.id_utilisateur,
-    nom: initialData?.nom,
-    prenom: initialData?.prenom,
-    email: initialData?.email,
-    statut: initialData?.statut,
+  const [formData, setFormData] = useState<UserUpdate>({
+    id_utilisateur: initialData?.id_utilisateur || 0,
+    nom: initialData?.nom || '',
+    prenom: initialData?.prenom || '',
+    email: initialData?.email || '',
+    statut: initialData?.statut || 'indefinite',
+    formations: initialData?.formations || [],
+  })
+  const [formations, setFormations] = useState<FormationOption[]>([])
+
+  useEffect(() => {
+    getFormations()
+      .then((data) => {
+        const formations = data.map((formation: formation) => ({
+          value: formation.id_formation,
+          label: formation.libelle,
+          statut: initialData?.formations?.find(f => f.id_formation === formation.id_formation) ? true : false,
+        }))
+        setFormations(formations)
+      })
+      .catch(console.error)
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +61,24 @@ export function UserForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!formData.nom.trim()) {
+      alert('Le nom est obligatoire')
+      return
+    }
+    if (!formData.prenom.trim()) {
+      alert('Le prénom est obligatoire')
+      return
+    }
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
+      alert("Veuillez saisir une adresse email valide")
+      return
+    }
+    if (!formData.statut) {
+      alert('Le rôle est obligatoire')
+      return
+    }
+
     onSubmit(formData)
   }
 
@@ -60,11 +99,11 @@ export function UserForm({
           </button>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          {!isEdit && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* TODO: Demander à l'équipe s'il faut garder {!isEdit && (
             <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                ID
+                ID {!isEdit ? '' : 'utilisateur (optionnel)'}
               </label>
               <input
                 type="text"
@@ -74,7 +113,7 @@ export function UserForm({
                 className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
               />
             </div>
-          )}
+          )} */}
 
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] mb-1">
@@ -131,6 +170,29 @@ export function UserForm({
               className="text-sm"
             />
           </div>
+
+          {isEdit && (
+            <div>
+              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                Formation(s)
+              </label>
+              <Select
+                defaultValue={initialData?.formations.map(f => ({
+                  value: f.id_formation,
+                  label: f.libelle,
+                }))}
+                isMulti
+                options={formations}
+                // value={formations.filter(f => f.statut)}
+                onChange={(options: any) => setFormData(prevState => ({
+                  ...prevState,
+                  formations: options,
+                }))}
+                placeholder="Aucune formation"
+                className="text-sm"
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-3">
             {/* TODO: demander à Mohamed pourquoi le bouton annuler alors qu'il y a déjà un bouton fermer */}

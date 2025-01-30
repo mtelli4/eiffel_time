@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { Utilisateur } from '../../types/types'
+import { UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
@@ -18,6 +20,11 @@ export function Admin() {
     type: '',
     search: ''
   })
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
+  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
+  const [UserFilters, setUserFilters] = useState<any>(null)
+  const [UserForm, setUserForm] = useState<any>(null)
+  const [UserTable, setUserTable] = useState<any>(null)
 
   const handleFilterChange = (filterName: string, value: string) => {
     setFilters(prevFilters => ({
@@ -25,9 +32,6 @@ export function Admin() {
       [filterName]: value
     }))
   }
-
-  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
-  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
   useEffect(() => {
     fetch('http://localhost:4000/api/users') // URL de votre API
@@ -59,13 +63,6 @@ export function Admin() {
         )
         setLoading(false)
       })
-  }, []);
-
-  const [UserFilters, setUserFilters] = useState<any>(null)
-  const [UserForm, setUserForm] = useState<any>(null)
-  const [UserTable, setUserTable] = useState<any>(null)
-
-  useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
         const { UserFilters } = await import(
@@ -107,44 +104,130 @@ export function Admin() {
   }
 
   const handleDeleteUser = (user: Utilisateur) => {
-    setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
+    if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
+      fetch(`http://localhost:4000/api/delete-user/${user.id_utilisateur}`, {
+        method: 'DELETE'
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Erreur réseau')
+          }
+          setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
+          toast.success(`L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`, {
+            position: 'bottom-right',
+            // toastId: 'delete-user' + user.id_utilisateur,
+          });
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la suppression de l\'utilisateur:', error)
+          toast.error('Erreur lors de la suppression de l\'utilisateur', {
+            position: 'bottom-right',
+            // toastId: 'delete-user' + user.id_utilisateur,
+          });
+        })
+    }
   }
 
-  const handleSubmitUser = async (data: any) => {
+  const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
       try {
-        const response = await fetch(`https://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
+        const response = await fetch(`http://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
-        });
-
+        })
         if (!response.ok) {
-          throw new Error("Erreur lors de la mise à jour de l'utilisateur");
+          throw new Error('Erreur réseau')
         }
-
-        const updatedUser: Utilisateur = {
-          id_utilisateur: selectedUser.id_utilisateur,
-          nom: data.nom,
-          prenom: data.prenom,
-          email: data.email,
-          statut: data.statut,
-          formations: data.formations,
-          groupes: data.groupes,
-          vacataire: data.vacataire
+        const updatedUser = await response.json()
+        // console.log('Modification de l\'utilisateur : ', updatedUser)
+        const message = []
+        if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
+          message.push('ID')
         }
-        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === updatedUser.id_utilisateur ? updatedUser : u));
+        if (updatedUser.nom !== selectedUser.nom) {
+          message.push('nom')
+        }
+        if (updatedUser.prenom !== selectedUser.prenom) {
+          message.push('prénom')
+        }
+        if (updatedUser.email !== selectedUser.email) {
+          message.push('email')
+        }
+        if (updatedUser.statut !== selectedUser.statut) {
+          message.push('rôle')
+        }
+        if (updatedUser.formations) {
+          const formations = updatedUser.formations.map((f: any) => f.formation)
+          if (JSON.stringify(formations) !== JSON.stringify(selectedUser.formations)) {
+            message.push('formations')
+          }
+        }
+        toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
+          position: 'bottom-right',
+          // toastId: 'update-user' + selectedUser.id_utilisateur,
+        });
+        selectedUser.id_utilisateur = updatedUser.id_utilisateur
+        selectedUser.nom = updatedUser.nom
+        selectedUser.prenom = updatedUser.prenom
+        selectedUser.email = updatedUser.email
+        selectedUser.statut = updatedUser.statut
+        selectedUser.formations = updatedUser.formations.map((f: any) => {
+          return { id_formation: f.value, libelle: f.label }
+        })
+        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
+        toast.error('Erreur lors de la modification de l\'utilisateur', {
+          position: 'bottom-right',
+          // toastId: 'update-user' + selectedUser.id_utilisateur,
+        });
       }
     } else {
-      setUtilisateurs([...utilisateurs, { ...data, id: `U${Date.now()}` }])
+      console.log('Création d\'un utilisateur')
+      try {
+        const response = await fetch('http://localhost:4000/api/create-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+          throw new Error('Erreur réseau')
+        }
+
+        const newUser = await response.json()
+        const utilisateur: Utilisateur = {
+          id_utilisateur: newUser.id_utilisateur,
+          nom: newUser.nom,
+          prenom: newUser.prenom,
+          email: newUser.email,
+          statut: newUser.statut,
+          formations: newUser.formation_utilisateur?.map((f: any) => f.formation) || [],
+          groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: newUser.enseignant?.vacataire
+        }
+        setUtilisateurs((prev) => [...prev, utilisateur])
+        toast.success(`L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`, {
+          position: 'bottom-right',
+          // toastId: 'create-user' + newUser.id_utilisateur,
+        });
+      } catch (error) {
+        console.error("Erreur lors de la création de l'utilisateur : ", error)
+        toast.error('Erreur lors de la création de l\'utilisateur', {
+          position: 'bottom-right',
+          // toastId: 'create-user',
+        });
+      }
     }
     setShowUserForm(false)
     setSelectedUser(null)
   }
+
 
   if (!UserFilters || !UserForm || !UserTable) {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
@@ -197,7 +280,6 @@ export function Admin() {
           </View>
 
           <UserFilters
-            filters={filters}
             onFilterChange={handleFilterChange}
           />
 
@@ -224,6 +306,8 @@ export function Admin() {
           isEdit={!!selectedUser}
         />
       )}
+      <ToastContainer />
     </View>
+    
   )
 }

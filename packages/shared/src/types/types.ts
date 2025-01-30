@@ -33,7 +33,16 @@ export type Utilisateur = {
   formations: Formation[];
   groupes: Groupe[];
   vacataire?: boolean;
-};
+}
+
+export interface UserUpdate {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+  formations: Formation[]
+}
 
 export interface CourseModalProps {
   course: Course
@@ -96,13 +105,6 @@ export interface FormData {
 }
 
 export interface UserFiltersProps {
-  filters: {
-    role: string
-    groupe: string
-    formation: string
-    type: string
-    search: string
-  },
   onFilterChange: (filterName: string, value: string) => void
 }
 

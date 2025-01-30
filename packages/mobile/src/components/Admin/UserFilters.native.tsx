@@ -2,13 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {UserFiltersProps} from '../../../../shared/src/types/types';
-
-const ROLES = [
-  {value: 'student', label: 'Élève'},
-  {value: 'teacher', label: 'Professeur'},
-  {value: 'manager', label: 'Gestionnaire'},
-  {value: 'admin', label: 'Administrateur'},
-];
+import { ROLES, TEACHER_TYPES } from '../../../../shared/src/types/types';
 
 const GROUPS = [
   {value: 'A1', label: 'Groupe A1'},
@@ -23,18 +17,7 @@ const FORMATIONS = [
   {value: 'tc', label: 'TC'},
 ];
 
-const TEACHER_TYPES = [
-  {value: 'permanent', label: 'Titulaire'},
-  {value: 'temporary', label: 'Vacataire'},
-];
-
-export function UserFilters({
-  onRoleChange,
-  onGroupChange,
-  onFormationChange,
-  onTypeChange,
-  onSearch,
-}: UserFiltersProps) {
+export function UserFilters({ onFilterChange }: UserFiltersProps) {
   const renderDropdown = (
     data: {label: string; value: string}[],
     placeholder: string,
@@ -48,6 +31,30 @@ export function UserFilters({
       />
     );
   };
+
+  const handleFilterChange = (filterName: string, value: string) => {
+    onFilterChange(filterName, value)
+  }
+
+  const onRoleChange = (value: string) => {
+    handleFilterChange('role', value)
+  }
+
+  const onGroupChange = (value: string) => {
+    handleFilterChange('group', value)
+  }
+
+  const onFormationChange = (value: string) => {
+    handleFilterChange('formation', value)
+  }
+
+  const onTypeChange = (value: string) => {
+    handleFilterChange('type', value)
+  }
+
+  const onSearch = (value: string) => {
+    handleFilterChange('search', value)
+  }
 
   return (
     <View style={styles.container}>

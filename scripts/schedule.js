@@ -1,7 +1,7 @@
 // récupère l'url Ical
 async function fetchICal(url) {
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, { mode: 'cors' }); // Ajouter mode: 'cors' pour gérer les problèmes de CORS
         if (!response.ok) {
             throw new Error(`Erreur de réseau: ${response.status}`);
         }
@@ -105,10 +105,10 @@ async function loadCalendar() {
 }
 
 // Update le calendrier
-function updateCalendarView() {
+async function updateCalendarView() {
     const url = document.getElementById('ical-url').value;
     if (url) {
-        const events = fetchICal(url);
+        const events = await fetchICal(url); // Ajouter await ici
         const viewType = document.getElementById('view-type').value;
         displayEvents(events, viewType);
     } else {

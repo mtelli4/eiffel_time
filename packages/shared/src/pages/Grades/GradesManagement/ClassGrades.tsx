@@ -146,20 +146,11 @@ export function ClassGrades() {
                           )
                         return (
                           <View
-                            key={
-                              'e' +
-                              n.getEvaluationId() +
-                              'u' +
-                              n.getUtilisateurId()
-                            }
-                            style={
-                              styles.tableRow
-                            }
+                            key={ 'e' + n.getEvaluationId() + 'u' + n.getUtilisateurId() }
+                            style={ styles.tableRow }
                           >
                             <Text
-                              style={
-                                styles.tableCell
-                              }
+                              style={ styles.tableCell }
                             >
                               {etudiant?.getNumeroEtudiant()}
                             </Text>

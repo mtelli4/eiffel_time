@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Sidebar } from './Navigation/Sidebar'
 
 interface LayoutProps {
-  userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin'
+  userRole: 'student' | 'teacher' | 'secretary' | 'director' | 'manager' | 'administrator'
   children: React.ReactNode
 }
 
