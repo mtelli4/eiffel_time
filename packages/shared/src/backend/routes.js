@@ -274,9 +274,25 @@ router.put('/update-user/:id', async (req, res) => {
         },
       });
 
-      // TODO: Ajouter les formations, groupes, etc. à mettre à jour
+      // Suppression de toutes les formations liées à l'utilisateur
+      await tx.formation_utilisateur.deleteMany({
+        where: { id_utilisateur: parseInt(id) },
+      });
 
-      return user;
+      // Ajout des nouvelles formations liées à l'utilisateur
+      const updateUserFormations = data.formations.map((formation) => 
+        tx.formation_utilisateur.create({
+          data: {
+            id_utilisateur: parseInt(id),
+            id_formation: formation.value,
+          },
+        })
+      );
+      await Promise.all(updateUserFormations);
+
+      // TODO: Ajouter les groupes, etc. à mettre à jour
+
+      return { ...user, formations: data.formations };
     });
 
     res.json(updateUser);

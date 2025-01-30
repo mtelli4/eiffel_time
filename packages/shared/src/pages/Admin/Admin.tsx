@@ -142,22 +142,28 @@ export function Admin() {
           throw new Error('Erreur réseau')
         }
         const updatedUser = await response.json()
-
+        // console.log('Modification de l\'utilisateur : ', updatedUser)
         const message = []
         if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
-          message.push(`ID : ${selectedUser.id_utilisateur} -> ${updatedUser.id_utilisateur}`)
+          message.push('ID')
         }
         if (updatedUser.nom !== selectedUser.nom) {
-          message.push(`Nom : ${selectedUser.nom} -> ${updatedUser.nom}`)
+          message.push('nom')
         }
         if (updatedUser.prenom !== selectedUser.prenom) {
-          message.push(`Prénom : ${selectedUser.prenom} -> ${updatedUser.prenom}`)
+          message.push('prénom')
         }
         if (updatedUser.email !== selectedUser.email) {
-          message.push(`Email : ${selectedUser.email} -> ${updatedUser.email}`)
+          message.push('email')
         }
         if (updatedUser.statut !== selectedUser.statut) {
-          message.push(`Rôle : ${selectedUser.statut} -> ${updatedUser.statut}`)
+          message.push('rôle')
+        }
+        if (updatedUser.formations) {
+          const formations = updatedUser.formations.map((f: any) => f.formation)
+          if (JSON.stringify(formations) !== JSON.stringify(selectedUser.formations)) {
+            message.push('formations')
+          }
         }
         toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
           position: 'bottom-right',
@@ -168,6 +174,9 @@ export function Admin() {
         selectedUser.prenom = updatedUser.prenom
         selectedUser.email = updatedUser.email
         selectedUser.statut = updatedUser.statut
+        selectedUser.formations = updatedUser.formations.map((f: any) => {
+          return { id_formation: f.value, libelle: f.label }
+        })
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)

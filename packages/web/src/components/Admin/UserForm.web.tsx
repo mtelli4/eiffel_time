@@ -34,7 +34,7 @@ export function UserForm({
     nom: initialData?.nom || '',
     prenom: initialData?.prenom || '',
     email: initialData?.email || '',
-    statut: initialData?.statut || '',
+    statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
   })
   const [formations, setFormations] = useState<FormationOption[]>([])
@@ -177,7 +177,10 @@ export function UserForm({
                 Formation(s)
               </label>
               <Select
-                defaultValue={formations.filter(f => f.statut)}
+                defaultValue={initialData?.formations.map(f => ({
+                  value: f.id_formation,
+                  label: f.libelle,
+                }))}
                 isMulti
                 options={formations}
                 // value={formations.filter(f => f.statut)}
