@@ -245,6 +245,15 @@ router.post('/create-user', async (req, res) => {
         },
       });
 
+      const createUserFormations = data.formations.map((formation) =>
+        tx.formation_utilisateur.create({
+          data: {
+            id_utilisateur: user.id_utilisateur,
+            id_formation: formation.value,
+          },
+        })
+      );
+
       return user;
     });
 
