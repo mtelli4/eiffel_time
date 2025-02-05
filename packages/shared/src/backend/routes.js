@@ -331,10 +331,40 @@ router.delete('/delete-user/:id', async (req, res) => {
   }
 })
 
+/* // Route pour récupérer la liste des utilisateurs
+router.get('/users', async (req, res) => {
+  try {
+    const users = await prisma.utilisateur.findMany({
+      select: {
+        id_utilisateur: true,
+        nom: true,
+        prenom: true,
+        email: true,
+        statut: true,
+        formation_utilisateur: { select: { formation: { select: { id_formation: true, libelle: true, }, }, }, },
+        etudiant: { select: { groupe_etudiant: { select: { groupe: { select: { id_grp: true, libelle: true, }}}}}},
+        enseignant: { select: { vacataire: true, }},
+      },
+      orderBy: {
+        id_utilisateur: 'asc',  // Tri par id d'utilisateur
+      },
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
+  }
+}); */
+
 // Route pour récupérer la liste des formations
 router.get('/formations', async (req, res) => {
   try {
     const formations = await prisma.formation.findMany({
+      select: {
+        id_formation: true,
+        libelle: true,
+      },
       orderBy: {
         id_formation: 'asc',  // Tri par id de formation
       },
@@ -344,6 +374,26 @@ router.get('/formations', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la récupération des formations.' });
+  }
+});
+
+// Route pour récupérer la liste des groupes
+router.get('/groupes', async (req, res) => {
+  try {
+    const groupes = await prisma.groupe.findMany({
+      select: {
+        id_grp: true,
+        libelle: true,
+      },
+      orderBy: {
+        id_grp: 'asc',  // Tri par id de groupe
+      },
+    });
+
+    res.json(groupes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des groupes.' });
   }
 });
 
