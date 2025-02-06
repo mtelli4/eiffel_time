@@ -27,7 +27,14 @@ interface UserTableProps {
   isAdmin: boolean;
   onEdit: (user: Utilisateur) => void;
   onDelete: (user: Utilisateur) => void;
-  searchTerm: string;
+  filters: {
+    role: string,
+    formation: string,
+    groupe: string,
+    type: string,
+    search: string,
+  };
+  loading: boolean;
 }
 
 export function UserTable({
@@ -35,7 +42,8 @@ export function UserTable({
   isAdmin,
   onEdit,
   onDelete,
-  searchTerm,
+  filters,
+  loading,
 }: UserTableProps) {
   const [formations, setFormations] = useState<Formation[]>([]);
   const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>(
