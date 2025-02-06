@@ -1,9 +1,9 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
-import { Formation, ROLES, UserUpdate } from '../../../../shared/src/types/types'
+import { Formation, Groupe, ROLES, TEACHER_TYPES, UserUpdate } from '../../../../shared/src/types/types'
 import { Utilisateur } from '../../../../shared/src/types/types'
 import { useEffect, useState } from 'react'
-import { formation, statut_utilisateur } from '@prisma/client'
+import { formation, groupe, statut_utilisateur } from '@prisma/client'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
 
@@ -13,7 +13,6 @@ interface UserFormProps {
   onSubmit: (data: UserUpdate) => void
   initialData?: Utilisateur
   isEdit?: boolean
-  formations: Formation[]
 }
 
 export function UserForm({
@@ -22,7 +21,6 @@ export function UserForm({
   onSubmit,
   initialData,
   isEdit,
-  formations,
 }: UserFormProps) {
   const [formData, setFormData] = useState<UserUpdate>({
     id_utilisateur: initialData?.id_utilisateur || 0,
@@ -31,8 +29,33 @@ export function UserForm({
     email: initialData?.email || '',
     statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
+    groupes: initialData?.groupes || [],
   })
   const [errorMessage, setErrorMessage] = useState<string[]>([])
+
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
+
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:4000/api/formations').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (formations)');
+        return response.json();
+      }),
+      fetch('http://localhost:4000/api/groupes').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (groupes)');
+        return response.json();
+      })
+    ])
+      .then(([formationsData, groupesData]) => {
+        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
+
+        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prevState => ({
@@ -57,6 +80,9 @@ export function UserForm({
     }
     if (formData.formations.length > 1 && formData.statut === 'student') {
       messages.push('Un étudiant ne peut pas être inscrit à plusieurs formations')
+    }
+    if (formData.groupes.length > 0 && formData.statut !== 'student') {
+      messages.push('Seul un étudiant peut être inscrit à des groupes')
     }
     setErrorMessage(messages)
 
@@ -164,10 +190,7 @@ export function UserForm({
                 label: f.libelle,
               }))}
               isMulti
-              options={formations.map(f => ({
-                value: f.id_formation,
-                label: f.libelle,
-              }))}
+              options={formations}
               onChange={(options: any) => setFormData(prevState => ({
                 ...prevState,
                 formations: options,
@@ -176,6 +199,47 @@ export function UserForm({
               className="text-sm"
             />
           </div>
+
+          {formData.statut === 'student' && (
+            <div>
+              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                Groupes
+              </label>
+              <Select
+                defaultValue={initialData?.groupes.map(g => ({
+                  value: g.id_grp,
+                  label: g.libelle,
+                }))}
+                isMulti
+                options={groupes}
+                onChange={(options: any) => setFormData(prevState => ({
+                  ...prevState,
+                  groupes: options,
+                }))}
+                placeholder="Aucun groupe"
+                className="text-sm"
+              />
+            </div>
+          )}
+
+          {formData.statut === 'teacher' && (
+            <div>
+              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                Type
+              </label>
+              <Select
+                options={TEACHER_TYPES}
+                isClearable
+                placeholder="Sélectionner un type"
+                value={initialData?.vacataire ? { value: 'Vacataire', label: 'Vacataire' } : { value: 'Titulaire', label: 'Titulaire' }}
+                onChange={(option: any) => setFormData(prevState => ({
+                  ...prevState,
+                  vacataire: option?.value === 'Vacataire',
+                }))}
+                className="text-sm"
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-3">
             {/* TODO: demander à Mohamed pourquoi le bouton annuler alors qu'il y a déjà un bouton fermer */}

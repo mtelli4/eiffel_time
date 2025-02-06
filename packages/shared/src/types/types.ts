@@ -20,7 +20,7 @@ export type Formation = {
 }
 
 export type Groupe = {
-  id_groupe: number;
+  id_grp: number;
   libelle: string;
 }
 
@@ -42,6 +42,7 @@ export interface UserUpdate {
   email: string
   statut: string
   formations: Formation[]
+  groupes: Groupe[]
 }
 
 export interface CourseModalProps {

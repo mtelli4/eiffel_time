@@ -208,6 +208,7 @@ router.get('/users', async (req, res) => {
           }
         },
       },
+      where: { premiereconnexion: { not: null }, }, // On exclut les utilisateurs supprimés
       orderBy: {
         id_utilisateur: 'asc',  // Tri par id d'utilisateur
       },
@@ -249,10 +250,21 @@ router.post('/create-user', async (req, res) => {
         tx.formation_utilisateur.create({
           data: {
             id_utilisateur: user.id_utilisateur,
-            id_formation: formation.value,
+            id_formation: formation.id_formation,
           },
         })
       );
+      await Promise.all(createUserFormations);
+
+      const createUserGroupes = data.groupes.map((groupe) =>
+        tx.groupe_etudiant.create({
+          data: {
+            id_etudiant: user.id_utilisateur,
+            id_grp: groupe.value,
+          },
+        })
+      );
+      await Promise.all(createUserGroupes);
 
       return user;
     });
@@ -299,9 +311,23 @@ router.put('/update-user/:id', async (req, res) => {
       );
       await Promise.all(updateUserFormations);
 
-      // TODO: Ajouter les groupes, etc. à mettre à jour
+      // Suppression de tous les groupes liés à l'utilisateur
+      await tx.groupe_etudiant.deleteMany({
+        where: { id_etudiant: parseInt(id) },
+      });
 
-      return { ...user, formations: data.formations };
+      // Ajout des nouveaux groupes liés à l'utilisateur
+      const updateUserGroupes = data.groupes.map((groupe) =>
+        tx.groupe_etudiant.create({
+          data: {
+            id_etudiant: parseInt(id),
+            id_grp: groupe.value,
+          },
+        })
+      );
+      await Promise.all(updateUserGroupes);
+
+      return { ...user, formations: data.formations, groupes: data.groupes };
     });
 
     res.json(updateUser);
@@ -317,7 +343,9 @@ router.delete('/delete-user/:id', async (req, res) => {
   
   try {
     const deleteUser = await prisma.$transaction(async (tx) => {
-      const user = await tx.utilisateur.delete({
+      // On met à jour la table utilisateur pour considérer l'utilisateur comme supprimé
+      const user = await tx.utilisateur.update({
+        data: { premiereconnexion: null, }, // On met à null pour considérer l'utilisateur comme supprimé
         where: { id_utilisateur: parseInt(id) },
       });
 
@@ -330,32 +358,6 @@ router.delete('/delete-user/:id', async (req, res) => {
     res.status(500).json({ error: `Erreur lors de la suppression de l'utilisateur ${id} ; ${error}.` });
   }
 })
-
-/* // Route pour récupérer la liste des utilisateurs
-router.get('/users', async (req, res) => {
-  try {
-    const users = await prisma.utilisateur.findMany({
-      select: {
-        id_utilisateur: true,
-        nom: true,
-        prenom: true,
-        email: true,
-        statut: true,
-        formation_utilisateur: { select: { formation: { select: { id_formation: true, libelle: true, }, }, }, },
-        etudiant: { select: { groupe_etudiant: { select: { groupe: { select: { id_grp: true, libelle: true, }}}}}},
-        enseignant: { select: { vacataire: true, }},
-      },
-      orderBy: {
-        id_utilisateur: 'asc',  // Tri par id d'utilisateur
-      },
-    });
-
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
-  }
-}); */
 
 // Route pour récupérer la liste des formations
 router.get('/formations', async (req, res) => {
