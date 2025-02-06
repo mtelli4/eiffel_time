@@ -8,11 +8,7 @@ import {
   View,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {
-  Formation,
-  FormationUtilisateur,
-  Utilisateur,
-} from '../../../../shared/src/backend/classes';
+import { Utilisateur } from '../../../../shared/src/types/types';
 
 // Utilisez l'IP de votre machine pour Android
 const API_URL = Platform.select({
@@ -45,13 +41,11 @@ export function UserTable({
   filters,
   loading,
 }: UserTableProps) {
-  const [formations, setFormations] = useState<Formation[]>([]);
-  const [formationUsers, setFormationUsers] = useState<FormationUtilisateur[]>(
-    [],
-  );
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
+  const [chargement, setChargement] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/data`)
+    fetch(`${API_URL}/api/users`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Erreur réseau');
@@ -59,13 +53,18 @@ export function UserTable({
         return response.json();
       })
       .then(data => {
-        const formations = data.formations.map((f: any) => new Formation(f));
-        setFormations(formations);
-
-        const formationUsers = data.formation_utilisateur.map(
-          (fu: any) => new FormationUtilisateur(fu),
-        );
-        setFormationUsers(formationUsers);
+        const utilisateurs = data.map((utilisateur: any) => ({
+          id_utilisateur: utilisateur.id_utilisateur,
+          nom: utilisateur.nom,
+          prenom: utilisateur.prenom,
+          email: utilisateur.email,
+          statut: utilisateur.statut,
+          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: utilisateur.enseignant?.vacataire
+        }));
+        setUtilisateurs(utilisateurs)
+        setChargement(false)
       })
       .catch(error => {
         console.error(
@@ -81,6 +80,7 @@ export function UserTable({
         <View style={styles.headerRow}>
           <Text style={[styles.headerCell, styles.idCell]}>ID</Text>
           <Text style={[styles.headerCell, styles.nameCell]}>Nom</Text>
+          <Text style={[styles.headerCell, styles.nameCell]}>Prénom</Text>
           <Text style={[styles.headerCell, styles.emailCell]}>Email</Text>
           <Text style={[styles.headerCell, styles.roleCell]}>Rôle</Text>
           <Text style={[styles.headerCell, styles.formationCell]}>
@@ -104,29 +104,24 @@ export function UserTable({
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View>
               {users.map(user => (
-                <View key={user.getId()} style={styles.row}>
+                <View key={user.id_utilisateur} style={styles.row}>
                   <Text style={[styles.cell, styles.idCell]}>
-                    {user.getId()}
+                    {user.id_utilisateur}
                   </Text>
                   <Text style={[styles.cell, styles.nameCell]}>
-                    {user.getFullName()}
+                    {user.nom}
+                  </Text>
+                  <Text style={[styles.cell, styles.nameCell]}>
+                    {user.prenom}
                   </Text>
                   <Text style={[styles.cell, styles.emailCell]}>
-                    {user.getEmail()}
+                    {user.email}
                   </Text>
                   <Text style={[styles.cell, styles.roleCell]}>
-                    {user.getStatutName()}
+                    {user.statut}
                   </Text>
                   <Text style={[styles.cell, styles.formationCell]}>
-                    {formationUsers
-                      .filter(fu => fu.getIdUtilisateur() === user.getId())
-                      .map(fu => {
-                        const formation = formations.find(
-                          f => f.getId() === fu.getIdFormation(),
-                        );
-                        return formation ? formation.getLibelle() : '';
-                      })
-                      .join(', ') || '-'}
+                    {user.formations.map(f => f.libelle).sort().join(', ') || '-'}
                   </Text>
                   <View style={[styles.actionsCell]}>
                     {isAdmin && (
