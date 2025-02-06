@@ -4,15 +4,8 @@ import { Formation, ROLES, UserUpdate } from '../../../../shared/src/types/types
 import { Utilisateur } from '../../../../shared/src/types/types'
 import { useEffect, useState } from 'react'
 import { formation, statut_utilisateur } from '@prisma/client'
-import { getFormations } from '../../../../shared/src/backend/services'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
-
-type FormationOption = {
-  value: number
-  label: string
-  statut: boolean
-}
 
 interface UserFormProps {
   isOpen: boolean
@@ -20,6 +13,7 @@ interface UserFormProps {
   onSubmit: (data: UserUpdate) => void
   initialData?: Utilisateur
   isEdit?: boolean
+  formations: Formation[]
 }
 
 export function UserForm({
@@ -28,6 +22,7 @@ export function UserForm({
   onSubmit,
   initialData,
   isEdit,
+  formations,
 }: UserFormProps) {
   const [formData, setFormData] = useState<UserUpdate>({
     id_utilisateur: initialData?.id_utilisateur || 0,
@@ -37,20 +32,7 @@ export function UserForm({
     statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
   })
-  const [formations, setFormations] = useState<FormationOption[]>([])
-
-  useEffect(() => {
-    getFormations()
-      .then((data) => {
-        const formations = data.map((formation: formation) => ({
-          value: formation.id_formation,
-          label: formation.libelle,
-          statut: initialData?.formations?.find(f => f.id_formation === formation.id_formation) ? true : false,
-        }))
-        setFormations(formations)
-      })
-      .catch(console.error)
-  })
+  const [errorMessage, setErrorMessage] = useState<string[]>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prevState => ({
@@ -59,27 +41,28 @@ export function UserForm({
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
+    const messages = []
     if (!formData.nom.trim()) {
-      alert('Le nom est obligatoire')
-      return
+      messages.push('Le nom est obligatoire')
     }
     if (!formData.prenom.trim()) {
-      alert('Le prénom est obligatoire')
-      return
+      messages.push('Le prénom est obligatoire')
     }
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
-      alert("Veuillez saisir une adresse email valide")
-      return
+      messages.push('Veuillez saisir une adresse email valide')
     }
     if (!formData.statut) {
-      alert('Le rôle est obligatoire')
-      return
+      messages.push('Le rôle est obligatoire')
     }
+    if (formData.formations.length > 1 && formData.statut === 'student') {
+      messages.push('Un étudiant ne peut pas être inscrit à plusieurs formations')
+    }
+    setErrorMessage(messages)
 
-    onSubmit(formData)
+    if (messages.length === 0) {
+      onSubmit(formData)
+    }
   }
 
   if (!isOpen) return null
@@ -171,28 +154,28 @@ export function UserForm({
             />
           </div>
 
-          {isEdit && (
-            <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                Formation(s)
-              </label>
-              <Select
-                defaultValue={initialData?.formations.map(f => ({
-                  value: f.id_formation,
-                  label: f.libelle,
-                }))}
-                isMulti
-                options={formations}
-                // value={formations.filter(f => f.statut)}
-                onChange={(options: any) => setFormData(prevState => ({
-                  ...prevState,
-                  formations: options,
-                }))}
-                placeholder="Aucune formation"
-                className="text-sm"
-              />
-            </div>
-          )}
+          <div>
+            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+              Formation(s)
+            </label>
+            <Select
+              defaultValue={initialData?.formations.map(f => ({
+                value: f.id_formation,
+                label: f.libelle,
+              }))}
+              isMulti
+              options={formations.map(f => ({
+                value: f.id_formation,
+                label: f.libelle,
+              }))}
+              onChange={(options: any) => setFormData(prevState => ({
+                ...prevState,
+                formations: options,
+              }))}
+              placeholder="Aucune formation"
+              className="text-sm"
+            />
+          </div>
 
           <div className="flex justify-end gap-3">
             {/* TODO: demander à Mohamed pourquoi le bouton annuler alors qu'il y a déjà un bouton fermer */}
@@ -204,12 +187,19 @@ export function UserForm({
               Annuler
             </button>
             <button
-              type="submit"
+              // type="submit"
+              onClick={handleSubmit}
               className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] rounded-lg transition-colors"
             >
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
+
+          {errorMessage.length > 0 && (
+            <div className="text-red-500 text-sm">
+              {errorMessage.join('. ')}
+            </div>
+          )}
         </form>
       </div>
     </div>

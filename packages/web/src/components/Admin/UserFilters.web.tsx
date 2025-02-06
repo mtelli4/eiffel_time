@@ -3,6 +3,8 @@ import { Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import {
+  Formation,
+  Groupe,
   ROLES,
   TEACHER_TYPES,
   UserFiltersProps,
@@ -11,39 +13,33 @@ import {
 export function UserFilters({
   onFilterChange,
 }: UserFiltersProps) {
-  const [formations, setFormations] = useState([])
-  const [groupes, setGroupes] = useState([])
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
+
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:4000/api/formations').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (formations)');
+        return response.json();
+      }),
+      fetch('http://localhost:4000/api/groupes').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (groupes)');
+        return response.json();
+      })
+    ])
+      .then(([formationsData, groupesData]) => {
+        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
+
+        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
 
   const handleFilterChange = (filterName: string, value: string) => {
     onFilterChange(filterName, value)
   }
-
-  useEffect(() => {
-    // Effectuer la requête GET pour récupérer les utilisateurs
-    fetch('http://localhost:4000/api/data') // URL de votre API
-      .then((response) => {
-        // Vérifier si la réponse est correcte
-        if (!response.ok) {
-          throw new Error('Erreur réseau')
-        }
-        return response.json() // Convertir la réponse en JSON
-      })
-      .then((data) => {
-        setGroupes(data.groupes.map((g: groupe) => {
-          return { value: g.libelle, label: g.libelle }
-        }))
-        
-        setFormations(data.formations.map((f: formation) => {
-          return { value: f.id_formation, label: f.libelle }
-        }))
-      })
-      .catch((error) => {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error
-        )
-      })
-  }, [])
 
   return (
     <div className="space-y-4 bg-white p-4 rounded-lg shadow-sm">

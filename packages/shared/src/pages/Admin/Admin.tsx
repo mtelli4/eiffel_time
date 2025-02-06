@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { UserUpdate, Utilisateur } from '../../types/types'
+import { Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { formation, groupe } from '@prisma/client'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
@@ -21,6 +22,8 @@ export function Admin() {
     search: ''
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
@@ -44,14 +47,14 @@ export function Admin() {
       })
       .then((data) => {
         const utilisateurs = data.map((utilisateur: any) => ({
-            id_utilisateur: utilisateur.id_utilisateur,
-            nom: utilisateur.nom,
-            prenom: utilisateur.prenom,
-            email: utilisateur.email,
-            statut: utilisateur.statut,
-            formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-            groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-            vacataire: utilisateur.enseignant?.vacataire
+          id_utilisateur: utilisateur.id_utilisateur,
+          nom: utilisateur.nom,
+          prenom: utilisateur.prenom,
+          email: utilisateur.email,
+          statut: utilisateur.statut,
+          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: utilisateur.enseignant?.vacataire
         }));
         setUtilisateurs(utilisateurs)
         setLoading(false)
@@ -63,6 +66,9 @@ export function Admin() {
         )
         setLoading(false)
       })
+  })
+
+  useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
         const { UserFilters } = await import(
@@ -175,7 +181,7 @@ export function Admin() {
         selectedUser.email = updatedUser.email
         selectedUser.statut = updatedUser.statut
         selectedUser.formations = updatedUser.formations.map((f: any) => {
-          return { id_formation: f.value, libelle: f.label }
+          return { id_formation: parseInt(f.value), libelle: f.label }
         })
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
@@ -207,7 +213,7 @@ export function Admin() {
           prenom: newUser.prenom,
           email: newUser.email,
           statut: newUser.statut,
-          formations: newUser.formation_utilisateur?.map((f: any) => f.formation) || [],
+          formations: newUser.formations.map((f: any) => { return { id_formation: f.value, libelle: f.label } }),
           groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
           vacataire: newUser.enseignant?.vacataire
         }
@@ -304,10 +310,11 @@ export function Admin() {
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
           isEdit={!!selectedUser}
+          formations={formations}
         />
       )}
       <ToastContainer />
     </View>
-    
+
   )
 }
