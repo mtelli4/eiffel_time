@@ -8,10 +8,12 @@ import {
   View,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { Utilisateur } from '../../../../shared/src/types/types';
+import { ROLES, Utilisateur } from '../../../../shared/src/types/types';
+import { DataTable } from 'react-native-paper';
 
 // Utilisez l'IP de votre machine pour Android
 const API_URL = Platform.select({
+  web: 'http://localhost:4000',
   ios: 'http://localhost:4000',
   android: 'http://10.0.2.2:4000', // Pour l'émulateur Android
   // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
@@ -73,9 +75,7 @@ export function UserTable({
         );
       });
   }, []);
-
-  const renderHeader = () => (
-    <View style={styles.headerContainer}>
+{/* <View style={styles.headerContainer}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <Text style={[styles.headerCell, styles.idCell]}>ID</Text>
@@ -91,19 +91,29 @@ export function UserTable({
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </View> */}
+  const renderHeader = () => (
+    <DataTable.Header style={styles.headerContainer}>
+      <DataTable.Title style={[styles.headerCell, styles.idCell]}>ID</DataTable.Title>
+      <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Nom</DataTable.Title>
+      <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Prénom</DataTable.Title>
+      <DataTable.Title style={[styles.headerCell, styles.emailCell]}>Email</DataTable.Title>
+      <DataTable.Title style={[styles.headerCell, styles.roleCell]}>Rôle</DataTable.Title>
+      <DataTable.Title style={[styles.headerCell, styles.formationCell]}>Formation</DataTable.Title>
+      <DataTable.Title style={[styles.headerCellActions, styles.actionsHeaderCell]}>Actions</DataTable.Title>
+    </DataTable.Header>
   );
 
   return (
     <View style={styles.mainContainer}>
-      {renderHeader()}
-      <View style={styles.tableContainer}>
+      {/* {renderHeader()} */}
+      {/* <View style={styles.tableContainer}>
         <ScrollView
           nestedScrollEnabled={true}
           contentContainerStyle={styles.scrollViewContent}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View>
-              {users.map(user => (
+              {utilisateurs.map(user => (
                 <View key={user.id_utilisateur} style={styles.row}>
                   <Text style={[styles.cell, styles.idCell]}>
                     {user.id_utilisateur}
@@ -144,7 +154,52 @@ export function UserTable({
             </View>
           </ScrollView>
         </ScrollView>
-      </View>
+      </View> */}
+      <DataTable style={styles.tableContainer}>
+        {renderHeader()}
+        <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.scrollViewContent}>
+          {chargement ? (
+            <DataTable.Row>
+              <DataTable.Cell>Chargement...</DataTable.Cell>
+            </DataTable.Row>
+          ) : utilisateurs.length === 0 ? (
+            <DataTable.Row>
+              <DataTable.Cell>Aucun utilisateur trouvé</DataTable.Cell>
+            </DataTable.Row>
+          ) : (
+            utilisateurs.map((utilisateur) => (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <DataTable.Row key={utilisateur.id_utilisateur} style={styles.row}>
+                  <DataTable.Cell style={styles.idCell}>{utilisateur.id_utilisateur}</DataTable.Cell>
+                  <DataTable.Cell style={styles.nameCell}>{utilisateur.nom}</DataTable.Cell>
+                  <DataTable.Cell style={styles.nameCell}>{utilisateur.prenom}</DataTable.Cell>
+                  <DataTable.Cell style={styles.emailCell}>{utilisateur.email}</DataTable.Cell>
+                  <DataTable.Cell style={styles.roleCell}>{ROLES.find(r => r.value === utilisateur.statut)?.label}</DataTable.Cell>
+                  <DataTable.Cell style={styles.formationCell}>
+                    {utilisateur.formations.map(f => f.libelle).sort().join(', ') || '-'}
+                  </DataTable.Cell>
+                  <DataTable.Cell style={styles.actionsCell}>
+                    {isAdmin && (
+                      <>
+                        <TouchableOpacity
+                          style={styles.iconButton}
+                          onPress={() => onEdit(utilisateur)}>
+                          <Feather name="edit" size={16} color="#3498DB" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.iconButton}
+                          onPress={() => onDelete(utilisateur)}>
+                          <Feather name="trash-2" size={16} color="#E74C3C" />
+                        </TouchableOpacity>
+                      </>
+                    )}
+                  </DataTable.Cell>
+                </DataTable.Row>
+              </ScrollView>
+            ))
+          )}
+        </ScrollView>
+      </DataTable>
     </View>
   );
 }
@@ -174,7 +229,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   headerRow: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     paddingVertical: 8,
     paddingHorizontal: 4,
   },
@@ -187,12 +242,12 @@ const styles = StyleSheet.create({
   headerCellActions: {
     fontWeight: 'bold',
     color: '#2C3E50',
-    textAlign: 'right',
+    // textAlign: 'right',
     paddingHorizontal: 8,
     fontSize: 14,
   },
   row: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
     paddingVertical: 8,
@@ -207,7 +262,7 @@ const styles = StyleSheet.create({
     width: 100,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   actionsHeaderCell: {
     width: 100,
