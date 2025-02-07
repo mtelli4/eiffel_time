@@ -1,18 +1,11 @@
 import { X } from 'lucide-react'
 import Select from 'react-select'
-import { Formation, ROLES, UserUpdate } from '../../../../shared/src/types/types'
+import { Formation, Groupe, ROLES, TEACHER_TYPES, UserUpdate } from '../../../../shared/src/types/types'
 import { Utilisateur } from '../../../../shared/src/types/types'
 import { useEffect, useState } from 'react'
-import { formation, statut_utilisateur } from '@prisma/client'
-import { getFormations } from '../../../../shared/src/backend/services'
+import { formation, groupe, statut_utilisateur } from '@prisma/client'
 
 const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
-
-type FormationOption = {
-  value: number
-  label: string
-  statut: boolean
-}
 
 interface UserFormProps {
   isOpen: boolean
@@ -36,21 +29,34 @@ export function UserForm({
     email: initialData?.email || '',
     statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
+    groupes: initialData?.groupes || [],
+    vacataire: initialData?.vacataire || null,
   })
-  const [formations, setFormations] = useState<FormationOption[]>([])
+  const [errorMessage, setErrorMessage] = useState<string[]>([])
+
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
 
   useEffect(() => {
-    getFormations()
-      .then((data) => {
-        const formations = data.map((formation: formation) => ({
-          value: formation.id_formation,
-          label: formation.libelle,
-          statut: initialData?.formations?.find(f => f.id_formation === formation.id_formation) ? true : false,
-        }))
-        setFormations(formations)
+    Promise.all([
+      fetch('http://localhost:4000/api/formations').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (formations)');
+        return response.json();
+      }),
+      fetch('http://localhost:4000/api/groupes').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (groupes)');
+        return response.json();
       })
-      .catch(console.error)
-  })
+    ])
+      .then(([formationsData, groupesData]) => {
+        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
+
+        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prevState => ({
@@ -59,26 +65,30 @@ export function UserForm({
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
+    const messages = []
     if (!formData.nom.trim()) {
       alert('Le nom est obligatoire')
-      return
     }
     if (!formData.prenom.trim()) {
       alert('Le prénom est obligatoire')
-      return
     }
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
-      alert("Veuillez saisir une adresse email valide")
-      return
+      alert('Veuillez saisir une adresse email valide')
     }
     if (!formData.statut) {
       alert('Le rôle est obligatoire')
-      return
     }
-
+    if (formData.formations.length > 1 && formData.statut === 'student') {
+      alert('Un étudiant ne peut pas être inscrit à plusieurs formations')
+    }
+    if (formData.groupes.length > 0 && formData.statut !== 'student') {
+      alert('Seul un étudiant peut être inscrit à des groupes')
+    }
+    if (formData.statut === 'teacher' && formData.vacataire === undefined) {
+      alert('Un enseignant doit être soit titulaire soit vacataire')
+    }
+    alert(`Données valides: ${JSON.stringify(formData)}`)
     onSubmit(formData)
   }
 
@@ -171,24 +181,62 @@ export function UserForm({
             />
           </div>
 
-          {isEdit && (
+          <div>
+            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+              Formation(s)
+            </label>
+            <Select
+              defaultValue={initialData?.formations.map(f => ({
+                value: f.id_formation,
+                label: f.libelle,
+              }))}
+              isMulti
+              options={formations}
+              onChange={(options: any) => setFormData(prevState => ({
+                ...prevState,
+                formations: options,
+              }))}
+              placeholder="Aucune formation"
+              className="text-sm"
+            />
+          </div>
+
+          {formData.statut === 'student' && (
             <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                Formation(s)
+                Groupes
               </label>
               <Select
-                defaultValue={initialData?.formations.map(f => ({
-                  value: f.id_formation,
-                  label: f.libelle,
+                defaultValue={initialData?.groupes.map(g => ({
+                  value: g.id_grp,
+                  label: g.libelle,
                 }))}
                 isMulti
-                options={formations}
-                // value={formations.filter(f => f.statut)}
+                options={groupes}
                 onChange={(options: any) => setFormData(prevState => ({
                   ...prevState,
-                  formations: options,
+                  groupes: options,
                 }))}
-                placeholder="Aucune formation"
+                placeholder="Aucun groupe"
+                className="text-sm"
+              />
+            </div>
+          )}
+
+          {formData.statut === 'teacher' && (
+            <div>
+              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+                Type
+              </label>
+              <Select
+                options={TEACHER_TYPES}
+                isClearable
+                placeholder="Sélectionner un type"
+                value={TEACHER_TYPES.find(option => option.value === formData.vacataire)}
+                onChange={(option: any) => setFormData(prevState => ({
+                  ...prevState,
+                  vacataire: option?.value ?? null, // Utilisez null si l'option est undefined
+                }))}
                 className="text-sm"
               />
             </div>
@@ -204,12 +252,19 @@ export function UserForm({
               Annuler
             </button>
             <button
-              type="submit"
+              // type="submit"
+              onClick={handleSubmit}
               className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] rounded-lg transition-colors"
             >
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
+
+          {errorMessage.length > 0 && (
+            <div className="text-red-500 text-sm">
+              {errorMessage.join('. ')}
+            </div>
+          )}
         </form>
       </div>
     </div>

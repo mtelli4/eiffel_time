@@ -141,7 +141,7 @@ router.post('/insert-evaluation', async (req, res) => {
     const result = await prisma.$transaction(async (tx) => {
       const lastEvaluation = await tx.evaluation.lastEvaluation(); // Récupère la dernière évaluation
 
-      const evaluation = await tx.evaluation.create({
+      return tx.evaluation.create({
         data: {
           id_eval: lastEvaluation.id_eval + 1, // Incrémente l'id de l'évaluation
           libelle: formData.libelle,
@@ -153,9 +153,7 @@ router.post('/insert-evaluation', async (req, res) => {
           id_notif: 3, // Exemple : une notification par défaut
           id_module: parseInt(formData.id_module, 10), // Convertir en entier
         },
-      });
-
-      return evaluation; // Retourne l'évaluation créée
+      }) // Retourne l'évaluation créée
     });
 
     res.status(201).json(result); // Réponse JSON avec un statut HTTP 201 (Created)
@@ -208,6 +206,7 @@ router.get('/users', async (req, res) => {
           }
         },
       },
+      where: { premiereconnexion: { not: null }, }, // On exclut les utilisateurs supprimés
       orderBy: {
         id_utilisateur: 'asc',  // Tri par id d'utilisateur
       },
@@ -245,6 +244,26 @@ router.post('/create-user', async (req, res) => {
         },
       });
 
+      const createUserFormations = data.formations.map((formation) =>
+        tx.formation_utilisateur.create({
+          data: {
+            id_utilisateur: user.id_utilisateur,
+            id_formation: formation.id_formation,
+          },
+        })
+      );
+      await Promise.all(createUserFormations);
+
+      const createUserGroupes = data.groupes.map((groupe) =>
+        tx.groupe_etudiant.create({
+          data: {
+            id_utilisateur: user.id_utilisateur,
+            id_grp: groupe.value,
+          },
+        })
+      );
+      await Promise.all(createUserGroupes);
+
       return user;
     });
 
@@ -259,7 +278,6 @@ router.post('/create-user', async (req, res) => {
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
   const data = req.body;
-  const now = new Date();
 
   try {
     const updateUser = await prisma.$transaction(async (tx) => {
@@ -284,15 +302,50 @@ router.put('/update-user/:id', async (req, res) => {
         tx.formation_utilisateur.create({
           data: {
             id_utilisateur: parseInt(id),
-            id_formation: formation.value,
+            id_formation: formation.id_formation,
           },
         })
       );
-      await Promise.all(updateUserFormations);
 
-      // TODO: Ajouter les groupes, etc. à mettre à jour
+      // Suppression de tous les groupes liés à l'utilisateur
+      await tx.groupe_etudiant.deleteMany({
+        where: { id_utilisateur: parseInt(id) },
+      });
 
-      return { ...user, formations: data.formations };
+      // Ajout des nouveaux groupes liés à l'utilisateur
+      const updateUserGroupes = data.groupes.map((groupe) =>
+        tx.groupe_etudiant.create({
+          data: {
+            id_utilisateur: parseInt(id),
+            id_grp: groupe.value,
+          },
+        })
+      );
+      await Promise.all(updateUserFormations, updateUserGroupes);
+
+      // Mise à jour des données de l'enseignant
+      const isEnseignant = await tx.enseignant.findUnique({
+        where: { id_utilisateur: parseInt(id) },
+      });
+
+      // Si l'enseignant n'existe pas, on le crée
+      if (!isEnseignant) {
+        await tx.enseignant.create({
+          data: {
+            id_utilisateur: parseInt(id),
+            vacataire: data.vacataire,
+          },
+        });
+      } else {
+        await tx.enseignant.update({
+          where: { id_utilisateur: parseInt(id) },
+          data: {
+            vacataire: data.vacataire,
+          },
+        });
+      }
+
+      return { ...user, formations: data.formations, groupes: data.groupes };
     });
 
     res.json(updateUser);
@@ -308,7 +361,9 @@ router.delete('/delete-user/:id', async (req, res) => {
   
   try {
     const deleteUser = await prisma.$transaction(async (tx) => {
-      const user = await tx.utilisateur.delete({
+      // On met à jour la table utilisateur pour considérer l'utilisateur comme supprimé
+      const user = await tx.utilisateur.update({
+        data: { premiereconnexion: null, }, // On met à null pour considérer l'utilisateur comme supprimé
         where: { id_utilisateur: parseInt(id) },
       });
 
@@ -326,6 +381,10 @@ router.delete('/delete-user/:id', async (req, res) => {
 router.get('/formations', async (req, res) => {
   try {
     const formations = await prisma.formation.findMany({
+      select: {
+        id_formation: true,
+        libelle: true,
+      },
       orderBy: {
         id_formation: 'asc',  // Tri par id de formation
       },
@@ -335,6 +394,26 @@ router.get('/formations', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la récupération des formations.' });
+  }
+});
+
+// Route pour récupérer la liste des groupes
+router.get('/groupes', async (req, res) => {
+  try {
+    const groupes = await prisma.groupe.findMany({
+      select: {
+        id_grp: true,
+        libelle: true,
+      },
+      orderBy: {
+        id_grp: 'asc',  // Tri par id de groupe
+      },
+    });
+
+    res.json(groupes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des groupes.' });
   }
 });
 

@@ -10,8 +10,9 @@ export const ROLES = [
 ]
 
 export const TEACHER_TYPES = [
-  { value: 'Titulaire', label: 'Titulaire' },
-  { value: 'Vacataire', label: 'Vacataire' },
+  { value: false, label: 'Titulaire' },
+  { value: true, label: 'Vacataire' },
+  { value: null, label: 'Non spécifié' },
 ]
 
 export type Formation = {
@@ -20,7 +21,7 @@ export type Formation = {
 }
 
 export type Groupe = {
-  id_groupe: number;
+  id_grp: number;
   libelle: string;
 }
 
@@ -32,7 +33,7 @@ export type Utilisateur = {
   statut: string;
   formations: Formation[];
   groupes: Groupe[];
-  vacataire?: boolean;
+  vacataire?: boolean | null;
 }
 
 export interface UserUpdate {
@@ -42,6 +43,8 @@ export interface UserUpdate {
   email: string
   statut: string
   formations: Formation[]
+  groupes: Groupe[]
+  vacataire?: boolean | null
 }
 
 export interface CourseModalProps {

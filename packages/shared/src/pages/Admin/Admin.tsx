@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { UserUpdate, Utilisateur } from '../../types/types'
+import { Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { formation, groupe } from '@prisma/client'
+// import { toast, ToastContainer } from 'react-toastify'
+// import 'react-toastify/dist/ReactToastify.css'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
 
@@ -21,6 +22,8 @@ export function Admin() {
     search: ''
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
@@ -36,22 +39,19 @@ export function Admin() {
   useEffect(() => {
     fetch('http://localhost:4000/api/users') // URL de votre API
       .then((response) => {
-        // Vérifier si la réponse est correcte
-        if (!response.ok) {
-          throw new Error('Erreur réseau')
-        }
+        if (!response.ok) throw new Error('Erreur réseau');
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
         const utilisateurs = data.map((utilisateur: any) => ({
-            id_utilisateur: utilisateur.id_utilisateur,
-            nom: utilisateur.nom,
-            prenom: utilisateur.prenom,
-            email: utilisateur.email,
-            statut: utilisateur.statut,
-            formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-            groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-            vacataire: utilisateur.enseignant?.vacataire
+          id_utilisateur: utilisateur.id_utilisateur,
+          nom: utilisateur.nom,
+          prenom: utilisateur.prenom,
+          email: utilisateur.email,
+          statut: utilisateur.statut,
+          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: utilisateur.enseignant?.vacataire
         }));
         setUtilisateurs(utilisateurs)
         setLoading(false)
@@ -63,6 +63,32 @@ export function Admin() {
         )
         setLoading(false)
       })
+  })
+
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:4000/api/formations').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (formations)');
+        return response.json();
+      }),
+      fetch('http://localhost:4000/api/groupes').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (groupes)');
+        return response.json();
+      })
+    ])
+      .then(([formationsData, groupesData]) => {
+        setFormations(formationsData);
+        setGroupes(groupesData);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
+
+  let showNotification: (type: 'success' | 'error', message: string) => void;
+  let NotificationContainer: React.FC;
+
+  useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
         const { UserFilters } = await import(
@@ -113,17 +139,19 @@ export function Admin() {
             throw new Error('Erreur réseau')
           }
           setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
-          toast.success(`L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`, {
+          /* toast.success(`L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`, {
             position: 'bottom-right',
             // toastId: 'delete-user' + user.id_utilisateur,
-          });
+          }); */
+          // showNotification('success', `L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`)
         })
         .catch((error) => {
           console.error('Erreur lors de la suppression de l\'utilisateur:', error)
-          toast.error('Erreur lors de la suppression de l\'utilisateur', {
+          /* toast.error('Erreur lors de la suppression de l\'utilisateur', {
             position: 'bottom-right',
             // toastId: 'delete-user' + user.id_utilisateur,
-          });
+          }); */
+          // showNotification('error', 'Erreur lors de la suppression de l\'utilisateur')
         })
     }
   }
@@ -142,7 +170,6 @@ export function Admin() {
           throw new Error('Erreur réseau')
         }
         const updatedUser = await response.json()
-        // console.log('Modification de l\'utilisateur : ', updatedUser)
         const message = []
         if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
           message.push('ID')
@@ -162,32 +189,42 @@ export function Admin() {
         if (updatedUser.formations) {
           const formations = updatedUser.formations.map((f: any) => f.formation)
           if (JSON.stringify(formations) !== JSON.stringify(selectedUser.formations)) {
-            message.push('formations')
+            message.push('formation(s)')
           }
         }
-        toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
+
+        if (updatedUser.etudiant?.groupes) {
+          const groupes = updatedUser.groupes.map((g: any) => g.groupe)
+          if (JSON.stringify(groupes) !== JSON.stringify(selectedUser.groupes)) {
+            message.push('groupe(s)')
+          }
+        }
+        /* toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
           position: 'bottom-right',
           // toastId: 'update-user' + selectedUser.id_utilisateur,
-        });
+        }); */
+        // showNotification('success', 'L\'utilisateur a été modifié avec succès : ' + message.join(', '))
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
         selectedUser.email = updatedUser.email
         selectedUser.statut = updatedUser.statut
         selectedUser.formations = updatedUser.formations.map((f: any) => {
-          return { id_formation: f.value, libelle: f.label }
+          return { id_formation: parseInt(f.value), libelle: f.label }
         })
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
-        toast.error('Erreur lors de la modification de l\'utilisateur', {
+        /* toast.error('Erreur lors de la modification de l\'utilisateur', {
           position: 'bottom-right',
           // toastId: 'update-user' + selectedUser.id_utilisateur,
-        });
+        }); */
+        // showNotification('error', 'Erreur lors de la modification de l\'utilisateur')
       }
     } else {
       console.log('Création d\'un utilisateur')
       try {
+        console.log('Création d\'un utilisateur', data)
         const response = await fetch('http://localhost:4000/api/create-user', {
           method: 'POST',
           headers: {
@@ -207,21 +244,23 @@ export function Admin() {
           prenom: newUser.prenom,
           email: newUser.email,
           statut: newUser.statut,
-          formations: newUser.formation_utilisateur?.map((f: any) => f.formation) || [],
+          formations: newUser.formations.map((f: any) => { return { id_formation: f.value, libelle: f.label } }),
           groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
           vacataire: newUser.enseignant?.vacataire
         }
         setUtilisateurs((prev) => [...prev, utilisateur])
-        toast.success(`L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`, {
+        /* toast.success(`L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`, {
           position: 'bottom-right',
           // toastId: 'create-user' + newUser.id_utilisateur,
-        });
+        }); */
+        // showNotification('success', `L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`)
       } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur : ", error)
-        toast.error('Erreur lors de la création de l\'utilisateur', {
+        /* toast.error('Erreur lors de la création de l\'utilisateur', {
           position: 'bottom-right',
           // toastId: 'create-user',
-        });
+        }); */
+        // showNotification('error', 'Erreur lors de la création de l\'utilisateur')
       }
     }
     setShowUserForm(false)
@@ -306,8 +345,8 @@ export function Admin() {
           isEdit={!!selectedUser}
         />
       )}
-      <ToastContainer />
+      {/* <NotificationContainer /> */}
     </View>
-    
+
   )
 }
