@@ -1,8 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Absences } from '../../shared/src/pages/Absences/StudentAbsences'
 import { Admin } from '../../shared/src/pages/Admin/Admin'
+import { Absences } from '../../shared/src/pages/Attendance/StudentAbsences'
+import { TeacherAttendance } from '../../shared/src/pages/Attendance/TeacherAttendance'
 import { ClassAverages } from '../../shared/src/pages/Averages/ClassAverages'
 import { ClassGrades } from '../../shared/src/pages/Grades/GradesManagement/ClassGrades'
 import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
         element: <ClassGrades />,
       },
       {
+        path: '/teacher-attendance',
+        element: <TeacherAttendance />,
+      },
+      {
         path: '/class-averages',
         element: <ClassAverages />,
       },
@@ -56,7 +61,7 @@ const router = createBrowserRouter([
 
 const rootElement = document.getElementById('root') as HTMLElement
 createRoot(rootElement).render(
-    <StrictMode>
-        <RouterProvider router={router} />
-    </StrictMode>
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>
 )
