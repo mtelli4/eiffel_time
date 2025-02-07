@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Platform,
   ScrollView,
@@ -43,157 +43,59 @@ export function UserTable({
   filters,
   loading,
 }: UserTableProps) {
-  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
-  const [chargement, setChargement] = useState<boolean>(true);
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/users`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Erreur réseau');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const utilisateurs = data.map((utilisateur: any) => ({
-          id_utilisateur: utilisateur.id_utilisateur,
-          nom: utilisateur.nom,
-          prenom: utilisateur.prenom,
-          email: utilisateur.email,
-          statut: utilisateur.statut,
-          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: utilisateur.enseignant?.vacataire
-        }));
-        setUtilisateurs(utilisateurs)
-        setChargement(false)
-      })
-      .catch(error => {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error,
-        );
-      });
-  }, []);
-{/* <View style={styles.headerContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.headerRow}>
-          <Text style={[styles.headerCell, styles.idCell]}>ID</Text>
-          <Text style={[styles.headerCell, styles.nameCell]}>Nom</Text>
-          <Text style={[styles.headerCell, styles.nameCell]}>Prénom</Text>
-          <Text style={[styles.headerCell, styles.emailCell]}>Email</Text>
-          <Text style={[styles.headerCell, styles.roleCell]}>Rôle</Text>
-          <Text style={[styles.headerCell, styles.formationCell]}>
-            Formation
-          </Text>
-          <Text style={[styles.headerCellActions, styles.actionsHeaderCell]}>
-            Actions
-          </Text>
-        </View>
-      </ScrollView>
-    </View> */}
   const renderHeader = () => (
     <DataTable.Header style={styles.headerContainer}>
-      <DataTable.Title style={[styles.headerCell, styles.idCell]}>ID</DataTable.Title>
-      <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Nom</DataTable.Title>
-      <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Prénom</DataTable.Title>
-      <DataTable.Title style={[styles.headerCell, styles.emailCell]}>Email</DataTable.Title>
-      <DataTable.Title style={[styles.headerCell, styles.roleCell]}>Rôle</DataTable.Title>
-      <DataTable.Title style={[styles.headerCell, styles.formationCell]}>Formation</DataTable.Title>
-      <DataTable.Title style={[styles.headerCellActions, styles.actionsHeaderCell]}>Actions</DataTable.Title>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <DataTable.Title style={[styles.headerCell, styles.idCell]}>ID</DataTable.Title>
+        <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Nom</DataTable.Title>
+        <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Prénom</DataTable.Title>
+        <DataTable.Title style={[styles.headerCell, styles.emailCell]}>Email</DataTable.Title>
+        <DataTable.Title style={[styles.headerCell, styles.roleCell]}>Rôle</DataTable.Title>
+        <DataTable.Title style={[styles.headerCell, styles.formationCell]}>Formation</DataTable.Title>
+        <DataTable.Title style={[styles.headerCellActions, styles.actionsHeaderCell]}>Actions</DataTable.Title>
+      </ScrollView>
     </DataTable.Header>
   );
 
   return (
     <View style={styles.mainContainer}>
-      {/* {renderHeader()} */}
-      {/* <View style={styles.tableContainer}>
-        <ScrollView
-          nestedScrollEnabled={true}
-          contentContainerStyle={styles.scrollViewContent}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View>
-              {utilisateurs.map(user => (
-                <View key={user.id_utilisateur} style={styles.row}>
-                  <Text style={[styles.cell, styles.idCell]}>
-                    {user.id_utilisateur}
-                  </Text>
-                  <Text style={[styles.cell, styles.nameCell]}>
-                    {user.nom}
-                  </Text>
-                  <Text style={[styles.cell, styles.nameCell]}>
-                    {user.prenom}
-                  </Text>
-                  <Text style={[styles.cell, styles.emailCell]}>
-                    {user.email}
-                  </Text>
-                  <Text style={[styles.cell, styles.roleCell]}>
-                    {user.statut}
-                  </Text>
-                  <Text style={[styles.cell, styles.formationCell]}>
-                    {user.formations.map(f => f.libelle).sort().join(', ') || '-'}
-                  </Text>
-                  <View style={[styles.actionsCell]}>
-                    {isAdmin && (
-                      <>
-                        <TouchableOpacity
-                          style={styles.iconButton}
-                          onPress={() => onEdit(user)}>
-                          <Feather name="edit" size={16} color="#3498DB" />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={styles.iconButton}
-                          onPress={() => onDelete(user)}>
-                          <Feather name="trash-2" size={16} color="#E74C3C" />
-                        </TouchableOpacity>
-                      </>
-                    )}
-                  </View>
-                </View>
-              ))}
-            </View>
-          </ScrollView>
-        </ScrollView>
-      </View> */}
       <DataTable style={styles.tableContainer}>
         {renderHeader()}
         <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.scrollViewContent}>
-          {chargement ? (
+          {loading ? (
             <DataTable.Row>
               <DataTable.Cell>Chargement...</DataTable.Cell>
             </DataTable.Row>
-          ) : utilisateurs.length === 0 ? (
+          ) : users.length === 0 ? (
             <DataTable.Row>
               <DataTable.Cell>Aucun utilisateur trouvé</DataTable.Cell>
             </DataTable.Row>
           ) : (
-            utilisateurs.map((utilisateur) => (
+            users.map((user) => (
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <DataTable.Row key={utilisateur.id_utilisateur} style={styles.row}>
-                  <DataTable.Cell style={styles.idCell}>{utilisateur.id_utilisateur}</DataTable.Cell>
-                  <DataTable.Cell style={styles.nameCell}>{utilisateur.nom}</DataTable.Cell>
-                  <DataTable.Cell style={styles.nameCell}>{utilisateur.prenom}</DataTable.Cell>
-                  <DataTable.Cell style={styles.emailCell}>{utilisateur.email}</DataTable.Cell>
-                  <DataTable.Cell style={styles.roleCell}>{ROLES.find(r => r.value === utilisateur.statut)?.label}</DataTable.Cell>
+                <DataTable.Row key={user.id_utilisateur} style={styles.row}>
+                  <DataTable.Cell style={styles.idCell}>{user.id_utilisateur}</DataTable.Cell>
+                  <DataTable.Cell style={styles.nameCell}>{user.nom}</DataTable.Cell>
+                  <DataTable.Cell style={styles.nameCell}>{user.prenom}</DataTable.Cell>
+                  <DataTable.Cell style={styles.emailCell}>{user.email}</DataTable.Cell>
+                  <DataTable.Cell style={styles.roleCell}>{ROLES.find(r => r.value === user.statut)?.label}</DataTable.Cell>
                   <DataTable.Cell style={styles.formationCell}>
-                    {utilisateur.formations.map(f => f.libelle).sort().join(', ') || '-'}
+                    {user.formations.map(f => f.libelle).sort().join(', ') || '-'}
                   </DataTable.Cell>
-                  <DataTable.Cell style={styles.actionsCell}>
-                    {isAdmin && (
-                      <>
-                        <TouchableOpacity
-                          style={styles.iconButton}
-                          onPress={() => onEdit(utilisateur)}>
-                          <Feather name="edit" size={16} color="#3498DB" />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={styles.iconButton}
-                          onPress={() => onDelete(utilisateur)}>
-                          <Feather name="trash-2" size={16} color="#E74C3C" />
-                        </TouchableOpacity>
-                      </>
-                    )}
-                  </DataTable.Cell>
+                  {isAdmin && (
+                    <DataTable.Cell style={styles.actionsCell}>
+                      <TouchableOpacity
+                        style={styles.iconButton}
+                        onPress={() => onEdit(user)}>
+                        <Feather name="edit" size={16} color="#3498DB" />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.iconButton}
+                        onPress={() => onDelete(user)}>
+                        <Feather name="trash-2" size={16} color="#E74C3C" />
+                      </TouchableOpacity>
+                    </DataTable.Cell>
+                  )}
                 </DataTable.Row>
               </ScrollView>
             ))
@@ -210,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -262,7 +164,7 @@ const styles = StyleSheet.create({
     width: 100,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    // alignItems: 'center',
+    alignItems: 'center',
   },
   actionsHeaderCell: {
     width: 100,
