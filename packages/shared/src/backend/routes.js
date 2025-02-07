@@ -302,10 +302,11 @@ router.put('/update-user/:id', async (req, res) => {
         tx.formation_utilisateur.create({
           data: {
             id_utilisateur: parseInt(id),
-            id_formation: formation.id_formation,
+            id_formation: formation.value || formation.id_formation,
           },
         })
       );
+      await Promise.all(updateUserFormations);
 
       // Suppression de tous les groupes liés à l'utilisateur
       await tx.groupe_etudiant.deleteMany({
@@ -313,15 +314,28 @@ router.put('/update-user/:id', async (req, res) => {
       });
 
       // Ajout des nouveaux groupes liés à l'utilisateur
-      const updateUserGroupes = data.groupes.map((groupe) =>
-        tx.groupe_etudiant.create({
-          data: {
-            id_utilisateur: parseInt(id),
-            id_grp: groupe.value,
-          },
-        })
-      );
-      await Promise.all(updateUserFormations, updateUserGroupes);
+      if (data.groupes.length > 0) {
+        const isEtudiant = await tx.etudiant.findUnique({
+          where: { id_utilisateur: parseInt(id) },
+        });
+
+        if (!isEtudiant) {
+          await tx.etudiant.create({
+            data: {
+              id_utilisateur: parseInt(id),
+            },
+          });
+        }
+        const updateUserGroupes = data.groupes.map((groupe) =>
+          tx.groupe_etudiant.create({
+            data: {
+              id_utilisateur: parseInt(id),
+              id_grp: groupe.value,
+            },
+          })
+        );
+        await Promise.all(updateUserGroupes);
+      }
 
       // Mise à jour des données de l'enseignant
       const isEnseignant = await tx.enseignant.findUnique({
