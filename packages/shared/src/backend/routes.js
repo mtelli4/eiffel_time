@@ -141,7 +141,7 @@ router.post('/insert-evaluation', async (req, res) => {
     const result = await prisma.$transaction(async (tx) => {
       const lastEvaluation = await tx.evaluation.lastEvaluation(); // Récupère la dernière évaluation
 
-      const evaluation = await tx.evaluation.create({
+      return tx.evaluation.create({
         data: {
           id_eval: lastEvaluation.id_eval + 1, // Incrémente l'id de l'évaluation
           libelle: formData.libelle,
@@ -153,9 +153,7 @@ router.post('/insert-evaluation', async (req, res) => {
           id_notif: 3, // Exemple : une notification par défaut
           id_module: parseInt(formData.id_module, 10), // Convertir en entier
         },
-      });
-
-      return evaluation; // Retourne l'évaluation créée
+      }) // Retourne l'évaluation créée
     });
 
     res.status(201).json(result); // Réponse JSON avec un statut HTTP 201 (Created)
@@ -259,7 +257,7 @@ router.post('/create-user', async (req, res) => {
       const createUserGroupes = data.groupes.map((groupe) =>
         tx.groupe_etudiant.create({
           data: {
-            id_etudiant: user.id_utilisateur,
+            id_utilisateur: user.id_utilisateur,
             id_grp: groupe.value,
           },
         })
@@ -280,7 +278,6 @@ router.post('/create-user', async (req, res) => {
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
   const data = req.body;
-  const now = new Date();
 
   try {
     const updateUser = await prisma.$transaction(async (tx) => {
@@ -305,27 +302,48 @@ router.put('/update-user/:id', async (req, res) => {
         tx.formation_utilisateur.create({
           data: {
             id_utilisateur: parseInt(id),
-            id_formation: formation.value,
+            id_formation: formation.id_formation,
           },
         })
       );
-      await Promise.all(updateUserFormations);
 
       // Suppression de tous les groupes liés à l'utilisateur
       await tx.groupe_etudiant.deleteMany({
-        where: { id_etudiant: parseInt(id) },
+        where: { id_utilisateur: parseInt(id) },
       });
 
       // Ajout des nouveaux groupes liés à l'utilisateur
       const updateUserGroupes = data.groupes.map((groupe) =>
         tx.groupe_etudiant.create({
           data: {
-            id_etudiant: parseInt(id),
+            id_utilisateur: parseInt(id),
             id_grp: groupe.value,
           },
         })
       );
-      await Promise.all(updateUserGroupes);
+      await Promise.all(updateUserFormations, updateUserGroupes);
+
+      // Mise à jour des données de l'enseignant
+      const isEnseignant = await tx.enseignant.findUnique({
+        where: { id_utilisateur: parseInt(id) },
+      });
+
+      // Si l'enseignant n'existe pas, on le crée
+      if (!isEnseignant) {
+        await tx.enseignant.create({
+          data: {
+            id_utilisateur: parseInt(id),
+            vacataire: data.vacataire,
+          },
+        });
+      } else {
+        await tx.enseignant.update({
+          where: { id_utilisateur: parseInt(id) },
+          data: {
+            vacataire: data.vacataire,
+          },
+        });
+      }
 
       return { ...user, formations: data.formations, groupes: data.groupes };
     });

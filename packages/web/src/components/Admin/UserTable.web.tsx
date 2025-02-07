@@ -3,7 +3,7 @@ import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import { Edit2, Trash2 } from 'lucide-react'
-import { Utilisateur } from '../../../../shared/src/types/types'
+import { TEACHER_TYPES, Utilisateur } from '../../../../shared/src/types/types'
 import { roleFinder } from '../../../../shared/src/lib/utils'
 import '../../styles/dataTables.dataTables.min.css'
 
@@ -16,7 +16,7 @@ interface UserTableProps {
     role: string
     formation: string
     groupe: string
-    type: string
+    type: boolean
     search: string
   }
   loading: boolean
@@ -58,9 +58,6 @@ export function UserTable({
     );
   }
 
-  // le filtre groupe ne fonctionne pas correctement, lorsque je choisis un groupe, il montre aucun utilisateur
-  // comment je peux le corriger?
-
   if (filters.groupe && !isNaN(Number(filters.groupe))) {
     filteredData = filteredData.filter(
       (utilisateur) =>
@@ -72,7 +69,7 @@ export function UserTable({
 
   if (filters.type) {
     filteredData = filteredData.filter(
-      (utilisateur) => (utilisateur.vacataire ? 'Vacataire' : 'Titulaire') === filters.type && utilisateur.statut === statut_utilisateur.teacher
+      (utilisateur: Utilisateur) => utilisateur.statut === statut_utilisateur.teacher && utilisateur.vacataire === filters.type
     );
   }
 
@@ -157,7 +154,7 @@ export function UserTable({
               <td className="py-3 px-4">{roleFinder(utilisateur.statut)}</td>
               <td className="py-3 px-4">{utilisateur.formations.map((f) => f.libelle).sort().join(', ') || '-'}</td>
               <td className="py-3 px-4">{utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}</td>
-              <td className="py-3 px-4">{utilisateur.vacataire === undefined ? '-' : utilisateur.vacataire ? 'Vacataire' : 'Titulaire'}</td>
+              <td className="py-3 px-4">{utilisateur.statut !== 'teacher' ? '-' : TEACHER_TYPES.find(t => t.value === utilisateur.vacataire)?.label}</td>
               <td className="py-3 px-4">
                 <div className="flex justify-end gap-2">
                   <button

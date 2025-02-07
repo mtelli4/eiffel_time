@@ -170,7 +170,6 @@ export function Admin() {
           throw new Error('Erreur réseau')
         }
         const updatedUser = await response.json()
-        // console.log('Modification de l\'utilisateur : ', updatedUser)
         const message = []
         if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
           message.push('ID')
@@ -193,6 +192,7 @@ export function Admin() {
             message.push('formation(s)')
           }
         }
+
         if (updatedUser.etudiant?.groupes) {
           const groupes = updatedUser.groupes.map((g: any) => g.groupe)
           if (JSON.stringify(groupes) !== JSON.stringify(selectedUser.groupes)) {

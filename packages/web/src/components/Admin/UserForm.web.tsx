@@ -30,6 +30,7 @@ export function UserForm({
     statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
     groupes: initialData?.groupes || [],
+    vacataire: initialData?.vacataire || null,
   })
   const [errorMessage, setErrorMessage] = useState<string[]>([])
 
@@ -67,28 +68,28 @@ export function UserForm({
   const handleSubmit = () => {
     const messages = []
     if (!formData.nom.trim()) {
-      messages.push('Le nom est obligatoire')
+      alert('Le nom est obligatoire')
     }
     if (!formData.prenom.trim()) {
-      messages.push('Le prénom est obligatoire')
+      alert('Le prénom est obligatoire')
     }
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
-      messages.push('Veuillez saisir une adresse email valide')
+      alert('Veuillez saisir une adresse email valide')
     }
     if (!formData.statut) {
-      messages.push('Le rôle est obligatoire')
+      alert('Le rôle est obligatoire')
     }
     if (formData.formations.length > 1 && formData.statut === 'student') {
-      messages.push('Un étudiant ne peut pas être inscrit à plusieurs formations')
+      alert('Un étudiant ne peut pas être inscrit à plusieurs formations')
     }
     if (formData.groupes.length > 0 && formData.statut !== 'student') {
-      messages.push('Seul un étudiant peut être inscrit à des groupes')
+      alert('Seul un étudiant peut être inscrit à des groupes')
     }
-    setErrorMessage(messages)
-
-    if (messages.length === 0) {
-      onSubmit(formData)
+    if (formData.statut === 'teacher' && formData.vacataire === undefined) {
+      alert('Un enseignant doit être soit titulaire soit vacataire')
     }
+    alert(`Données valides: ${JSON.stringify(formData)}`)
+    onSubmit(formData)
   }
 
   if (!isOpen) return null
@@ -231,10 +232,10 @@ export function UserForm({
                 options={TEACHER_TYPES}
                 isClearable
                 placeholder="Sélectionner un type"
-                value={initialData?.vacataire ? { value: 'Vacataire', label: 'Vacataire' } : { value: 'Titulaire', label: 'Titulaire' }}
+                value={TEACHER_TYPES.find(option => option.value === formData.vacataire)}
                 onChange={(option: any) => setFormData(prevState => ({
                   ...prevState,
-                  vacataire: option?.value === 'Vacataire',
+                  vacataire: option?.value ?? null, // Utilisez null si l'option est undefined
                 }))}
                 className="text-sm"
               />
