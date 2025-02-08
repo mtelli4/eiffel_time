@@ -41,12 +41,16 @@ const navigationConfig = {
   ],
   secretary: [
     {
+      icon: UserCheck,
+      label: 'Absences et retards',
+      path: '/manage-absences',
+    },
+    {
       icon: Users,
       label: 'Suivi des présences professeurs',
       path: '/teacher-attendance',
     },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
-    { icon: UserCheck, label: 'Absences', path: '/absences' },
   ],
   director: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
