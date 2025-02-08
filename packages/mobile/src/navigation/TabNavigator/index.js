@@ -13,6 +13,7 @@ import {Grades} from '../../../../shared/src/pages/Grades/StudentGradestest';
 import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
 import {Settings} from '../../../../shared/src/pages/Settings/Settings';
 import {UserContext} from '../../context/UserContext'; // Exemple de contexte utilisateur
+import {ManageAbsences} from '../../screens/Attendance';
 
 const Tab = createBottomTabNavigator();
 
@@ -158,11 +159,11 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Absences et Retards',
-    //   component: ClassGrades,
-    //   icon: {name: 'user-check', source: 'Feather'},
-    // },
+    {
+      name: 'Absences et Retards',
+      component: ManageAbsences,
+      icon: {name: 'user-check', source: 'Feather'},
+    },
     {
       name: 'Présences professeurs',
       component: TeacherAttendance,
