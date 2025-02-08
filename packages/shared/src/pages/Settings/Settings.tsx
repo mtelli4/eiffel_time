@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Button,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native'
 // import { Save } from 'lucide-react-native' // Assurez-vous d'avoir une version compatible de lucide-react pour React Native
@@ -70,7 +70,9 @@ export function Settings() {
         <PersonalizationSettings />
         <View style={{ marginVertical: 20 }} />
         <View style={styles.buttonContainer}>
-          <Button title="Enregistrer les modifications" onPress={handleSave} />
+          <TouchableOpacity style={styles.button} onPress={handleSave}>
+            <Text style={styles.button}>Enregistrer</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -93,5 +95,14 @@ const styles = StyleSheet.create({
   loading: {
     fontSize: 18,
     textAlign: 'center',
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2E3494',
+    padding: 5,
+    borderRadius: 8,
+    color: '#fff',
+    fontWeight: 'bold',
   },
 })
