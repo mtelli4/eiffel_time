@@ -1,6 +1,13 @@
-import { Check, Eye, FileDown, Filter, Search, X as XIcon } from 'lucide-react'
+import {
+  Check,
+  FileDown,
+  FileText,
+  Filter,
+  Search,
+  X as XIcon,
+} from 'lucide-react'
 import { useState } from 'react'
-import { cn } from '../../lib/utils'
+import { cn } from '../../../../shared/src/lib/utils'
 
 interface Student {
   id: string
@@ -124,9 +131,6 @@ export function ManageAbsences() {
   return (
     <div className="h-full">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-primary">
-          Gestion des absences
-        </h1>
         <button
           onClick={handleExport}
           className="btn btn-outline flex items-center gap-2"
@@ -286,7 +290,7 @@ export function ManageAbsences() {
                           className="p-1 text-gray-500 hover:text-primary"
                           title="Voir le justificatif"
                         >
-                          <Eye className="w-4 h-4" />
+                          <FileText className="w-4 h-4" />
                         </button>
                       )}
                       {absence.status === 'pending' && (
