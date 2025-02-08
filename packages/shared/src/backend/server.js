@@ -4,12 +4,28 @@ const routes = require('./routes');  // Import des routes définies dans routes.
 
 const app = express();
 
+// Configuration de CORS pour autoriser les requêtes provenant de l'application React
 const corsOptions = {
-  origin: '*', // Accepter toutes les origines
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
-  allowedHeaders: ['Content-Type', 'Authorization'], // En-tête autorisées dans les requêtes
-  credentials: true, // Nécessaire pour les requêtes avec des cookies ou des sessions
-}
+  origin: '*', // URL de l'application React
+
+  // Autoriser les cookies pour les requêtes CORS
+  credentials: true,
+
+  // Autoriser les méthodes HTTP
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+
+  // Autoriser les en-têtes HTTP
+  allowedHeaders: ['Content-Type', 'Authorization'],
+
+  // Exposer les en-têtes HTTP
+  exposedHeaders: ['Authorization'],
+
+  // Préflight Continue
+  preflightContinue: false,
+
+  // Configuration des options CORS pour les requêtes pré-vol
+  optionsSuccessStatus: 200,
+};
 
 app.use(cors(corsOptions));
 

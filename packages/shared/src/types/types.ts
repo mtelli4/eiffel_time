@@ -10,30 +10,42 @@ export const ROLES = [
 ]
 
 export const TEACHER_TYPES = [
-  { value: 'Titulaire', label: 'Titulaire' },
-  { value: 'Vacataire', label: 'Vacataire' },
+  { value: false, label: 'Titulaire' },
+  { value: true, label: 'Vacataire' },
+  { value: null, label: 'Non spécifié' },
 ]
 
 export type Formation = {
-  id_formation: number;
-  libelle: string;
+  id_formation: number
+  libelle: string
 }
 
 export type Groupe = {
-  id_groupe: number;
-  libelle: string;
+  id_grp: number
+  libelle: string
 }
 
 export type Utilisateur = {
-  id_utilisateur: number;
-  nom: string;
-  prenom: string;
-  email: string;
-  statut: string;
-  formations: Formation[];
-  groupes: Groupe[];
-  vacataire?: boolean;
-};
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+  formations: Formation[]
+  groupes: Groupe[]
+  vacataire?: boolean | null
+}
+
+export interface UserUpdate {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+  formations: Formation[]
+  groupes: Groupe[]
+  vacataire?: boolean | null
+}
 
 export interface CourseModalProps {
   course: Course
@@ -96,13 +108,6 @@ export interface FormData {
 }
 
 export interface UserFiltersProps {
-  filters: {
-    role: string
-    groupe: string
-    formation: string
-    type: string
-    search: string
-  },
   onFilterChange: (filterName: string, value: string) => void
 }
 
@@ -113,4 +118,17 @@ export interface FormEvaluation {
   periode: string
   id_cours: number
   id_module: number
+}
+
+export interface ModuleHours {
+  code: string
+  name: string
+  planned: PlannedHours
+  completed: PlannedHours
+}
+export interface TeacherPlanning {
+  id: string
+  firstName: string
+  lastName: string
+  modules: ModuleHours[]
 }

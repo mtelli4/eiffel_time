@@ -3,8 +3,9 @@ import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import { Edit2, Trash2 } from 'lucide-react'
-import { Utilisateur } from '../../../../shared/src/types/types'
+import { TEACHER_TYPES, Utilisateur } from '../../../../shared/src/types/types'
 import { roleFinder } from '../../../../shared/src/lib/utils'
+import '../../styles/dataTables.dataTables.min.css'
 
 interface UserTableProps {
   users: Utilisateur[]
@@ -15,9 +16,9 @@ interface UserTableProps {
     role: string
     formation: string
     groupe: string
-    type: string
+    type: boolean
     search: string
-  },
+  }
   loading: boolean
 }
 
@@ -32,16 +33,14 @@ export function UserTable({
   loading,
 }: UserTableProps) {
   /* roleSelected: string */
-
-  let filteredData = users.filter((user) =>
-    user.nom.toLowerCase().includes(filters.search.toLowerCase()) ||
-    user.prenom.toLowerCase().includes(filters.search.toLowerCase()) ||
-    user.email.toLowerCase().includes(filters.search.toLowerCase())
-  );
-
-  filteredData.sort((a, b) => a.id_utilisateur - b.id_utilisateur);
-  /* sort in the formation names when */
-  filteredData.sort((a, b) => a.formations.length - b.formations.length);
+  let filteredData = users
+  if (filters.search !== '') {
+    filteredData = users.filter((user) =>
+      user.nom.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.prenom.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.email.toLowerCase().includes(filters.search.toLowerCase())
+    );
+  }
 
   if (filters.role) {
     filteredData = filteredData.filter(
@@ -59,20 +58,33 @@ export function UserTable({
     );
   }
 
-  if (filters.groupe) {
+  if (filters.groupe && !isNaN(Number(filters.groupe))) {
     filteredData = filteredData.filter(
       (utilisateur) =>
         utilisateur.groupes.some(
-          (g) => g.id_groupe === parseInt(filters.groupe)
+          (g) => g.id_grp === Number(filters.groupe)
         )
     );
-  }
+  }  
 
   if (filters.type) {
     filteredData = filteredData.filter(
-      (utilisateur) => (utilisateur.vacataire ? 'Vacataire' : 'Titulaire') === filters.type && utilisateur.statut === statut_utilisateur.teacher
+      (utilisateur: Utilisateur) => utilisateur.statut === statut_utilisateur.teacher && utilisateur.vacataire === filters.type
     );
   }
+
+  filteredData = filteredData.sort((a, b) => {
+    // Tri principal par ID utilisateur
+    if (a.id_utilisateur !== b.id_utilisateur) {
+      return a.id_utilisateur - b.id_utilisateur;
+    }
+    // Tri secondaire par nombre de formations
+    if (a.formations.length !== b.formations.length) {
+      return a.formations.length - b.formations.length;
+    }
+    // Tri tertiaire par nombre de groupes
+    return a.groupes.length - b.groupes.length;
+  });  
 
   if (loading) {
     return (
@@ -135,14 +147,14 @@ export function UserTable({
               key={utilisateur.id_utilisateur}
               className="border-b border-gray-100 hover:bg-[#ECF0F1]"
             >
-              <td className="py-3 px-4">{utilisateur.id_utilisateur}</td>
+              <td className="py-3 px-4 dt-left">{utilisateur.id_utilisateur}</td>
               <td className="py-3 px-4">{utilisateur.nom}</td>
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>
               <td className="py-3 px-4">{roleFinder(utilisateur.statut)}</td>
               <td className="py-3 px-4">{utilisateur.formations.map((f) => f.libelle).sort().join(', ') || '-'}</td>
               <td className="py-3 px-4">{utilisateur.groupes.map((g) => g.libelle).join(', ') || '-'}</td>
-              <td className="py-3 px-4">{utilisateur.vacataire === undefined ? '-' : utilisateur.vacataire ? 'Vacataire' : 'Titulaire'}</td>
+              <td className="py-3 px-4">{utilisateur.statut !== 'teacher' ? '-' : TEACHER_TYPES.find(t => t.value === utilisateur.vacataire)?.label}</td>
               <td className="py-3 px-4">
                 <div className="flex justify-end gap-2">
                   <button

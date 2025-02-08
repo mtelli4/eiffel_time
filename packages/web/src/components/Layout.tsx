@@ -3,7 +3,13 @@ import { useState } from 'react'
 import { Sidebar } from './Navigation/Sidebar'
 
 interface LayoutProps {
-  userRole: 'student' | 'teacher' | 'secretary' | 'manager' | 'admin'
+  userRole:
+    | 'student'
+    | 'teacher'
+    | 'secretary'
+    | 'director'
+    | 'manager'
+    | 'administrator'
   children: React.ReactNode
 }
 
@@ -19,8 +25,14 @@ const getPageTitle = (pathname: string): string => {
       return 'Gestion des notes'
     case '/class-averages':
       return 'Moyennes'
+    case '/manage-absences':
+      return 'Gestion des absences'
+    case '/teacher-attendance':
+      return 'Suivi des présences des enseignants'
     case '/admin':
       return 'Administration'
+    case '/settings':
+      return 'Paramètres'
     default:
       return 'Page introuvable'
   }

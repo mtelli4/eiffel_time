@@ -1,5 +1,3 @@
-SET search_path TO 'ingrid';
-
 -- CreateEnum
 CREATE TYPE "statut_utilisateur" AS ENUM ('indefinite', 'student', 'teacher', 'secretary', 'director', 'manager', 'administrator');
 
