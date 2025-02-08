@@ -4,8 +4,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {Absences} from '../../../../shared/src/pages/Absences/StudentAbsences';
 import {Admin} from '../../../../shared/src/pages/Admin/Admin';
+import {Absences} from '../../../../shared/src/pages/Attendance/StudentAbsences';
+import {TeacherAttendance} from '../../../../shared/src/pages/Attendance/TeacherAttendance';
 import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages';
 import {ClassGrades} from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
 import {Grades} from '../../../../shared/src/pages/Grades/StudentGradestest';
@@ -161,11 +162,11 @@ const TABS_CONFIG = {
     //   component: ClassGrades,
     //   icon: {name: 'user-check', source: 'Feather'},
     // },
-    // {
-    //   name: 'Présences professeurs',
-    //   component: ClassAverages,
-    //   icon: {name: 'users', source: 'Feather'},
-    // },
+    {
+      name: 'Présences professeurs',
+      component: TeacherAttendance,
+      icon: {name: 'users', source: 'Feather'},
+    },
     // {
     //   name: 'Messagerie',
     //   component: Schedule,

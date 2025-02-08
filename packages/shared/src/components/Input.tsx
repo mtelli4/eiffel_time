@@ -1,4 +1,4 @@
-import { TextInput, StyleSheet, View, Text } from "react-native";
+import { TextInput, StyleSheet, View, Text } from 'react-native'
 
 interface InputProps {
   label?: string
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 16,
     color: '#2E3494',
-    outlineWidth: 0,
     width: 350,
   },
   // text: {
@@ -31,12 +30,12 @@ const styles = StyleSheet.create({
 
 const TYPES = {
   text: { secureTextEntry: false },
-  password: { secureTextEntry: true }
+  password: { secureTextEntry: true },
 }
 
 const STATUS = {
   normal: { borderColor: '#2E3494' },
-  error: { borderColor: '#FF0000' }
+  error: { borderColor: '#FF0000' },
 }
 
 export function Input({
@@ -45,7 +44,7 @@ export function Input({
   color = '#2E3494',
   type = 'text',
   status = 'normal',
-  onChangeText
+  onChangeText,
 }: InputProps) {
   const inputType = TYPES[type]
 
@@ -57,7 +56,8 @@ export function Input({
         placeholder={placeholder}
         placeholderTextColor={color + '55'}
         {...inputType}
-        onChangeText={onChangeText} />
+        onChangeText={onChangeText}
+      />
     </View>
   )
 }
