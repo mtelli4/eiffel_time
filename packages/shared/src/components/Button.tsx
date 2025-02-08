@@ -10,7 +10,6 @@ interface ButtonProps {
 const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
-    outlineWidth: 0,
   },
   text: {
     textAlign: 'center',

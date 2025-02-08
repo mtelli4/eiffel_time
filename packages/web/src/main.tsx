@@ -6,8 +6,8 @@ import { Admin } from '../../shared/src/pages/Admin/Admin'
 import { ClassAverages } from '../../shared/src/pages/Averages/ClassAverages'
 import { ClassGrades } from '../../shared/src/pages/Grades/GradesManagement/ClassGrades'
 import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
-import { Login } from '../../shared/src/pages/Login/Login'
-import { Register } from '../../shared/src/pages/Login/Register'
+import { Login } from '../../shared/src/pages/Login/SignIn'
+import { SignUp } from '../../shared/src/pages/Login/SignUp'
 import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
 import Root, { Error } from './root'
 import './styles/index.css'
@@ -45,12 +45,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/login',
+    path: '/signin',
     element: <Login />,
   },
   {
-    path: '/register',
-    element: <Register />,
+    path: '/signup',
+    element: <SignUp />,
   },
 ])
 

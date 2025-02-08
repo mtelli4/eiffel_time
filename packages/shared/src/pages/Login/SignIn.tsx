@@ -1,42 +1,10 @@
-import { Input } from '@shared/components/Input'
+import { Input } from '@shared/components/Input/Input'
 import { Button } from '@shared/components/Button'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, Linking } from 'react-native'
 import logo from '../../assets/logo.png';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    height: '100%',
-    gap: 16,
-  },
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    gap: 16,
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    fontFamily: 'Montserrat',
-    color: '#2E3494'
-  },
-  logo: {
-    width: 128,
-    height: 128,
-    position: 'absolute',
-    top: 64,
-    left: 64,
-  } 
-})
+import { styles } from './Style';
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -45,7 +13,7 @@ export function Login() {
 
   const handleSubmitUser = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/login`, {
+      const response = await fetch(`http://localhost:4000/api/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,9 +41,10 @@ export function Login() {
       <Image source={logo} style={styles.logo} />
       <View style={styles.container}>
         <Text style={styles.title}>Eiffel TIME</Text>
-        <Input placeholder='Adresse mail' onChangeText={setEmail} />
-        <Input placeholder='Mot de passe' type='password' onChangeText={setPassword} />
+        <Input label='Adresse mail' onChangeText={setEmail} />
+        <Input label='Mot de passe' type='password' onChangeText={setPassword} />
         <Button label="Connexion" onpress={handleSubmitUser} />
+        <Button label="Inscription" variant='secondary' onpress={() => navigate("/signup")} />
       </View>
     </View>
 
