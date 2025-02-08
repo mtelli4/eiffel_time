@@ -70,8 +70,8 @@ export function ManageAbsences() {
   const [selectedStatus, setSelectedStatus] = useState<
     Absence['status'] | 'all'
   >('all');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date('2000-01-01'));
+  const [endDate, setEndDate] = useState(new Date('2100-12-31'));
   const [showFilters, setShowFilters] = useState(false);
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
@@ -132,178 +132,148 @@ export function ManageAbsences() {
     }
   };
 
+  console.log('Filtered absences:', filteredAbsences);
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.exportButton} onPress={handleExport}>
-          <Feather name="download" size={20} color="#666" />
-          <Text style={styles.exportButtonText}>Exporter</Text>
-        </TouchableOpacity>
+      <View style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.exportButton} onPress={handleExport}>
+            <Feather name="download" size={20} color="#2E3494" />
+            <Text style={styles.exportButtonText}>Exporter</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.searchContainer}>
+          <View style={styles.searchInputContainer}>
+            <Feather
+              name="search"
+              size={20}
+              color="#666"
+              style={styles.searchIcon}
+            />
+            <TextInput
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Rechercher un étudiant, un module..."
+              placeholderTextColor="#666"
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.filterButton}
+            onPress={() => setShowFilters(!showFilters)}>
+            <Feather name="filter" size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
+
+        {showFilters && (
+          <View style={styles.filtersContainer}>
+            <View style={styles.filterItem}>
+              <Text style={styles.filterLabel}>Statut</Text>
+              <TouchableOpacity
+                style={styles.picker}
+                onPress={() => {
+                  /* Implement status picker modal */
+                }}>
+                <Text>
+                  {selectedStatus === 'all'
+                    ? 'Tous les statuts'
+                    : getStatusText(selectedStatus)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.filterItem}>
+              <Text style={styles.filterLabel}>Date début</Text>
+              <TouchableOpacity
+                style={styles.picker}
+                onPress={() => setShowStartDatePicker(true)}>
+                <Text>{startDate.toLocaleDateString('fr-FR')}</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.filterItem}>
+              <Text style={styles.filterLabel}>Date fin</Text>
+              <TouchableOpacity
+                style={styles.picker}
+                onPress={() => setShowEndDatePicker(true)}>
+                <Text>{endDate.toLocaleDateString('fr-FR')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </View>
 
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Feather
-            name="search"
-            size={20}
-            color="#666"
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Rechercher un étudiant, un module..."
-            placeholderTextColor="#666"
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.filterButton}
-          onPress={() => setShowFilters(!showFilters)}>
-          <Feather name="filter" size={20} color="#666" />
-        </TouchableOpacity>
-      </View>
-
-      {showFilters && (
-        <View style={styles.filtersContainer}>
-          <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Statut</Text>
-            <TouchableOpacity
-              style={styles.picker}
-              onPress={() => {
-                /* Implement status picker modal */
-              }}>
-              <Text>
-                {selectedStatus === 'all'
-                  ? 'Tous les statuts'
-                  : getStatusText(selectedStatus)}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Date début</Text>
-            <TouchableOpacity
-              style={styles.picker}
-              onPress={() => setShowStartDatePicker(true)}>
-              <Text>{startDate.toLocaleDateString('fr-FR')}</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Date fin</Text>
-            <TouchableOpacity
-              style={styles.picker}
-              onPress={() => setShowEndDatePicker(true)}>
-              <Text>{endDate.toLocaleDateString('fr-FR')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-      <View style={styles.absencesContainer}>
-        <ScrollView
-          style={styles.absencesList}
-          contentContainerStyle={{paddingBottom: 20}}>
-          {filteredAbsences.map(absence => {
-            const student = MOCK_STUDENTS.find(s => s.id === absence.studentId);
-            return (
-              <View key={absence.id} style={styles.absenceCard}>
-                <View style={styles.absenceHeader}>
-                  <View>
-                    <Text style={styles.studentName}>
-                      {student?.lastName} {student?.firstName}
-                    </Text>
-                    <Text style={styles.groupText}>
-                      Groupe {student?.group}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      getStatusStyle(absence.status),
-                    ]}>
-                    <Text style={styles.statusText}>
-                      {getStatusText(absence.status)}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.moduleInfo}>
-                  <Text style={styles.moduleCode}>{absence.module.code}</Text>
-                  <Text style={styles.moduleName}>{absence.module.name}</Text>
-                </View>
-
-                <View style={styles.dateInfo}>
-                  <Text style={styles.date}>
-                    {new Date(absence.date).toLocaleDateString('fr-FR')}
+      <ScrollView
+        style={styles.absencesList}
+        contentContainerStyle={styles.absencesListContent}>
+        {filteredAbsences.map(absence => {
+          const student = MOCK_STUDENTS.find(s => s.id === absence.studentId);
+          return (
+            <View key={absence.id} style={styles.absenceCard}>
+              <View style={styles.absenceHeader}>
+                <View>
+                  <Text style={styles.studentName}>
+                    {student?.lastName} {student?.firstName}
                   </Text>
-                  {absence.submissionDate && (
-                    <Text style={styles.submissionDate}>
-                      Soumis le{' '}
-                      {new Date(absence.submissionDate).toLocaleDateString(
-                        'fr-FR',
-                      )}
-                    </Text>
-                  )}
+                  <Text style={styles.groupText}>Groupe {student?.group}</Text>
                 </View>
-
-                <View style={styles.actions}>
-                  {absence.document && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        /* Implement document viewer */
-                      }}
-                      style={styles.actionButton}>
-                      <Feather name="file-text" size={20} color="#666" />
-                    </TouchableOpacity>
-                  )}
-                  {absence.status === 'pending' && (
-                    <>
-                      <TouchableOpacity
-                        onPress={() => handleApprove(absence.id)}
-                        style={styles.actionButton}>
-                        <Feather name="check" size={20} color="#22c55e" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => handleReject(absence.id)}
-                        style={styles.actionButton}>
-                        <Feather name="x" size={20} color="#ef4444" />
-                      </TouchableOpacity>
-                    </>
-                  )}
+                <View
+                  style={[styles.statusBadge, getStatusStyle(absence.status)]}>
+                  <Text style={styles.statusText}>
+                    {getStatusText(absence.status)}
+                  </Text>
                 </View>
               </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-      {/* {(Platform.OS === 'ios' ? showStartDatePicker : true) && (
-        <DateTimePicker
-          value={startDate}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={(event, selectedDate) => {
-            setShowStartDatePicker(false);
-            if (selectedDate) {
-              setStartDate(selectedDate);
-            }
-          }}
-        />
-      )}
 
-      {(Platform.OS === 'ios' ? showEndDatePicker : true) && (
-        <DateTimePicker
-          value={endDate}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={(event, selectedDate) => {
-            setShowEndDatePicker(false);
-            if (selectedDate) {
-              setEndDate(selectedDate);
-            }
-          }}
-        />
-      )} */}
+              <View style={styles.moduleInfo}>
+                <Text style={styles.moduleCode}>{absence.module.code}</Text>
+                <Text style={styles.moduleName}>{absence.module.name}</Text>
+              </View>
+
+              <View style={styles.dateInfo}>
+                <Text style={styles.date}>
+                  {new Date(absence.date).toLocaleDateString('fr-FR')}
+                </Text>
+                {absence.submissionDate && (
+                  <Text style={styles.submissionDate}>
+                    Soumis le{' '}
+                    {new Date(absence.submissionDate).toLocaleDateString(
+                      'fr-FR',
+                    )}
+                  </Text>
+                )}
+              </View>
+
+              <View style={styles.actions}>
+                {absence.document && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      /* Implement document viewer */
+                    }}
+                    style={styles.actionButton}>
+                    <Feather name="file-text" size={20} color="#666" />
+                  </TouchableOpacity>
+                )}
+                {absence.status === 'pending' && (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => handleApprove(absence.id)}
+                      style={styles.actionButton}>
+                      <Feather name="check" size={20} color="#22c55e" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleReject(absence.id)}
+                      style={styles.actionButton}>
+                      <Feather name="x" size={20} color="#ef4444" />
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 }
@@ -312,6 +282,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  headerContainer: {
+    backgroundColor: '#f5f5f5',
+    zIndex: 1,
   },
   header: {
     padding: 16,
@@ -324,12 +298,12 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#2E3494',
     backgroundColor: 'white',
   },
   exportButtonText: {
     marginLeft: 8,
-    color: '#666',
+    color: '#2E3494',
   },
   searchContainer: {
     padding: 16,
@@ -386,18 +360,17 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: 'white',
   },
-  absencesContainer: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
   absencesList: {
     flex: 1,
+  },
+  absencesListContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
   },
   absenceCard: {
     backgroundColor: 'white',
     borderRadius: 8,
-    margin: 16,
-    marginTop: 0,
+    marginBottom: 16,
     padding: 16,
     ...Platform.select({
       ios: {

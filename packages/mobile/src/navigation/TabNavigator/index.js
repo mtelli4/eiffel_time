@@ -13,7 +13,7 @@ import {Grades} from '../../../../shared/src/pages/Grades/StudentGradestest';
 import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
 import {Settings} from '../../../../shared/src/pages/Settings/Settings';
 import {UserContext} from '../../context/UserContext'; // Exemple de contexte utilisateur
-import {ManageAbsences} from '../../screens/Attendance';
+import {ManageAbsences} from '../../screens/ManageAbsences';
 
 const Tab = createBottomTabNavigator();
 
