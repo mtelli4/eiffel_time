@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Admin } from '../../shared/src/pages/Admin/Admin'
+import { ManageAbsences } from '../../shared/src/pages/Attendance/ManageAbsences'
 import { Absences } from '../../shared/src/pages/Attendance/StudentAbsences'
 import { TeacherAttendance } from '../../shared/src/pages/Attendance/TeacherAttendance'
 import { ClassAverages } from '../../shared/src/pages/Averages/ClassAverages'
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         element: <Grades />,
       },
       {
+        path: '/class-averages',
+        element: <ClassAverages />,
+      },
+      {
         path: '/absences',
         element: <Absences />,
       },
@@ -36,12 +41,12 @@ const router = createBrowserRouter([
         element: <ClassGrades />,
       },
       {
-        path: '/teacher-attendance',
-        element: <TeacherAttendance />,
+        path: '/manage-absences',
+        element: <ManageAbsences />,
       },
       {
-        path: '/class-averages',
-        element: <ClassAverages />,
+        path: '/teacher-attendance',
+        element: <TeacherAttendance />,
       },
       {
         path: '/admin',
