@@ -24,14 +24,13 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
   }
 
   return (
-    <ScrollView horizontal>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          {/* <Clock size={20} color="#2C3E50" /> */}
-          <Text style={styles.headerText}>Prévisionnel des heures</Text>
-        </View>
+    <View style={styles.wrapper}>
+      <ScrollView horizontal contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Prévisionnel des heures</Text>
+          </View>
 
-        <View>
           <View style={styles.tableHeader}>
             <View style={styles.moduleColumn}>
               <Text style={styles.columnHeaderText}>Module</Text>
@@ -135,14 +134,20 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
             </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   container: {
-    minWidth: '100%',
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -166,15 +171,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F3F4F6',
   },
   moduleColumn: {
-    flex: 1,
+    flex: 3,
     padding: 16,
   },
   hourColumn: {
-    width: 80,
+    flex: 1,
     padding: 16,
   },
   completedColumn: {
-    width: 96,
+    flex: 1,
     padding: 16,
   },
   columnHeaderText: {

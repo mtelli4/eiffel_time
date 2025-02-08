@@ -14,10 +14,10 @@ import {
   Etudiant,
   Module,
 } from '../../backend/classes'
-import { Badge } from '../../components/absences/Badge'
-import { Button } from '../../components/absences/Button'
-import { Card } from '../../components/absences/Card'
-import { Input } from '../../components/absences/Input'
+import { Badge } from '../../components/attendance/Badge'
+import { Button } from '../../components/attendance/Button'
+import { Card } from '../../components/attendance/Card'
+import { Input } from '../../components/attendance/Input'
 
 export function Absences() {
   const [absences, setAbsences] = useState<Absence[]>([])

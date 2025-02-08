@@ -1,12 +1,12 @@
 // import { FileDown, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { AddAttendanceModal } from '../../components/absences/AddAttendanceModal'
-import { AttendanceTable } from '../../components/absences/AttendanceTable'
-import { Button } from '../../components/absences/Button'
-import { Card } from '../../components/absences/Card'
-import { HoursPlanning } from '../../components/absences/HoursPlanning'
-import { TeacherFilters } from '../../components/absences/TeacherFilters'
+import { AddAttendanceModal } from '../../components/attendance/AddAttendanceModal'
+import { AttendanceTable } from '../../components/attendance/AttendanceTable'
+import { Button } from '../../components/attendance/Button'
+import { Card } from '../../components/attendance/Card'
+import { HoursPlanning } from '../../components/attendance/HoursPlanning'
+import { TeacherFilters } from '../../components/attendance/TeacherFilters'
 import { TeacherPlanning } from '../../types/types'
 
 const TEACHERS_PLANNING: TeacherPlanning[] = [
@@ -163,5 +163,6 @@ const styles = StyleSheet.create({
   },
   tableCard: {
     marginBottom: 24,
+    width: '100%',
   },
 })
