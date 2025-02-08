@@ -1,5 +1,5 @@
 // AdminStyles.js
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   container: {
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#3498db',
+    backgroundColor: '#2E3494',
     padding: 8,
     borderRadius: 8,
   },
@@ -70,4 +70,4 @@ export const styles = StyleSheet.create({
   addButtonText: {
     color: '#fff',
   },
-});
+})

@@ -1,35 +1,54 @@
 {
-  "name": "eiffel_time",
-  "version": "1.0.0",
-  "private": true,
-  "workspaces": [
-    "packages/web",
-    "packages/mobile",
-    "packages/shared"
-  ],
-  "resolutions": {
-    "@babel/runtime": "^7.26.0"
-  },
-  "scripts": {
-    "build": "npm run build --workspaces",
-    "start:web": "npm run dev --workspace web",
-    "start:mobile": "npm run start --workspace mobile",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx"
-  },
-  "devDependencies": {
-    "@react-native/gradle-plugin": "^0.76.5",
-    "@types/jest": "^29.5.14",
-    "@types/react": "^18.2.6",
-    "@types/react-dom": "^18.2.6",
-    "@types/react-router-dom": "^5.3.3",
-    "eslint": "^8.50.0",
-    "typescript": "^5.2.0"
-  },
-  "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.25.9",
-    "@babel/runtime": "^7.26.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^7.1.1"
-  }
+    "name": "eiffel_time",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "packages/web",
+        "packages/mobile",
+        "packages/shared",
+        "backend/classes"
+    ],
+    "resolutions": {
+        "@babel/runtime": "^7.26.0"
+    },
+    "scripts": {
+        "build": "npm run build --workspaces",
+        "start:web": "npm run dev --workspace web",
+        "start:mobile": "npm run start --workspace mobile",
+        "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+        "start:server": "nodemon packages/shared/src/backend/server.js"
+    },
+    "devDependencies": {
+        "@react-native/gradle-plugin": "^0.76.5",
+        "@types/jest": "^29.5.14",
+        "@types/react": "^18.2.6",
+        "@types/react-dom": "^18.2.6",
+        "@types/react-router-dom": "^5.3.3",
+        "datatables.net": "^2.2.1",
+        "eslint": "^8.50.0",
+        "jquery": "^3.7.1",
+        "nodemon": "^3.1.9",
+        "typescript": "^5.2.0"
+    },
+    "dependencies": {
+        "@babel/plugin-transform-runtime": "^7.25.9",
+        "@babel/runtime": "^7.26.0",
+        "@prisma/client": "^6.2.1",
+        "@types/datatables.net": "^1.12.3",
+        "@types/jquery": "^3.5.32",
+        "axios": "^1.7.9",
+        "cors": "^2.8.5",
+        "crypto": "^1.0.1",
+        "datatables.net-dt": "^2.2.1",
+        "datatables.net-react": "^1.0.0",
+        "express": "^4.21.2",
+        "prisma": "^6.2.1",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-native-paper": "^5.13.1",
+        "react-native-safe-area-context": "^5.2.0",
+        "react-native-toast-message": "^2.2.1",
+        "react-router-dom": "^7.1.1",
+        "react-toastify": "^11.0.3"
+    }
 }

@@ -1,74 +1,279 @@
-import { UserPlus, Users } from 'lucide-react'
-import { useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { UserFilters } from '../../components/admin/UserFilters'
-import { UserForm } from '../../components/admin/UserForm'
-import { UserTable } from '../../components/admin/UserTable'
-import { styles } from '../../styles/Admin/AdminStyles' // Import the styles
+import { useEffect, useState } from 'react'
+import { Platform, Text, TouchableOpacity, View } from 'react-native'
+import { Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
+import { styles } from '../../styles/Admin/AdminStyles'
+import { formation, groupe } from '@prisma/client'
+// import { toast, ToastContainer } from 'react-toastify'
+// import 'react-toastify/dist/ReactToastify.css'
 
 type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
-
-interface User {
-  id: string
-  name: string
-  email: string
-  role: string
-  formation?: string
-  group?: string
-  type?: string
-}
-
-const MOCK_USERS: User[] = [
-  {
-    id: '22001234',
-    name: 'DUPONT Jean',
-    email: 'jean.dupont@example.com',
-    role: 'student',
-    formation: 'Informatique',
-    group: 'A1',
-  },
-  {
-    id: 'P001',
-    name: 'MARTIN Pierre',
-    email: 'pierre.martin@example.com',
-    role: 'teacher',
-    type: 'permanent',
-  },
-]
 
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [users, setUsers] = useState<User[]>(MOCK_USERS)
+  const [loading, setLoading] = useState(true)
 
-  const tabs = [{ id: 'users' as const, label: 'Utilisateurs', icon: Users }]
+  // État unique pour les filtres
+  const [filters, setFilters] = useState({
+    role: '',
+    formation: '',
+    groupe: '',
+    type: '',
+    search: ''
+  })
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
+  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
+  const [UserFilters, setUserFilters] = useState<any>(null)
+  const [UserForm, setUserForm] = useState<any>(null)
+  const [UserTable, setUserTable] = useState<any>(null)
 
-  const handleEditUser = (user: User) => {
+  const handleFilterChange = (filterName: string, value: string) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [filterName]: value
+    }))
+  }
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/users') // URL de votre API
+      .then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau');
+        return response.json() // Convertir la réponse en JSON
+      })
+      .then((data) => {
+        const utilisateurs = data.map((utilisateur: any) => ({
+          id_utilisateur: utilisateur.id_utilisateur,
+          nom: utilisateur.nom,
+          prenom: utilisateur.prenom,
+          email: utilisateur.email,
+          statut: utilisateur.statut,
+          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
+          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: utilisateur.enseignant?.vacataire
+        }));
+        setUtilisateurs(utilisateurs)
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error(
+          'Erreur lors de la récupération des utilisateurs:',
+          error
+        )
+        setLoading(false)
+      })
+  })
+
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:4000/api/formations').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (formations)');
+        return response.json();
+      }),
+      fetch('http://localhost:4000/api/groupes').then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (groupes)');
+        return response.json();
+      })
+    ])
+      .then(([formationsData, groupesData]) => {
+        setFormations(formationsData);
+        setGroupes(groupesData);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
+
+  let showNotification: (type: 'success' | 'error', message: string) => void;
+  let NotificationContainer: React.FC;
+
+  useEffect(() => {
+    const loadComponents = async () => {
+      if (Platform.OS === 'web') {
+        const { UserFilters } = await import(
+          '../../../../web/src/components/Admin/UserFilters.web'
+        )
+        const { UserForm } = await import(
+          '../../../../web/src/components/Admin/UserForm.web'
+        )
+        const { UserTable } = await import(
+          '../../../../web/src/components/Admin/UserTable.web'
+        )
+        setUserFilters(() => UserFilters)
+        setUserForm(() => UserForm)
+        setUserTable(() => UserTable)
+      } else {
+        const { UserFilters } = await import(
+          '../../../../mobile/src/components/Admin/UserFilters.native'
+        )
+        const { UserForm } = await import(
+          '../../../../mobile/src/components/Admin/UserForm.native'
+        )
+        const { UserTable } = await import(
+          '../../../../mobile/src/components/Admin/UserTable.native'
+        )
+        setUserFilters(() => UserFilters)
+        setUserForm(() => UserForm)
+        setUserTable(() => UserTable)
+      }
+    }
+
+    loadComponents().then(r => r)
+  }, [])
+
+  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' }]
+
+  const handleEditUser = (user: Utilisateur) => {
     setSelectedUser(user)
     setShowUserForm(true)
   }
 
-  const handleDeleteUser = (user: User) => {
-    setUsers(users.filter((u) => u.id !== user.id))
+  const handleDeleteUser = (user: Utilisateur) => {
+    if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
+      fetch(`http://localhost:4000/api/delete-user/${user.id_utilisateur}`, {
+        method: 'DELETE'
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Erreur réseau')
+          }
+          setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
+          /* toast.success(`L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`, {
+            position: 'bottom-right',
+            // toastId: 'delete-user' + user.id_utilisateur,
+          }); */
+          // showNotification('success', `L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`)
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la suppression de l\'utilisateur:', error)
+          /* toast.error('Erreur lors de la suppression de l\'utilisateur', {
+            position: 'bottom-right',
+            // toastId: 'delete-user' + user.id_utilisateur,
+          }); */
+          // showNotification('error', 'Erreur lors de la suppression de l\'utilisateur')
+        })
+    }
   }
 
-  const handleSubmitUser = (data: any) => {
+  const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
-      setUsers(
-        users.map((u) => (u.id === selectedUser.id ? { ...u, ...data } : u))
-      )
+      try {
+        const response = await fetch(`http://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        if (!response.ok) {
+          throw new Error('Erreur réseau')
+        }
+        const updatedUser = await response.json()
+        const message = []
+        if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
+          message.push('ID')
+        }
+        if (updatedUser.nom !== selectedUser.nom) {
+          message.push('nom')
+        }
+        if (updatedUser.prenom !== selectedUser.prenom) {
+          message.push('prénom')
+        }
+        if (updatedUser.email !== selectedUser.email) {
+          message.push('email')
+        }
+        if (updatedUser.statut !== selectedUser.statut) {
+          message.push('rôle')
+        }
+        if (updatedUser.formations) {
+          const formations = updatedUser.formations.map((f: any) => f.formation)
+          if (JSON.stringify(formations) !== JSON.stringify(selectedUser.formations)) {
+            message.push('formation(s)')
+          }
+        }
+
+        if (updatedUser.etudiant?.groupes) {
+          const groupes = updatedUser.groupes.map((g: any) => g.groupe)
+          if (JSON.stringify(groupes) !== JSON.stringify(selectedUser.groupes)) {
+            message.push('groupe(s)')
+          }
+        }
+        /* toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
+          position: 'bottom-right',
+          // toastId: 'update-user' + selectedUser.id_utilisateur,
+        }); */
+        // showNotification('success', 'L\'utilisateur a été modifié avec succès : ' + message.join(', '))
+        selectedUser.id_utilisateur = updatedUser.id_utilisateur
+        selectedUser.nom = updatedUser.nom
+        selectedUser.prenom = updatedUser.prenom
+        selectedUser.email = updatedUser.email
+        selectedUser.statut = updatedUser.statut
+        selectedUser.formations = updatedUser.formations.map((f: any) => {
+          return { id_formation: parseInt(f.value), libelle: f.label }
+        })
+        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
+      } catch (error) {
+        console.error("Erreur lors de la modification de l'utilisateur : ", error)
+        /* toast.error('Erreur lors de la modification de l\'utilisateur', {
+          position: 'bottom-right',
+          // toastId: 'update-user' + selectedUser.id_utilisateur,
+        }); */
+        // showNotification('error', 'Erreur lors de la modification de l\'utilisateur')
+      }
     } else {
-      setUsers([...users, { ...data, id: `U${Date.now()}` }])
+      console.log('Création d\'un utilisateur')
+      try {
+        console.log('Création d\'un utilisateur', data)
+        const response = await fetch('http://localhost:4000/api/create-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+          throw new Error('Erreur réseau')
+        }
+
+        const newUser = await response.json()
+        const utilisateur: Utilisateur = {
+          id_utilisateur: newUser.id_utilisateur,
+          nom: newUser.nom,
+          prenom: newUser.prenom,
+          email: newUser.email,
+          statut: newUser.statut,
+          formations: newUser.formations.map((f: any) => { return { id_formation: f.value, libelle: f.label } }),
+          groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: newUser.enseignant?.vacataire
+        }
+        setUtilisateurs((prev) => [...prev, utilisateur])
+        /* toast.success(`L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`, {
+          position: 'bottom-right',
+          // toastId: 'create-user' + newUser.id_utilisateur,
+        }); */
+        // showNotification('success', `L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`)
+      } catch (error) {
+        console.error("Erreur lors de la création de l'utilisateur : ", error)
+        /* toast.error('Erreur lors de la création de l\'utilisateur', {
+          position: 'bottom-right',
+          // toastId: 'create-user',
+        }); */
+        // showNotification('error', 'Erreur lors de la création de l\'utilisateur')
+      }
     }
     setShowUserForm(false)
     setSelectedUser(null)
   }
 
+
+  if (!UserFilters || !UserForm || !UserTable) {
+    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Administration</Text>
-
       <View style={styles.tabContainer}>
         {tabs.map((tab) => (
           <TouchableOpacity
@@ -81,7 +286,6 @@ export function Admin() {
                 : styles.inactiveTabButton,
             ]}
           >
-            <tab.icon style={styles.tabIcon} />
             <Text
               style={
                 activeTab === tab.id
@@ -98,7 +302,9 @@ export function Admin() {
       {activeTab === 'users' && (
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.subtitle}>Gestion des utilisateurs</Text>
+            <Text style={styles.subtitle}>
+              Gestion des utilisateurs
+            </Text>
             <TouchableOpacity
               onPress={() => {
                 setSelectedUser(null)
@@ -106,24 +312,23 @@ export function Admin() {
               }}
               style={styles.addButton}
             >
-              <UserPlus style={styles.addIcon} />
-              <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
+              <Text style={styles.addButtonText}>
+                Ajouter un utilisateur
+              </Text>
             </TouchableOpacity>
           </View>
 
           <UserFilters
-            onRoleChange={() => {}}
-            onGroupChange={() => {}}
-            onFormationChange={() => {}}
-            onTypeChange={() => {}}
-            onSearch={() => {}}
+            onFilterChange={handleFilterChange}
           />
 
           <UserTable
-            users={users}
+            users={utilisateurs}
             isAdmin={true}
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
+            filters={filters}
+            loading={loading}
           />
         </View>
       )}
@@ -140,6 +345,8 @@ export function Admin() {
           isEdit={!!selectedUser}
         />
       )}
+      {/* <NotificationContainer /> */}
     </View>
+
   )
 }

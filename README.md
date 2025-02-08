@@ -1,5 +1,9 @@
 # Eiffel Time
 
+## Requierements
+
+* PostgreSQL database and ingrid schema
+
 ## Installation
 
 Run the following command at root of the project : `npm install`
@@ -9,6 +13,23 @@ Run the following command at root of the project : `npm install`
 ### Web :
 
 Run the following command at root of the project : `npm run start:web`
+
+Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
+1. `user` by database user;
+2. `password` by password of the database user;
+3. `server` by server name;
+4. `port` by port of the database (default : 5432);
+5. `dbname` by database name;
+6. `schemaname` by schema name;
+
+```
+psql -U <username> -d <database_name> -f prisma/migrations/0_init/migration.sql
+psql -U <username> -d <database_name> -f prisma/migrations/0_init/ingrid_data.sql
+npx prisma
+npx prisma db pull
+```
+
+For the server, open a second terminal and run : `npm run start:server`
 
 ### Mobile :
 
