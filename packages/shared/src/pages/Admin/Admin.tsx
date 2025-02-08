@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
+import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 // import { toast, ToastContainer } from 'react-toastify'
 // import 'react-toastify/dist/ReactToastify.css'
@@ -326,7 +326,7 @@ export function Admin() {
     </>
   )
 
-  if (Platform.OS === 'web') {
+  /* if (Platform.OS === 'web') {
     return (
       <View style={styles.container}>
         {adminContent}
@@ -338,5 +338,10 @@ export function Admin() {
         {adminContent}
       </ScrollView>
     )
-  }
+  } */
+ return (
+    <View style={styles.container}>
+      {adminContent}
+    </View>
+  )
 }

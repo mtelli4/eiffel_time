@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {UserFiltersProps} from '../../../../shared/src/types/types';
@@ -17,18 +17,51 @@ const FORMATIONS = [
   {value: 'tc', label: 'TC'},
 ];
 
+interface CustomPickerProps {
+  data: {label: string; value: string}[];
+  placeholder?: string;
+  onValueChange?: (value: string) => void;
+}
+
+const CustomPicker = ({ data, placeholder, onValueChange }: CustomPickerProps) => {
+  const [selectedRole, setSelectedRole] = useState(null);
+
+  return (
+    <View style={styles.pickerContainer}>
+      
+    </View>
+  );
+};
+
 export function UserFilters({ onFilterChange }: UserFiltersProps) {
+  const [selectedRole, setSelectedRole] = React.useState('');
+
   const renderDropdown = (
     data: {label: string; value: string}[],
     placeholder: string,
     onValueChange: (value: string) => void,
   ) => {
     return (
-      <TextInput
+      <View style={styles.pickerContainer}>
+        <TextInput
         placeholder={placeholder}
         style={styles.input}
         onChangeText={onValueChange}
-      />
+        />
+        {/* <Picker
+          
+          selectedValue={selectedRole}
+          onValueChange={(itemValue) => {
+            setSelectedRole(itemValue);
+            onValueChange(itemValue);
+          }}
+          style={styles.picker}>
+          <Picker.Item label={placeholder} value="" />
+          {data.map((item) => (
+            <Picker.Item label={item.label} value={item.value} />
+          ))}
+        </Picker> */}
+      </View>
     );
   };
 
@@ -78,10 +111,10 @@ export function UserFilters({ onFilterChange }: UserFiltersProps) {
           )}
         </View>
 
-        <View style={styles.column}>
+        {/* <View style={styles.column}>
           <Text style={styles.label}>Type de professeur</Text>
           {renderDropdown(TEACHER_TYPES, 'Tous les types', onTypeChange)}
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.searchContainer}>
