@@ -31,6 +31,8 @@ const getPageTitle = (pathname: string): string => {
       return 'Suivi des présences des enseignants'
     case '/admin':
       return 'Administration'
+    case '/settings':
+      return 'Paramètres'
     default:
       return 'Page introuvable'
   }

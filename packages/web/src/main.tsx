@@ -10,6 +10,7 @@ import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
 import { Login } from '../../shared/src/pages/Login/Login'
 import { Register } from '../../shared/src/pages/Login/Register'
 import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
+import { Settings } from '../../shared/src/pages/Settings/Settings'
 import { ManageAbsences } from './pages/Attendance/ManageAbsences'
 import Root, { Error } from './root'
 import './styles/index.css'
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: '/admin',
         element: <Admin />,
+      },
+      {
+        path: '/settings',
+        element: <Settings />,
       },
     ],
   },

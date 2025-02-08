@@ -183,13 +183,15 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
         </select>
       </div>
       <div className="flex justify-between items-end p-2">
-        <Settings className="w-6 h-6 cursor-pointer" />
+        <NavLink to="/settings">
+          <Settings className="w-6 h-6 cursor-pointer" />
+        </NavLink>
         {isManuallyOpened ? (
           <ArrowLeftToLine
             className="w-6 h-6 cursor-pointer"
             onClick={() => {
-              setIsVisible(true)
-              setIsManuallyOpened(true)
+              setIsVisible(false)
+              setIsManuallyOpened(false)
             }}
           />
         ) : (
