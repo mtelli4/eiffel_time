@@ -67,7 +67,7 @@ export function UserTable({
     );
   }  
 
-  if (filters.type) {
+  if (filters.type === true || filters.type === false || filters.type === null) {
     filteredData = filteredData.filter(
       (utilisateur: Utilisateur) => utilisateur.statut === statut_utilisateur.teacher && utilisateur.vacataire === filters.type
     );
