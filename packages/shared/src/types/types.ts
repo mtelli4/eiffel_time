@@ -1,4 +1,13 @@
 import { Cours, Etudiant, Module } from '@shared/backend/classes'
+import { Platform } from 'react-native';
+
+export const API_URL = Platform.select({
+  web: 'http://localhost:4000',
+  ios: 'http://localhost:4000',
+  android: 'http://10.0.2.2:4000', // Pour l'émulateur Android
+  // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
+  // android: 'http://192.168.1.XX:4000',
+});
 
 export const ROLES = [
   { value: 'student', label: 'Étudiant' },
