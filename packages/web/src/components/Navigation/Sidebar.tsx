@@ -4,6 +4,7 @@ import {
   Calendar,
   ClipboardList,
   GraduationCap,
+  MessageCircleMore,
   Settings,
   UserCheck,
   Users,
@@ -78,6 +79,7 @@ const navigationConfig = {
       label: 'Suivi des présences des enseignants',
       path: '/teacher-attendance',
     },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
     { icon: Wrench, label: 'Administration', path: '/admin' },
   ],
 }
