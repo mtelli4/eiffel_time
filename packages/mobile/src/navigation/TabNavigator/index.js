@@ -4,13 +4,16 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {Absences} from '../../../../shared/src/pages/Absences/StudentAbsences';
 import {Admin} from '../../../../shared/src/pages/Admin/Admin';
+import {Absences} from '../../../../shared/src/pages/Attendance/StudentAbsences';
+import {TeacherAttendance} from '../../../../shared/src/pages/Attendance/TeacherAttendance';
 import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages';
 import {ClassGrades} from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
 import {Grades} from '../../../../shared/src/pages/Grades/StudentGradestest';
 import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
+import {Settings} from '../../../../shared/src/pages/Settings/Settings';
 import {UserContext} from '../../context/UserContext'; // Exemple de contexte utilisateur
+import {ManageAbsences} from '../../screens/ManageAbsences';
 
 const Tab = createBottomTabNavigator();
 
@@ -156,26 +159,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Absences et Retards',
-    //   component: ClassGrades,
-    //   icon: {name: 'user-check', source: 'Feather'},
-    // },
-    // {
-    //   name: 'Présences professeurs',
-    //   component: ClassAverages,
-    //   icon: {name: 'users', source: 'Feather'},
-    // },
+    {
+      name: 'Absences et Retards',
+      component: ManageAbsences,
+      icon: {name: 'user-check', source: 'Feather'},
+    },
+    {
+      name: 'Présences professeurs',
+      component: TeacherAttendance,
+      icon: {name: 'users', source: 'Feather'},
+    },
     // {
     //   name: 'Messagerie',
     //   component: Schedule,
     //   icon: {name: 'message1', source: 'AntDesign'},
     // },
-    // {
-    //   name: 'Réglages',
-    //   component: Schedule,
-    //   icon: {name: 'settings', source: 'Feather'},
-    // },
+    {
+      name: 'Réglages',
+      component: Settings,
+      icon: {name: 'settings', source: 'Feather'},
+    },
     {
       name: 'Gestion des utilisateurs',
       component: Admin,

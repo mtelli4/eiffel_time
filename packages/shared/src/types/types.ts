@@ -25,24 +25,24 @@ export const TEACHER_TYPES = [
 ]
 
 export type Formation = {
-  id_formation: number;
-  libelle: string;
+  id_formation: number
+  libelle: string
 }
 
 export type Groupe = {
-  id_grp: number;
-  libelle: string;
+  id_grp: number
+  libelle: string
 }
 
 export type Utilisateur = {
-  id_utilisateur: number;
-  nom: string;
-  prenom: string;
-  email: string;
-  statut: string;
-  formations: Formation[];
-  groupes: Groupe[];
-  vacataire?: boolean | null;
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+  formations: Formation[]
+  groupes: Groupe[]
+  vacataire?: boolean | null
 }
 
 export interface UserUpdate {
@@ -127,4 +127,17 @@ export interface FormEvaluation {
   periode: string
   id_cours: number
   id_module: number
+}
+
+export interface ModuleHours {
+  code: string
+  name: string
+  planned: PlannedHours
+  completed: PlannedHours
+}
+export interface TeacherPlanning {
+  id: string
+  firstName: string
+  lastName: string
+  modules: ModuleHours[]
 }

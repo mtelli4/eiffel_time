@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 interface ButtonProps {
   label?: string
@@ -10,7 +10,6 @@ interface ButtonProps {
 const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
-    outlineWidth: 0,
   },
   text: {
     textAlign: 'center',
@@ -38,8 +37,8 @@ export function Button({
   variant = 'primary',
   onpress,
 }: ButtonProps) {
-  const { fontSize, paddingVertical, paddingHorizontal } = SIZE_STYLES[size];
-  const { backgroundColor, color } = VARIANT_STYLES[variant];
+  const { fontSize, paddingVertical, paddingHorizontal } = SIZE_STYLES[size]
+  const { backgroundColor, color } = VARIANT_STYLES[variant]
 
   return (
     <TouchableOpacity
@@ -49,14 +48,7 @@ export function Button({
         { backgroundColor, paddingVertical, paddingHorizontal },
       ]}
     >
-      <Text
-        style={[
-          styles.text,
-          { fontSize, color },
-        ]}
-      >
-        {label}
-      </Text>
+      <Text style={[styles.text, { fontSize, color }]}>{label}</Text>
     </TouchableOpacity>
   )
 }
