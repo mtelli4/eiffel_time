@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
+import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 import { formation, groupe } from '@prisma/client'
 // import { toast, ToastContainer } from 'react-toastify'
@@ -22,8 +22,6 @@ export function Admin() {
     search: ''
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
-  const [formations, setFormations] = useState<Formation[]>([])
-  const [groupes, setGroupes] = useState<Groupe[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
@@ -37,7 +35,7 @@ export function Admin() {
   }
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/users') // URL de votre API
+    fetch(`${API_URL}/api/users`) // URL de votre API
       .then((response) => {
         if (!response.ok) throw new Error('Erreur réseau');
         return response.json() // Convertir la réponse en JSON
@@ -64,26 +62,6 @@ export function Admin() {
         setLoading(false)
       })
   })
-
-  useEffect(() => {
-    Promise.all([
-      fetch('http://localhost:4000/api/formations').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (formations)');
-        return response.json();
-      }),
-      fetch('http://localhost:4000/api/groupes').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (groupes)');
-        return response.json();
-      })
-    ])
-      .then(([formationsData, groupesData]) => {
-        setFormations(formationsData);
-        setGroupes(groupesData);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la récupération des données:', error);
-      });
-  }, []);
 
   let showNotification: (type: 'success' | 'error', message: string) => void;
   let NotificationContainer: React.FC;
