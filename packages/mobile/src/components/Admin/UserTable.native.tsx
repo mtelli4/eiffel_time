@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
 import {
-  Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { API_URL, ROLES, Utilisateur } from '../../../../shared/src/types/types';
+import { ROLES, Utilisateur } from '../../../../shared/src/types/types';
 import { DataTable } from 'react-native-paper';
 
 interface UserTableProps {
@@ -34,20 +31,6 @@ export function UserTable({
   filters,
   loading,
 }: UserTableProps) {
-  const renderHeader = () => (
-    <DataTable.Header style={styles.headerContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <DataTable.Title style={[styles.headerCell, styles.idCell]}>ID</DataTable.Title>
-        <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Nom</DataTable.Title>
-        <DataTable.Title style={[styles.headerCell, styles.nameCell]}>Prénom</DataTable.Title>
-        <DataTable.Title style={[styles.headerCell, styles.emailCell]}>Email</DataTable.Title>
-        <DataTable.Title style={[styles.headerCell, styles.roleCell]}>Rôle</DataTable.Title>
-        <DataTable.Title style={[styles.headerCell, styles.formationCell]}>Formation</DataTable.Title>
-        <DataTable.Title style={[styles.headerCellActions, styles.actionsHeaderCell]}>Actions</DataTable.Title>
-      </ScrollView>
-    </DataTable.Header>
-  );
-
   return (
     <View style={styles.mainContainer}>
       <DataTable style={styles.tableContainer}>
