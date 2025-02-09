@@ -29,6 +29,8 @@ const getPageTitle = (pathname: string): string => {
       return 'Gestion des absences'
     case '/teacher-attendance':
       return 'Suivi des présences des enseignants'
+    case '/messaging':
+      return 'Messagerie'
     case '/admin':
       return 'Administration'
     case '/settings':
