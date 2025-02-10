@@ -1,10 +1,10 @@
+import { Button } from '@shared/components/Button/Button'
 import { Input } from '@shared/components/Input/Input'
-import { Button } from '@shared/components/Button'
-import { StyleSheet, View, Text, Image, Linking } from 'react-native'
-import logo from '../../assets/logo.png';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { styles } from './Style';
+import { useEffect, useState } from 'react'
+import { Image, Text, View } from 'react-native'
+import { useNavigate } from 'react-router'
+import logo from '../../assets/logo.png'
+import { styles } from './Style'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -19,34 +19,42 @@ export function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      setValid(data)
+      })
+      const data = await response.json()
+      console.log(data)
 
+      setValid(data)
     } catch {
       console.log('error')
     }
   }
 
-  const navigate = useNavigate();
-
+  const navigate = useNavigate()
+  
   useEffect(() => {
     if (valid) {
-      navigate('/schedule');
+      navigate('/schedule')
     }
-  }, [valid, navigate]);
+  }, [valid, navigate])
 
   return (
     <View style={styles.root}>
       <Image source={logo} style={styles.logo} />
       <View style={styles.container}>
         <Text style={styles.title}>Eiffel TIME</Text>
-        <Input label='Adresse mail' onChangeText={setEmail} />
-        <Input label='Mot de passe' type='password' onChangeText={setPassword} />
-        <Button label="Connexion" onpress={handleSubmitUser} />
-        <Button label="Inscription" variant='secondary' onpress={() => navigate("/signup")} />
+        <Input label="Adresse mail" onChangeText={setEmail} />
+        <Input
+          label="Mot de passe"
+          type="password"
+          onChangeText={setPassword}
+        />
+        <Button label="Connexion" onPress={handleSubmitUser} />
+        <Button
+          label="Inscription"
+          variant="secondary"
+          onPress={() => navigate('/signup')}
+        />
       </View>
     </View>
-
   )
 }

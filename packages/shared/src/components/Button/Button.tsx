@@ -1,22 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { styles } from './ButtonStyle'
 
 interface ButtonProps {
   label?: string
   size?: 'small' | 'medium' | 'large'
   variant?: 'primary' | 'secondary' | 'negative' | 'positive'
-  onpress?: () => void
+  onPress?: () => void
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 10,
-  },
-  text: {
-    textAlign: 'center',
-    fontFamily: 'Montserrat',
-    fontWeight: 500,
-  },
-})
 
 const SIZE_STYLES = {
   small: { fontSize: 16, paddingVertical: 12, paddingHorizontal: 24 },
@@ -35,14 +25,14 @@ export function Button({
   label = 'Button',
   size = 'medium',
   variant = 'primary',
-  onpress,
+  onPress,
 }: ButtonProps) {
   const { fontSize, paddingVertical, paddingHorizontal } = SIZE_STYLES[size]
   const { backgroundColor, color } = VARIANT_STYLES[variant]
 
   return (
     <TouchableOpacity
-      onPress={onpress}
+      onPress={onPress}
       style={[
         styles.button,
         { backgroundColor, paddingVertical, paddingHorizontal },
