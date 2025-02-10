@@ -1,7 +1,6 @@
 // import { FileDown, Plus } from 'lucide-react'
-import { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { AddAttendanceModal } from '../../components/attendance/AddAttendanceModal'
+import { useEffect, useState } from 'react'
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { AttendanceTable } from '../../components/attendance/AttendanceTable'
 import { Button } from '../../components/attendance/Button'
 import { Card } from '../../components/attendance/Card'
@@ -12,8 +11,8 @@ import { TeacherPlanning } from '../../types/types'
 const TEACHERS_PLANNING: TeacherPlanning[] = [
   {
     id: '1',
-    firstName: 'Jean',
-    lastName: 'MARTIN',
+    prenom: 'Jean',
+    nom: 'MARTIN',
     modules: [
       {
         code: 'M5101',
@@ -37,8 +36,28 @@ export function TeacherAttendance() {
   const [selectedSemester, setSelectedSemester] = useState<number | null>(null)
   const [showAttendanceForm, setShowAttendanceForm] = useState(false)
 
+  const [AddAttendance, setAddAttendance] = useState<any>(null)
+
+  useEffect(() => {
+    const loadComponents = async () => {
+      if (Platform.OS === 'web') {
+        const { AddAttendance } = await import(
+          '../../../../web/src/components/Attendance/AddAttendance.web'
+        )
+        setAddAttendance(() => AddAttendance)
+      } else {
+        const { AddAttendance } = await import(
+          '../../../../mobile/src/components/Attendance/AddAttendance.native'
+        )
+        setAddAttendance(() => AddAttendance)
+      }
+    }
+
+    loadComponents().then(r => r)
+  })
+
   const filteredTeachers = TEACHERS_PLANNING.filter((teacher) =>
-    `${teacher.firstName} ${teacher.lastName}`
+    `${teacher.prenom} ${teacher.nom}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   )
@@ -47,67 +66,85 @@ export function TeacherAttendance() {
     console.log('Exporting data...')
   }
 
-  return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={() => setShowAttendanceForm(true)}
-              variant="primary"
-            >
-              <View style={styles.buttonContent}>
-                {/* <Plus size={16} color="#FFFFFF" /> */}
-                <Text style={styles.buttonText}>Ajouter une présence</Text>
-              </View>
-            </Button>
-            <View style={styles.buttonSpacing} />
-            <Button onPress={handleExport} variant="outline">
-              <View style={styles.buttonContent}>
-                {/* <FileDown size={16} color="#2C3E50" /> */}
-                <Text style={styles.exportButtonText}>Exporter</Text>
-              </View>
-            </Button>
-          </View>
-        </View>
-
-        <TeacherFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          selectedYear={selectedYear}
-          onYearChange={setSelectedYear}
-          selectedSemester={selectedSemester}
-          onSemesterChange={setSelectedSemester}
-        />
-
-        {filteredTeachers.map((teacher) => (
-          <View key={teacher.id} style={styles.teacherContainer}>
-            <View style={styles.teacherHeader}>
-              <Text style={styles.teacherName}>
-                {teacher.lastName} {teacher.firstName}
-              </Text>
+  const TeacherAttendanceContent = () => (
+    <View style={styles.content}>
+      <View style={styles.header}>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => setShowAttendanceForm(true)}
+            variant="primary"
+          >
+            <View style={styles.buttonContent}>
+              {/* <Plus size={16} color="#FFFFFF" /> */}
+              <Text style={styles.buttonText}>Ajouter une présence</Text>
             </View>
+          </Button>
+          <View style={styles.buttonSpacing} />
+          <Button onPress={handleExport} variant="outline">
+            <View style={styles.buttonContent}>
+              {/* <FileDown size={16} color="#2C3E50" /> */}
+              <Text style={styles.exportButtonText}>Exporter</Text>
+            </View>
+          </Button>
+        </View>
+      </View>
 
-            <Card style={styles.planningCard}>
-              <HoursPlanning modules={teacher.modules} />
-            </Card>
+      <TeacherFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedYear={selectedYear}
+        onYearChange={setSelectedYear}
+        selectedSemester={selectedSemester}
+        onSemesterChange={setSelectedSemester}
+      />
 
-            <Card style={styles.tableCard}>
-              <AttendanceTable teacher={teacher} />
-            </Card>
+      {filteredTeachers.map((teacher) => (
+        <View key={teacher.id} style={styles.teacherContainer}>
+          <View style={styles.teacherHeader}>
+            <Text style={styles.teacherName}>
+              {teacher.nom} {teacher.prenom}
+            </Text>
           </View>
-        ))}
 
-        {showAttendanceForm && (
-          <AddAttendanceModal
+          <Card style={styles.planningCard}>
+            <HoursPlanning modules={teacher.modules} />
+          </Card>
+
+          <Card style={styles.tableCard}>
+            <AttendanceTable teacher={teacher} />
+          </Card>
+        </View>
+      ))}
+    </View>
+  )
+
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.container}>
+        {showAttendanceForm && AddAttendance && (
+          <AddAttendance
             isOpen={showAttendanceForm}
             onClose={() => setShowAttendanceForm(false)}
             teachers={TEACHERS_PLANNING}
           />
         )}
+        <TeacherAttendanceContent />
       </View>
-    </ScrollView>
-  )
+    )
+  } else {
+    return (
+      <ScrollView style={styles.container}>
+        {showAttendanceForm && AddAttendance && (
+          <AddAttendance
+            isOpen={showAttendanceForm}
+            onClose={() => setShowAttendanceForm(false)}
+            teachers={TEACHERS_PLANNING}
+          />
+        )}
+        <TeacherAttendanceContent />
+      </ScrollView>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
