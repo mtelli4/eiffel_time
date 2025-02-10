@@ -15,7 +15,7 @@ export function ClassGrades() {
   const [evaluations, setEvaluations] = useState<Evaluation[]>([])
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/data')
+    fetch('http://localhost:4000/api/data/data')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Erreur réseau')

@@ -45,7 +45,7 @@ export function UserTable({
   const [chargement, setChargement] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/users`)
+    fetch(`${API_URL}/api/admin/users`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Erreur réseau');

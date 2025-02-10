@@ -39,11 +39,11 @@ export function UserForm({
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:4000/api/formations').then((response) => {
+      fetch('http://localhost:4000/api/all/formations').then((response) => {
         if (!response.ok) throw new Error('Erreur réseau (formations)');
         return response.json();
       }),
-      fetch('http://localhost:4000/api/groupes').then((response) => {
+      fetch('http://localhost:4000/api/all/groupes').then((response) => {
         if (!response.ok) throw new Error('Erreur réseau (groupes)');
         return response.json();
       })
