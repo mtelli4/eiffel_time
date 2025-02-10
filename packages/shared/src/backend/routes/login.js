@@ -1,6 +1,8 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+
 const prisma = new PrismaClient();
+const router = express.Router();
 
 router.post('/login', async (req, res) => {
   try {
@@ -14,3 +16,5 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
   }
 });
+
+module.exports = router;
