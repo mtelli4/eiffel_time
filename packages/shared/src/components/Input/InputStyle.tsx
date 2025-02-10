@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   input: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     color: '#2E3494',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   inputContainer: {
     justifyContent: 'center',
@@ -36,5 +36,5 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'white',
     paddingHorizontal: 4,
-  }
+  },
 })

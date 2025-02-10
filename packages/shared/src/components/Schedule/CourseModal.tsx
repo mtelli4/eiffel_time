@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform } from 'react-native'
+  import { Platform } from 'react-native'
 import type { CourseModalProps } from '../../types/types'
 
 export function CourseModal(props: CourseModalProps) {

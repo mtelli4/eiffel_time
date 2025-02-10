@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { Animated } from 'react-native';
+import { useRef } from 'react'
+import { Animated } from 'react-native'
 
 export const createLabelAnimation = (value: string) => {
   const labelAnimation = useRef(new Animated.Value(0)).current
@@ -9,11 +9,11 @@ export const createLabelAnimation = (value: string) => {
       toValue,
       duration: 200,
       useNativeDriver: false,
-    }).start();
-  };
+    }).start()
+  }
 
-  const handleFocus = () => !value && animateLabel(1);
-  const handleBlur = () => !value && animateLabel(0);
+  const handleFocus = () => !value && animateLabel(1)
+  const handleBlur = () => !value && animateLabel(0)
 
   const labelStyle = {
     transform: [
@@ -38,7 +38,7 @@ export const createLabelAnimation = (value: string) => {
       inputRange: [0, 1],
       outputRange: [0, 8],
     }),
-  };
+  }
 
-  return { labelAnimation, animateLabel, handleFocus, handleBlur, labelStyle };
-};
+  return { labelAnimation, animateLabel, handleFocus, handleBlur, labelStyle }
+}
