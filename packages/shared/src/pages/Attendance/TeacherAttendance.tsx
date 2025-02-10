@@ -7,6 +7,7 @@ import { Card } from '../../components/attendance/Card'
 import { HoursPlanning } from '../../components/attendance/HoursPlanning'
 import { TeacherFilters } from '../../components/attendance/TeacherFilters'
 import { TeacherPlanning } from '../../types/types'
+import { API_URL } from '../../../../shared/src/types/types'
 
 const TEACHERS_PLANNING: TeacherPlanning[] = [
   {
@@ -54,6 +55,12 @@ export function TeacherAttendance() {
     }
 
     loadComponents().then(r => r)
+  })
+
+  const [teachers, setTeachers] = useState<TeacherPlanning[]>([])
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/teachers-attendance/select`)
   })
 
   const filteredTeachers = TEACHERS_PLANNING.filter((teacher) =>

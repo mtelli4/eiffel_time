@@ -54,10 +54,7 @@ export function AddAttendance({
           <h2 className="text-xl font-bold text-[#2C3E50]">
             Ajouter une présence
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -150,88 +147,6 @@ export function AddAttendance({
           </div>
         </form>
       </div>
-    {/* <Modal
-      visible={isOpen}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Nouvelle présence</Text>
-            <TouchableOpacity onPress={onClose}>
-              <X size={20} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.formContainer}>
-            <View style={styles.formField}>
-              <Text style={styles.label}>Professeur</Text>
-              <Input
-                value={formData.teacherId}
-                onChangeText={(value) =>
-                  setFormData({ ...formData, teacherId: value })
-                }
-                placeholder="Sélectionner un professeur"
-              />
-            </View>
-
-            <View style={styles.row}>
-              <View style={styles.columnField}>
-                <Text style={styles.label}>Date</Text>
-                <Input
-                  value={formData.date}
-                  onChangeText={(value) =>
-                    setFormData({ ...formData, date: value })
-                  }
-                  placeholder="Date"
-                />
-              </View>
-
-              <View style={styles.columnField}>
-                <Text style={styles.label}>Type de cours</Text>
-                <Input
-                  value={formData.type}
-                  onChangeText={(value) =>
-                    setFormData({
-                      ...formData,
-                      type: value as (typeof COURSE_TYPES)[number],
-                    })
-                  }
-                  placeholder="Type de cours"
-                />
-              </View>
-
-              <View style={styles.columnField}>
-                <Text style={styles.label}>Nombre d'heures</Text>
-                <Input
-                  value={formData.hours.toString()}
-                  onChangeText={(value) =>
-                    setFormData({ ...formData, hours: parseFloat(value) || 0 })
-                  }
-                  placeholder="Heures"
-                />
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.footer}>
-            <Button variant="outline" onPress={onClose}>
-              Annuler
-            </Button>
-            <View style={styles.buttonSpacing} />
-            <Button
-              variant="primary"
-              onPress={handleSubmit}
-              disabled={!formData.teacherId}
-            >
-              Ajouter
-            </Button>
-          </View>
-        </View>
-      </View>
-    </Modal> */}
     </div>
   )
 }
