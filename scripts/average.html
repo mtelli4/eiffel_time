@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .class {
+            margin-bottom: 20px;
+        }
+        .student {
+            margin-bottom: 10px;
+        }
+        .notes {
+            margin-left: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container label, .form-container input, .form-container button {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <label for="student-select">Sélectionnez un élève :</label>
+        <select id="student-select">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+        <label for="uc-select">Sélectionnez un UC :</label>
+        <select id="uc-select">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+        <label for="subject-select">Sélectionnez une matière :</label>
+        <select id="subject-select">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+        <label for="note-input">Ajouter une note :</label>
+        <input type="number" id="note-input" step="0.01" placeholder="Note">
+        <button onclick="addNote()">Ajouter la note</button>
+    </div>
+    <div id="classes-container"></div>
+    <div class="form-container">
+        <button onclick="exportToXLS()">Exporter en XLS</button>
+        <button onclick="exportToPDF()">Exporter en PDF</button>
+        <input type="file" id="import-file" accept=".xls,.xlsx">
+        <button onclick="importFromXLS()">Importer depuis XLS</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="average.js"></script>
+</body>
+</html>
