@@ -15,6 +15,8 @@ export const TEACHER_TYPES = [
   { value: null, label: 'Non spécifié' },
 ]
 
+export const COURSE_TYPES = ['CM', 'TD', 'TP']
+
 export type Formation = {
   id_formation: number
   libelle: string
@@ -126,9 +128,10 @@ export interface ModuleHours {
   planned: PlannedHours
   completed: PlannedHours
 }
+
 export interface TeacherPlanning {
   id: string
-  firstName: string
-  lastName: string
+  nom: string
+  prenom: string
   modules: ModuleHours[]
 }
