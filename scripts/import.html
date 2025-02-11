@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Génération de fichiers de test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Génération de fichiers de test</h1>
+    <button onclick="generateTestFiles()">Générer les fichiers de test</button>
+
+    <script>
+        // Exemple de données
+        const testDataXLSX = [
+            { élève: "Sherwell Frankie", uc: "UC1", matière: "Algorithmique", note: 15 },
+            { élève: "Brambell Styrbjörn", uc: "UC1", matière: "Algorithmique", note: 18.5 },
+            { élève: "Eagle Tú", uc: "UC1", matière: "Algorithmique", note: 20 },
+            { élève: "Bearblock Clélia", uc: "UC1", matière: "Algorithmique", note: 19.5 }
+        ];
+
+        const testDataPDF = [
+            { élève: "Sherwell Frankie", uc: "UC3", matière: "Réseaux", note: 17 },
+            { élève: "Brambell Styrbjörn", uc: "UC3", matière: "Réseaux", note: 15 },
+            { élève: "Eagle Tú", uc: "UC3", matière: "Réseaux", note: 16.5 },
+            { élève: "Bearblock Clélia", uc: "UC3", matière: "Réseaux", note: 15.5 }
+        ];
+
+        // Fonction pour exporter les données en XLSX
+        function exportToXLSX(data) {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(formatDataForXLSX(data));
+            XLSX.utils.book_append_sheet(wb, ws, 'Notes');
+            XLSX.writeFile(wb, 'test_notes.xlsx');
+        }
+
+        // Fonction pour formater les données pour XLSX
+        function formatDataForXLSX(data) {
+            const formattedData = [];
+            const headers = ["Élève", "UC", "Matière", "Note"];
+            formattedData.push(headers);
+
+            data.forEach(row => {
+                formattedData.push([row.élève, row.uc, row.matière, row.note]);
+            });
+
+            return formattedData;
+        }
+
+        // Fonction pour exporter les données en PDF
+        function exportToPDF(data) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape');
+            doc.text("Notes des élèves", 10, 10);
+
+            const headers = ["Élève", "UC", "Matière", "Note"];
+            doc.text(headers.join(", "), 10, 20);
+
+            let yOffset = 30;
+            data.forEach(row => {
+                doc.text(`${row.élève}, ${row.uc}, ${row.matière}, ${row.note}`, 10, yOffset);
+                yOffset += 10;
+            });
+
+            doc.save('test_notes.pdf');
+        }
+
+        // Fonction pour générer les fichiers de test
+        function generateTestFiles() {
+            exportToXLSX(testDataXLSX);
+            exportToPDF(testDataPDF);
+        }
+    </script>
+</body>
+</html>

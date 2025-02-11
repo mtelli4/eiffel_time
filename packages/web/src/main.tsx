@@ -15,6 +15,10 @@ import { ManageAbsences } from './pages/Attendance/ManageAbsences'
 import { Messages } from './pages/Messaging/Messages'
 import Root, { Error } from './root'
 import './styles/index.css'
+// import { createStackNavigator } from '@react-navigation/stack'
+// import { NavigationContainer } from '@react-navigation/native';
+
+// const Stack = createStackNavigator();
 
 const router = createBrowserRouter([
   {
