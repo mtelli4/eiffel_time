@@ -60,11 +60,7 @@ export function TeacherAttendance() {
                   TD: parseInt(heures[1]),
                   TP: parseInt(heures[2]),
                 },
-                effectue: {
-                  CM: 0,
-                  TD: 0,
-                  TP: 0,
-                }
+                effectue: module.totalHours,
               }
             })
           }

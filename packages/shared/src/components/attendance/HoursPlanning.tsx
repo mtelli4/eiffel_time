@@ -19,8 +19,7 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
 
   const getTotalCompletedHours = () => {
     return modules.reduce((total, module) => {
-      // return total + getTotalHours(module.effectue)
-      return 0
+      return total + getTotalHours(module.effectue)
     }, 0)
   }
 
