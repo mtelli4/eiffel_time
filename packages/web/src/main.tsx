@@ -12,6 +12,7 @@ import { SignUp } from '../../shared/src/pages/Login/SignUp'
 import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
 import { Settings } from '../../shared/src/pages/Settings/Settings'
 import { ManageAbsences } from './pages/Attendance/ManageAbsences'
+import { Messages } from './pages/Messaging/Messages'
 import Root, { Error } from './root'
 import './styles/index.css'
 // import { createStackNavigator } from '@react-navigation/stack'
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/teacher-attendance',
         element: <TeacherAttendance />,
+      },
+      {
+        path: '/messaging',
+        element: <Messages />,
       },
       {
         path: '/admin',
