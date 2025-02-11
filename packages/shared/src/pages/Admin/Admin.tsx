@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { UserUpdate, Utilisateur } from '../../types/types'
+import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 // import { toast, ToastContainer } from 'react-toastify'
 // import 'react-toastify/dist/ReactToastify.css'
@@ -34,7 +34,7 @@ export function Admin() {
   }
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/admin/users') // URL de votre API
+    fetch(`${API_URL}/api/admin/users`) // URL de votre API
       .then((response) => {
         if (!response.ok) throw new Error('Erreur réseau');
         return response.json() // Convertir la réponse en JSON

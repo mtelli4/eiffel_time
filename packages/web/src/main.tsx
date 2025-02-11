@@ -7,11 +7,18 @@ import { TeacherAttendance } from '../../shared/src/pages/Attendance/TeacherAtte
 import { ClassAverages } from '../../shared/src/pages/Averages/ClassAverages'
 import { ClassGrades } from '../../shared/src/pages/Grades/GradesManagement/ClassGrades'
 import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
-import { Login } from '../../shared/src/pages/Login/Login'
-import { Register } from '../../shared/src/pages/Login/Register'
+import { Login } from '../../shared/src/pages/Login/SignIn'
+import { SignUp } from '../../shared/src/pages/Login/SignUp'
 import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
+import { Settings } from '../../shared/src/pages/Settings/Settings'
+import { ManageAbsences } from './pages/Attendance/ManageAbsences'
+import { Messages } from './pages/Messaging/Messages'
 import Root, { Error } from './root'
 import './styles/index.css'
+// import { createStackNavigator } from '@react-navigation/stack'
+// import { NavigationContainer } from '@react-navigation/native';
+
+// const Stack = createStackNavigator();
 
 const router = createBrowserRouter([
   {
@@ -28,6 +35,10 @@ const router = createBrowserRouter([
         element: <Grades />,
       },
       {
+        path: '/class-averages',
+        element: <ClassAverages />,
+      },
+      {
         path: '/absences',
         element: <Absences />,
       },
@@ -36,26 +47,34 @@ const router = createBrowserRouter([
         element: <ClassGrades />,
       },
       {
+        path: '/manage-absences',
+        element: <ManageAbsences />,
+      },
+      {
         path: '/teacher-attendance',
         element: <TeacherAttendance />,
       },
       {
-        path: '/class-averages',
-        element: <ClassAverages />,
+        path: '/messaging',
+        element: <Messages />,
       },
       {
         path: '/admin',
         element: <Admin />,
       },
+      {
+        path: '/settings',
+        element: <Settings />,
+      },
     ],
   },
   {
-    path: '/login',
+    path: '/signin',
     element: <Login />,
   },
   {
-    path: '/register',
-    element: <Register />,
+    path: '/signup',
+    element: <SignUp />,
   },
 ])
 
