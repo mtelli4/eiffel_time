@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');  // Import des routes définies dans routes.js
-
 const app = express();
 
 // Configuration de CORS pour autoriser les requêtes provenant de l'application React
@@ -35,7 +34,8 @@ app.use(express.json());
 // Intégration des routes dans l'application Express
 app.use('/api', routes);  // Assurez-vous que les routes sont préfixées par "/api"
 
+const PORT = process.env.PORT || 4000;
 // Lancer le serveur sur le port 4000
-app.listen(4000, () => {
-  console.log('Serveur démarré sur http://localhost:4000');
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });

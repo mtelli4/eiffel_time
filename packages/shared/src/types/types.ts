@@ -1,4 +1,4 @@
-import { Cours, Etudiant, Module } from '@shared/backend/classes'
+import { Cours, Etudiant } from '@shared/backend/classes'
 import { Platform } from 'react-native';
 
 export const API_URL = Platform.select({
@@ -23,6 +23,8 @@ export const TEACHER_TYPES = [
   { value: true, label: 'Vacataire' },
   { value: null, label: 'Non spécifié' },
 ]
+
+export const COURSE_TYPES = ['CM', 'TD', 'TP']
 
 export type Formation = {
   id_formation: number
@@ -135,9 +137,18 @@ export interface ModuleHours {
   planned: PlannedHours
   completed: PlannedHours
 }
-export interface TeacherPlanning {
-  id: string
-  firstName: string
-  lastName: string
-  modules: ModuleHours[]
+
+export type Module = {
+  id_module: number
+  libelle: string
+  codeapogee: string
+  prevu: { CM: number; TD: number; TP: number }
+  effectue: { CM: number; TD: number; TP: number }
+}
+
+export type TeacherPlanning = {
+  id_utilisateur: number
+  prenom: string
+  nom: string
+  modules: Module[]
 }
