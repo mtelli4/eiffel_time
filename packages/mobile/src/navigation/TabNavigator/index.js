@@ -11,7 +11,10 @@ import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages
 import {ClassGrades} from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
 import {Grades} from '../../../../shared/src/pages/Grades/StudentGradestest';
 import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
+import {Settings} from '../../../../shared/src/pages/Settings/Settings';
 import {UserContext} from '../../context/UserContext'; // Exemple de contexte utilisateur
+import {ManageAbsences} from '../../screens/ManageAbsences';
+import {Messages} from '../../screens/Messaging/Messages';
 
 const Tab = createBottomTabNavigator();
 
@@ -157,26 +160,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Absences et Retards',
-    //   component: ClassGrades,
-    //   icon: {name: 'user-check', source: 'Feather'},
-    // },
+    {
+      name: 'Absences et Retards',
+      component: ManageAbsences,
+      icon: {name: 'user-check', source: 'Feather'},
+    },
     {
       name: 'Présences professeurs',
       component: TeacherAttendance,
       icon: {name: 'users', source: 'Feather'},
     },
-    // {
-    //   name: 'Messagerie',
-    //   component: Schedule,
-    //   icon: {name: 'message1', source: 'AntDesign'},
-    // },
-    // {
-    //   name: 'Réglages',
-    //   component: Schedule,
-    //   icon: {name: 'settings', source: 'Feather'},
-    // },
+    {
+      name: 'Messagerie',
+      component: Messages,
+      icon: {name: 'message1', source: 'AntDesign'},
+    },
+    {
+      name: 'Réglages',
+      component: Settings,
+      icon: {name: 'settings', source: 'Feather'},
+    },
     {
       name: 'Gestion des utilisateurs',
       component: Admin,

@@ -4,6 +4,7 @@ import {
   Calendar,
   ClipboardList,
   GraduationCap,
+  MessageCircleMore,
   Settings,
   UserCheck,
   Users,
@@ -41,12 +42,16 @@ const navigationConfig = {
   ],
   secretary: [
     {
+      icon: UserCheck,
+      label: 'Absences et retards',
+      path: '/manage-absences',
+    },
+    {
       icon: Users,
       label: 'Suivi des présences professeurs',
       path: '/teacher-attendance',
     },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
-    { icon: UserCheck, label: 'Absences', path: '/absences' },
   ],
   director: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
@@ -74,6 +79,7 @@ const navigationConfig = {
       label: 'Suivi des présences des enseignants',
       path: '/teacher-attendance',
     },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
     { icon: Wrench, label: 'Administration', path: '/admin' },
   ],
 }
@@ -179,13 +185,15 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
         </select>
       </div>
       <div className="flex justify-between items-end p-2">
-        <Settings className="w-6 h-6 cursor-pointer" />
+        <NavLink to="/settings">
+          <Settings className="w-6 h-6 cursor-pointer" />
+        </NavLink>
         {isManuallyOpened ? (
           <ArrowLeftToLine
             className="w-6 h-6 cursor-pointer"
             onClick={() => {
-              setIsVisible(true)
-              setIsManuallyOpened(true)
+              setIsVisible(false)
+              setIsManuallyOpened(false)
             }}
           />
         ) : (

@@ -125,7 +125,7 @@ export function UserFilters({
             isClearable
             placeholder="Tous les types"
             onChange={(option: any) =>
-              handleFilterChange('type', option?.value || null)
+              handleFilterChange('type', option?.value)
             }
             className="text-sm"
             styles={{
