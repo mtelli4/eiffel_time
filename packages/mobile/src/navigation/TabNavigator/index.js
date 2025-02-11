@@ -14,6 +14,7 @@ import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
 import {Settings} from '../../../../shared/src/pages/Settings/Settings';
 import {UserContext} from '../../context/UserContext'; // Exemple de contexte utilisateur
 import {ManageAbsences} from '../../screens/ManageAbsences';
+import {Messages} from '../../screens/Messaging/Messages';
 
 const Tab = createBottomTabNavigator();
 
@@ -169,11 +170,11 @@ const TABS_CONFIG = {
       component: TeacherAttendance,
       icon: {name: 'users', source: 'Feather'},
     },
-    // {
-    //   name: 'Messagerie',
-    //   component: Schedule,
-    //   icon: {name: 'message1', source: 'AntDesign'},
-    // },
+    {
+      name: 'Messagerie',
+      component: Messages,
+      icon: {name: 'message1', source: 'AntDesign'},
+    },
     {
       name: 'Réglages',
       component: Settings,
