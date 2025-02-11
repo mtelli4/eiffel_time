@@ -6,30 +6,7 @@ import { Button } from '../../components/attendance/Button'
 import { Card } from '../../components/attendance/Card'
 import { HoursPlanning } from '../../components/attendance/HoursPlanning'
 import { TeacherFilters } from '../../components/attendance/TeacherFilters'
-import { TeacherPlanning } from '../../types/types'
-import { API_URL } from '../../../../shared/src/types/types'
-
-const TEACHERS_PLANNING: TeacherPlanning[] = [
-  {
-    id: '1',
-    prenom: 'Jean',
-    nom: 'MARTIN',
-    modules: [
-      {
-        code: 'M5101',
-        name: 'Développement Web',
-        planned: { CM: 10, TD: 20, TP: 20 },
-        completed: { CM: 8, TD: 16, TP: 12 },
-      },
-      {
-        code: 'M5102',
-        name: 'Base de données',
-        planned: { CM: 15, TD: 15, TP: 15 },
-        completed: { CM: 10, TD: 10, TP: 10 },
-      },
-    ],
-  },
-]
+import { API_URL, TeacherPlanning } from '../../../../shared/src/types/types'
 
 export function TeacherAttendance() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -60,153 +37,187 @@ export function TeacherAttendance() {
   const [teachers, setTeachers] = useState<TeacherPlanning[]>([])
 
   useEffect(() => {
-    fetch(`${API_URL}/api/teachers-attendance/select`)
-  })
+    fetch(`${API_URL}/api/teacher-attendance/select`)
+      .then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau');
+        return response.json() // Convertir la réponse en JSON
+      })
+      .then((data) => {
+        const teachers = data.map((teacher: any) => {
+          return {
+            id_utilisateur: teacher.id_utilisateur,
+            prenom: teacher.utilisateur.prenom,
+            nom: teacher.utilisateur.nom,
+            modules: teacher.enseignant_module.map((em: any) => {
+              const module = em.module
+              const heures = module.heures.split(',')
+              return {
+                id_module: module.id_module,
+                libelle: module.libelle,
+                codeapogee: module.codeapogee,
+                prevu: {
+                  CM: parseInt(heures[0]),
+                  TD: parseInt(heures[1]),
+                  TP: parseInt(heures[2]),
+                },
+                effectue: {
+                  CM: 0,
+                  TD: 0,
+                  TP: 0,
+                }
+              }
+            })
+          }
+        })
+        setTeachers(teachers)
+      })
+      .catch((error) => console.error('Erreur lors de la récupération des données :', error))
+  }, [])
 
-  const filteredTeachers = TEACHERS_PLANNING.filter((teacher) =>
-    `${teacher.prenom} ${teacher.nom}`
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  )
+    const filteredTeachers = teachers.filter((teacher) =>
+      `${teacher.prenom} ${teacher.nom}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    )
 
-  const handleExport = () => {
-    console.log('Exporting data...')
-  }
+    const handleExport = () => {
+      console.log('Exporting data...')
+    }
 
-  const TeacherAttendanceContent = () => (
-    <View style={styles.content}>
-      <View style={styles.header}>
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={() => setShowAttendanceForm(true)}
-            variant="primary"
-          >
-            <View style={styles.buttonContent}>
-              {/* <Plus size={16} color="#FFFFFF" /> */}
-              <Text style={styles.buttonText}>Ajouter une présence</Text>
-            </View>
-          </Button>
-          <View style={styles.buttonSpacing} />
-          <Button onPress={handleExport} variant="outline">
-            <View style={styles.buttonContent}>
-              {/* <FileDown size={16} color="#2C3E50" /> */}
-              <Text style={styles.exportButtonText}>Exporter</Text>
-            </View>
-          </Button>
-        </View>
-      </View>
-
-      <TeacherFilters
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedYear={selectedYear}
-        onYearChange={setSelectedYear}
-        selectedSemester={selectedSemester}
-        onSemesterChange={setSelectedSemester}
-      />
-
-      {filteredTeachers.map((teacher) => (
-        <View key={teacher.id} style={styles.teacherContainer}>
-          <View style={styles.teacherHeader}>
-            <Text style={styles.teacherName}>
-              {teacher.nom} {teacher.prenom}
-            </Text>
+    const TeacherAttendanceContent = () => (
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={() => setShowAttendanceForm(true)}
+              variant="primary"
+            >
+              <View style={styles.buttonContent}>
+                {/* <Plus size={16} color="#FFFFFF" /> */}
+                <Text style={styles.buttonText}>Ajouter une présence</Text>
+              </View>
+            </Button>
+            <View style={styles.buttonSpacing} />
+            <Button onPress={handleExport} variant="outline">
+              <View style={styles.buttonContent}>
+                {/* <FileDown size={16} color="#2C3E50" /> */}
+                <Text style={styles.exportButtonText}>Exporter</Text>
+              </View>
+            </Button>
           </View>
-
-          <Card style={styles.planningCard}>
-            <HoursPlanning modules={teacher.modules} />
-          </Card>
-
-          <Card style={styles.tableCard}>
-            <AttendanceTable teacher={teacher} />
-          </Card>
         </View>
-      ))}
-    </View>
-  )
 
-  if (Platform.OS === 'web') {
-    return (
-      <View style={styles.container}>
-        {showAttendanceForm && AddAttendance && (
-          <AddAttendance
-            isOpen={showAttendanceForm}
-            onClose={() => setShowAttendanceForm(false)}
-            teachers={TEACHERS_PLANNING}
-          />
-        )}
-        <TeacherAttendanceContent />
+        <TeacherFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedYear={selectedYear}
+          onYearChange={setSelectedYear}
+          selectedSemester={selectedSemester}
+          onSemesterChange={setSelectedSemester}
+        />
+
+        {filteredTeachers.map((teacher) => (
+          <View key={teacher.id_utilisateur} style={styles.teacherContainer}>
+            <View style={styles.teacherHeader}>
+              <Text style={styles.teacherName}>
+                {teacher.nom} {teacher.prenom}
+              </Text>
+            </View>
+
+            <Card style={styles.planningCard}>
+              <HoursPlanning modules={teacher.modules} />
+            </Card>
+
+            <Card style={styles.tableCard}>
+              <AttendanceTable teacher={teacher} />
+            </Card>
+          </View>
+        ))}
       </View>
     )
-  } else {
-    return (
-      <ScrollView style={styles.container}>
-        {showAttendanceForm && AddAttendance && (
-          <AddAttendance
-            isOpen={showAttendanceForm}
-            onClose={() => setShowAttendanceForm(false)}
-            teachers={TEACHERS_PLANNING}
-          />
-        )}
-        <TeacherAttendanceContent />
-      </ScrollView>
-    )
+
+    if (Platform.OS === 'web') {
+      return (
+        <View style={styles.container}>
+          {showAttendanceForm && AddAttendance && (
+            <AddAttendance
+              isOpen={showAttendanceForm}
+              onClose={() => setShowAttendanceForm(false)}
+              teachers={teachers}
+            />
+          )}
+          <TeacherAttendanceContent />
+        </View>
+      )
+    } else {
+      return (
+        <ScrollView style={styles.container}>
+          {showAttendanceForm && AddAttendance && (
+            <AddAttendance
+              isOpen={showAttendanceForm}
+              onClose={() => setShowAttendanceForm(false)}
+              teachers={teachers}
+            />
+          )}
+          <TeacherAttendanceContent />
+        </ScrollView>
+      )
+    }
   }
-}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-  },
-  exportButtonText: {
-    color: '#2C3E50',
-  },
-  buttonSpacing: {
-    width: 12,
-  },
-  teacherContainer: {
-    marginBottom: 32,
-  },
-  teacherHeader: {
-    marginBottom: 24,
-  },
-  teacherName: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  planningCard: {
-    marginBottom: 24,
-  },
-  tableCard: {
-    marginBottom: 24,
-    width: '100%',
-  },
-})
+    container: {
+      flex: 1,
+      backgroundColor: '#F9FAFB',
+    },
+    content: {
+      padding: 24,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 24,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: '#111827',
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    buttonContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    buttonText: {
+      color: '#FFFFFF',
+    },
+    exportButtonText: {
+      color: '#2C3E50',
+    },
+    buttonSpacing: {
+      width: 12,
+    },
+    teacherContainer: {
+      marginBottom: 32,
+    },
+    teacherHeader: {
+      marginBottom: 24,
+    },
+    teacherName: {
+      fontSize: 20,
+      fontWeight: '600',
+      color: '#111827',
+    },
+    planningCard: {
+      marginBottom: 24,
+    },
+    tableCard: {
+      marginBottom: 24,
+      width: '100%',
+    },
+  })

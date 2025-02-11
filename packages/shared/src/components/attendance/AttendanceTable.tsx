@@ -38,7 +38,7 @@ export function AttendanceTable({ teacher }: AttendanceTableProps) {
           </View>
 
           {teacher.modules.map((module) => (
-            <React.Fragment key={module.code}>
+            <React.Fragment key={module.id_module}>
               {[
                 { date: '2023-09-15', cm: 2, td: 0, tp: 4 },
                 { date: '2023-09-22', cm: 4, td: 2, tp: 0 },
@@ -61,7 +61,7 @@ export function AttendanceTable({ teacher }: AttendanceTableProps) {
               ))}
               <View style={styles.moduleHeader}>
                 <Text style={styles.moduleText}>
-                  {module.code} - {module.name}
+                  {module.codeapogee} - {module.libelle}
                 </Text>
               </View>
             </React.Fragment>
