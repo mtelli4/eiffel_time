@@ -4,6 +4,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Route pour récupérer toutes les évaluations
+
 // Route pour insérer une nouvelle évaluation
 router.post('/insert-evaluation', async (req, res) => {
   const formData = req.body; // Les données du formulaire envoyées par le frontend
