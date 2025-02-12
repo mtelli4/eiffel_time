@@ -96,10 +96,10 @@ export default function WebAddGradeModal({
                             <option value="">Sélectionner un module</option>
                             {modules.map((module) => (
                                 <option
-                                    key={module.getId()}
-                                    value={module.getId()}
+                                    key={module.id_module}
+                                    value={module.id_module}
                                 >
-                                    {module.getName()}
+                                    {module.libelle}
                                 </option>
                             ))}
                         </select>
