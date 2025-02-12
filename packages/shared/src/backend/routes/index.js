@@ -6,6 +6,7 @@ const allRouter = require('./all');
 const evaluationRouter = require('./evaluation');
 const teacherAttendanceRouter = require('./teacher-attendance');
 const adminRouter = require('./admin');
+const scheduleRouter = require('./schedule')
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/all', allRouter);
 router.use('/evaluation', evaluationRouter);
 router.use('/teacher-attendance', teacherAttendanceRouter);
 router.use('/admin', adminRouter);
+router.use('/schedule', scheduleRouter)
 
 module.exports = router;
