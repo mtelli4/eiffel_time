@@ -199,8 +199,7 @@ model utilisateur {
   prenom                                 String                  @db.VarChar(255)
   email                                  String?                 @unique(map: "utilisateur_email") @db.VarChar(255)
   mdp                                    String?                 @db.VarChar(255)
-  salt                                   String?                 @db.VarChar(255)
-  premiereconnexion                      Boolean?
+  salt                                   String?                 @db.VarBit(16)
   statut                                 statut_utilisateur?
   createdat                              DateTime                @db.Timestamp(6)
   updatedat                              DateTime                @db.Timestamp(6)

@@ -1,5 +1,6 @@
 import { Cours, Etudiant } from '@shared/backend/classes'
 import { Platform } from 'react-native';
+import { Module as Modul } from '../backend/classes/'
 
 export const API_URL = Platform.select({
   web: 'http://localhost:4000',
@@ -101,7 +102,7 @@ export type GradeStatus =
 export interface AddGradeModalProps {
   isOpen: boolean
   onClose: () => void
-  modules: Module[]
+  modules: Modul[]
   students: Etudiant[]
   cours: Cours[]
 }

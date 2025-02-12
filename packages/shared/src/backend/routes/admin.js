@@ -35,7 +35,6 @@ router.get('/users', async (req, res) => {
 // Route pour créer un nouvel utilisateur
 router.post('/create-user', async (req, res) => {
   const data = req.body;
-  const now = new Date();
 
   try {
     const createUser = await prisma.$transaction(async (tx) => {
@@ -52,8 +51,7 @@ router.post('/create-user', async (req, res) => {
           prenom: data.prenom,
           email: data.email,
           statut: data.statut,
-          createdat: now,
-          updatedat: now,
+          createdat: new Date(),
         },
       });
 
