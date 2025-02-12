@@ -20,7 +20,7 @@ export default function NativeCourseModal({
           <Text style={styles.modalTitle}>{course.subject}</Text>
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Professeur</Text>
+              <Text style={styles.infoLabel}>Enseignant</Text>
               <Text style={styles.infoValue}>{course.professor}</Text>
             </View>
             <View style={styles.infoItem}>

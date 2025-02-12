@@ -22,7 +22,7 @@ export default function WebCourseModal({
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <p className="text-sm text-gray-600">Professeur</p>
+                        <p className="text-sm text-gray-600">Enseignant(e)</p>
                         <p className="font-medium">{course.teacher}</p>
                     </div>
                     <div>
