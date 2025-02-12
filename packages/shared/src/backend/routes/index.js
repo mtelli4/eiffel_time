@@ -7,6 +7,7 @@ const evaluationRouter = require('./evaluation');
 const absenceRouter = require('./absence');
 const teacherAttendanceRouter = require('./teacher-attendance');
 const adminRouter = require('./admin');
+const scheduleRouter = require('./schedule')
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use('/evaluation', evaluationRouter);
 router.use('/absences', absenceRouter);
 router.use('/teacher-attendance', teacherAttendanceRouter);
 router.use('/admin', adminRouter);
+router.use('/schedule', scheduleRouter)
 
 module.exports = router;

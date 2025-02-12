@@ -17,27 +17,27 @@ export default function WebCourseModal({
                 </button>
 
                 <h2 className="text-2xl font-bold text-primary mb-4">
-                    {course.subject}
+                    {course.summary}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
                         <p className="text-sm text-gray-600">Professeur</p>
-                        <p className="font-medium">{course.professor}</p>
+                        <p className="font-medium">{course.teacher}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-600">Salle</p>
-                        <p className="font-medium">{course.room}</p>
+                        <p className="font-medium">{course.location}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-600">Horaire</p>
                         <p className="font-medium">
-                            {course.startTime} - {course.endTime}
+                            {course.start} - {course.end}
                         </p>
                     </div>
                     <div>
-                        <p className="text-sm text-gray-600">Type</p>
-                        <p className="font-medium">{course.type}</p>
+                        <p className="text-sm text-gray-600">Groupe(s)</p>
+                        <p className="font-medium">{course.group}</p>
                     </div>
                 </div>
 
