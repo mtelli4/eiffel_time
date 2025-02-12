@@ -99,7 +99,7 @@ export default function WebAddGradeModal({
                                     key={module.getId()}
                                     value={module.getId()}
                                 >
-                                    {module.getName()}
+                                    {module.getLibelle()}
                                 </option>
                             ))}
                         </select>

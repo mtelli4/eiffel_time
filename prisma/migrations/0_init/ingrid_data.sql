@@ -101,24 +101,25 @@ INSERT INTO ingrid.cours VALUES (13, 'CM', '', '2025-02-18 14:00:00', '2025-02-1
 -- Data for Name: utilisateur; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.utilisateur VALUES (2, 'Herries', 'Karlik', 'kherries1@dion.ne.jp', NULL, NULL, false, 'indefinite', '2024-10-11 00:00:00', '2024-09-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, false, 'student', '2024-11-09 00:00:00', '2024-08-11 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (4, 'Anstee', 'Gypsy', 'ganstee3@exblog.jp', NULL, NULL, true, 'director', '2024-02-27 00:00:00', '2024-07-24 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, true, 'teacher', '2024-01-21 00:00:00', '2024-10-19 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (6, 'Gateley', 'Emalee', 'egateley5@addtoany.com', NULL, NULL, true, 'manager', '2024-02-26 00:00:00', '2024-04-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', NULL, NULL, false, 'secretary', '2024-08-24 00:00:00', '2023-12-21 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (8, 'Brambell', 'Styrbjörn', 'sbrambell0@cmu.edu', NULL, NULL, true, 'student', '2024-09-11 00:00:00', '2024-02-06 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (9, 'Eagle', 'Tú', 'keagle1@nyu.edu', NULL, NULL, true, 'student', '2024-07-10 00:00:00', '2024-09-20 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (10, 'Bearblock', 'Clélia', 'nbearblock2@amazon.co.uk', NULL, NULL, true, 'student', '2024-07-16 00:00:00', '2024-11-12 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (11, 'Tyrer', 'Anaël', 'styrer3@nbcnews.com', NULL, NULL, false, 'student', '2024-07-09 00:00:00', '2024-01-20 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (12, 'Manby', 'Laurène', 'fmanby4@elegantthemes.com', NULL, NULL, false, 'student', '2024-05-26 00:00:00', '2024-11-28 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (13, 'Canter', 'Marie-ève', 'acanter5@scientificamerican.com', NULL, NULL, true, 'student', '2024-02-11 00:00:00', '2024-09-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@youtu.be', NULL, NULL, false, 'student', '2024-01-22 00:00:00', '2024-12-06 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, true, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, true, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, false, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, true, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
-INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, false, 'administrator', '2024-10-12 00:00:00', '2025-01-27 20:32:51.166');
+INSERT INTO ingrid.utilisateur VALUES (2, 'Herries', 'Karlik', 'kherries1@dion.ne.jp', NULL, NULL, 'indefinite', '2024-10-11 00:00:00', '2024-09-07 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, 'student', '2024-11-09 00:00:00', '2024-08-11 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (4, 'Anstee', 'Gypsy', 'ganstee3@exblog.jp', NULL, NULL, 'director', '2024-02-27 00:00:00', '2024-07-24 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (6, 'Gateley', 'Emalee', 'egateley5@addtoany.com', NULL, NULL, 'manager', '2024-02-26 00:00:00', '2024-04-27 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', NULL, NULL, 'secretary', '2024-08-24 00:00:00', '2023-12-21 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (8, 'Brambell', 'Styrbjörn', 'sbrambell0@cmu.edu', NULL, NULL, 'student', '2024-09-11 00:00:00', '2024-02-06 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (9, 'Eagle', 'Tú', 'keagle1@nyu.edu', NULL, NULL, 'student', '2024-07-10 00:00:00', '2024-09-20 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (10, 'Bearblock', 'Clélia', 'nbearblock2@amazon.co.uk', NULL, NULL, 'student', '2024-07-16 00:00:00', '2024-11-12 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (11, 'Tyrer', 'Anaël', 'styrer3@nbcnews.com', NULL, NULL, 'student', '2024-07-09 00:00:00', '2024-01-20 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (12, 'Manby', 'Laurène', 'fmanby4@elegantthemes.com', NULL, NULL, 'student', '2024-05-26 00:00:00', '2024-11-28 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (13, 'Canter', 'Marie-ève', 'acanter5@scientificamerican.com', NULL, NULL, 'student', '2024-02-11 00:00:00', '2024-09-27 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@youtu.be', NULL, NULL, 'student', '2024-01-22 00:00:00', '2024-12-06 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-02-10 18:47:16.102');
+INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
+INSERT INTO ingrid.utilisateur VALUES (19, 'Mariya Constantine', 'Cédric', 'cedric.mc11@gmail.com', NULL, NULL, 'administrator', '2025-02-05 10:27:39.307', '2025-02-05 10:27:39.307');
+INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, 'teacher', '2024-01-21 00:00:00', '2025-02-06 20:40:41.284');
 
 
 --
@@ -136,6 +137,7 @@ INSERT INTO ingrid.etudiant VALUES (14, '599049', true, false);
 INSERT INTO ingrid.etudiant VALUES (15, '545287', false, false);
 INSERT INTO ingrid.etudiant VALUES (16, '532519', false, false);
 INSERT INTO ingrid.etudiant VALUES (17, '428081', false, false);
+INSERT INTO ingrid.etudiant VALUES (1, NULL, NULL, NULL);
 
 
 --
@@ -214,6 +216,7 @@ INSERT INTO ingrid.communiquer VALUES (22, 'Je propose qu’on se répartisse le
 
 INSERT INTO ingrid.enseignant VALUES (18, true);
 INSERT INTO ingrid.enseignant VALUES (5, false);
+INSERT INTO ingrid.enseignant VALUES (1, NULL);
 
 
 --
@@ -226,39 +229,6 @@ INSERT INTO ingrid.enseignant_module VALUES (1, 18);
 INSERT INTO ingrid.enseignant_module VALUES (2, 18);
 INSERT INTO ingrid.enseignant_module VALUES (4, 18);
 INSERT INTO ingrid.enseignant_module VALUES (5, 18);
-INSERT INTO ingrid.enseignant_module VALUES (6, 18);
-INSERT INTO ingrid.enseignant_module VALUES (7, 18);
-INSERT INTO ingrid.enseignant_module VALUES (8, 18);
-INSERT INTO ingrid.enseignant_module VALUES (9, 18);
-INSERT INTO ingrid.enseignant_module VALUES (11, 18);
-INSERT INTO ingrid.enseignant_module VALUES (12, 18);
-INSERT INTO ingrid.enseignant_module VALUES (13, 18);
-INSERT INTO ingrid.enseignant_module VALUES (14, 18);
-INSERT INTO ingrid.enseignant_module VALUES (15, 18);
-INSERT INTO ingrid.enseignant_module VALUES (16, 18);
-INSERT INTO ingrid.enseignant_module VALUES (17, 18);
-INSERT INTO ingrid.enseignant_module VALUES (18, 18);
-INSERT INTO ingrid.enseignant_module VALUES (20, 18);
-INSERT INTO ingrid.enseignant_module VALUES (21, 18);
-INSERT INTO ingrid.enseignant_module VALUES (22, 18);
-INSERT INTO ingrid.enseignant_module VALUES (23, 18);
-INSERT INTO ingrid.enseignant_module VALUES (24, 18);
-INSERT INTO ingrid.enseignant_module VALUES (25, 18);
-INSERT INTO ingrid.enseignant_module VALUES (26, 18);
-INSERT INTO ingrid.enseignant_module VALUES (27, 18);
-INSERT INTO ingrid.enseignant_module VALUES (28, 18);
-INSERT INTO ingrid.enseignant_module VALUES (29, 18);
-INSERT INTO ingrid.enseignant_module VALUES (30, 18);
-INSERT INTO ingrid.enseignant_module VALUES (31, 18);
-INSERT INTO ingrid.enseignant_module VALUES (32, 18);
-INSERT INTO ingrid.enseignant_module VALUES (33, 18);
-INSERT INTO ingrid.enseignant_module VALUES (34, 18);
-INSERT INTO ingrid.enseignant_module VALUES (35, 18);
-INSERT INTO ingrid.enseignant_module VALUES (36, 18);
-INSERT INTO ingrid.enseignant_module VALUES (37, 18);
-INSERT INTO ingrid.enseignant_module VALUES (38, 18);
-INSERT INTO ingrid.enseignant_module VALUES (19, 18);
-INSERT INTO ingrid.enseignant_module VALUES (39, 18);
 
 
 --
@@ -299,6 +269,9 @@ INSERT INTO ingrid.formation_utilisateur VALUES (6, 2);
 INSERT INTO ingrid.formation_utilisateur VALUES (6, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (6, 1);
 INSERT INTO ingrid.formation_utilisateur VALUES (4, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (19, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (19, 2);
+INSERT INTO ingrid.formation_utilisateur VALUES (19, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (5, 1);
 
 
