@@ -15,7 +15,7 @@ router.use('/data', dataRouter);
 router.use('/login', usersRouter);
 router.use('/all', allRouter);
 router.use('/evaluation', evaluationRouter);
-router.use('/absence', absenceRouter);
+router.use('/absences', absenceRouter);
 router.use('/teacher-attendance', teacherAttendanceRouter);
 router.use('/admin', adminRouter);
 
