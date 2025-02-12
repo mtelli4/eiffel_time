@@ -1,3 +1,5 @@
+SET search_path TO 'ingrid';
+
 -- CreateEnum
 CREATE TYPE "statut_utilisateur" AS ENUM ('indefinite', 'student', 'teacher', 'secretary', 'director', 'manager', 'administrator');
 
@@ -194,7 +196,6 @@ CREATE TABLE "utilisateur" (
     "email" VARCHAR(255),
     "mdp" VARCHAR(255),
     "salt" VARBIT(16),
-    "premiereconnexion" BOOLEAN,
     "statut" "statut_utilisateur",
     "createdat" TIMESTAMP(6) NOT NULL,
     "updatedat" TIMESTAMP(6) NOT NULL,
