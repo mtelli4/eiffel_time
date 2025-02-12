@@ -34,7 +34,7 @@ export default function NativeCourseModal({
               </Text>
             </View>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Type</Text>
+              <Text style={styles.infoLabel}>Groupe(s)</Text>
               <Text style={styles.infoValue}>{course.group}</Text>
             </View>
           </View>
