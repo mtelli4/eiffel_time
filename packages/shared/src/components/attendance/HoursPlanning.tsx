@@ -1,25 +1,25 @@
 // import { Clock } from 'lucide-react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { ModuleHours, PlannedHours } from '../../types/types'
+import { Module } from '../../types/types'
 
 interface HoursPlanningProps {
-  modules: ModuleHours[]
+  modules: Module[]
 }
 
 export function HoursPlanning({ modules }: HoursPlanningProps) {
-  const getTotalHours = (hours: PlannedHours) => {
-    return hours.CM + hours.TD + hours.TP
+  const getTotalHours = (heures: { CM: number; TD: number; TP: number }) => {
+    return heures.CM + heures.TD + heures.TP
   }
 
   const getTotalPlannedHours = () => {
     return modules.reduce((total, module) => {
-      return total + getTotalHours(module.planned)
+      return total + getTotalHours(module.prevu)
     }, 0)
   }
 
   const getTotalCompletedHours = () => {
     return modules.reduce((total, module) => {
-      return total + getTotalHours(module.completed)
+      return total + getTotalHours(module.effectue)
     }, 0)
   }
 
@@ -53,43 +53,43 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
           </View>
 
           {modules.map((module) => (
-            <View key={module.code} style={styles.tableRow}>
+            <View key={module.id_module} style={styles.tableRow}>
               <View style={styles.moduleColumn}>
-                <Text style={styles.moduleCode}>{module.code}</Text>
-                <Text style={styles.moduleName}>{module.name}</Text>
+                <Text style={styles.moduleCode}>{module.codeapogee}</Text>
+                <Text style={styles.moduleName}>{module.libelle}</Text>
               </View>
               <View style={styles.hourColumn}>
                 <View style={styles.centerContent}>
-                  <Text style={styles.hourText}>{module.planned.CM}h</Text>
+                  <Text style={styles.hourText}>{module.prevu.CM}h</Text>
                   <Text style={styles.completedHourText}>
-                    {module.completed.CM}h faites
+                    {module.effectue.CM}h faites
                   </Text>
                 </View>
               </View>
               <View style={styles.hourColumn}>
                 <View style={styles.centerContent}>
-                  <Text style={styles.hourText}>{module.planned.TD}h</Text>
+                  <Text style={styles.hourText}>{module.prevu.TD}h</Text>
                   <Text style={styles.completedHourText}>
-                    {module.completed.TD}h faites
+                    {module.effectue.TD}h faites
                   </Text>
                 </View>
               </View>
               <View style={styles.hourColumn}>
                 <View style={styles.centerContent}>
-                  <Text style={styles.hourText}>{module.planned.TP}h</Text>
+                  <Text style={styles.hourText}>{module.prevu.TP}h</Text>
                   <Text style={styles.completedHourText}>
-                    {module.completed.TP}h faites
+                    {module.effectue.TP}h faites
                   </Text>
                 </View>
               </View>
               <View style={styles.hourColumn}>
                 <Text style={styles.totalHourText}>
-                  {getTotalHours(module.planned)}h
+                  {getTotalHours(module.prevu)}h
                 </Text>
               </View>
               <View style={styles.completedColumn}>
                 <Text style={styles.totalHourText}>
-                  {getTotalHours(module.completed)}h
+                  {getTotalHours(module.effectue)}h
                 </Text>
               </View>
             </View>
@@ -102,7 +102,7 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
             <View style={styles.hourColumn}>
               <Text style={styles.totalText}>
                 {modules.reduce(
-                  (total, module) => total + module.planned.CM,
+                  (total, module) => total + module.prevu.CM,
                   0
                 )}
                 h
@@ -111,7 +111,7 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
             <View style={styles.hourColumn}>
               <Text style={styles.totalText}>
                 {modules.reduce(
-                  (total, module) => total + module.planned.TD,
+                  (total, module) => total + module.prevu.TD,
                   0
                 )}
                 h
@@ -120,7 +120,7 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
             <View style={styles.hourColumn}>
               <Text style={styles.totalText}>
                 {modules.reduce(
-                  (total, module) => total + module.planned.TP,
+                  (total, module) => total + module.prevu.TP,
                   0
                 )}
                 h

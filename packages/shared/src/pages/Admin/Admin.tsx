@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
+import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { formation, groupe } from '@prisma/client'
 // import { toast, ToastContainer } from 'react-toastify'
 // import 'react-toastify/dist/ReactToastify.css'
 
@@ -35,7 +34,7 @@ export function Admin() {
   }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/users`) // URL de votre API
+    fetch(`${API_URL}/api/admin/users`) // URL de votre API
       .then((response) => {
         if (!response.ok) throw new Error('Erreur réseau');
         return response.json() // Convertir la réponse en JSON
@@ -109,7 +108,7 @@ export function Admin() {
 
   const handleDeleteUser = (user: Utilisateur) => {
     if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
-      fetch(`http://localhost:4000/api/delete-user/${user.id_utilisateur}`, {
+      fetch(`http://localhost:4000/api/admin/delete-user/${user.id_utilisateur}`, {
         method: 'DELETE'
       })
         .then((response) => {
@@ -137,7 +136,7 @@ export function Admin() {
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
       try {
-        const response = await fetch(`http://localhost:4000/api/update-user/${selectedUser.id_utilisateur}`, {
+        const response = await fetch(`http://localhost:4000/api/admin/update-user/${selectedUser.id_utilisateur}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -203,7 +202,7 @@ export function Admin() {
       console.log('Création d\'un utilisateur')
       try {
         console.log('Création d\'un utilisateur', data)
-        const response = await fetch('http://localhost:4000/api/create-user', {
+        const response = await fetch('http://localhost:4000/api/admin/create-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

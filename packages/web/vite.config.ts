@@ -12,7 +12,10 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['react-native-vector-icons', 'react-native/Libraries/Utilities/codegenNativeComponent'],
+    exclude: [
+      'react-native-vector-icons',
+      'react-native/Libraries/Utilities/codegenNativeComponent',
+    ],
   },
   server: {
     port: 3000,
