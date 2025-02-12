@@ -96,7 +96,6 @@ export function ManageAbsences() {
     fetch(`${API_URL}/api/absences/select`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data[0].etudiant.groupe_etudiant[0].groupe.libelle)
         setAbsences(data.map((absence: any) => ({
           id_absence: absence.id_absence,
           etudiant: {
@@ -120,7 +119,6 @@ export function ManageAbsences() {
           statut: setAbsenceStatut(absence),
           path: absence.justificatif,
         })))
-        console.log(absences[0])
       })
       .catch((error) => console.error('Error:', error))
   })
@@ -293,7 +291,7 @@ export function ManageAbsences() {
                         {absence.etudiant.nom} {absence.etudiant.prenom}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {absence.etudiant.groupes.toString()}
+                        {absence.etudiant.groupes.map((groupe) => groupe.libelle).join(', ')}
                       </div>
                     </div>
                   </td>
