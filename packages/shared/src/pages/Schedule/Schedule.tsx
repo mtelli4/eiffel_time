@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Button } from '../../components/Button/Button'
 import { CourseModal } from '../../components/Schedule/CourseModal'
 import { styles } from '../../styles/Schedule/ScheduleStyles'
 import { API_URL, COURSE } from '../../types/types'
-import { Button } from '../../components/Button/Button'
 
 const DAYS = [
   'Dimanche',
@@ -41,23 +41,36 @@ function getProperties(description: string) {
 
 const getWeekRange = (offset = 0) => {
   const today = new Date()
-  // Traiter dimanche comme le 7ème jour
   const currentDay = today.getDay() === 0 ? 7 : today.getDay()
-  // Calcul du lundi de la semaine courante en appliquant le décalage
   const monday = new Date(today)
   monday.setDate(today.getDate() - currentDay + 1 + offset * 7)
-
-  // Le dimanche est 6 jours après le lundi
   const sunday = new Date(monday)
   sunday.setDate(monday.getDate() + 6)
-
   return { monday, sunday }
+}
+
+const calculateCoursePosition = (startTime: string, endTime: string) => {
+  const getMinutesFromMidnight = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number)
+    return hours * 60 + (minutes || 0)
+  }
+
+  const startMinutes =
+    getMinutesFromMidnight(startTime) - getMinutesFromMidnight('08:00')
+  const endMinutes =
+    getMinutesFromMidnight(endTime) - getMinutesFromMidnight('08:00')
+
+  const hourHeight = 70 // même valeur que HOUR_HEIGHT dans les styles
+
+  const top = (startMinutes / 60) * hourHeight
+  const height = ((endMinutes - startMinutes) / 60) * hourHeight
+
+  return { top, height }
 }
 
 export function Schedule() {
   const [selectedCourse, setSelectedCourse] = useState<COURSE | null>(null)
   const [courses, setCourses] = useState<COURSE[]>([])
-
   const [weekOffset, setWeekOffset] = useState(0)
   const { monday, sunday } = getWeekRange(weekOffset)
 
@@ -66,7 +79,6 @@ export function Schedule() {
   }
 
   const handlePresenceCheck = () => {
-    // Implement QR code scanning
     console.log('Opening QR code scanner...')
   }
 
@@ -81,25 +93,20 @@ export function Schedule() {
           .filter(([_, course]) => course.type === 'VEVENT')
           .map(([id, course]) => {
             const [group, teacher] = getProperties(course.description)
-            const start = new Date(course.start).toLocaleTimeString(`fr-FR`, {
-              timeStyle: 'short',
-            })
-            const end = new Date(course.end).toLocaleTimeString(`fr-FR`, {
-              timeStyle: 'short',
-            })
-            const day = DAYS[new Date(course.start).getDay()]
-            const date = new Date(course.start)
+            const start = new Date(course.start)
+            const end = new Date(course.end)
+            const day = DAYS[start.getDay()]
 
             return {
               id,
               summary: course.summary,
               location: course.location,
-              start,
-              end,
+              start: start.toLocaleTimeString('fr-FR', { timeStyle: 'short' }),
+              end: end.toLocaleTimeString('fr-FR', { timeStyle: 'short' }),
               teacher,
               group,
               day,
-              date,
+              date: start,
             }
           })
         setCourses(newCourses)
@@ -113,59 +120,96 @@ export function Schedule() {
     <View style={styles.container}>
       <View>
         <Text>
-          Du {monday.toLocaleDateString(`fr-FR`)} au{' '}
-          {sunday.toLocaleDateString(`fr-FR`)}
+          Du {monday.toLocaleDateString('fr-FR')} au{' '}
+          {sunday.toLocaleDateString('fr-FR')}
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            gap: 10, // note : "gap" n'est pas toujours supporté dans React Native
-            margin: 10,
-          }}
-        >
+        <View style={styles.buttonContainer}>
           <Button label="Précédent" onPress={() => handleWeekChange(-1)} />
           <Button label="Suivant" onPress={() => handleWeekChange(1)} />
         </View>
       </View>
       <ScrollView style={styles.scheduleContainer}>
         <View style={styles.scheduleHeader}>
-          <Text style={styles.headerCell}>Horaire</Text>
-          {DAYS.slice(1).map((day) => (
-            <Text key={day} style={styles.headerCell}>
-              {day}
-            </Text>
-          ))}
+          <Text style={styles.headerHourCell}>Horaire</Text>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            {DAYS.slice(1).map((day) => (
+              <Text key={day} style={styles.headerDayCell}>
+                {day}
+              </Text>
+            ))}
+          </View>
         </View>
 
-        {HOURS.map((hour) => (
-          <View key={hour} style={styles.scheduleRow}>
-            <Text style={styles.hourCell}>{hour}</Text>
-
-            {DAYS.slice(1).map((day) => {
-              const course = courses.find(
-                (c) =>
-                  c.day === day &&
-                  c.start.substring(0, 2) === hour.substring(0, 2) &&
-                  monday < c.date &&
-                  c.date < sunday
-              )
-              return (
-                <View key={day} style={styles.dayCell}>
-                  {course && (
-                    <TouchableOpacity
-                      onPress={() => setSelectedCourse(course)}
-                      style={styles.courseButton}
-                    >
-                      <Text style={styles.courseTitle}>{course.summary}</Text>
-                      <Text style={styles.courseRoom}>{course.location}</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              )
-            })}
+        <View style={styles.scheduleContent}>
+          <View style={styles.gridLines}>
+            {HOURS.map((_, index) => (
+              <View
+                key={`line-${index}`}
+                style={[
+                  styles.horizontalLine,
+                  {
+                    top: index * 70,
+                  },
+                ]}
+              />
+            ))}
           </View>
-        ))}
+          {/* Grille des heures */}
+          <View style={styles.hoursColumn}>
+            {HOURS.map((hour) => (
+              <View key={hour} style={styles.hourCell}>
+                <Text style={styles.hourText}>{hour}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Colonnes des jours avec les cours */}
+          <View style={styles.daysContainer}>
+            {DAYS.slice(1).map((day) => (
+              <View key={day} style={styles.dayColumn}>
+                {courses
+                  .filter(
+                    (c) => c.day === day && monday < c.date && c.date < sunday
+                  )
+                  .map((course) => {
+                    const { top, height } = calculateCoursePosition(
+                      course.start,
+                      course.end
+                    )
+                    return (
+                      <TouchableOpacity
+                        key={course.id}
+                        style={[
+                          styles.courseButton,
+                          {
+                            position: 'absolute',
+                            top,
+                            height,
+                            left: '5%',
+                            width: '90%',
+                          },
+                        ]}
+                        onPress={() => setSelectedCourse(course)}
+                      >
+                        <View style={styles.courseContent}>
+                          <Text
+                            style={styles.courseTitle}
+                            numberOfLines={10}
+                            ellipsizeMode="tail"
+                          >
+                            {course.summary}
+                          </Text>
+                          <Text style={styles.courseRoom}>
+                            {course.location}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  })}
+              </View>
+            ))}
+          </View>
+        </View>
       </ScrollView>
 
       {selectedCourse && (
