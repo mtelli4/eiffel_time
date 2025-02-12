@@ -28,7 +28,7 @@ const HOURS = [
   '18:00',
 ]
 
-function getProperties(description: string) {
+export function getProperties(description: string) {
   let test: Array<string> = description.split('\n')
   test = test.filter((x) => x !== '')
   const groups = ['TD', 'TP']
@@ -45,7 +45,7 @@ const getWeekRange = (offset = 0) => {
   const currentDay = today.getDay() === 0 ? 7 : today.getDay()
   // Calcul du lundi de la semaine courante en appliquant le décalage
   const monday = new Date(today)
-  monday.setDate(today.getDate() - currentDay + 1 + offset * 7)
+  monday.setDate(today.getDate() - currentDay + 2 + offset * 7)
 
   // Le dimanche est 6 jours après le lundi
   const sunday = new Date(monday)
@@ -109,11 +109,13 @@ export function Schedule() {
       })
   }, [])
 
+  // console.log(courses);
+
   return (
     <View style={styles.container}>
       <View>
         <Text>
-          Du {monday.toLocaleDateString(`fr-FR`)} au{' '}
+          Du {monday.toLocaleDateString(`en-FR`)} au{' '}
           {sunday.toLocaleDateString(`fr-FR`)}
         </Text>
         <View
@@ -143,6 +145,7 @@ export function Schedule() {
             <Text style={styles.hourCell}>{hour}</Text>
 
             {DAYS.slice(1).map((day) => {
+
               const course = courses.find(
                 (c) =>
                   c.day === day &&
@@ -150,6 +153,7 @@ export function Schedule() {
                   monday < c.date &&
                   c.date < sunday
               )
+
               return (
                 <View key={day} style={styles.dayCell}>
                   {course && (
