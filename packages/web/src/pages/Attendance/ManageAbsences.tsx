@@ -17,24 +17,30 @@ interface Student {
   group: string
 }
 
+type Groupe = {
+  id_grp: number
+  libelle: string
+}
+
 interface Absence {
   id_absence: string
   etudiant: {
     id_utilisateur: number
     nom: string
     prenom: string
+    groupes: Groupe[]
   }
   module: {
+    id_module: number
     codeapogee: string
     libelle: string
   }
   date: string
   envoye: boolean
   valide: boolean
-  status: 'pending' | 'approved' | 'rejected'
-  justification?: string
-  document?: string
-  submissionDate?: string
+  updatedat: string
+  statut: 'pending' | 'approved' | 'rejected'
+  path?: string
 }
 
 // Mock data
@@ -50,7 +56,7 @@ interface Absence {
     date: '2024-03-15',
     module: { code: 'M5101', name: 'Développement Web' },
     professor: 'Dr. Martin',
-    status: 'pending',
+    statut: 'pending',
     justification: 'Certificat médical',
     document: 'https://example.com/justification.pdf',
     submissionDate: '2024-03-16',
@@ -61,7 +67,7 @@ interface Absence {
     date: '2024-03-20',
     module: { code: 'M5102', name: 'Base de données' },
     professor: 'Dr. Dubois',
-    status: 'approved',
+    statut: 'approved',
     justification: 'Rendez-vous médical',
     document: 'https://example.com/justification2.pdf',
     submissionDate: '2024-03-21',
@@ -71,34 +77,50 @@ interface Absence {
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<Absence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedStatus, setSelectedStatus] = useState<
-    Absence['status'] | 'all'
-  >('all')
+  const [selectedStatut, setSelectedStatut] = useState<Absence['statut'] | 'all'>('all')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+
+  const setAbsenceStatut = (absence: Absence) => {
+    if (absence.envoye && absence.valide) {
+      return 'approved'
+    } else if (absence.envoye && !absence.valide) {
+      return 'rejected'
+    } else {
+      return 'pending'
+    }
+  }
 
   useEffect(() => {
     fetch(`${API_URL}/api/absences/select`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data[0].etudiant.groupe_etudiant[0].groupe.libelle)
         setAbsences(data.map((absence: any) => ({
           id_absence: absence.id_absence,
           etudiant: {
-            id_utilisateur: absence.etudiant.id_utilisateur,
-            nom: absence.etudiant.nom,
-            prenom: absence.etudiant.prenom,
+            id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
+            nom: absence.etudiant.utilisateur.nom,
+            prenom: absence.etudiant.utilisateur.prenom,
+            groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
+              id_grp: groupe.groupe.id_grp,
+              libelle: groupe.groupe.libelle,
+            })),
           },
-          groupe: absence.cours.groupe,
           module: {
-            codeapogee: absence.module.codeapogee,
-            libelle: absence.module.libelle,
+            id_module: absence.cours.module.id_module,
+            codeapogee: absence.cours.module.codeapogee,
+            libelle: absence.cours.module.libelle,
           },
-          date: absence.debut,
+          date: absence.cours.debut,
           envoye: absence.envoye,
           valide: absence.valide,
+          updatedat: absence.updatedat,
+          statut: setAbsenceStatut(absence),
+          path: absence.justificatif,
         })))
-        console.log('Absences:', absences)
+        console.log(absences[0])
       })
       .catch((error) => console.error('Error:', error))
   })
@@ -106,7 +128,7 @@ export function ManageAbsences() {
   const handleApprove = (absenceId: string) => {
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id_absence === absenceId ? { ...abs, status: 'approved' } : abs
+        abs.id_absence === absenceId ? { ...abs, statut: 'approved' } : abs
       )
     )
   }
@@ -114,7 +136,7 @@ export function ManageAbsences() {
   const handleReject = (absenceId: string) => {
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id_absence === absenceId ? { ...abs, status: 'rejected' } : abs
+        abs.id_absence === absenceId ? { ...abs, statut: 'rejected' } : abs
       )
     )
   }
@@ -128,17 +150,17 @@ export function ManageAbsences() {
     const searchString =
       `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
-    const matchesStatus =
-      selectedStatus === 'all' || absence.status === selectedStatus
+    const matchesStatut =
+      selectedStatut === 'all' || absence.statut === selectedStatut
     const matchesDateRange =
       (!startDate || absence.date >= startDate) &&
       (!endDate || absence.date <= endDate)
 
-    return matchesSearch && matchesStatus && matchesDateRange
+    return matchesSearch && matchesStatut && matchesDateRange
   })
 
-  const getStatusBadgeClass = (status: Absence['status']) => {
-    switch (status) {
+  const getStatutBadgeClass = (statut: Absence['statut']) => {
+    switch (statut) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800'
       case 'approved':
@@ -148,8 +170,8 @@ export function ManageAbsences() {
     }
   }
 
-  const getStatusText = (status: Absence['status']) => {
-    switch (status) {
+  const getStatutText = (statut: Absence['statut']) => {
+    switch (statut) {
       case 'pending':
         return 'En attente'
       case 'approved':
@@ -199,9 +221,9 @@ export function ManageAbsences() {
                 Statut
               </label>
               <select
-                value={selectedStatus}
+                value={selectedStatut}
                 onChange={(e) =>
-                  setSelectedStatus(e.target.value as Absence['status'] | 'all')
+                  setSelectedStatut(e.target.value as Absence['statut'] | 'all')
                 }
                 className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
               >
@@ -260,9 +282,6 @@ export function ManageAbsences() {
           </thead>
           <tbody>
             {filteredAbsences.map((absence) => {
-              const student = absences.find(
-                (s) => s.id_absence === absence.id_absence
-              )
               return (
                 <tr
                   key={absence.id_absence}
@@ -271,20 +290,20 @@ export function ManageAbsences() {
                   <td className="py-3 px-4">
                     <div>
                       <div className="font-medium text-gray-900">
-                        {student?.lastName} {student?.firstName}
+                        {absence.etudiant.nom} {absence.etudiant.prenom}
                       </div>
                       <div className="text-sm text-gray-500">
-                        Groupe {student?.group}
+                        {absence.etudiant.groupes.toString()}
                       </div>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <div>
                       <div className="font-medium text-gray-900">
-                        {absence.module.code}
+                        {absence.module.codeapogee}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {absence.module.name}
+                        {absence.module.libelle}
                       </div>
                     </div>
                   </td>
@@ -293,10 +312,10 @@ export function ManageAbsences() {
                       <div className="font-medium text-gray-900">
                         {new Date(absence.date).toLocaleDateString('fr-FR')}
                       </div>
-                      {absence.submissionDate && (
+                      {absence.updatedat && (
                         <div className="text-sm text-gray-500">
                           Soumis le{' '}
-                          {new Date(absence.submissionDate).toLocaleDateString(
+                          {new Date(absence.updatedat).toLocaleDateString(
                             'fr-FR'
                           )}
                         </div>
@@ -307,34 +326,34 @@ export function ManageAbsences() {
                     <span
                       className={cn(
                         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                        getStatusBadgeClass(absence.status)
+                        getStatutBadgeClass(absence.statut)
                       )}
                     >
-                      {getStatusText(absence.status)}
+                      {getStatutText(absence.statut)}
                     </span>
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center justify-end gap-2">
-                      {absence.document && (
+                      {absence.path && (
                         <button
-                          onClick={() => window.open(absence.document)}
+                          onClick={() => window.open(absence.path, '_blank')}
                           className="p-1 text-gray-500 hover:text-primary"
                           title="Voir le justificatif"
                         >
                           <FileText className="w-4 h-4" />
                         </button>
                       )}
-                      {absence.status === 'pending' && (
+                      {absence.statut === 'pending' && (
                         <>
                           <button
-                            onClick={() => handleApprove(absence.id)}
+                            onClick={() => handleApprove(absence.id_absence)}
                             className="p-1 text-green-600 hover:text-green-700"
                             title="Valider"
                           >
                             <Check className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleReject(absence.id)}
+                            onClick={() => handleReject(absence.id_absence)}
                             className="p-1 text-red-600 hover:text-red-700"
                             title="Refuser"
                           >

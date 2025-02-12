@@ -17,19 +17,24 @@ router.get('/select', async (req, res) => {
               nom: true,
               prenom: true,
             }
+          },
+          groupe_etudiant: {
+            select: {
+              groupe: {
+                select: {
+                  id_grp: true,
+                  libelle: true,
+                }
+              }
+            }
           }
         }
       },
       cours: {
         select: {
-          groupe: {
-            select: {
-              id_grp: true,
-              libelle: true,
-            }
-          },
           module: {
             select: {
+              id_module: true,
               codeapogee: true,
               libelle: true,
             }
@@ -40,6 +45,7 @@ router.get('/select', async (req, res) => {
       updatedat: true,
       valide: true,
       envoye: true,
+      justificatif: true,
     },
     orderBy: {
       createdat: 'asc',  // Tri par date de création
