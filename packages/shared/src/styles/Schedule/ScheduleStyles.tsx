@@ -1,4 +1,10 @@
+// ScheduleStyles.tsx
 import { StyleSheet } from 'react-native'
+
+// Hauteur fixe pour chaque cellule d'heure (11 heures au total)
+const HOUR_HEIGHT = 70
+const HOURS_COLUMN_WIDTH = 50
+const TOTAL_HOURS = 11
 
 export const styles = StyleSheet.create({
   container: {
@@ -6,11 +12,11 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'rgb(46, 52, 148)',
-    marginBottom: 16,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 10,
+    margin: 10,
   },
   scheduleContainer: {
     backgroundColor: '#fff',
@@ -25,46 +31,90 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
-  headerCell: {
-    flex: 1,
+  headerHourCell: {
+    width: HOURS_COLUMN_WIDTH,
     padding: 12,
     fontWeight: '500',
     color: '#555',
     textAlign: 'center',
   },
-  scheduleRow: {
+  headerDayCell: {
+    flex: 1,
+    padding: 12,
+    fontWeight: '500',
+    color: '#555',
+    textAlign: 'center',
+    borderLeftWidth: 1,
+    borderLeftColor: '#ddd',
+  },
+  scheduleContent: {
     flexDirection: 'row',
+    position: 'relative', // Pour que les lignes de la grille se positionnent correctement
+  },
+  gridLines: {
+    position: 'absolute',
+    left: 50, // Largeur de la colonne des heures
+    right: 0,
+    top: 0,
+    height: HOUR_HEIGHT * TOTAL_HOURS,
+  },
+  horizontalLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+  hoursColumn: {
+    width: 50,
+    zIndex: 1, // Pour s'assurer que la colonne des heures reste au-dessus des lignes
+  },
+  hourCell: {
+    height: HOUR_HEIGHT,
+    justifyContent: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
-  hourCell: {
-    flex: 1,
-    padding: 12,
+  hourText: {
     fontSize: 12,
     color: '#555',
     textAlign: 'center',
   },
-  dayCell: {
+  daysContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  dayColumn: {
     flex: 1,
     borderLeftWidth: 1,
     borderLeftColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 8,
+    height: HOUR_HEIGHT * TOTAL_HOURS,
+    position: 'relative',
+  },
+  courseRoom: {
+    marginTop: 4,
+    fontSize: 10,
+    color: '#666',
   },
   courseButton: {
-    width: '100%',
     padding: 8,
     borderRadius: 4,
-    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+    backgroundColor: 'rgb(197, 225, 255)',
+    justifyContent: 'flex-start', // Changed from 'center' to 'flex-start'
+    alignItems: 'flex-start', // Added this line
+    zIndex: 2,
   },
   courseTitle: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
     color: '#2E3494',
   },
-  courseRoom: {
-    fontSize: 12,
-    color: '#666',
+  // Ajout des styles pour la troncature
+  courseContent: {
+    width: '100%',
+    overflow: 'hidden',
+  },
+  courseText: {
+    width: '100%',
   },
 })
