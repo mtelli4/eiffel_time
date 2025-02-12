@@ -71,7 +71,7 @@ export function Schedule() {
   }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/schedule`)
+    fetch(`${API_URL}/api/schedule/schedule`)
       .then((response) => {
         if (!response.ok) throw new Error('Erreur réseau')
         return response.json() as Promise<Record<string, any>>

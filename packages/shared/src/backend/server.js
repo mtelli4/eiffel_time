@@ -34,7 +34,7 @@ app.use(express.json());
 // Intégration des routes dans l'application Express
 app.use('/api', routes);  // Assurez-vous que les routes sont préfixées par "/api"
 
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
 // Lancer le serveur sur le port 4000
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur http://localhost:${PORT}`);
