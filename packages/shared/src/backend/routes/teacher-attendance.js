@@ -69,6 +69,11 @@ router.get('/select', async (req, res) => {
       omit: {
         vacataire: true,
       },
+      where: {
+        enseignant_module: {
+          some: {}
+        }
+      }
     });
 
     const hoursPerModule = await getHoursPerModule();

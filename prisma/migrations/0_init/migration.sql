@@ -194,7 +194,6 @@ CREATE TABLE "utilisateur" (
     "email" VARCHAR(255),
     "mdp" VARCHAR(255),
     "salt" VARBIT(16),
-    "premiereconnexion" BOOLEAN,
     "statut" "statut_utilisateur",
     "createdat" TIMESTAMP(6) NOT NULL,
     "updatedat" TIMESTAMP(6) NOT NULL,
