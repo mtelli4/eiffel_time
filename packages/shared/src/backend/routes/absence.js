@@ -13,6 +13,7 @@ router.get('/select', async (req, res) => {
         select: {
           utilisateur: {
             select: {
+              id_utilisateur: true,
               nom: true,
               prenom: true,
             }

@@ -6,8 +6,9 @@ import {
   Search,
   X as XIcon,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '../../../../shared/src/lib/utils'
+import { API_URL } from '../../../../shared/src/types/types'
 
 interface Student {
   id: string
@@ -17,14 +18,19 @@ interface Student {
 }
 
 interface Absence {
-  id: string
-  studentId: string
-  date: string
-  module: {
-    code: string
-    name: string
+  id_absence: string
+  etudiant: {
+    id_utilisateur: number
+    nom: string
+    prenom: string
   }
-  professor: string
+  module: {
+    codeapogee: string
+    libelle: string
+  }
+  date: string
+  envoye: boolean
+  valide: boolean
   status: 'pending' | 'approved' | 'rejected'
   justification?: string
   document?: string
@@ -32,12 +38,12 @@ interface Absence {
 }
 
 // Mock data
-const MOCK_STUDENTS: Student[] = [
+/* const MOCK_STUDENTS: Student[] = [
   { id: '22001234', firstName: 'Jean', lastName: 'DUPONT', group: 'A1' },
   { id: '22001235', firstName: 'Marie', lastName: 'MARTIN', group: 'A2' },
-]
+] */
 
-const MOCK_ABSENCES: Absence[] = [
+/* const MOCK_ABSENCES: Absence[] = [
   {
     id: 'abs1',
     studentId: '22001234',
@@ -60,10 +66,10 @@ const MOCK_ABSENCES: Absence[] = [
     document: 'https://example.com/justification2.pdf',
     submissionDate: '2024-03-21',
   },
-]
+] */
 
 export function ManageAbsences() {
-  const [absences, setAbsences] = useState<Absence[]>(MOCK_ABSENCES)
+  const [absences, setAbsences] = useState<Absence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<
     Absence['status'] | 'all'
@@ -72,10 +78,35 @@ export function ManageAbsences() {
   const [endDate, setEndDate] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
+  useEffect(() => {
+    fetch(`${API_URL}/api/absences/select`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAbsences(data.map((absence: any) => ({
+          id_absence: absence.id_absence,
+          etudiant: {
+            id_utilisateur: absence.etudiant.id_utilisateur,
+            nom: absence.etudiant.nom,
+            prenom: absence.etudiant.prenom,
+          },
+          groupe: absence.cours.groupe,
+          module: {
+            codeapogee: absence.module.codeapogee,
+            libelle: absence.module.libelle,
+          },
+          date: absence.debut,
+          envoye: absence.envoye,
+          valide: absence.valide,
+        })))
+        console.log('Absences:', absences)
+      })
+      .catch((error) => console.error('Error:', error))
+  })
+
   const handleApprove = (absenceId: string) => {
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id === absenceId ? { ...abs, status: 'approved' } : abs
+        abs.id_absence === absenceId ? { ...abs, status: 'approved' } : abs
       )
     )
   }
@@ -83,7 +114,7 @@ export function ManageAbsences() {
   const handleReject = (absenceId: string) => {
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id === absenceId ? { ...abs, status: 'rejected' } : abs
+        abs.id_absence === absenceId ? { ...abs, status: 'rejected' } : abs
       )
     )
   }
@@ -93,9 +124,9 @@ export function ManageAbsences() {
   }
 
   const filteredAbsences = absences.filter((absence) => {
-    const student = MOCK_STUDENTS.find((s) => s.id === absence.studentId)
+    const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
     const searchString =
-      `${student?.firstName} ${student?.lastName} ${absence.module.code} ${absence.module.name}`.toLowerCase()
+      `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
     const matchesStatus =
       selectedStatus === 'all' || absence.status === selectedStatus
@@ -229,12 +260,12 @@ export function ManageAbsences() {
           </thead>
           <tbody>
             {filteredAbsences.map((absence) => {
-              const student = MOCK_STUDENTS.find(
-                (s) => s.id === absence.studentId
+              const student = absences.find(
+                (s) => s.id_absence === absence.id_absence
               )
               return (
                 <tr
-                  key={absence.id}
+                  key={absence.id_absence}
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4">
