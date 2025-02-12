@@ -57,23 +57,24 @@ export interface UserUpdate {
 }
 
 export interface CourseModalProps {
-  course: Course
+  course: COURSE
   onClose: () => void
   onPresenceCheck: () => void
 }
 
-export interface Course {
-  id: number
-  subject: string
-  professor: string
-  room: string
-  startTime: string
-  endTime: string
+export type COURSE = {
+  id: string
+  summary: string
+  teacher: string
+  location: string
+  start: string
+  end: string
+  group: string 
   day: string
-  type: string
-  startHour: number
-  duration: number
+  date: Date
+  duration?: number
 }
+
 export interface PlannedHours {
   CM: number
   TD: number

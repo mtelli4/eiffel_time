@@ -3,6 +3,16 @@ const { PrismaClient } = require('@prisma/client') // Import du client Prisma
 const prisma = new PrismaClient() // Initialisation du client Prisma
 const router = express.Router() // Initialisation du routeur Express
 const { hashPassword, comparePasswords, generateSalt } = require('./password')
+const { fetchCalendar } = require('./schedule')
+
+router.get('/schedule', async (req, res) => {
+  try {
+    const data = await fetchCalendar();
+    res.json(data)
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 router.post('/signin', async (req, res) => {
   try {
