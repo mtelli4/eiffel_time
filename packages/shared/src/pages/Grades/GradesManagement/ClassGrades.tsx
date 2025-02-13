@@ -203,6 +203,9 @@ export function ClassGrades() {
                                 ? `${n.getNote()}/${e.getNoteMax()}`
                                 : '-'}
                             </Text>
+                            <Text>
+                              {n.getCommentaire()}
+                            </Text>
                             <Text
                               style={
                                 styles.tableCell
