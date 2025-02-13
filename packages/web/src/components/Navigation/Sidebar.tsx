@@ -32,7 +32,7 @@ interface SidebarProps {
 const navigationConfig = {
   student: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
-    { icon: UserCheck, label: 'Absences', path: '/absences' },
+    { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     { icon: ClipboardList, label: 'Notes', path: '/grades' },
   ],
   teacher: [
