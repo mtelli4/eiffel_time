@@ -103,7 +103,8 @@ const MOCK_UES: UE[] = [
 export function Grades() {
   const [expandedUEs, setExpandedUEs] = useState<string[]>([])
   const [expandedModules, setExpandedModules] = useState<string[]>([])
-  const id = 1
+  const id = 3
+
   useEffect(() => {
     fetch(`${API_URL}/api/notes/${id}`)
       .then((res) => res.json())

@@ -4,24 +4,24 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get('/select', async (req, res) => {
-  // Utilisation de req.query pour passer l'ID en paramètre de requête
-  const { id } = req.query;
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  
   try {
-    const note = await prisma.notes.findMany({
+    const notesParBloc = await prisma.bloc_competence.findMany({
       select: {
-        note: true,
-        commentaire: true,
-      },
-      where: {
-        id_utilisateur: Number(id) || 1,  // Utilisation de l'ID passé ou valeur par défaut 1
+        id_bloc_comp: true,
+        libelle: true,
+        
       },
       orderBy: {
-        createdat: 'asc',  // Tri par date de création
+        id_bloc_comp: 'asc'
       },
     });
-    res.json(note);
+
+    res.json(notesParBloc);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
