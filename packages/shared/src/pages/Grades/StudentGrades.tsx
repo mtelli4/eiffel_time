@@ -1,7 +1,7 @@
 import { ChevronDown, Clock, FileDown, FileSpreadsheet } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '../../lib/utils'
-import { PlannedHours } from '../../types/types'
+import { API_URL, PlannedHours } from '../../types/types'
 
 interface Grade {
   id: string
@@ -103,6 +103,13 @@ const MOCK_UES: UE[] = [
 export function Grades() {
   const [expandedUEs, setExpandedUEs] = useState<string[]>([])
   const [expandedModules, setExpandedModules] = useState<string[]>([])
+  const id = 1
+  useEffect(() => {
+    fetch(`${API_URL}/api/notes/${id}`)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err))
+  })
 
   const toggleUE = (ueId: string) => {
     setExpandedUEs((prev) =>
