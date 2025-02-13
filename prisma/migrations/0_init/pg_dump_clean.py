@@ -23,7 +23,7 @@ def run_pg_dump(user, database, output_file, schema):
         exit(1)
 
 # Fonction pour nettoyer le fichier dump
-def clean_dump_file(input_file, output_file):
+def clean_dump_file(input_file, output_file, schema):
     if not os.path.exists(input_file):
         print(f"Fichier {input_file} introuvable.")
         exit(1)
@@ -33,6 +33,8 @@ def clean_dump_file(input_file, output_file):
         lines = infile.readlines()
 
     with open(output_file, "w") as outfile:
+        outfile.write(f"-- Dump nettoyé à partir de {input_file}\n")
+        outfile.write(f"SET search_path SET {schema};\n\n")
         for line in lines:
             # Exclure les lignes commençant par "SET" ou contenant "pg_catalog.set_config"
             if not line.startswith("SET ") and "pg_catalog.set_config('search_path', '', false);" not in line:
@@ -59,7 +61,7 @@ def main():
     run_pg_dump(args.user, args.database, args.output, args.schema)
     
     # Nettoyer le fichier dump
-    clean_dump_file(args.output, args.clean_output)
+    clean_dump_file(args.output, args.clean_output, args.schema)
 
 if __name__ == "__main__":
     main()
