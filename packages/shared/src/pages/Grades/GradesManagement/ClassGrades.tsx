@@ -3,6 +3,9 @@ import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Cours, Etudiant, Evaluation, Module, Note } from '../../../backend/classes'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
+import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
+import { Button } from '@shared/components/Button/Button'
+
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
@@ -13,6 +16,10 @@ export function ClassGrades() {
   const [notes, setNotes] = useState<Note[]>([])
   const [cours, setCours] = useState<Cours[]>([])
   const [evaluations, setEvaluations] = useState<Evaluation[]>([])
+  const [showAddNote, setShowAddNote] = useState(false);
+  const [selectedEvaluation, setSelectedEvaluation] = useState<Evaluation | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null);
+
 
   useEffect(() => {
     fetch('http://localhost:4000/api/data/data')
@@ -67,6 +74,12 @@ export function ClassGrades() {
         .toLowerCase()
         .includes(searchQuery.toLowerCase()),
   )
+  const handleAddNote = () => {
+
+    setShowAddNote(true);
+  };
+
+
 
   const hasEvaluations = (id_module: number) => {
     /* récupérer le nombre de notes pour un module donné, sachant que chaque note est liée à une évaluation qui est liée à un cours qui est lié à un module */
@@ -86,13 +99,16 @@ export function ClassGrades() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
+        {<TouchableOpacity
           onPress={handleAddGrade}
           style={styles.addButton}
         >
-          {/* Replace with appropriate icon */}
+
           <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
+
+
+        <Button label='Nouvelle Note' onPress={handleAddNote} />
       </View>
 
       <View style={styles.searchContainer}>
@@ -117,8 +133,20 @@ export function ClassGrades() {
               evaluations.map((e) => (
                 e.getCoursId() === module.getId() && (
                   <View key={e.getId()} style={styles.evaluationCard}>
+
                     <View style={styles.evaluationHeader}>
                       <Text style={styles.evaluationTitle}>{e.getLibelle()}</Text>
+
+                      {/* <TouchableOpacity
+                        onPress={() => handleAddNote(e)} // On passe juste l'évaluation
+                        style={styles.addButton}
+                      >
+                        <Text style={styles.lblAddbtn}>Nouvelle note</Text>
+                      </TouchableOpacity> */}
+
+
+
+
                       <Text style={styles.evaluationSubtitle}>
                         Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
                         Date :{' '}
@@ -144,13 +172,17 @@ export function ClassGrades() {
                               etudiant.getId() ===
                               n.getUtilisateurId(),
                           )
+
+
+
+
                         return (
                           <View
-                            key={ 'e' + n.getEvaluationId() + 'u' + n.getUtilisateurId() }
-                            style={ styles.tableRow }
+                            key={'e' + n.getEvaluationId() + 'u' + n.getUtilisateurId()}
+                            style={styles.tableRow}
                           >
                             <Text
-                              style={ styles.tableCell }
+                              style={styles.tableCell}
                             >
                               {etudiant?.getNumeroEtudiant()}
                             </Text>
@@ -170,6 +202,9 @@ export function ClassGrades() {
                                 null
                                 ? `${n.getNote()}/${e.getNoteMax()}`
                                 : '-'}
+                            </Text>
+                            <Text>
+                              {n.getCommentaire()}
                             </Text>
                             <Text
                               style={
@@ -207,6 +242,18 @@ export function ClassGrades() {
           cours={cours}
         />
       )}
+      {showAddNote && (
+        <WebAddNoteModal
+          isOpen={showAddNote}
+          onClose={() => setShowAddNote(false)}
+          evaluations={evaluations} // 
+          students={etudiants}
+        />
+      )}
+
+
+
+
     </View>
   )
 }
