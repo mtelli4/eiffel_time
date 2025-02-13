@@ -269,6 +269,9 @@ ALTER TABLE "etudiant" ADD CONSTRAINT "etudiant_id_utilisateur_fkey" FOREIGN KEY
 ALTER TABLE "evaluation" ADD CONSTRAINT "evaluation_id_cours_fkey" FOREIGN KEY ("id_cours") REFERENCES "cours"("id_cours") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
+ALTER TABLE "evaluation" ADD CONSTRAINT "evaluation_id_module_fkey" FOREIGN KEY ("id_module") REFERENCES "module"("id_module") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
 ALTER TABLE "evaluation" ADD CONSTRAINT "evaluation_id_notif_fkey" FOREIGN KEY ("id_notif") REFERENCES "notification"("id_notif") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey

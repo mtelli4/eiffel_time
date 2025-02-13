@@ -1,3 +1,6 @@
+-- Dump nettoyé à partir de prisma/migrations/0_init/ingrid_data.sql
+SET search_path SET ingrid;
+
 --
 -- PostgreSQL database dump
 --
@@ -116,7 +119,7 @@ INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@you
 INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-02-10 18:47:16.102');
+INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@gmail.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-02-13 13:36:40.284');
 INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
 INSERT INTO ingrid.utilisateur VALUES (19, 'Mariya Constantine', 'Cédric', 'cedric.mc11@gmail.com', NULL, NULL, 'administrator', '2025-02-05 10:27:39.307', '2025-02-05 10:27:39.307');
 INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, 'teacher', '2024-01-21 00:00:00', '2025-02-06 20:40:41.284');
@@ -247,6 +250,8 @@ INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2
 INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3, 33);
 INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3, 39);
 INSERT INTO ingrid.evaluation VALUES (100, 'test', 1, 20, NULL, '2025-01-27 21:39:05.254', NULL, 1, 3, 1);
+INSERT INTO ingrid.evaluation VALUES (101, 'derrick', 1, 100, NULL, '2025-02-13 07:38:55.519', NULL, 1, 3, 1);
+INSERT INTO ingrid.evaluation VALUES (102, 'Testest', 1, 20, NULL, '2025-02-13 13:33:47.324', NULL, 1, 3, 1);
 
 
 --
@@ -466,6 +471,8 @@ INSERT INTO ingrid.notes VALUES (15, 10, 16.00, 'Bonne préparation.', '2025-02-
 INSERT INTO ingrid.notes VALUES (16, 10, 15.50, 'Quelques lacunes dans les détails.', '2025-02-15 14:20:00', '2025-02-16 14:20:00');
 INSERT INTO ingrid.notes VALUES (17, 11, 4.00, 'Manque de révision.', '2025-02-20 12:00:00', '2025-02-21 12:00:00');
 INSERT INTO ingrid.notes VALUES (8, 11, 5.00, 'Réponse correcte, mais incomplète.', '2025-02-20 12:30:00', '2025-02-21 12:30:00');
+INSERT INTO ingrid.notes VALUES (17, 101, 0.00, 'Horrible', '2025-02-13 07:40:04.669', '2025-02-13 07:40:04.669');
+INSERT INTO ingrid.notes VALUES (9, 102, 0.00, 'NUl', '2025-02-13 13:34:14.231', '2025-02-13 13:34:14.231');
 
 
 --

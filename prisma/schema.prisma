@@ -106,6 +106,7 @@ model evaluation {
   id_notif     Int
   id_module    Int
   cours        cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
+  module       module       @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   notification notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
   notes        notes[]
 }
@@ -159,6 +160,7 @@ model module {
   heures                 String?                  @db.VarChar(50)
   cours                  cours[]
   enseignant_module      enseignant_module[]
+  evaluation             evaluation[]
   module_bloc_competence module_bloc_competence[]
 }
 
