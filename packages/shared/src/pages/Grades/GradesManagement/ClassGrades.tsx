@@ -1,11 +1,22 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { Cours, Etudiant, Evaluation, Module, Note } from '../../../backend/classes'
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import {
+  Cours,
+  Etudiant,
+  Evaluation,
+  Module,
+  Note,
+} from '../../../backend/classes'
+import { Button } from '../../../components/Button/Button'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
-import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
-import { Button } from '@shared/components/Button/Button'
-
+import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
@@ -16,10 +27,10 @@ export function ClassGrades() {
   const [notes, setNotes] = useState<Note[]>([])
   const [cours, setCours] = useState<Cours[]>([])
   const [evaluations, setEvaluations] = useState<Evaluation[]>([])
-  const [showAddNote, setShowAddNote] = useState(false);
-  const [selectedEvaluation, setSelectedEvaluation] = useState<Evaluation | null>(null);
-  const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null);
-
+  const [showAddNote, setShowAddNote] = useState(false)
+  const [selectedEvaluation, setSelectedEvaluation] =
+    useState<Evaluation | null>(null)
+  const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
 
   useEffect(() => {
     fetch('http://localhost:4000/api/data/data')
@@ -34,26 +45,21 @@ export function ClassGrades() {
         setModules(modules)
 
         const etudiants = data.etudiants.map(
-          (e: any) => new Etudiant(e, e.utilisateur),
+          (e: any) => new Etudiant(e, e.utilisateur)
         )
         setEtudiants(etudiants)
 
         const notes = data.notes.map((n: any) => new Note(n))
         setNotes(notes)
 
-        const evaluations = data.evaluations.map(
-          (e: any) => new Evaluation(e),
-        )
+        const evaluations = data.evaluations.map((e: any) => new Evaluation(e))
         setEvaluations(evaluations)
 
         const cours = data.cours.map((c: any) => new Cours(c))
         setCours(cours)
       })
       .catch((error) => {
-        console.error(
-          'Erreur lors de la récupération des modules:',
-          error,
-        )
+        console.error('Erreur lors de la récupération des modules:', error)
       })
   }, [])
 
@@ -65,21 +71,12 @@ export function ClassGrades() {
 
   const filteredModules = modules.filter(
     (module) =>
-      module
-        .getLibelle()
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      module
-        .getCodeApogee()
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()),
+      module.getLibelle().toLowerCase().includes(searchQuery.toLowerCase()) ||
+      module.getCodeApogee().toLowerCase().includes(searchQuery.toLowerCase())
   )
   const handleAddNote = () => {
-
-    setShowAddNote(true);
-  };
-
-
+    setShowAddNote(true)
+  }
 
   const hasEvaluations = (id_module: number) => {
     /* récupérer le nombre de notes pour un module donné, sachant que chaque note est liée à une évaluation qui est liée à un cours qui est lié à un module */
@@ -99,16 +96,13 @@ export function ClassGrades() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {<TouchableOpacity
-          onPress={handleAddGrade}
-          style={styles.addButton}
-        >
+        {
+          <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
+            <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
+          </TouchableOpacity>
+        }
 
-          <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
-        </TouchableOpacity>}
-
-
-        <Button label='Nouvelle Note' onPress={handleAddNote} />
+        <Button label="Nouvelle Note" onPress={handleAddNote} />
       </View>
 
       <View style={styles.searchContainer}>
@@ -124,109 +118,80 @@ export function ClassGrades() {
         {filteredModules.map((module) => (
           <View key={module.getId()} style={styles.moduleCard}>
             <View style={styles.moduleHeader}>
-              <Text style={styles.moduleTitle}>
-                {module.getName()}
-              </Text>
+              <Text style={styles.moduleTitle}>{module.getName()}</Text>
             </View>
 
-            {hasEvaluations(module.getId()) && (
-              evaluations.map((e) => (
-                e.getCoursId() === module.getId() && (
-                  <View key={e.getId()} style={styles.evaluationCard}>
+            {hasEvaluations(module.getId()) &&
+              evaluations.map(
+                (e) =>
+                  e.getCoursId() === module.getId() && (
+                    <View key={e.getId()} style={styles.evaluationCard}>
+                      <View style={styles.evaluationHeader}>
+                        <Text style={styles.evaluationTitle}>
+                          {e.getLibelle()}
+                        </Text>
 
-                    <View style={styles.evaluationHeader}>
-                      <Text style={styles.evaluationTitle}>{e.getLibelle()}</Text>
-
-                      {/* <TouchableOpacity
+                        {/* <TouchableOpacity
                         onPress={() => handleAddNote(e)} // On passe juste l'évaluation
                         style={styles.addButton}
                       >
                         <Text style={styles.lblAddbtn}>Nouvelle note</Text>
                       </TouchableOpacity> */}
 
+                        <Text style={styles.evaluationSubtitle}>
+                          Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
+                          Date :{' '}
+                          {cours
+                            .find((c) => c.getId() === e.getCoursId())
+                            ?.getTime()}{' '}
+                          - Coefficient : {e.getCoefficient()}
+                        </Text>
+                      </View>
 
-
-
-                      <Text style={styles.evaluationSubtitle}>
-                        Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
-                        Date :{' '}
-                        {
-                          cours.find((c) => c.getId() === e.getCoursId())
-                            ?.getTime()
-                        } -{' '}
-                        Coefficient : {e.getCoefficient()}
-                      </Text>
-                    </View>
-
-                    <View style={styles.table}>
-                      {notes.map((n) => {
-                        if (
-                          n.getEvaluationId() !==
-                          e.getId()
-                        ) {
-                          return null
-                        }
-                        const etudiant =
-                          etudiants.find(
+                      <View style={styles.table}>
+                        {notes.map((n) => {
+                          if (n.getEvaluationId() !== e.getId()) {
+                            return null
+                          }
+                          const etudiant = etudiants.find(
                             (etudiant) =>
-                              etudiant.getId() ===
-                              n.getUtilisateurId(),
+                              etudiant.getId() === n.getUtilisateurId()
                           )
 
-
-
-
-                        return (
-                          <View
-                            key={'e' + n.getEvaluationId() + 'u' + n.getUtilisateurId()}
-                            style={styles.tableRow}
-                          >
-                            <Text
-                              style={styles.tableCell}
-                            >
-                              {etudiant?.getNumeroEtudiant()}
-                            </Text>
-                            <Text
-                              style={
-                                styles.tableCell
+                          return (
+                            <View
+                              key={
+                                'e' +
+                                n.getEvaluationId() +
+                                'u' +
+                                n.getUtilisateurId()
                               }
+                              style={styles.tableRow}
                             >
-                              {etudiant?.getFullName()}
-                            </Text>
-                            <Text
-                              style={
-                                styles.tableCell
-                              }
-                            >
-                              {n.getNote() !==
-                                null
-                                ? `${n.getNote()}/${e.getNoteMax()}`
-                                : '-'}
-                            </Text>
-                            <Text>
-                              {n.getCommentaire()}
-                            </Text>
-                            <Text
-                              style={
-                                styles.tableCell
-                              }
-                            >
-                              <Text
-                                style={
-                                  styles.gradeStatus
-                                }
-                              >
-                                'Publiée'
+                              <Text style={styles.tableCell}>
+                                {etudiant?.getNumeroEtudiant()}
                               </Text>
-                            </Text>
-                          </View>
-                        )
-                      })}
+                              <Text style={styles.tableCell}>
+                                {etudiant?.getFullName()}
+                              </Text>
+                              <Text style={styles.tableCell}>
+                                {n.getNote() !== null
+                                  ? `${n.getNote()}/${e.getNoteMax()}`
+                                  : '-'}
+                              </Text>
+                              <Text>{n.getCommentaire()}</Text>
+                              <Text style={styles.tableCell}>
+                                <Text style={styles.gradeStatus}>
+                                  'Publiée'
+                                </Text>
+                              </Text>
+                            </View>
+                          )
+                        })}
+                      </View>
                     </View>
-                  </View>
-                )
-              ))
-            )}
+                  )
+              )}
           </View>
         ))}
       </ScrollView>
@@ -246,14 +211,10 @@ export function ClassGrades() {
         <WebAddNoteModal
           isOpen={showAddNote}
           onClose={() => setShowAddNote(false)}
-          evaluations={evaluations} // 
+          evaluations={evaluations} //
           students={etudiants}
         />
       )}
-
-
-
-
     </View>
   )
 }
