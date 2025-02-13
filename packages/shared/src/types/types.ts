@@ -154,3 +154,13 @@ export type TeacherPlanning = {
   nom: string
   modules: Module[]
 }
+
+export const periodeLabels = {
+  Semestre_1: "Semestre 1",
+  Semestre_2: "Semestre 2",
+  Semestre_3: "Semestre 3",
+  Semestre_4: "Semestre 4",
+  Semestre_5: "Semestre 5",
+  Semestre_6: "Semestre 6",
+}
+
