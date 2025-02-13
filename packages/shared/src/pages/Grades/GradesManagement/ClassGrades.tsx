@@ -74,9 +74,8 @@ export function ClassGrades() {
         .toLowerCase()
         .includes(searchQuery.toLowerCase()),
   )
-  const handleAddNote = (evaluation: Evaluation) => {
-    console.log("Évaluation sélectionnée :", evaluation); // 🔥 Vérification
-    setSelectedEvaluation(evaluation);
+  const handleAddNote = () => {
+
     setShowAddNote(true);
   };
 
@@ -100,13 +99,16 @@ export function ClassGrades() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
+        {<TouchableOpacity
           onPress={handleAddGrade}
           style={styles.addButton}
         >
-          {/* Replace with appropriate icon */}
+
           <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
+
+
+        <Button label='Nouvelle Note' onPress={handleAddNote} />
       </View>
 
       <View style={styles.searchContainer}>
@@ -142,7 +144,7 @@ export function ClassGrades() {
                         <Text style={styles.lblAddbtn}>Nouvelle note</Text>
                       </TouchableOpacity> */}
 
-                      <Button label='Nouvelle Note' onPress={() => handleAddNote(e)} />
+
 
 
                       <Text style={styles.evaluationSubtitle}>
