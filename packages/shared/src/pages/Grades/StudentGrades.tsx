@@ -218,18 +218,13 @@ export function Grades() {
             >
               <div>
                 <h2 className="text-lg font-semibold text-primary">
-                  {bc.libelle} - {periodeLabels[bc.periode]} {/* prisma periode.bc.periode */}
+                  {bc.libelle} - {periodeLabels[bc.periode]}
                 </h2>
                 {/* <p className="text-sm text-gray-600">
                   ECTS : {bc.ects} • Moyenne : {bc.average.toFixed(2)}/20
                 </p> */}
               </div>
-              <ChevronDown
-                className={cn(
-                  'w-5 h-5 transition-transform',
-                  expandedUEs.includes(bc.id_bloc_comp.toString()) && 'transform rotate-180'
-                )}
-              />
+              <ChevronDown className={cn('w-5 h-5 transition-transform', expandedUEs.includes(bc.id_bloc_comp.toString()) && 'transform rotate-180')}/>
             </button>
 
             {expandedUEs.includes(bc.id_bloc_comp.toString()) && (
