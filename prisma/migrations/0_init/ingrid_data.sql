@@ -226,12 +226,12 @@ INSERT INTO ingrid.enseignant VALUES (1, NULL);
 -- Data for Name: enseignant_module; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.enseignant_module VALUES (10, 5);
-INSERT INTO ingrid.enseignant_module VALUES (3, 5);
-INSERT INTO ingrid.enseignant_module VALUES (1, 18);
-INSERT INTO ingrid.enseignant_module VALUES (2, 18);
-INSERT INTO ingrid.enseignant_module VALUES (4, 18);
-INSERT INTO ingrid.enseignant_module VALUES (5, 18);
+INSERT INTO ingrid.enseignant_module VALUES (10, 5, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (3, 5, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (1, 18, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (2, 18, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (4, 18, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (5, 18, NULL);
 
 
 --

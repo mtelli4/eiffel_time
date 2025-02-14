@@ -78,6 +78,7 @@ CREATE TABLE "enseignant" (
 CREATE TABLE "enseignant_module" (
     "id_module" INTEGER NOT NULL,
     "id_utilisateur" INTEGER NOT NULL,
+    "heures" VARCHAR(50),
 
     CONSTRAINT "enseignant_module_pkey" PRIMARY KEY ("id_module","id_utilisateur")
 );

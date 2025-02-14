@@ -76,6 +76,7 @@ model enseignant {
 model enseignant_module {
   id_module      Int
   id_utilisateur Int
+  heures         String?    @db.VarChar(50)
   module         module     @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   enseignant     enseignant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 
