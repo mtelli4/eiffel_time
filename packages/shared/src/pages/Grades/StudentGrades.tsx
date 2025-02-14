@@ -164,7 +164,7 @@ export function Grades() {
         setNotes(notes);
       })
       .catch((err) => console.error(err));
-  }, [id]);
+  }, []);
 
   const toggleUE = (ueId: string) => {
     setExpandedUEs((prev) =>

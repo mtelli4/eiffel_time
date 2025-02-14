@@ -60,7 +60,7 @@ export function Admin() {
         )
         setLoading(false)
       })
-  })
+  }, [])
 
   let showNotification: (type: 'success' | 'error', message: string) => void;
   let NotificationContainer: React.FC;
