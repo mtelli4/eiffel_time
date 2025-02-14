@@ -88,7 +88,7 @@ export function UserForm({
     if (formData.statut === 'teacher' && formData.vacataire === undefined) {
       alert('Un enseignant doit être soit titulaire soit vacataire')
     }
-    alert(`Données valides: ${JSON.stringify(formData)}`)
+    // alert(`Données valides: ${JSON.stringify(formData)}`)
     onSubmit(formData)
   }
 
