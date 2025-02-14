@@ -32,12 +32,12 @@ export function TeacherAttendance() {
     }
 
     loadComponents().then(r => r)
-  })
+  }, [])
 
   const [teachers, setTeachers] = useState<TeacherPlanning[]>([])
 
   useEffect(() => {
-    fetch(`${API_URL}/api/teacher-attendance/select`)
+    fetch(`${API_URL}/api/teacher-attendance/`)
       .then((response) => {
         if (!response.ok) throw new Error('Erreur réseau');
         return response.json() // Convertir la réponse en JSON

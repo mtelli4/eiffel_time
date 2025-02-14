@@ -42,10 +42,10 @@ async function getHoursPerModule() {
 }
 
 // Route pour récupérer l'ensemble des présences des enseignants pour chaque module
-router.get('/select', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const teacherAttendances = await prisma.enseignant.findMany({
-      include: {
+      select: {
         utilisateur: {
           select: {
             id_utilisateur: true,
@@ -54,7 +54,7 @@ router.get('/select', async (req, res) => {
           }
         },
         enseignant_module: {
-          include: {
+          select: {
             module: {
               select: {
                 id_module: true,
@@ -62,7 +62,8 @@ router.get('/select', async (req, res) => {
                 codeapogee: true,
                 heures: true,
               }
-            }
+            },
+            heures: true
           }
         }
       },
