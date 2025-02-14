@@ -65,8 +65,9 @@ export function AddAttendance({
               Enseignant
             </label>
             <Select
+              isClearable
               options={teachers.map(t => ({
-                value: t.id,
+                value: t.id_utilisateur,
                 label: t.prenom + ' ' + t.nom,
               }))}
               onChange={(options: any) => setFormData(prevState => ({
@@ -76,6 +77,25 @@ export function AddAttendance({
               placeholder="Sélectionner un enseignant"
               className="text-sm"
             />
+          </div>
+          <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            Module
+          </label>
+          <Select
+            isClearable
+            options={teachers.map(t => ({
+              value: t.id_utilisateur,
+              label: t.prenom + ' ' + t.nom,
+            }))}
+            onChange={(options: any) => setFormData(prevState => ({
+              ...prevState,
+              formations: options,
+            }))}
+            placeholder="Sélectionner un enseignant"
+            className="text-sm"
+          />
+          <div>
+
           </div>
 
           <div className="flex gap-3">
