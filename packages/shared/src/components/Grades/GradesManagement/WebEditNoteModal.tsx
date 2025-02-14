@@ -3,18 +3,19 @@ import { Note } from '../../../backend/classes';
 import { Etudiant } from '../../../backend/classes';
 import { Decimal } from '@prisma/client/runtime/library';
 
+
 interface EditNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  note: Note | null;
-  student: Etudiant | null; 
+  note: Note | null; // 📌 La note sélectionnée
+  students: any[];
 }
 
 export default function WebEditNoteModal({
   isOpen,
   onClose,
   note,
-  student, 
+  students,
 }: EditNoteModalProps) {
   const [formData, setFormData] = useState({
     id_eval: 0,
@@ -23,6 +24,7 @@ export default function WebEditNoteModal({
     commentaire: '',
   });
 
+  // 📌 Charger les données de la note sélectionnée
   useEffect(() => {
     if (note) {
       setFormData({
@@ -34,6 +36,42 @@ export default function WebEditNoteModal({
     }
   }, [note]);
 
+  const handleSubmit = async () => {
+    if (!formData.id_eval || !formData.id_utilisateur) {
+      alert("L'évaluation et l'étudiant sont requis");
+      return;
+    }
+    if (formData.note < 0 || formData.note > 20) {
+      alert('La note doit être comprise entre 0 et 20');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/note/update-note/${formData.id_utilisateur}/${formData.id_eval}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors de la modification de la note.");
+      }
+
+      const result = await response.json();
+      console.log('Note modifiée avec succès:', result);
+      onClose(); // Ferme la modal après succès
+    } catch (error: any) {
+      console.error('Erreur:', error);
+      alert("Une erreur s'est produite lors de la modification de la note: " + error.message);
+    }
+  };
+
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-[90%] max-w-2xl">
@@ -43,12 +81,16 @@ export default function WebEditNoteModal({
         </div>
 
         <div className="space-y-4">
-         
           <div>
             <label className="block text-sm font-medium mb-1">Étudiant</label>
-            <div className="w-full p-2 border rounded bg-gray-100 text-gray-700">
-            {student ? student.getFullName() : "Étudiant introuvable"}
-            </div>
+            <select disabled className="w-full p-2 border rounded">
+              {students.map((student) => (
+                <option key={student.id_utilisateur} value={student.id_utilisateur} 
+                  selected={student.id_utilisateur === formData.id_utilisateur}>
+                  {student.nom} {student.prenom}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -66,7 +108,7 @@ export default function WebEditNoteModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Commentaire</label>
+            <label className="block text-sm font-medium mb-1">Commentaire (optionnel)</label>
             <input
               type="text"
               value={formData.commentaire}
@@ -82,7 +124,7 @@ export default function WebEditNoteModal({
           <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">
             Annuler
           </button>
-          <button className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90">
+          <button onClick={handleSubmit} className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90">
             Enregistrer
           </button>
         </div>
@@ -90,4 +132,3 @@ export default function WebEditNoteModal({
     </div>
   );
 }
-

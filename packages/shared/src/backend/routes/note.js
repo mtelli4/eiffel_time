@@ -27,6 +27,43 @@ router.post('/insert-note', async (req, res) => {
     }
 });
 
+router.delete("/delete-note/:id_utilisateur/:id_eval", async (req, res) => {
+    try {
+      const { id_utilisateur, id_eval } = req.params;
+  
+   
+      const existingNote = await prisma.notes.findUnique({
+        where: {
+          id_utilisateur_id_eval: {
+            id_utilisateur: parseInt(id_utilisateur),
+            id_eval: parseInt(id_eval),
+          },
+        },
+      });
+  
+      if (!existingNote) {
+        return res.status(404).json({ error: "Note non trouvée." });
+      }
+  
+      await prisma.notes.delete({
+        where: {
+          id_utilisateur_id_eval: {
+            id_utilisateur: parseInt(id_utilisateur),
+            id_eval: parseInt(id_eval),
+          },
+        },
+      });
+  
+      res.status(200).json({ message: "Note supprimée avec succès." });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Erreur lors de la suppression de la note." });
+    }
+  });
+  
+
+
+  
 // 🔹 Route pour mettre à jour une note existante
 router.put('/update-note/:id_utilisateur/:id_eval', async (req, res) => {
     try {
@@ -68,5 +105,7 @@ router.put('/update-note/:id_utilisateur/:id_eval', async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la mise à jour de la note." });
     }
 });
+
+
 
 module.exports = router;

@@ -19,6 +19,7 @@ import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddN
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
 import { Edit2, Trash2 } from 'lucide-react'
+import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
@@ -35,7 +36,9 @@ export function ClassGrades() {
   const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
   const [showEditNote, setShowEditNote] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [showDeleteNote, setShowDeleteNote] = useState(false);
 
+  
 
   useEffect(() => {
     fetch('http://localhost:4000/api/data/data')
@@ -104,6 +107,12 @@ export function ClassGrades() {
     setSelectedStudent(student || null); // Si l'étudiant n'est pas trouvé, on met `null`
     setShowEditNote(true);
   };
+  
+  const handleDeleteNote = (note: Note) => {
+    setSelectedNote(note);
+    setShowDeleteNote(true);
+  };
+  
   
 
   return (
@@ -201,6 +210,15 @@ export function ClassGrades() {
         
           <Edit2 className="w-4 h-4" />
         </TouchableOpacity>
+
+        <TouchableOpacity 
+          onPress={() => handleDeleteNote(n)}
+          
+        >
+        
+          <Trash2 className="w-4 h-4" />
+          
+        </TouchableOpacity>
                             </View>
                           )
                         })}
@@ -232,14 +250,48 @@ export function ClassGrades() {
         />
       )}
 
-{showEditNote && selectedNote && selectedStudent && (
+{showEditNote && selectedNote && (
   <WebEditNoteModal
     isOpen={showEditNote}
     onClose={() => setShowEditNote(false)}
-    note={selectedNote}
-    student={selectedStudent} // 
+    note={selectedNote} // 🔥 Passe la note sélectionnée
+    students={etudiants}
   />
 )}
+
+
+{showDeleteNote && selectedNote && (
+  <WebDeleteNoteModal
+    isOpen={showDeleteNote}
+    onClose={() => setShowDeleteNote(false)}
+    onDelete={async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/note/delete-note/${selectedNote.getUtilisateurId()}/${selectedNote.getEvaluationId()}`,
+          { method: "DELETE" }
+        );
+
+        if (!response.ok) {
+          throw new Error("Erreur lors de la suppression de la note.");
+        }
+
+        setNotes((prevNotes) =>
+          prevNotes.filter(
+            (n) =>
+              n.getUtilisateurId() !== selectedNote.getUtilisateurId() ||
+              n.getEvaluationId() !== selectedNote.getEvaluationId()
+          )
+        );
+
+        console.log("Note supprimée avec succès.");
+      } catch (error) {
+        console.error("Erreur :", error);
+        alert("Une erreur s'est produite lors de la suppression de la note.");
+      }
+    }}
+  />
+)}
+
 
 
     </View>
