@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import { Evaluation } from '@shared/backend/classes';
 
 interface AddNoteModalProps {
     isOpen: boolean;
     onClose: () => void;
-    evaluations: any[]; // 🔥 On passe toutes les évaluations disponibles
+    evaluation: Evaluation | null; 
     students: any[];
 }
 
 export default function WebAddNoteModal({
     isOpen,
     onClose,
-    evaluations, // 🔥 Liste complète des évaluations
+    evaluation, 
     students,
 }: AddNoteModalProps) {
     const [formData, setFormData] = useState({
@@ -20,20 +21,26 @@ export default function WebAddNoteModal({
         commentaire: '',
     });
 
-    const handleSubmit = async () => {
-        console.log("Données envoyées :", formData); // 🔥 Vérification
 
-        if (!formData.id_eval || formData.id_eval === 0) {
-            alert('L’évaluation est requise')
-            return
+    useEffect(() => {
+        if (evaluation) {
+            setFormData((prev) => ({
+                ...prev,
+                id_eval: evaluation.getId(), 
+            }));
         }
+    }, [evaluation]);
+
+    const handleSubmit = async () => {
+        console.log("Données envoyées :", formData);
+
         if (!formData.id_utilisateur || formData.id_utilisateur === 0) {
-            alert('L’étudiant est requis')
-            return
+            alert('L’étudiant est requis');
+            return;
         }
         if (formData.note < 0 || formData.note > 20) {
-            alert('La note doit être comprise entre 0 et 20')
-            return
+            alert('La note doit être comprise entre 0 et 20');
+            return;
         }
 
         try {
@@ -47,65 +54,38 @@ export default function WebAddNoteModal({
             );
 
             if (!response.ok) {
-                const errorData = await response.json()
-                throw new Error(
-                    errorData.message ||
-                    "Erreur lors de l'ajout de la note."
-                )
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de l'ajout de la note.");
             }
 
-            const result = await response.json()
-            console.log('Note ajoutée avec succès:', result)
-            onClose() // Ferme la modal après succès
+            const result = await response.json();
+            console.log('Note ajoutée avec succès:', result);
+            onClose();
         } catch (error: any) {
-            console.error('Erreur:', error)
-            alert(
-                "Une erreur s'est produite lors de l'ajout de la note: " +
-                error.message
-            )
+            console.error('Erreur:', error);
+            alert("Une erreur s'est produite lors de l'ajout de la note: " + error.message);
         }
-    }
+    };
 
-    if (!isOpen) return null
+    if (!isOpen || !evaluation) return null; 
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-[90%] max-w-2xl">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold">Ajouter une Note</h2>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700"
-                    >
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
                         ×
                     </button>
                 </div>
 
                 <div className="space-y-4">
-                    {/* Sélection de l'évaluation */}
+                    
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            Sélectionner une évaluation
+                            Évaluation sélectionnée
                         </label>
-                        <select
-                            value={formData.id_eval || ''} // 🔥 Empêche d'afficher NaN
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    id_eval: parseInt(e.target.value) || 0, // 🔥 Assure que `id_eval` est un nombre
-                                })
-                            }
-                            className="w-full p-2 border rounded"
-                        >
-                            <option value="">Sélectionner une évaluation</option>
-                            {evaluations.map((evaluation) => (
-                                <option key={evaluation.getId()} value={evaluation.getId()}>
-                                    {evaluation.getLibelle()} {/* 🔥 Affichage uniquement du nom */}
-                                </option>
-                            ))}
-                        </select>
-
-
+                        <p className="p-2 border rounded bg-gray-100">{evaluation.getLibelle()}</p>
                     </div>
 
                     {/* Sélection de l'étudiant */}
@@ -173,16 +153,10 @@ export default function WebAddNoteModal({
 
                 {/* Boutons Annuler / Enregistrer */}
                 <div className="flex justify-end gap-3 mt-4">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
-                    >
+                    <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">
                         Annuler
                     </button>
-                    <button
-                        onClick={handleSubmit}
-                        className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90"
-                    >
+                    <button onClick={handleSubmit} className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90">
                         Enregistrer
                     </button>
                 </div>

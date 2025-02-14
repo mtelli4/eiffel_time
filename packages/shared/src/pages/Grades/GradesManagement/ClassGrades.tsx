@@ -17,6 +17,9 @@ import { Button } from '../../../components/Button/Button'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
 import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
+import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
+import { Edit2, Plus, Trash2 } from 'lucide-react'
+import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
@@ -31,6 +34,11 @@ export function ClassGrades() {
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<Evaluation | null>(null)
   const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
+  const [showEditNote, setShowEditNote] = useState(false);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [showDeleteNote, setShowDeleteNote] = useState(false);
+
+  
 
   useEffect(() => {
     fetch('http://localhost:4000/api/data/data')
@@ -74,9 +82,11 @@ export function ClassGrades() {
       module.getLibelle().toLowerCase().includes(searchQuery.toLowerCase()) ||
       module.getCodeApogee().toLowerCase().includes(searchQuery.toLowerCase())
   )
-  const handleAddNote = () => {
-    setShowAddNote(true)
-  }
+  const handleAddNote = (evaluation: Evaluation) => {
+    setSelectedEvaluation(evaluation); // Stocker l'évaluation sélectionnée
+    setShowAddNote(true); // Ouvrir le modal d'ajout de note
+  };
+  
 
   const hasEvaluations = (id_module: number) => {
     /* récupérer le nombre de notes pour un module donné, sachant que chaque note est liée à une évaluation qui est liée à un cours qui est lié à un module */
@@ -93,16 +103,31 @@ export function ClassGrades() {
     return count.length > 0
   }
 
+  const handleEditNote = (note: Note) => {
+    const student = etudiants.find((etudiant) => etudiant.getId() === note.getUtilisateurId());
+    setSelectedNote(note);
+    setSelectedStudent(student || null); // Si l'étudiant n'est pas trouvé, on met `null`
+    setShowEditNote(true);
+  };
+  
+  const handleDeleteNote = (note: Note) => {
+    setSelectedNote(note);
+    setShowDeleteNote(true);
+  };
+  
+  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {
+        
           <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
-            <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
-          </TouchableOpacity>
-        }
 
-        <Button label="Nouvelle Note" onPress={handleAddNote} />
+            <Plus className="w-4 h-4" />
+          </TouchableOpacity>
+        
+     
+       
       </View>
 
       <View style={styles.searchContainer}>
@@ -128,16 +153,13 @@ export function ClassGrades() {
                     <View key={e.getId()} style={styles.evaluationCard}>
                       <View style={styles.evaluationHeader}>
                         <Text style={styles.evaluationTitle}>
-                          {e.getLibelle()}
+                          {e.getLibelle()}  <TouchableOpacity onPress={() => handleAddNote(e)}  style={styles.addButton}>
+  <Plus className="w-4 h-4" />
+</TouchableOpacity>
+
                         </Text>
-
-                        {/* <TouchableOpacity
-                        onPress={() => handleAddNote(e)} // On passe juste l'évaluation
-                        style={styles.addButton}
-                      >
-                        <Text style={styles.lblAddbtn}>Nouvelle note</Text>
-                      </TouchableOpacity> */}
-
+      
+                 
                         <Text style={styles.evaluationSubtitle}>
                           Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
                           Date :{' '}
@@ -185,6 +207,27 @@ export function ClassGrades() {
                                   'Publiée'
                                 </Text>
                               </Text>
+                      
+
+                 
+                             
+        <TouchableOpacity 
+          onPress={() => handleEditNote(n)}
+          
+        >
+        
+          <Edit2 className="w-4 h-4" />
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          onPress={() => handleDeleteNote(n)}
+          
+        >
+        
+          <Trash2 className="w-4 h-4" />
+          
+          
+        </TouchableOpacity>
                             </View>
                           )
                         })}
@@ -207,14 +250,61 @@ export function ClassGrades() {
           cours={cours}
         />
       )}
-      {showAddNote && (
-        <WebAddNoteModal
-          isOpen={showAddNote}
-          onClose={() => setShowAddNote(false)}
-          evaluations={evaluations} //
-          students={etudiants}
-        />
-      )}
+   {showAddNote && selectedEvaluation && (
+  <WebAddNoteModal
+    isOpen={showAddNote}
+    onClose={() => setShowAddNote(false)}
+    evaluation={selectedEvaluation} 
+    students={etudiants}
+  />
+)}
+
+
+
+{showEditNote && selectedNote && selectedStudent && (
+  <WebEditNoteModal
+    isOpen={showEditNote}
+    onClose={() => setShowEditNote(false)}
+    note={selectedNote}
+    student={selectedStudent} 
+  />
+)}
+
+
+{showDeleteNote && selectedNote && (
+  <WebDeleteNoteModal
+    isOpen={showDeleteNote}
+    onClose={() => setShowDeleteNote(false)}
+    onDelete={async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/note/delete-note/${selectedNote.getUtilisateurId()}/${selectedNote.getEvaluationId()}`,
+          { method: "DELETE" }
+        );
+
+        if (!response.ok) {
+          throw new Error("Erreur lors de la suppression de la note.");
+        }
+
+        setNotes((prevNotes) =>
+          prevNotes.filter(
+            (n) =>
+              n.getUtilisateurId() !== selectedNote.getUtilisateurId() ||
+              n.getEvaluationId() !== selectedNote.getEvaluationId()
+          )
+        );
+
+        console.log("Note supprimée avec succès.");
+      } catch (error) {
+        console.error("Erreur :", error);
+        alert("Une erreur s'est produite lors de la suppression de la note.");
+      }
+    }}
+  />
+)}
+
+
+
     </View>
   )
 }
