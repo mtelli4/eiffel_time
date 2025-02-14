@@ -155,6 +155,13 @@ export type TeacherPlanning = {
   modules: Module[]
 }
 
+export interface TeacherPlanningForm {
+  id_utilisateur: number
+  id_module: number
+  type: any
+  presences: number // It's the number of hours to add for the selected type
+}
+
 export const periodeLabels = {
   Semestre_1: "Semestre 1",
   Semestre_2: "Semestre 2",
