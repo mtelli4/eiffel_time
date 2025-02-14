@@ -18,7 +18,7 @@ import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGr
 import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
-import { Edit2, Trash2 } from 'lucide-react'
+import { Edit2, Plus, Trash2 } from 'lucide-react'
 import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
 
 export function ClassGrades() {
@@ -82,9 +82,11 @@ export function ClassGrades() {
       module.getLibelle().toLowerCase().includes(searchQuery.toLowerCase()) ||
       module.getCodeApogee().toLowerCase().includes(searchQuery.toLowerCase())
   )
-  const handleAddNote = () => {
-    setShowAddNote(true)
-  }
+  const handleAddNote = (evaluation: Evaluation) => {
+    setSelectedEvaluation(evaluation); // Stocker l'évaluation sélectionnée
+    setShowAddNote(true); // Ouvrir le modal d'ajout de note
+  };
+  
 
   const hasEvaluations = (id_module: number) => {
     /* récupérer le nombre de notes pour un module donné, sachant que chaque note est liée à une évaluation qui est liée à un cours qui est lié à un module */
@@ -118,13 +120,14 @@ export function ClassGrades() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {
+        
           <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
-            <Text style={styles.lblAddbtn}>Nouvelle évaluation</Text>
-          </TouchableOpacity>
-        }
 
-        <Button label="Nouvelle Note" onPress={handleAddNote} />
+            <Plus className="w-4 h-4" />
+          </TouchableOpacity>
+        
+     
+       
       </View>
 
       <View style={styles.searchContainer}>
@@ -150,9 +153,12 @@ export function ClassGrades() {
                     <View key={e.getId()} style={styles.evaluationCard}>
                       <View style={styles.evaluationHeader}>
                         <Text style={styles.evaluationTitle}>
-                          {e.getLibelle()}
-                        </Text>
+                          {e.getLibelle()}  <TouchableOpacity onPress={() => handleAddNote(e)}>
+  <Plus className="w-4 h-4" />
+</TouchableOpacity>
 
+                        </Text>
+      
                  
                         <Text style={styles.evaluationSubtitle}>
                           Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
@@ -201,7 +207,9 @@ export function ClassGrades() {
                                   'Publiée'
                                 </Text>
                               </Text>
+                      
 
+                 
                              
         <TouchableOpacity 
           onPress={() => handleEditNote(n)}
@@ -217,6 +225,7 @@ export function ClassGrades() {
         >
         
           <Trash2 className="w-4 h-4" />
+          
           
         </TouchableOpacity>
                             </View>
@@ -241,21 +250,23 @@ export function ClassGrades() {
           cours={cours}
         />
       )}
-      {showAddNote && (
-        <WebAddNoteModal
-          isOpen={showAddNote}
-          onClose={() => setShowAddNote(false)}
-          evaluations={evaluations} //
-          students={etudiants}
-        />
-      )}
+   {showAddNote && selectedEvaluation && (
+  <WebAddNoteModal
+    isOpen={showAddNote}
+    onClose={() => setShowAddNote(false)}
+    evaluation={selectedEvaluation} 
+    students={etudiants}
+  />
+)}
+
+
 
 {showEditNote && selectedNote && selectedStudent && (
   <WebEditNoteModal
     isOpen={showEditNote}
     onClose={() => setShowEditNote(false)}
     note={selectedNote}
-    student={selectedStudent} // 🔥 On passe l'étudiant sélectionné
+    student={selectedStudent} 
   />
 )}
 
