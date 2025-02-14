@@ -17,6 +17,7 @@ import { Button } from '../../../components/Button/Button'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
 import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
+import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
@@ -31,6 +32,9 @@ export function ClassGrades() {
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<Evaluation | null>(null)
   const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
+  const [showEditNote, setShowEditNote] = useState(false);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
 
   useEffect(() => {
     fetch('http://localhost:4000/api/data/data')
@@ -92,6 +96,12 @@ export function ClassGrades() {
     })
     return count.length > 0
   }
+
+  const handleEditNote = (note: Note) => {
+    setSelectedNote(note); // 📌 On stocke la note sélectionnée
+    setShowEditNote(true); // 📌 On affiche l'interface de modification
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -185,6 +195,14 @@ export function ClassGrades() {
                                   'Publiée'
                                 </Text>
                               </Text>
+
+                               {/* 📌 Bouton Modifier */}
+        <TouchableOpacity 
+          onPress={() => handleEditNote(n)}
+          style={styles.addButton}
+        >
+          <Text style={styles.lblAddbtn}>Modifier</Text>
+        </TouchableOpacity>
                             </View>
                           )
                         })}
@@ -215,6 +233,16 @@ export function ClassGrades() {
           students={etudiants}
         />
       )}
+
+{showEditNote && selectedNote && (
+  <WebEditNoteModal
+    isOpen={showEditNote}
+    onClose={() => setShowEditNote(false)}
+    note={selectedNote} // 🔥 Passe la note sélectionnée
+    students={etudiants}
+  />
+)}
+
     </View>
   )
 }
