@@ -87,7 +87,6 @@ export function TeacherAttendance() {
 
   const handleSubmit = async (data: TeacherPlanningForm) => {
     try {
-      console.log('Data:', data)
       const response = await fetch(`${API_URL}/api/teacher-attendance/update`, {
         method: 'PUT',
         headers: {
