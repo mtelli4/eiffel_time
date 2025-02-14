@@ -2,6 +2,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { UserProvider, useUser } from "./context/UserContext";
+import { useEffect } from "react";
 
 export default function Root() {
   return (
@@ -33,6 +34,12 @@ export function Error() {
 function InnerError() {
   const location = useLocation();
   const { role } = useUser();
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("dateFormat")) {
+      sessionStorage.setItem("dateFormat", "DD/MM/YYYY");
+    }
+  })
 
   return (
     <>
