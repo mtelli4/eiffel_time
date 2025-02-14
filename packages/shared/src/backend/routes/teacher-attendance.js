@@ -60,30 +60,41 @@ router.get('/', async (req, res) => {
                 id_module: true,
                 libelle: true,
                 codeapogee: true,
-                heures: true,
+                heures: true
               }
             },
             heures: true
           }
         }
       },
-      omit: {
-        vacataire: true,
-      },
-      where: {
-        enseignant_module: {
-          some: {}
+      orderBy: {
+        utilisateur: {
+          nom: 'asc'
         }
       }
     });
 
-    const hoursPerModule = await getHoursPerModule();
+    // Handle null heures and sort by prenom and module libelle
+    teacherAttendances.forEach((teacher) => {
+      teacher.enseignant_module.forEach((module) => {
+        if (module.heures === null) {
+          module.heures = '0,0,0';
+        }
+      });
+    });
 
-    // Ajouter totalHours à chaque module
-    teacherAttendances.forEach(teacher => {
-      teacher.enseignant_module.forEach(enseignantModule => {
-        const moduleId = enseignantModule.module.id_module;
-        enseignantModule.module.totalHours = hoursPerModule[moduleId] || { CM: 0, TD: 0, TP: 0 };
+    // Sort by prenom and module libelle in JavaScript
+    teacherAttendances.sort((a, b) => {
+      if (a.utilisateur.prenom < b.utilisateur.prenom) return -1;
+      if (a.utilisateur.prenom > b.utilisateur.prenom) return 1;
+      return 0;
+    });
+
+    teacherAttendances.forEach((teacher) => {
+      teacher.enseignant_module.sort((a, b) => {
+        if (a.module.libelle < b.module.libelle) return -1;
+        if (a.module.libelle > b.module.libelle) return 1;
+        return 0;
       });
     });
 
@@ -95,7 +106,8 @@ router.get('/', async (req, res) => {
 
 // Route pour ajouter/mettre à jour les présences des enseignants pour chaque module
 router.put('/update', async (req, res) => {
-  const { id_utilisateur, id_module, present } = req.body;
+  const { id_utilisateur, id_module, type, presences } = req.body;
+
 
   try {
     const updatedAttendance = await prisma.$transaction(async (tx) => {
@@ -111,16 +123,14 @@ router.put('/update', async (req, res) => {
       }
 
       let heures = teacherModule.heures.split(',');
-      heures[0] = parseInt(heures[0]) + (present.CM);
-      heures[1] = parseInt(heures[1]) + (present.TD);
-      heures[2] = parseInt(heures[2]) + (present.TP);
+      heures[type] += parseInt(presences);
       teacherModule.heures = heures.join(',')
-    
+
       return tx.enseignant_module.update({
         where: {
-          id_utilisateur_module: {
-            id_utilisateur,
-            id_module,
+          id_module_id_utilisateur: {
+            id_module: id_module,
+            id_utilisateur: id_utilisateur,
           },
         },
         data: {
@@ -128,9 +138,20 @@ router.put('/update', async (req, res) => {
         },
       });
     });
+
+    const heures = updatedAttendance.heures.split(',');
+    res.json({
+      id_utilisateur,
+      id_module,
+      heures: {
+        CM: parseInt(heures[0]),
+        TD: parseInt(heures[1]),
+        TP: parseInt(heures[2]),
+      },
+    });
   } catch (error) {
     res.status(500).send(error.message);
   }
-})
+});
 
 module.exports = router;
