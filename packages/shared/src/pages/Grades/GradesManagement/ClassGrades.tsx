@@ -250,12 +250,12 @@ export function ClassGrades() {
         />
       )}
 
-{showEditNote && selectedNote && (
+{showEditNote && selectedNote && selectedStudent && (
   <WebEditNoteModal
     isOpen={showEditNote}
     onClose={() => setShowEditNote(false)}
-    note={selectedNote} // 🔥 Passe la note sélectionnée
-    students={etudiants}
+    note={selectedNote}
+    student={selectedStudent} // 🔥 On passe l'étudiant sélectionné
   />
 )}
 

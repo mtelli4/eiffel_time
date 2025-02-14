@@ -8,14 +8,14 @@ interface EditNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
   note: Note | null; // 📌 La note sélectionnée
-  students: any[];
+  student: Etudiant | null;
 }
 
 export default function WebEditNoteModal({
   isOpen,
   onClose,
   note,
-  students,
+  student,
 }: EditNoteModalProps) {
   const [formData, setFormData] = useState({
     id_eval: 0,
@@ -81,16 +81,12 @@ export default function WebEditNoteModal({
         </div>
 
         <div className="space-y-4">
-          <div>
+           {/* 🔥 Affichage du nom de l'étudiant */}
+           <div>
             <label className="block text-sm font-medium mb-1">Étudiant</label>
-            <select disabled className="w-full p-2 border rounded">
-              {students.map((student) => (
-                <option key={student.id_utilisateur} value={student.id_utilisateur} 
-                  selected={student.id_utilisateur === formData.id_utilisateur}>
-                  {student.nom} {student.prenom}
-                </option>
-              ))}
-            </select>
+            <div className="w-full p-2 border rounded bg-gray-100 text-gray-700">
+              {student ? student.getFullName() : "Étudiant introuvable"}
+            </div>
           </div>
 
           <div>
