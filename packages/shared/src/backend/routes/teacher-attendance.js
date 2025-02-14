@@ -92,4 +92,44 @@ router.get('/select', async (req, res) => {
   }
 });
 
+// Route pour ajouter/mettre à jour les présences des enseignants pour chaque module
+router.put('/update', async (req, res) => {
+  const { id_utilisateur, id_module, present } = req.body;
+
+  try {
+    const updatedAttendance = await prisma.$transaction(async (tx) => {
+      const teacherModule = await tx.enseignant_module.findFirst({
+        where: {
+          id_utilisateur: id_utilisateur,
+          id_module: id_module,
+        },
+      });
+
+      if (teacherModule.heures === null) {
+        teacherModule.heures = '0,0,0';
+      }
+
+      let heures = teacherModule.heures.split(',');
+      heures[0] = parseInt(heures[0]) + (present.CM);
+      heures[1] = parseInt(heures[1]) + (present.TD);
+      heures[2] = parseInt(heures[2]) + (present.TP);
+      teacherModule.heures = heures.join(',')
+    
+      return tx.enseignant_module.update({
+        where: {
+          id_utilisateur_module: {
+            id_utilisateur,
+            id_module,
+          },
+        },
+        data: {
+          heures: teacherModule.heures,
+        },
+      });
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
+
 module.exports = router;
