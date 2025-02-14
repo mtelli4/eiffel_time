@@ -153,7 +153,7 @@ export function ClassGrades() {
                     <View key={e.getId()} style={styles.evaluationCard}>
                       <View style={styles.evaluationHeader}>
                         <Text style={styles.evaluationTitle}>
-                          {e.getLibelle()}  <TouchableOpacity onPress={() => handleAddNote(e)}>
+                          {e.getLibelle()}  <TouchableOpacity onPress={() => handleAddNote(e)}  style={styles.addButton}>
   <Plus className="w-4 h-4" />
 </TouchableOpacity>
 
