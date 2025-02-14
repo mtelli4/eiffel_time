@@ -18,6 +18,7 @@ import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGr
 import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
+import { Edit2, Trash2 } from 'lucide-react'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
@@ -98,8 +99,10 @@ export function ClassGrades() {
   }
 
   const handleEditNote = (note: Note) => {
-    setSelectedNote(note); // 📌 On stocke la note sélectionnée
-    setShowEditNote(true); // 📌 On affiche l'interface de modification
+    const student = etudiants.find((etudiant) => etudiant.getId() === note.getUtilisateurId());
+    setSelectedNote(note);
+    setSelectedStudent(student || null); // Si l'étudiant n'est pas trouvé, on met `null`
+    setShowEditNote(true);
   };
   
 
@@ -141,13 +144,7 @@ export function ClassGrades() {
                           {e.getLibelle()}
                         </Text>
 
-                        {/* <TouchableOpacity
-                        onPress={() => handleAddNote(e)} // On passe juste l'évaluation
-                        style={styles.addButton}
-                      >
-                        <Text style={styles.lblAddbtn}>Nouvelle note</Text>
-                      </TouchableOpacity> */}
-
+                 
                         <Text style={styles.evaluationSubtitle}>
                           Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
                           Date :{' '}
@@ -196,12 +193,13 @@ export function ClassGrades() {
                                 </Text>
                               </Text>
 
-                               {/* 📌 Bouton Modifier */}
+                             
         <TouchableOpacity 
           onPress={() => handleEditNote(n)}
-          style={styles.addButton}
+          
         >
-          <Text style={styles.lblAddbtn}>Modifier</Text>
+        
+          <Edit2 className="w-4 h-4" />
         </TouchableOpacity>
                             </View>
                           )
@@ -234,14 +232,15 @@ export function ClassGrades() {
         />
       )}
 
-{showEditNote && selectedNote && (
+{showEditNote && selectedNote && selectedStudent && (
   <WebEditNoteModal
     isOpen={showEditNote}
     onClose={() => setShowEditNote(false)}
-    note={selectedNote} // 🔥 Passe la note sélectionnée
-    students={etudiants}
+    note={selectedNote}
+    student={selectedStudent} // 
   />
 )}
+
 
     </View>
   )
