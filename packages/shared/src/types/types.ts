@@ -146,6 +146,7 @@ export type Module = {
   codeapogee: string
   prevu: { CM: number; TD: number; TP: number }
   effectue: { CM: number; TD: number; TP: number }
+  periodes: string[]
 }
 
 export type TeacherPlanning = {

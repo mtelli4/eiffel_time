@@ -1,45 +1,9 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient, periode } = require('@prisma/client');
+const { ObjectEnumValue } = require('@prisma/client/runtime/library');
 
 const prisma = new PrismaClient();
 const router = express.Router();
-
-// Fonction pour récupérer le nombre d'heures effectuées pour chaque module, différenciées par type de cours
-async function getHoursPerModule() {
-  const modules = await prisma.module.findMany({
-    include: {
-      cours: {
-        where: {
-          appel: true,
-        },
-        select: {
-          debut: true,
-          fin: true,
-          type: true,
-        },
-      },
-    },
-  });
-
-  const hoursPerModule = modules.reduce((acc, module) => {
-    const totalHours = module.cours.reduce((total, cours) => {
-      const start = new Date(cours.debut);
-      const end = new Date(cours.fin);
-      const hours = (end - start) / (1000 * 60 * 60); // Convertir la différence en heures
-
-      if (!total[cours.type]) {
-        total[cours.type] = 0;
-      }
-      total[cours.type] += hours;
-      return total;
-    }, { CM: 0, TD: 0, TP: 0 }); // Initialiser les types de cours à 0
-
-    acc[module.id_module] = totalHours;
-    return acc;
-  }, {});
-
-  return hoursPerModule;
-}
 
 // Route pour récupérer l'ensemble des présences des enseignants pour chaque module
 router.get('/', async (req, res) => {
@@ -60,7 +24,7 @@ router.get('/', async (req, res) => {
                 id_module: true,
                 libelle: true,
                 codeapogee: true,
-                heures: true
+                heures: true,
               }
             },
             heures: true
@@ -72,6 +36,37 @@ router.get('/', async (req, res) => {
           nom: 'asc'
         }
       }
+    });
+
+    const periodeLabels = {
+      Semestre_1: "Semestre 1",
+      Semestre_2: "Semestre 2",
+      Semestre_3: "Semestre 3",
+      Semestre_4: "Semestre 4",
+      Semestre_5: "Semestre 5",
+      Semestre_6: "Semestre 6",
+    }
+
+    // Récupérer les périodes de chaque module (module_bloc_competence)
+    const periodePerModule = await prisma.module_bloc_competence.findMany({
+      select: {
+        id_module: true,
+        periode: true
+      }
+    });
+    
+    // Formater periodePerModule pour avoir un objet avec id_module comme clé et periode[] sans doublons comme valeur
+    const periodePerModuleFormatted = {};
+    periodePerModule.forEach((module) => {
+      if (!periodePerModuleFormatted[module.id_module]) {
+        periodePerModuleFormatted[module.id_module] = new Set();
+      }
+      periodePerModuleFormatted[module.id_module].add(periodeLabels[module.periode]);
+    });
+
+    // Convertir les Sets en tableaux
+    Object.keys(periodePerModuleFormatted).forEach((id_module) => {
+      periodePerModuleFormatted[id_module] = Array.from(periodePerModuleFormatted[id_module]);
     });
 
     // Handle null heures and sort by prenom and module libelle
@@ -98,7 +93,7 @@ router.get('/', async (req, res) => {
       });
     });
 
-    res.json(teacherAttendances);
+    res.json({ teacherAttendances, periodePerModuleFormatted });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -108,7 +103,7 @@ router.get('/', async (req, res) => {
 router.put('/update', async (req, res) => {
   const { id_utilisateur, id_module, type, presences } = req.body;
 
-
+  console.log(req.body);
   try {
     const updatedAttendance = await prisma.$transaction(async (tx) => {
       const teacherModule = await tx.enseignant_module.findFirst({
@@ -123,21 +118,30 @@ router.put('/update', async (req, res) => {
       }
 
       let heures = teacherModule.heures.split(',');
-      heures[type] += parseInt(presences);
-      teacherModule.heures = heures.join(',')
+      if (type === 'CM') {
+        heures[0] = presences;
+      } else if (type === 'TD') {
+        heures[1] = presences;
+      } else if (type === 'TP') {
+        heures[2] = presences;
+      } else {
+        throw new Error('Invalid type');
+      }
+      heures = heures.join(',');
 
       return tx.enseignant_module.update({
+        data: {
+          heures: heures,
+        },
         where: {
           id_module_id_utilisateur: {
             id_module: id_module,
             id_utilisateur: id_utilisateur,
           },
         },
-        data: {
-          heures: teacherModule.heures,
-        },
       });
     });
+    console.log(updatedAttendance);
 
     const heures = updatedAttendance.heures.split(',');
     res.json({

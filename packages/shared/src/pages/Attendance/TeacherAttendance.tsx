@@ -7,6 +7,7 @@ import { Card } from '../../components/attendance/Card'
 import { HoursPlanning } from '../../components/attendance/HoursPlanning'
 import { TeacherFilters } from '../../components/attendance/TeacherFilters'
 import { API_URL, TeacherPlanning, TeacherPlanningForm } from '../../../../shared/src/types/types'
+import { periode } from '@prisma/client'
 
 export function TeacherAttendance() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -43,7 +44,9 @@ export function TeacherAttendance() {
         return response.json() // Convertir la réponse en JSON
       })
       .then((data) => {
-        const teachers = data.map((teacher: any) => {
+        const teacherAttendances = data.teacherAttendances;
+        const periodePerModuleFormatted = data.periodePerModuleFormatted;
+        const teachers = teacherAttendances.map((teacher: any) => {
           return {
             id_utilisateur: teacher.utilisateur.id_utilisateur,
             prenom: teacher.utilisateur.prenom,
@@ -66,6 +69,7 @@ export function TeacherAttendance() {
                   TD: parseInt(hours[1]),
                   TP: parseInt(hours[2]),
                 },
+                periodes: periodePerModuleFormatted[module.id_module],
               }
             })
           }
@@ -97,8 +101,8 @@ export function TeacherAttendance() {
       if (!response.ok) {
         throw new Error('Erreur réseau')
       }
-      const newTeacher = await response.json() // { id_utilisateur: number, id_module: number, heures: {CM: number, TD: number, TP: number} }
-      console.log('New teacher:', newTeacher)
+      const newTeacher = await response.json()
+      console.log('New teacher:', newTeacher.heures)
       setTeachers((prevTeachers) => {
         return prevTeachers.map((t) => {
           if (t.id_utilisateur === newTeacher.id_utilisateur) {
