@@ -43,37 +43,6 @@ interface Absence {
   path?: string
 }
 
-// Mock data
-/* const MOCK_STUDENTS: Student[] = [
-  { id: '22001234', firstName: 'Jean', lastName: 'DUPONT', group: 'A1' },
-  { id: '22001235', firstName: 'Marie', lastName: 'MARTIN', group: 'A2' },
-] */
-
-/* const MOCK_ABSENCES: Absence[] = [
-  {
-    id: 'abs1',
-    studentId: '22001234',
-    date: '2024-03-15',
-    module: { code: 'M5101', name: 'Développement Web' },
-    professor: 'Dr. Martin',
-    statut: 'pending',
-    justification: 'Certificat médical',
-    document: 'https://example.com/justification.pdf',
-    submissionDate: '2024-03-16',
-  },
-  {
-    id: 'abs2',
-    studentId: '22001235',
-    date: '2024-03-20',
-    module: { code: 'M5102', name: 'Base de données' },
-    professor: 'Dr. Dubois',
-    statut: 'approved',
-    justification: 'Rendez-vous médical',
-    document: 'https://example.com/justification2.pdf',
-    submissionDate: '2024-03-21',
-  },
-] */
-
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<Absence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -93,7 +62,7 @@ export function ManageAbsences() {
   }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/absences/select`)
+    fetch(`${API_URL}/api/absences/`)
       .then((res) => res.json())
       .then((data) => {
         setAbsences(data.map((absence: any) => ({
