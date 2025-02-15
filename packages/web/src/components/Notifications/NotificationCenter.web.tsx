@@ -20,6 +20,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     date: new Date('2024-03-15T10:00:00'),
     read: false,
   },
+
   {
     id: '2',
     title: 'Absence signalée',
