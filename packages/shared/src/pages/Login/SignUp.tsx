@@ -14,7 +14,7 @@ export function SignUp() {
 
   const handleSubmitSignUp = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/signup`, {
+      const response = await fetch(`http://localhost:4000/api/signup/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
