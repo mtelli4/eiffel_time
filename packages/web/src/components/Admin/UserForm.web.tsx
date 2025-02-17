@@ -32,7 +32,6 @@ export function UserForm({
     groupes: initialData?.groupes || [],
     vacataire: initialData?.vacataire || null,
   })
-  const [errorMessage, setErrorMessage] = useState<string[]>([])
 
   const [formations, setFormations] = useState<Formation[]>([])
   const [groupes, setGroupes] = useState<Groupe[]>([])
@@ -66,7 +65,6 @@ export function UserForm({
   }
 
   const handleSubmit = () => {
-    const messages = []
     if (!formData.nom.trim()) {
       alert('Le nom est obligatoire')
     }
@@ -88,8 +86,9 @@ export function UserForm({
     if (formData.statut === 'teacher' && formData.vacataire === undefined) {
       alert('Un enseignant doit être soit titulaire soit vacataire')
     }
-    // alert(`Données valides: ${JSON.stringify(formData)}`)
+    
     onSubmit(formData)
+    onClose()
   }
 
   if (!isOpen) return null
@@ -259,12 +258,6 @@ export function UserForm({
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
-
-          {errorMessage.length > 0 && (
-            <div className="text-red-500 text-sm">
-              {errorMessage.join('. ')}
-            </div>
-          )}
         </form>
       </div>
     </div>

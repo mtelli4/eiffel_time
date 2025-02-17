@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-// import { toast, ToastContainer } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css'
 
-type Tab = 'users' | 'courses' | 'schedule' | 'rooms'
+type Tab = 'users' | 'import' | 'courses' | 'schedule' | 'rooms'
 
 export function Admin() {
-  const [activeTab, setActiveTab] = useState<Tab>('users')
+  const [activeTab, setActiveTab] = useState<Tab>('users' as const)
   const [showUserForm, setShowUserForm] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -62,9 +60,6 @@ export function Admin() {
       })
   }, [])
 
-  let showNotification: (type: 'success' | 'error', message: string) => void;
-  let NotificationContainer: React.FC;
-
   useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
@@ -99,7 +94,7 @@ export function Admin() {
     loadComponents().then(r => r)
   }, [])
 
-  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' }]
+  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' }, { id: 'import' as const, label: 'Importation' }]
 
   const handleEditUser = (user: Utilisateur) => {
     setSelectedUser(user)
@@ -108,7 +103,7 @@ export function Admin() {
 
   const handleDeleteUser = (user: Utilisateur) => {
     if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
-      fetch(`http://localhost:4000/api/admin/delete-user/${user.id_utilisateur}`, {
+      fetch(`${API_URL}/api/admin/delete-user/${user.id_utilisateur}`, {
         method: 'DELETE'
       })
         .then((response) => {
@@ -116,19 +111,9 @@ export function Admin() {
             throw new Error('Erreur réseau')
           }
           setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
-          /* toast.success(`L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`, {
-            position: 'bottom-right',
-            // toastId: 'delete-user' + user.id_utilisateur,
-          }); */
-          // showNotification('success', `L'utilisateur a été supprimé avec succès. Au revoir ${user.prenom} ${user.nom} 😢`)
         })
         .catch((error) => {
           console.error('Erreur lors de la suppression de l\'utilisateur:', error)
-          /* toast.error('Erreur lors de la suppression de l\'utilisateur', {
-            position: 'bottom-right',
-            // toastId: 'delete-user' + user.id_utilisateur,
-          }); */
-          // showNotification('error', 'Erreur lors de la suppression de l\'utilisateur')
         })
     }
   }
@@ -136,7 +121,8 @@ export function Admin() {
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
       try {
-        const response = await fetch(`http://localhost:4000/api/admin/update-user/${selectedUser.id_utilisateur}`, {
+        // alert(`Données valides: ${JSON.stringify(data)}`)
+        const response = await fetch(`${API_URL}/api/admin/update-user/${selectedUser.id_utilisateur}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -144,43 +130,11 @@ export function Admin() {
           body: JSON.stringify(data)
         })
         if (!response.ok) {
-          throw new Error('Erreur réseau')
+          const errorData = await response.json();
+          console.error("Erreur API :", errorData);
+          throw new Error('Erreur réseau : ' + errorData.message);
         }
         const updatedUser = await response.json()
-        const message = []
-        if (updatedUser.id_utilisateur !== selectedUser.id_utilisateur) {
-          message.push('ID')
-        }
-        if (updatedUser.nom !== selectedUser.nom) {
-          message.push('nom')
-        }
-        if (updatedUser.prenom !== selectedUser.prenom) {
-          message.push('prénom')
-        }
-        if (updatedUser.email !== selectedUser.email) {
-          message.push('email')
-        }
-        if (updatedUser.statut !== selectedUser.statut) {
-          message.push('rôle')
-        }
-        if (updatedUser.formations) {
-          const formations = updatedUser.formations.map((f: any) => f.formation)
-          if (JSON.stringify(formations) !== JSON.stringify(selectedUser.formations)) {
-            message.push('formation(s)')
-          }
-        }
-
-        if (updatedUser.etudiant?.groupes) {
-          const groupes = updatedUser.groupes.map((g: any) => g.groupe)
-          if (JSON.stringify(groupes) !== JSON.stringify(selectedUser.groupes)) {
-            message.push('groupe(s)')
-          }
-        }
-        /* toast.success('L\'utilisateur a été modifié avec succès : ' + message.join(', '), {
-          position: 'bottom-right',
-          // toastId: 'update-user' + selectedUser.id_utilisateur,
-        }); */
-        // showNotification('success', 'L\'utilisateur a été modifié avec succès : ' + message.join(', '))
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
         selectedUser.nom = updatedUser.nom
         selectedUser.prenom = updatedUser.prenom
@@ -192,17 +146,10 @@ export function Admin() {
         setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
       } catch (error) {
         console.error("Erreur lors de la modification de l'utilisateur : ", error)
-        /* toast.error('Erreur lors de la modification de l\'utilisateur', {
-          position: 'bottom-right',
-          // toastId: 'update-user' + selectedUser.id_utilisateur,
-        }); */
-        // showNotification('error', 'Erreur lors de la modification de l\'utilisateur')
       }
     } else {
-      console.log('Création d\'un utilisateur')
       try {
-        console.log('Création d\'un utilisateur', data)
-        const response = await fetch('http://localhost:4000/api/admin/create-user', {
+        const response = await fetch(`${API_URL}/api/admin/create-user`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -226,24 +173,13 @@ export function Admin() {
           vacataire: newUser.enseignant?.vacataire
         }
         setUtilisateurs((prev) => [...prev, utilisateur])
-        /* toast.success(`L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`, {
-          position: 'bottom-right',
-          // toastId: 'create-user' + newUser.id_utilisateur,
-        }); */
-        // showNotification('success', `L'utilisateur a été créé avec succès. Bienvenue à bord ${newUser.prenom} ${newUser.nom} 😀`)
       } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur : ", error)
-        /* toast.error('Erreur lors de la création de l\'utilisateur', {
-          position: 'bottom-right',
-          // toastId: 'create-user',
-        }); */
-        // showNotification('error', 'Erreur lors de la création de l\'utilisateur')
       }
     }
     setShowUserForm(false)
     setSelectedUser(null)
   }
-
 
   if (!UserFilters || !UserForm || !UserTable) {
     return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
@@ -310,6 +246,31 @@ export function Admin() {
         </View>
       )}
 
+      {activeTab === 'import' && (
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.subtitle}>
+              Importation des utilisateurs
+            </Text>
+          </View>
+          <View /* style={styles.importContainer} */>
+            <Text /* style={styles.importText} */>
+              Pour importer des utilisateurs, veuillez utiliser le fichier XLSX suivant :
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                /* Implement file upload */
+              }}
+              style={styles.addButton}
+            >
+              <Text style={styles.addButtonText}>
+                Importer un fichier
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       {showUserForm && (
         <UserForm
           isOpen={showUserForm}
@@ -322,8 +283,6 @@ export function Admin() {
           isEdit={!!selectedUser}
         />
       )}
-      {/* <NotificationContainer /> */}
     </View>
-
   )
 }

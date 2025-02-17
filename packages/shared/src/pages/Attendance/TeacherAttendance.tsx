@@ -163,7 +163,7 @@ export function TeacherAttendance() {
         onSemesterChange={setSelectedSemester}
       />
 
-      {filteredTeachers.map((teacher) => (
+      {filteredTeachers.map((teacher) => teacher.modules.length > 0 && (
         <View key={teacher.id_utilisateur} style={styles.teacherContainer}>
           <View style={styles.teacherHeader}>
             <Text style={styles.teacherName}>
