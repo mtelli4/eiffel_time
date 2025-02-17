@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Evaluation } from '@shared/backend/classes';
+import { Evaluation, Note } from '@shared/backend/classes';
 
 interface AddNoteModalProps {
     isOpen: boolean;
     onClose: () => void;
-    evaluation: Evaluation | null; 
+    evaluation: Evaluation | null;
     students: any[];
+    notes: Note[]; // 🔥 Ajout de notes en props
 }
 
 export default function WebAddNoteModal({
     isOpen,
     onClose,
-    evaluation, 
+    evaluation,
     students,
+    notes, // 🔥 Notes passées en props
 }: AddNoteModalProps) {
     const [formData, setFormData] = useState({
         id_eval: 0,
@@ -21,12 +23,11 @@ export default function WebAddNoteModal({
         commentaire: '',
     });
 
-
     useEffect(() => {
         if (evaluation) {
             setFormData((prev) => ({
                 ...prev,
-                id_eval: evaluation.getId(), 
+                id_eval: evaluation.getId(),
             }));
         }
     }, [evaluation]);
@@ -67,7 +68,7 @@ export default function WebAddNoteModal({
         }
     };
 
-    if (!isOpen || !evaluation) return null; 
+    if (!isOpen || !evaluation) return null;
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -94,21 +95,29 @@ export default function WebAddNoteModal({
                             Étudiant
                         </label>
                         <select
-                            value={formData.id_utilisateur}
+                            value={formData.id_utilisateur || ''}
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    id_utilisateur: parseInt(e.target.value),
+                                    id_utilisateur: parseInt(e.target.value) || 0, 
                                 })
                             }
                             className="w-full p-2 border rounded"
                         >
                             <option value="">Sélectionner un étudiant</option>
-                            {students.map((student) => (
-                                <option key={student.getId()} value={student.getId()}>
-                                    {student.getFullName()}
-                                </option>
-                            ))}
+                            
+                            {students
+                                .filter((student) => 
+                                    !notes.some((note) => 
+                                        note.getUtilisateurId() === student.getId() &&
+                                        note.getEvaluationId() === formData.id_eval
+                                    )
+                                )
+                                .map((student) => (
+                                    <option key={student.getId()} value={student.getId()}>
+                                        {student.getFullName()}
+                                    </option>
+                                ))}
                         </select>
                     </div>
 

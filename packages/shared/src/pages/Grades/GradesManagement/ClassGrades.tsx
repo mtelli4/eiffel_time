@@ -250,14 +250,16 @@ export function ClassGrades() {
           cours={cours}
         />
       )}
-   {showAddNote && selectedEvaluation && (
-  <WebAddNoteModal
-    isOpen={showAddNote}
-    onClose={() => setShowAddNote(false)}
-    evaluation={selectedEvaluation} 
-    students={etudiants}
-  />
+ {showAddNote && selectedEvaluation && (
+    <WebAddNoteModal
+        isOpen={showAddNote}
+        onClose={() => setShowAddNote(false)}
+        evaluation={selectedEvaluation}
+        students={etudiants}
+        notes={notes} 
+    />
 )}
+
 
 
 
