@@ -35,7 +35,7 @@ export default function WebAddGradeModal({
         }
         try {
             const response = await fetch(
-                'http://localhost:4000/api/insert-evaluation',
+                'http://localhost:4000/api/evaluation/insert-evaluation',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
