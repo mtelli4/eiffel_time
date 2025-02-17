@@ -6,7 +6,7 @@ interface AddNoteModalProps {
     onClose: () => void;
     evaluation: Evaluation | null;
     students: any[];
-    notes: Note[]; // 🔥 Ajout de notes en props
+    notes: Note[]; 
 }
 
 export default function WebAddNoteModal({
@@ -14,7 +14,7 @@ export default function WebAddNoteModal({
     onClose,
     evaluation,
     students,
-    notes, // 🔥 Notes passées en props
+    notes, 
 }: AddNoteModalProps) {
     const [formData, setFormData] = useState({
         id_eval: 0,
@@ -89,7 +89,7 @@ export default function WebAddNoteModal({
                         <p className="p-2 border rounded bg-gray-100">{evaluation.getLibelle()}</p>
                     </div>
 
-                    {/* Sélection de l'étudiant */}
+             
                     <div>
                         <label className="block text-sm font-medium mb-1">
                             Étudiant
@@ -121,7 +121,7 @@ export default function WebAddNoteModal({
                         </select>
                     </div>
 
-                    {/* Champ pour entrer la note */}
+             
                     <div>
                         <label className="block text-sm font-medium mb-1">
                             Note
@@ -141,7 +141,6 @@ export default function WebAddNoteModal({
                         />
                     </div>
 
-                    {/* Commentaire optionnel */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
                             Commentaire (optionnel)
@@ -160,7 +159,7 @@ export default function WebAddNoteModal({
                     </div>
                 </div>
 
-                {/* Boutons Annuler / Enregistrer */}
+     
                 <div className="flex justify-end gap-3 mt-4">
                     <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">
                         Annuler

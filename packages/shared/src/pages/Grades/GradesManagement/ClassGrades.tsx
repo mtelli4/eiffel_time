@@ -22,7 +22,7 @@ import { Edit2, Plus, Trash2 } from 'lucide-react'
 import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
 
 export function ClassGrades() {
-  const [selectedModule, setSelectedModule] = useState<string | null>(null)
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
   const [showAddGrade, setShowAddGrade] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [modules, setModules] = useState<Module[]>([])
@@ -71,11 +71,10 @@ export function ClassGrades() {
       })
   }, [])
 
-  const handleAddGrade = (e: any) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setShowAddGrade(true)
-  }
+  const handleAddGrade = (module: Module) => {
+    setSelectedModule(module); 
+    setShowAddGrade(true);
+};
 
   const filteredModules = modules.filter(
     (module) =>
@@ -83,13 +82,13 @@ export function ClassGrades() {
       module.getCodeApogee().toLowerCase().includes(searchQuery.toLowerCase())
   )
   const handleAddNote = (evaluation: Evaluation) => {
-    setSelectedEvaluation(evaluation); // Stocker l'évaluation sélectionnée
-    setShowAddNote(true); // Ouvrir le modal d'ajout de note
+    setSelectedEvaluation(evaluation); 
+    setShowAddNote(true); 
   };
   
 
   const hasEvaluations = (id_module: number) => {
-    /* récupérer le nombre de notes pour un module donné, sachant que chaque note est liée à une évaluation qui est liée à un cours qui est lié à un module */
+   
     const count = notes.filter((note) => {
       return evaluations.find((evaluation) => {
         return cours.find((c) => {
@@ -121,10 +120,7 @@ export function ClassGrades() {
     <View style={styles.container}>
       <View style={styles.header}>
         
-          <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
-
-            <Plus className="w-4 h-4" />
-          </TouchableOpacity>
+         
         
      
        
@@ -137,13 +133,17 @@ export function ClassGrades() {
           placeholder="Rechercher un module..."
           style={styles.searchInput}
         />
-        {/* Replace with appropriate icon */}
+      
       </View>
       <ScrollView>
         {filteredModules.map((module) => (
           <View key={module.getId()} style={styles.moduleCard}>
             <View style={styles.moduleHeader}>
-              <Text style={styles.moduleTitle}>{module.getName()}</Text>
+              <Text style={styles.moduleTitle}>{module.getName()}    <TouchableOpacity onPress={() =>handleAddGrade(module)} >
+
+            <Plus className="w-4 h-4" />
+          </TouchableOpacity></Text> 
+          
             </View>
 
             {hasEvaluations(module.getId()) &&
@@ -153,9 +153,10 @@ export function ClassGrades() {
                     <View key={e.getId()} style={styles.evaluationCard}>
                       <View style={styles.evaluationHeader}>
                         <Text style={styles.evaluationTitle}>
-                          {e.getLibelle()}  <TouchableOpacity onPress={() => handleAddNote(e)}  style={styles.addButton}>
-  <Plus className="w-4 h-4" />
-</TouchableOpacity>
+                          {e.getLibelle()} 
+                              <TouchableOpacity onPress={() => handleAddNote(e)} >
+                    <Plus className="w-4 h-4" />
+               </TouchableOpacity>
 
                         </Text>
       
@@ -239,17 +240,17 @@ export function ClassGrades() {
         ))}
       </ScrollView>
 
-      {showAddGrade && (
-        <AddGradeModal
-          isOpen={showAddGrade}
-          onClose={() => {
-            setShowAddGrade(false)
-          }}
-          modules={modules}
-          students={etudiants}
-          cours={cours}
-        />
-      )}
+      {showAddGrade && selectedModule && (
+    <AddGradeModal
+        isOpen={showAddGrade}
+        onClose={() => setShowAddGrade(false)}
+        moduleName={selectedModule.getLibelle()} 
+        modules={modules} 
+        students={etudiants} 
+        cours={cours} 
+    />
+)}
+
  {showAddNote && selectedEvaluation && (
     <WebAddNoteModal
         isOpen={showAddNote}

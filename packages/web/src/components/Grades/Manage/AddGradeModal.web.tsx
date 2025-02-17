@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     AddGradeModalProps,
     FormEvaluation,
@@ -7,7 +7,8 @@ import {
 export default function WebAddGradeModal({
     isOpen,
     onClose,
-    modules,
+    moduleName,
+    modules, 
     students,
     cours,
 }: AddGradeModalProps) {
@@ -17,8 +18,19 @@ export default function WebAddGradeModal({
         notemaximale: 20,
         periode: 'Semestre 1',
         id_cours: 0,
-        id_module: 0,
+        id_module: 0, 
     })
+
+
+    useEffect(() => {
+        const selectedModule = modules.find(m => m.getLibelle() === moduleName);
+        if (selectedModule) {
+            setFormData(prev => ({
+                ...prev,
+                id_module: selectedModule.getId() 
+            }));
+        }
+    }, [moduleName, modules]);
 
     const handleSubmit = async () => {
         if (!formData.libelle) {
@@ -81,28 +93,11 @@ export default function WebAddGradeModal({
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            Module
+                            Module sélectionné
                         </label>
-                        <select
-                            value={formData.id_module}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    id_module: parseInt(e.target.value),
-                                })
-                            }
-                            className="w-full p-2 border rounded"
-                        >
-                            <option value="">Sélectionner un module</option>
-                            {modules.map((module) => (
-                                <option
-                                    key={module.getId()}
-                                    value={module.getId()}
-                                >
-                                    {module.getLibelle()}
-                                </option>
-                            ))}
-                        </select>
+                        <p className="p-2 border rounded bg-gray-100">
+                            {moduleName ?? "Aucun module sélectionné"} 
+                        </p>
                     </div>
 
                     <div>
@@ -122,6 +117,7 @@ export default function WebAddGradeModal({
                         />
                     </div>
 
+               
                     <div>
                         <label className="block text-sm font-medium mb-1">
                             Cours
@@ -137,15 +133,13 @@ export default function WebAddGradeModal({
                             className="w-full p-2 border rounded"
                         >
                             <option value="">Sélectionner un cours</option>
-                            {cours.map((c) => {
-                                if (c.getIdModule() !== formData.id_module)
-                                    return null
-                                return (
+                            {cours
+                                .filter(c => c.getIdModule() === formData.id_module) 
+                                .map(c => (
                                     <option key={c.getId()} value={c.getId()}>
                                         {c.getTime()}
                                     </option>
-                                )
-                            })}
+                                ))}
                         </select>
                     </div>
 
