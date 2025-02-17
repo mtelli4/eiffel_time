@@ -13,7 +13,7 @@ export function Login() {
 
   const handleSubmitUser = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/signin`, {
+      const response = await fetch(`http://localhost:4000/api/signin/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
