@@ -24,7 +24,7 @@ export function UserImport({ users }: UserImportProps) {
     if (!file) return
 
     const fileExtension = (file.name.split('.').pop()?.toLowerCase() || '')
-
+    
     const reader = new FileReader()
     reader.onload = (e) => {
       const data = e.target?.result
@@ -36,10 +36,10 @@ export function UserImport({ users }: UserImportProps) {
         })
         setJsonData(parsedData.data)
       } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
-        const workbook = XLSX.read(data, { type: 'binary' })
+        const workbook = XLSX.read(data)
         const sheetName = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[sheetName]
-        const parsedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
+        const parsedData = XLSX.utils.sheet_to_json(worksheet)
         setJsonData(parsedData)
       } else {
         alert('Format de fichier non pris en charge')
@@ -49,7 +49,7 @@ export function UserImport({ users }: UserImportProps) {
     if (fileExtension === 'csv') {
       reader.readAsText(file)
     } else {
-      reader.readAsBinaryString(file)
+      reader.readAsArrayBuffer(file)
     }
   }
 
@@ -71,7 +71,7 @@ export function UserImport({ users }: UserImportProps) {
           className="btn btn-outline flex items-center gap-2"
         >
           <FileUp className="w-4 h-4" />
-          Importer CSV
+          Importer CSV/XLSX
         </button>
         <input
           id="file-input"
@@ -106,8 +106,11 @@ export function UserImport({ users }: UserImportProps) {
         <li>Les utilisateurs seront créés.</li>
       </ul>
       <br />
+      <br />
+      {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre> */}
+      <br />
+      <br />
       {jsonData.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <DataTable
             data={jsonData.map((user) => ({
               nom: user.nom,
@@ -125,8 +128,8 @@ export function UserImport({ users }: UserImportProps) {
                 search: 'Rechercher :',
               },
             }}
+            className="table table-striped table-bordered"
           />
-        </div>
       )}
     </View>
   )
