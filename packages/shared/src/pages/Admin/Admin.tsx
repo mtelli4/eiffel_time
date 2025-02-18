@@ -23,6 +23,7 @@ export function Admin() {
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
   const [UserTable, setUserTable] = useState<any>(null)
+  const [UserImport, setUserImport] = useState<any>(null)
 
   const handleFilterChange = (filterName: string, value: string) => {
     setFilters(prevFilters => ({
@@ -72,9 +73,13 @@ export function Admin() {
         const { UserTable } = await import(
           '../../../../web/src/components/Admin/UserTable.web'
         )
+        const { UserImport } = await import(
+          '../../../../web/src/components/Admin/UserImport.web'
+        )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
         setUserTable(() => UserTable)
+        setUserImport(() => UserImport)
       } else {
         const { UserFilters } = await import(
           '../../../../mobile/src/components/Admin/UserFilters.native'
@@ -85,9 +90,13 @@ export function Admin() {
         const { UserTable } = await import(
           '../../../../mobile/src/components/Admin/UserTable.native'
         )
+        const { UserImport } = await import(
+          '../../../../mobile/src/components/Admin/UserImport.native'
+        )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
         setUserTable(() => UserTable)
+        setUserImport(() => UserImport)
       }
     }
 
@@ -247,28 +256,7 @@ export function Admin() {
       )}
 
       {activeTab === 'import' && (
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.subtitle}>
-              Importation des utilisateurs
-            </Text>
-          </View>
-          <View /* style={styles.importContainer} */>
-            <Text /* style={styles.importText} */>
-              Pour importer des utilisateurs, veuillez utiliser le fichier XLSX suivant :
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                /* Implement file upload */
-              }}
-              style={styles.addButton}
-            >
-              <Text style={styles.addButtonText}>
-                Importer un fichier
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <UserImport users={utilisateurs} />
       )}
 
       {showUserForm && (
