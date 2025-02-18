@@ -71,7 +71,7 @@ export function UserImport({ users }: UserImportProps) {
           className="btn btn-outline flex items-center gap-2"
         >
           <FileUp className="w-4 h-4" />
-          Importer CSV/XLSX
+          Importer CSV
         </button>
         <input
           id="file-input"
