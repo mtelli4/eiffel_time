@@ -30,7 +30,7 @@ export function UserImport({ users }: UserImportProps) {
       const data = e.target?.result
 
       if (fileExtension === 'csv') {
-        const parsedData = Papa.parse(data, {
+        const parsedData = Papa.parse(data as string, {
           header: true,
           skipEmptyLines: true,
         })
@@ -97,19 +97,17 @@ export function UserImport({ users }: UserImportProps) {
           </Text>
         </TouchableOpacity>
       </View>
-      <Text>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire.</Text>
-      <Text>Modalités d'importation des utilisateurs :</Text>
+      <p>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire.</p>
+      <p>Modalités d'importation des utilisateurs :
       <ul className="list-disc list-inside ml-4">
         <li>Le fichier doit être au format CSV ou XLSX.</li>
         <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle)</li>
         <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
         <li>Les utilisateurs seront créés.</li>
       </ul>
+      </p>
       <br />
-      <br />
-      {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre> */}
-      <br />
-      <br />
+      {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre><br /> */}
       {jsonData.length > 0 && (
           <DataTable
             data={jsonData.map((user) => ({
