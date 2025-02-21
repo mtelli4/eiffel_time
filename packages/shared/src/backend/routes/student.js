@@ -4,7 +4,8 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/:id", async (req, res) => {
+// Route pour récupérer l'ensemble des notes d'un étudiant
+router.get("/notes/:id", async (req, res) => {
   const { id } = req.params;
   const userId = parseInt(id);
 
