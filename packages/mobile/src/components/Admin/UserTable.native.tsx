@@ -1,10 +1,8 @@
 import {
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
 import { ROLES, Utilisateur } from '../../../../shared/src/types/types';
 import { DataTable } from 'react-native-paper';
 import { useEditDeleteLoader } from '../../../../shared/src/components/Button/EditDeleteLoader';
@@ -35,59 +33,6 @@ export function UserTable({
   const { Edit, Delete } = useEditDeleteLoader();
 
   if (!Edit || !Delete) return null;
-
-  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
-  const [chargement, setChargement] = useState<boolean>(true);
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/admin/users`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Erreur réseau');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const utilisateurs = data.map((utilisateur: any) => ({
-          id_utilisateur: utilisateur.id_utilisateur,
-          nom: utilisateur.nom,
-          prenom: utilisateur.prenom,
-          email: utilisateur.email,
-          statut: utilisateur.statut,
-          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: utilisateur.enseignant?.vacataire
-        }));
-        setUtilisateurs(utilisateurs)
-        setChargement(false)
-      })
-      .catch(error => {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error,
-        );
-      });
-  }, []);
-
-  const renderHeader = () => (
-    <View style={styles.headerContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.headerRow}>
-          <Text style={[styles.headerCell, styles.idCell]}>ID</Text>
-          <Text style={[styles.headerCell, styles.nameCell]}>Nom</Text>
-          <Text style={[styles.headerCell, styles.nameCell]}>Prénom</Text>
-          <Text style={[styles.headerCell, styles.emailCell]}>Email</Text>
-          <Text style={[styles.headerCell, styles.roleCell]}>Rôle</Text>
-          <Text style={[styles.headerCell, styles.formationCell]}>
-            Formation
-          </Text>
-          <Text style={[styles.headerCellActions, styles.actionsHeaderCell]}>
-            Actions
-          </Text>
-        </View>
-      </ScrollView>
-    </View>
-  );
 
   return (
     <View style={styles.mainContainer}>
