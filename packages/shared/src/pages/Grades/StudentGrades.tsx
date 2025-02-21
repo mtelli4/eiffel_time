@@ -4,103 +4,6 @@ import { cn } from '../../lib/utils'
 import { API_URL, periodeLabels, PlannedHours } from '../../types/types'
 import { periode } from '@prisma/client'
 
-interface Grade {
-  id: string
-  value: number
-  maxValue: number
-  coefficient: number
-  date: string
-  name: string
-}
-
-interface mbd {
-  id: string
-  code: string
-  name: string
-  average: number
-  grades: Grade[]
-  hours: PlannedHours
-}
-
-interface UE {
-  id: string
-  code: string
-  name: string
-  ects: number
-  average: number
-  modules: mbd[]
-}
-
-const MOCK_UES: UE[] = [
-  {
-    id: 'ue1',
-    code: 'UE51',
-    name: 'Semestre 5 BC1',
-    ects: 10,
-    average: 15.4,
-    modules: [
-      {
-        id: 'mod1',
-        code: 'M5101',
-        name: 'Développement Web',
-        average: 15.5,
-        hours: {
-          CM: 10,
-          TD: 20,
-          TP: 20,
-        },
-        grades: [
-          {
-            id: 'grade1',
-            value: 16,
-            maxValue: 20,
-            coefficient: 1,
-            date: '2024-03-15',
-            name: 'TP1 - React',
-          },
-          {
-            id: 'grade2',
-            value: 15,
-            maxValue: 20,
-            coefficient: 2,
-            date: '2024-03-20',
-            name: 'Contrôle Final',
-          },
-        ],
-      },
-      {
-        id: 'mod2',
-        code: 'M5102',
-        name: 'Base de données',
-        average: 14.8,
-        hours: {
-          CM: 15,
-          TD: 15,
-          TP: 15,
-        },
-        grades: [
-          {
-            id: 'grade3',
-            value: 14,
-            maxValue: 20,
-            coefficient: 1,
-            date: '2024-03-10',
-            name: 'TP1 - SQL',
-          },
-          {
-            id: 'grade4',
-            value: 15,
-            maxValue: 20,
-            coefficient: 2,
-            date: '2024-03-25',
-            name: 'Contrôle Final',
-          },
-        ],
-      },
-    ],
-  },
-]
-
 type BC = {
   id_bloc_comp: number
   libelle: string
@@ -133,7 +36,7 @@ export function Grades() {
   const id = 3
   
   useEffect(() => {
-    fetch(`${API_URL}/api/notes/${id}`)
+    fetch(`${API_URL}/api/student/notes/${id}`)
       .then((res) => res.json())
       .then((data) => {
         const notes: BC[] = data.map((bc: any) => ({
