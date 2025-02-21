@@ -6,6 +6,7 @@ import { Edit2, Trash2 } from 'lucide-react'
 import { TEACHER_TYPES, Utilisateur } from '../../../../shared/src/types/types'
 import { roleFinder } from '../../../../shared/src/lib/utils'
 import '../../styles/dataTables.dataTables.min.css'
+import { useEditDeleteLoader } from '../../../../shared/src/components/Button/EditDeleteLoader'
 
 interface UserTableProps {
   users: Utilisateur[]
@@ -32,6 +33,10 @@ export function UserTable({
   filters,
   loading,
 }: UserTableProps) {
+  const { Edit, Delete } = useEditDeleteLoader()
+
+  if (!Edit || !Delete) return null
+
   /* roleSelected: string */
   let filteredData = users
   if (filters.search !== '') {
@@ -157,22 +162,8 @@ export function UserTable({
               <td className="py-3 px-4">{utilisateur.statut !== 'teacher' ? '-' : TEACHER_TYPES.find(t => t.value === utilisateur.vacataire)?.label}</td>
               <td className="py-3 px-4">
                 <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => onEdit(utilisateur)}
-                    className="p-1 text-[#3498DB] hover:text-[#2980B9] transition-colors"
-                    title="Modifier"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  {isAdmin && (
-                    <button
-                      onClick={() => onDelete(utilisateur)}
-                      className="p-1 text-[#E74C3C] hover:text-[#C0392B] transition-colors"
-                      title="Supprimer"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
+                  <Edit onEdit={() => onEdit(utilisateur)} />
+                  {isAdmin && (<Delete onDelete={() => onDelete(utilisateur)} confirmMessage={`Voulez-vous vraiment supprimer l'utilisateur ${utilisateur.nom} ${utilisateur.prenom} ?`} />)}
                 </div>
               </td>
             </tr>

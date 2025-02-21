@@ -7,6 +7,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import { ROLES, Utilisateur } from '../../../../shared/src/types/types';
 import { DataTable } from 'react-native-paper';
+import { useEditDeleteLoader } from '../../../../shared/src/components/Button/EditDeleteLoader';
 
 interface UserTableProps {
   users: Utilisateur[];
@@ -31,6 +32,10 @@ export function UserTable({
   filters,
   loading,
 }: UserTableProps) {
+  const { Edit, Delete } = useEditDeleteLoader();
+
+  if (!Edit || !Delete) return null;
+
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
   const [chargement, setChargement] = useState<boolean>(true);
 
@@ -121,16 +126,8 @@ export function UserTable({
                   </DataTable.Cell>
                   {isAdmin && (
                     <DataTable.Cell style={styles.actionsCell}>
-                      <TouchableOpacity
-                        style={styles.iconButton}
-                        onPress={() => onEdit(user)}>
-                        <Feather name="edit" size={16} color="#3498DB" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.iconButton}
-                        onPress={() => onDelete(user)}>
-                        <Feather name="trash-2" size={16} color="#E74C3C" />
-                      </TouchableOpacity>
+                      <Edit onEdit={() => onEdit(user)} />
+                      <Delete onDelete={() => onDelete(user)} confirmMessage={`Voulez-vous vraiment supprimer l'utilisateur ${user.nom} ${user.prenom} ?`} />
                     </DataTable.Cell>
                   )}
                 </DataTable.Row>
