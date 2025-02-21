@@ -99,6 +99,34 @@ export type GradeStatus =
   | 'exempted'
   | 'pending_makeup'
 
+
+export type ClassGradesNote = {
+  id_eval: number
+  numero_etudiant: string
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  note: number
+  commentaire: string
+}
+
+export type ClassGradesEvaluation = {
+  id_eval: number
+  libelle: string
+  periode: string
+  date: string
+  notemaximale: number
+  coefficient: number
+  notes: ClassGradesNote[]
+}
+
+export type ClassGradesModule = {
+  id_module: number
+  libelle: string
+  codeapogee: string
+  evaluations: ClassGradesEvaluation[]
+}
+
 export interface AddGradeModalProps {
   isOpen: boolean
   onClose: () => void
@@ -163,7 +191,7 @@ export interface TeacherPlanningForm {
   presences: number // It's the number of hours to add for the selected type
 }
 
-export const periodeLabels = {
+export const periodeLabels: Record<string, string> = {
   Semestre_1: "Semestre 1",
   Semestre_2: "Semestre 2",
   Semestre_3: "Semestre 3",
@@ -171,4 +199,3 @@ export const periodeLabels = {
   Semestre_5: "Semestre 5",
   Semestre_6: "Semestre 6",
 }
-
