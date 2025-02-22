@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
+import { fetchUsers } from '../../backend/services/adminServices'
 
-type Tab = 'users' | 'import' | 'courses' | 'schedule' | 'rooms'
+type Tab = 'users' | 'import'
 
 export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users' as const)
@@ -33,32 +34,18 @@ export function Admin() {
   }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/admin/users`) // URL de votre API
-      .then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau');
-        return response.json() // Convertir la réponse en JSON
-      })
-      .then((data) => {
-        const utilisateurs = data.map((utilisateur: any) => ({
-          id_utilisateur: utilisateur.id_utilisateur,
-          nom: utilisateur.nom,
-          prenom: utilisateur.prenom,
-          email: utilisateur.email,
-          statut: utilisateur.statut,
-          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: utilisateur.enseignant?.vacataire
-        }));
+    const getUsers = async () => {
+      try {
+        const utilisateurs = await fetchUsers()
         setUtilisateurs(utilisateurs)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs:', error)
+      } finally {
         setLoading(false)
-      })
-      .catch((error) => {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error
-        )
-        setLoading(false)
-      })
+      }
+    }
+
+    getUsers()
   }, [])
 
   useEffect(() => {
