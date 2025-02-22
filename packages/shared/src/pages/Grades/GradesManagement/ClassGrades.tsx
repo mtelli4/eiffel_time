@@ -15,11 +15,7 @@ import { Edit2, Plus, Trash2 } from 'lucide-react'
 import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
 import { API_URL, ClassGradesEvaluation, ClassGradesModule, ClassGradesNote, periodeLabels } from '../../../types/types'
 import { useEditDeleteLoader } from '../../../components/Button/EditDeleteLoader'
-
-function getTime(debut: Date, fin: Date) {
-  const date = debut.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-  return `${date} : ${debut.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${fin.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
-}
+import { getTime } from '../../../utils/stringUtils'
 
 export function ClassGrades() {
   const { Edit, Delete } = useEditDeleteLoader()
@@ -187,7 +183,6 @@ export function ClassGrades() {
             setShowAddGrade(false)
           }}
           modules={modulesEvalNotes}
-          students={etudiants}
           cours={cours}
         />
       )}

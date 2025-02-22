@@ -127,12 +127,19 @@ export type ClassGradesModule = {
   evaluations: ClassGradesEvaluation[]
 }
 
+export type ClassGradesCours = {
+  id_cours: number
+  debut: string
+  fin: string
+  type: string
+  id_module: number
+}
+
 export interface AddGradeModalProps {
   isOpen: boolean
   onClose: () => void
-  modules: Modul[]
-  students: Etudiant[]
-  cours: Cours[]
+  modules: ClassGradesModule[]
+  cours: ClassGradesCours[]
 }
 
 export interface FormData {
