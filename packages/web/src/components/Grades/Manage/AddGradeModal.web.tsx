@@ -3,12 +3,12 @@ import {
   AddGradeModalProps,
   FormEvaluation,
 } from '../../../../../shared/src/types/types'
+import { getTime } from '../../../../../shared/src/utils/stringUtils'
 
 export default function WebAddGradeModal({
   isOpen,
   onClose,
   modules,
-  students,
   cours,
 }: AddGradeModalProps) {
   const [formData, setFormData] = useState<FormEvaluation>({
@@ -96,10 +96,10 @@ export default function WebAddGradeModal({
               <option value="">Sélectionner un module</option>
               {modules.map((module) => (
                 <option
-                  key={module.getId()}
-                  value={module.getId()}
+                  key={module.id_module}
+                  value={module.id_module}
                 >
-                  {module.getLibelle()}
+                  {module.libelle}
                 </option>
               ))}
             </select>
@@ -138,11 +138,11 @@ export default function WebAddGradeModal({
             >
               <option value="">Sélectionner un cours</option>
               {cours.map((c) => {
-                if (c.getIdModule() !== formData.id_module)
+                if (c.id_module !== formData.id_module)
                   return null
                 return (
-                  <option key={c.getId()} value={c.getId()}>
-                    {c.getTime()}
+                  <option key={c.id_cours} value={c.id_cours}>
+                    {getTime(new Date(c.debut), new Date(c.fin))}
                   </option>
                 )
               })}

@@ -11,7 +11,7 @@ export default function MobileAddGradeModal({
   isOpen,
   onClose,
   modules,
-  students,
+  cours,
 }: AddGradeModalProps) {
   const [formData, setFormData] = useState<FormData>({
     moduleId: '',
