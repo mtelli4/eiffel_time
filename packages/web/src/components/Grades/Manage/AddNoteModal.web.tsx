@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Evaluation } from '@shared/backend/classes';
+import { Evaluation } from '../../../../../shared/src/backend/classes/Evaluation';
 
 interface AddNoteModalProps {
   isOpen: boolean;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Decimal } from '@prisma/client/runtime/library';
-import { ClassGradesNote } from '@shared/types/types';
+import { ClassGradesNote } from '../../../../../shared/src/types/types';
 
 
 interface EditNoteModalProps {
