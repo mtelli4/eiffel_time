@@ -204,3 +204,33 @@ export const periodeLabels: Record<string, string> = {
   Semestre_5: "Semestre 5",
   Semestre_6: "Semestre 6",
 }
+
+export type MessagingUtilisateur = {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  statut: string
+  avatar: string | 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'
+  status: 'online' | 'offline'
+  lastSeen?: string
+}
+
+export type MessagingMessage = {
+  id_message: number
+  emetteur: number
+  recepteur: number
+  message: string
+  date: string
+  vu: boolean
+  attachments?: {
+    name: string
+    url: string
+    type: string
+  }[]
+}
+
+export type MessagingConversation = {
+  utilisateur: MessagingUtilisateur
+  last_message: MessagingMessage
+  unread: number
+}

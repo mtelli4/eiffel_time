@@ -1,127 +1,48 @@
 import { Edit2, MoreVertical, Paperclip, Search, Send } from 'lucide-react'
-import { useState } from 'react'
-import { cn } from '../../../../shared/src/lib/utils'
-
-interface User {
-  id: string
-  name: string
-  role: string
-  avatar?: string
-  status: 'online' | 'offline'
-  lastSeen?: string
-}
-
-interface Message {
-  id: string
-  senderId: string
-  content: string
-  timestamp: string
-  read: boolean
-  attachments?: {
-    name: string
-    url: string
-    type: string
-  }[]
-}
-
-interface Conversation {
-  id: string
-  participants: User[]
-  lastMessage?: Message
-  unreadCount: number
-}
-
-// Données de démonstration
-const MOCK_USERS: User[] = [
-  {
-    id: '1',
-    name: 'Jean Dupont',
-    role: 'Professeur',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-    status: 'online',
-  },
-  {
-    id: '2',
-    name: 'Thomas Bernard',
-    role: 'Étudiant',
-    avatar:
-      'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop',
-    status: 'offline',
-    lastSeen: '2024-03-15T14:30:00',
-  },
-]
-
-const MOCK_CONVERSATIONS: Conversation[] = [
-  {
-    id: '1',
-    participants: [MOCK_USERS[0]],
-    lastMessage: {
-      id: 'm1',
-      senderId: '1',
-      content:
-        'Bonjour, pouvez-vous me confirmer la date du prochain contrôle ?',
-      timestamp: '2024-03-15T15:30:00',
-      read: false,
-    },
-    unreadCount: 1,
-  },
-  {
-    id: '2',
-    participants: [MOCK_USERS[1]],
-    lastMessage: {
-      id: 'm2',
-      senderId: '2',
-      content: 'Merci pour les documents du cours.',
-      timestamp: '2024-03-15T14:00:00',
-      read: true,
-    },
-    unreadCount: 0,
-  },
-]
-
-const MOCK_MESSAGES: Message[] = [
-  {
-    id: 'm1',
-    senderId: '1',
-    content: 'Bonjour, pouvez-vous me confirmer la date du prochain contrôle ?',
-    timestamp: '2024-03-15T15:30:00',
-    read: false,
-  },
-  {
-    id: 'm2',
-    senderId: '2',
-    content: 'Bien sûr, le contrôle aura lieu le 25 mars.',
-    timestamp: '2024-03-15T15:32:00',
-    read: true,
-  },
-  {
-    id: 'm3',
-    senderId: '1',
-    content: 'Merci beaucoup !',
-    timestamp: '2024-03-15T15:33:00',
-    read: false,
-    attachments: [
-      {
-        name: 'cours.pdf',
-        url: 'https://example.com/cours.pdf',
-        type: 'application/pdf',
-      },
-    ],
-  },
-]
+import { useEffect, useState } from 'react'
+import { cn, roleFinder } from '../../../../shared/src/lib/utils'
+import { fetchConversations, fetchMessages } from '../../../../shared/src/backend/services/messaging'
+import { MessagingConversation, MessagingMessage } from '../../../../shared/src/types/types'
 
 export function Messages() {
-  const [conversations, setConversations] =
-    useState<Conversation[]>(MOCK_CONVERSATIONS)
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation | null>(null)
-  const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES)
+  const [conversations, setConversations] = useState<MessagingConversation[]>([])
+  const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null)
+  const [messages, setMessages] = useState<MessagingMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
+  const userId = 3
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const conversations = await fetchConversations(userId)
+        setConversations(conversations)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des conversations:', error)
+      }
+    }
+
+    getConversations()
+  }, [])
+
+  useEffect(() => {
+    if (selectedConversation) {
+      const getMessages = async () => {
+        try {
+          const messages = await fetchMessages(userId)
+          setMessages(messages)
+        } catch (error) {
+          console.error('Erreur lors de la récupération des messages:', error)
+        }
+      }
+
+      getMessages()
+    }
+  }, [selectedConversation])
+
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedConversation) return
+    /* if (!newMessage.trim() || !selectedConversation) return
 
     const message: Message = {
       id: `m${Date.now()}`,
@@ -132,7 +53,7 @@ export function Messages() {
     }
 
     setMessages([...messages, message])
-    setNewMessage('')
+    setNewMessage('') */
   }
 
   const formatTimestamp = (timestamp: string) => {
@@ -164,28 +85,28 @@ export function Messages() {
               {/* En-tête */}
               <div className="p-4 border-b border-gray-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {selectedConversation.participants[0].avatar ? (
+                  {selectedConversation.utilisateur.avatar ? (
                     <img
-                      src={selectedConversation.participants[0].avatar}
-                      alt={selectedConversation.participants[0].name}
+                      src={selectedConversation.utilisateur.avatar}
+                      alt={selectedConversation.utilisateur.prenom + ' ' + selectedConversation.utilisateur.nom}
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                       <span className="text-lg font-medium text-gray-600">
-                        {selectedConversation.participants[0].name[0]}
+                        {selectedConversation.utilisateur.prenom + ' ' + selectedConversation.utilisateur.nom}
                       </span>
                     </div>
                   )}
                   <div>
                     <h2 className="font-medium text-gray-900">
-                      {selectedConversation.participants[0].name}
+                      {selectedConversation.utilisateur.prenom + ' ' + selectedConversation.utilisateur.nom}
                     </h2>
                     <p className="text-sm text-gray-500">
-                      {selectedConversation.participants[0].status === 'online'
+                      {selectedConversation.utilisateur.status === 'online'
                         ? 'En ligne'
                         : formatLastSeen(
-                            selectedConversation.participants[0].lastSeen
+                            selectedConversation.utilisateur.lastSeen
                           )}
                     </p>
                   </div>
@@ -197,12 +118,12 @@ export function Messages() {
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
+                {messages.map((message) => (message.emetteur === selectedConversation.utilisateur.id_utilisateur || message.recepteur === selectedConversation.utilisateur.id_utilisateur) && (
                   <div
-                    key={message.id}
+                    key={'m' + message.id_message}
                     className={cn(
                       'flex flex-col max-w-[70%]',
-                      message.senderId === '1'
+                      message.emetteur === userId
                         ? 'ml-auto items-end'
                         : 'items-start'
                     )}
@@ -210,19 +131,19 @@ export function Messages() {
                     <div
                       className={cn(
                         'rounded-lg px-4 py-2',
-                        message.senderId === '1'
+                        message.emetteur === userId
                           ? 'bg-primary text-white'
                           : 'bg-gray-100 text-gray-900'
                       )}
                     >
-                      <p>{message.content}</p>
+                      <p>{message.message}</p>
                       {message.attachments?.map((attachment) => (
                         <a
                           key={attachment.name}
                           href={attachment.url}
                           className={cn(
                             'flex items-center gap-2 mt-2 p-2 rounded',
-                            message.senderId === '1'
+                            message.emetteur === userId
                               ? 'bg-white/10 text-white'
                               : 'bg-white text-primary'
                           )}
@@ -233,7 +154,7 @@ export function Messages() {
                       ))}
                     </div>
                     <span className="text-xs text-gray-500 mt-1">
-                      {formatTimestamp(message.timestamp)}
+                      {formatTimestamp(message.date)}
                     </span>
                   </div>
                 ))}
@@ -242,9 +163,9 @@ export function Messages() {
               {/* Zone de saisie */}
               <div className="p-4 border-t border-gray-200">
                 <div className="flex items-center gap-2">
-                  <button className="text-gray-500 hover:text-gray-700">
+                  {/* <button className="text-gray-500 hover:text-gray-700">
                     <Paperclip className="w-5 h-5" />
-                  </button>
+                  </button> */}
                   <input
                     type="text"
                     value={newMessage}
@@ -301,49 +222,49 @@ export function Messages() {
           <div className="overflow-y-auto h-[calc(100%-5rem)]">
             {conversations.map((conversation) => (
               <button
-                key={conversation.id}
+                key={'u' + conversation.utilisateur.id_utilisateur}
                 onClick={() => setSelectedConversation(conversation)}
                 className={cn(
                   'w-full p-4 flex items-start gap-3 hover:bg-gray-50 transition-colors',
-                  selectedConversation?.id === conversation.id && 'bg-gray-50'
+                  selectedConversation?.utilisateur.id_utilisateur === conversation.utilisateur.id_utilisateur && 'bg-gray-50'
                 )}
               >
-                {conversation.participants[0].avatar ? (
+                {conversation.utilisateur.avatar ? (
                   <img
-                    src={conversation.participants[0].avatar}
-                    alt={conversation.participants[0].name}
+                    src={conversation.utilisateur.avatar}
+                    alt={conversation.utilisateur.prenom + ' ' + conversation.utilisateur.nom}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                     <span className="text-lg font-medium text-gray-600">
-                      {conversation.participants[0].name[0]}
+                      {conversation.utilisateur.prenom + conversation.utilisateur.nom}
                     </span>
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <p className="font-medium text-gray-900 truncate">
-                      {conversation.participants[0].name}
+                      {conversation.utilisateur.prenom + ' ' + conversation.utilisateur.nom}
                     </p>
-                    {conversation.lastMessage && (
+                    {conversation.last_message && (
                       <span className="text-xs text-gray-500">
-                        {formatTimestamp(conversation.lastMessage.timestamp)}
+                        {formatTimestamp(conversation.last_message.date)}
                       </span>
                     )}
                   </div>
                   <p className="text-sm text-gray-500">
-                    {conversation.participants[0].role}
+                    {roleFinder(conversation.utilisateur.statut)}
                   </p>
-                  {conversation.lastMessage && (
+                  {conversation.last_message && (
                     <p className="text-sm text-gray-600 truncate">
-                      {conversation.lastMessage.content}
+                      {conversation.last_message.message}
                     </p>
                   )}
                 </div>
-                {conversation.unreadCount > 0 && (
+                {conversation.unread > 0 && (
                   <span className="bg-primary text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {conversation.unreadCount}
+                    {conversation.unread}
                   </span>
                 )}
               </button>
