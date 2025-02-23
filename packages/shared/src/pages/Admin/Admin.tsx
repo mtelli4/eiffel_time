@@ -231,14 +231,14 @@ export function Admin() {
             onFilterChange={handleFilterChange}
           />
 
-          <UserTable
+          {/* <UserTable
             users={utilisateurs}
             isAdmin={true}
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
             filters={filters}
             loading={loading}
-          />
+          /> */}
         </View>
       )}
 
