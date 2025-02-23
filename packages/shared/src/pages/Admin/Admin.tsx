@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { fetchUsers } from '../../backend/services/adminServices'
+import { fetchUsers } from '../../backend/services/admin'
 
 type Tab = 'users' | 'import'
 
