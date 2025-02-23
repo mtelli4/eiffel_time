@@ -169,6 +169,7 @@ model module_bloc_competence {
   id_module       Int
   id_bloc_comp    Int
   periode         periode?
+  coefficient     Int?
   bloc_competence bloc_competence @relation(fields: [id_bloc_comp], references: [id_bloc_comp], onDelete: NoAction, onUpdate: NoAction)
   module          module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
 

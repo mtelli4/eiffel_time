@@ -162,6 +162,7 @@ CREATE TABLE "module_bloc_competence" (
     "id_module" INTEGER NOT NULL,
     "id_bloc_comp" INTEGER NOT NULL,
     "periode" "periode",
+    "coefficient" INTEGER,
 
     CONSTRAINT "module_bloc_competence_pkey" PRIMARY KEY ("id_module","id_bloc_comp")
 );
