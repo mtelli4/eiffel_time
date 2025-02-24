@@ -52,7 +52,7 @@ export function Login() {
         <Button
           label="Inscription"
           variant="secondary"
-          onPress={() => navigate('/signup')}
+          onPress={() => navigate('/signup')} 
         />
       </View>
     </View>
