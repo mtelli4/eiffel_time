@@ -5,6 +5,7 @@ import { Image, Text, View } from 'react-native'
 import { useNavigate } from 'react-router'
 import logo from '../../assets/logo.png'
 import { styles } from './Style'
+import { API_URL } from '../../types/types'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -13,7 +14,7 @@ export function Login() {
 
   const handleSubmitUser = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/signin`, {
+      const response = await fetch(`${API_URL}/api/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ export function Login() {
 
       setValid(data)
     } catch {
-      console.log('error')
+      console.error('Erreur lors de la connexion')
     }
   }
 
