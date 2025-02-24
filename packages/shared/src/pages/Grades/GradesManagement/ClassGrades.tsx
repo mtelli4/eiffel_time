@@ -44,7 +44,7 @@ export function ClassGrades() {
     }
 
     loadComponents().then(r => r)
-  }, [])
+  }, [AddNoteModal])
 
   useEffect(() => {
     fetch(`${API_URL}/api/note/`)
