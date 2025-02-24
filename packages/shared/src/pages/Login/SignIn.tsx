@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { Image, Text, View } from 'react-native'
 import { useNavigate } from 'react-router'
 import logo from '../../assets/logo.png'
+import { Button } from '../../components/Button/Button'
+import { Input } from '../../components/Input/Input'
 import { styles } from './Style'
 import { API_URL } from '../../types/types'
 
@@ -14,7 +16,7 @@ export function Login() {
 
   const handleSubmitUser = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/signin`, {
+      const response = await fetch(`${API_URL}/api/signin/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +33,7 @@ export function Login() {
   }
 
   const navigate = useNavigate()
-  
+
   useEffect(() => {
     if (valid) {
       navigate('/schedule')

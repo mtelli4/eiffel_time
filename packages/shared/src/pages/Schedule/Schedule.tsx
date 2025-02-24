@@ -28,7 +28,7 @@ const HOURS = [
   '18:00',
 ]
 
-function getProperties(description: string) {
+export function getProperties(description: string) {
   let test: Array<string> = description.split('\n')
   test = test.filter((x) => x !== '')
   const groups = ['TD', 'TP']
@@ -43,7 +43,7 @@ const getWeekRange = (offset = 0) => {
   const today = new Date()
   const currentDay = today.getDay() === 0 ? 7 : today.getDay()
   const monday = new Date(today)
-  monday.setDate(today.getDate() - currentDay + 1 + offset * 7)
+  monday.setDate(today.getDate() - currentDay + 0 + offset * 7)
   const sunday = new Date(monday)
   sunday.setDate(monday.getDate() + 6)
   return { monday, sunday }
@@ -116,6 +116,13 @@ export function Schedule() {
       })
   }, [])
 
+  // console.log(courses);
+  // console.log(sunday.getDate())
+  // const daysOfYear = []
+  // for (var d = monday; d <= sunday; d.setDate(d.getDate() + 1)) {
+  //   daysOfYear.push(new Date(d))
+  // }
+
   return (
     <View style={styles.container}>
       <View>
@@ -137,6 +144,11 @@ export function Schedule() {
                 {day}
               </Text>
             ))}
+            {/* {daysOfYear.map((value) => (
+              <Text key={value.getDate()} style={styles.headerDayCell}>
+                {DAYS[value.getDay()]} {value.getDate()}
+              </Text>
+            ))} */}
           </View>
         </View>
 
