@@ -1,4 +1,4 @@
-import { Edit2, Plus, Trash2 } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   Platform,
@@ -8,20 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {
-  Cours,
-  Etudiant,
-  Evaluation,
-  Module,
-  Note,
-} from '../../../backend/classes'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
-import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
-import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebDeleteNoteModal'
-import WebEditNoteModal from '../../../components/Grades/GradesManagement/WebEditNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebEditNoteModal from '../../../components/Grades/GradesManagement/WebEditNoteModal'
-import { Edit2, Plus, Trash2 } from 'lucide-react'
 import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebDeleteNoteModal'
 import { API_URL, ClassGradesEvaluation, ClassGradesModule, ClassGradesNote, periodeLabels } from '../../../types/types'
 import { useEditDeleteLoader } from '../../../components/Button/EditDeleteLoader'
@@ -37,16 +26,9 @@ export function ClassGrades() {
   const [modulesEvalNotes, setModuleEvalNotes] = useState<ClassGradesModule[]>([])
   const [selectedEvaluation, setSelectedEvaluation] = useState<any>(null)
   const [selectedNote, setSelectedNote] = useState<any>(null)
-  const [selectedStudent, setSelectedStudent] = useState<any>(null)
   const [showAddNote, setShowAddNote] = useState(false)
-  const [selectedEvaluation, setSelectedEvaluation] =
-    useState<Evaluation | null>(null)
-  const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
   const [showEditNote, setShowEditNote] = useState(false)
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null)
   const [showDeleteNote, setShowDeleteNote] = useState(false)
-  const [showEditNote, setShowEditNote] = useState(false);
-  const [showDeleteNote, setShowDeleteNote] = useState(false);
 
   useEffect(() => {
     const loadComponents = async () => {

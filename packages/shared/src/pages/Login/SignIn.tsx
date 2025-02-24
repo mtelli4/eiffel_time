@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react'
 import { Image, Text, View } from 'react-native'
 import { useNavigate } from 'react-router'
 import logo from '../../assets/logo.png'
-import { Button } from '../../components/Button/Button'
-import { Input } from '../../components/Input/Input'
 import { styles } from './Style'
 import { API_URL } from '../../types/types'
 
@@ -24,8 +22,19 @@ export function Login() {
         body: JSON.stringify({ email, password }),
       })
       const data = await response.json()
+      if (data) {
+        const user = await fetch(`${API_URL}/api/user/me/${email}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        })
+        const userData = await user.json()
+        console.log(userData)
+        localStorage.setItem('user', JSON.stringify(userData))
+      }
       console.log(data)
-
       setValid(data)
     } catch {
       console.error('Erreur lors de la connexion')
@@ -34,11 +43,12 @@ export function Login() {
 
   const navigate = useNavigate()
 
+
   useEffect(() => {
-    if (valid) {
+    if (localStorage.getItem('user')) {
       navigate('/schedule')
     }
-  }, [valid, navigate])
+  }, [navigate])
 
   return (
     <View style={styles.root}>

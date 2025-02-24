@@ -12,6 +12,7 @@ const scheduleRouter = require('./schedule')
 const signupRouter = require('./signup')
 const noteRouter = require('./note');
 const messagingRouter = require('./messaging');
+const userRouter = require('./user');
 
 const router = express.Router();
 
@@ -28,5 +29,6 @@ router.use('/schedule', scheduleRouter);
 router.use('/note', noteRouter);
 router.use('/messaging', messagingRouter);
 router.use('/signup', signupRouter)
+router.use('/user', userRouter);
 
 module.exports = router;

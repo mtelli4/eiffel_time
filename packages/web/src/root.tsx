@@ -1,8 +1,8 @@
-// web/src/root.tsx
 import { Outlet, useLocation } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { UserProvider, useUser } from "./context/UserContext";
 import { useEffect } from "react";
+import useAuthCheck from "../../shared/src/hooks/useAuthCheck";
 
 export default function Root() {
   return (
@@ -34,6 +34,8 @@ export function Error() {
 function InnerError() {
   const location = useLocation();
   const { role } = useUser();
+
+  useAuthCheck()
 
   useEffect(() => {
     if (!sessionStorage.getItem("dateFormat")) {

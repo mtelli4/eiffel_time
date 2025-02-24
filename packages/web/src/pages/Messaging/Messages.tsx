@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react'
 import { cn, roleFinder } from '../../../../shared/src/lib/utils'
 import { fetchConversations, fetchMessages } from '../../../../shared/src/backend/services/messaging'
 import { MessagingConversation, MessagingMessage } from '../../../../shared/src/types/types'
+import useAuthCheck from '@shared/hooks/useAuthCheck'
 
 export function Messages() {
+  useAuthCheck()
+
   const [conversations, setConversations] = useState<MessagingConversation[]>([])
   const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null)
   const [messages, setMessages] = useState<MessagingMessage[]>([])

@@ -5,6 +5,7 @@ import logo from '../../assets/logo.png';
 import { useNavigate } from 'react-router';
 import { styles } from './Style';
 import { useState } from 'react';
+import { API_URL } from '../../types/types';
 
 export function SignUp() {
   const [lastname, setlastname] = useState('')
@@ -14,7 +15,7 @@ export function SignUp() {
 
   const handleSubmitSignUp = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/signup/signup`, {
+      const response = await fetch(`${API_URL}/api/signup/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
