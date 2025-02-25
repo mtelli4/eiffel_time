@@ -20,6 +20,11 @@ const dateSelectOptions: { value: string; label: string }[] = [
   { value: 'YYYY-MM-DD', label: 'YYYY-MM-DD' },
 ]
 
+const languagesSelectOptions: { value: string; label: string }[] = [
+  { value: 'fr', label: 'Français' },
+  { value: 'en', label: 'Anglais' },
+]
+
 export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme }: PersonalizationSettingsProps) {
   // const [date, setDate] = useState(sessionStorage.getItem('dateFormat') || dateFormat.fr)
   // const { theme, setTheme, themes } = useTheme()
@@ -60,10 +65,10 @@ export default function PersonalizationSettings({ dateFormat, setDate, theme, se
         <div>
           <label className="block text-sm text-gray-600 dark:text-white mb-1">Langue</label>
           <Select
-            defaultValue={themesSelectOptions.find((option) => option.value === theme)}
+            defaultValue={languagesSelectOptions.find((option) => option.value === 'fr')}
             placeholder="Choisissez une langue"
-            options={themesSelectOptions}
-            onChange={(option) => setTheme(option?.value as string)}
+            options={languagesSelectOptions}
+            onChange={(option) => console.log(option)}
             className="w-full"
           />
         </div>

@@ -64,7 +64,6 @@ export function Settings() {
     setTheme(tempTheme)        // On applique le thème
 
     localStorage.setItem('dateFormat', tempDate)
-    localStorage.setItem('theme', tempTheme)
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {
