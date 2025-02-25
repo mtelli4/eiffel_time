@@ -24,24 +24,4 @@ router.get('/formations', async (req, res) => {
   }
 });
 
-// Route pour récupérer la liste des groupes
-router.get('/groupes', async (req, res) => {
-  try {
-    const groupes = await prisma.groupe.findMany({
-      select: {
-        id_grp: true,
-        libelle: true,
-      },
-      orderBy: {
-        id_grp: 'asc',  // Tri par id de groupe
-      },
-    });
-
-    res.json(groupes);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération des groupes.' });
-  }
-});
-
 module.exports = router;

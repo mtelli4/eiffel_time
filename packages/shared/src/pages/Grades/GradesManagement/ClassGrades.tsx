@@ -15,6 +15,7 @@ import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebD
 import { API_URL, ClassGradesEvaluation, ClassGradesModule, ClassGradesNote, periodeLabels } from '../../../types/types'
 import { useEditDeleteLoader } from '../../../components/Button/EditDeleteLoader'
 import { getTime } from '../../../utils/stringUtils'
+import { fetchClassGrades } from '@shared/backend/services/classgrades'
 
 export function ClassGrades() {
   const { Edit, Delete } = useEditDeleteLoader()
@@ -24,6 +25,7 @@ export function ClassGrades() {
   const [showAddGrade, setShowAddGrade] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [modulesEvalNotes, setModuleEvalNotes] = useState<ClassGradesModule[]>([])
+  const [cours, setCours] = useState<any>(null)
   const [selectedEvaluation, setSelectedEvaluation] = useState<any>(null)
   const [selectedNote, setSelectedNote] = useState<any>(null)
   const [showAddNote, setShowAddNote] = useState(false)
@@ -47,38 +49,22 @@ export function ClassGrades() {
   }, [AddNoteModal])
 
   useEffect(() => {
-    fetch(`${API_URL}/api/note/`)
-      .then((res) => res.json())
+    fetchClassGrades()
       .then((data) => {
-        setModuleEvalNotes(data.map((module: any) => {
-          return {
-            id_module: module.id_module,
-            libelle: module.libelle,
-            codeapogee: module.codeapogee,
-            evaluations: module.evaluation.map((evaluationItem: any) => {
-              return {
-                id_eval: evaluationItem.id_eval,
-                libelle: evaluationItem.libelle,
-                periode: evaluationItem.periode,
-                date: getTime(new Date(evaluationItem.cours.debut), new Date(evaluationItem.cours.fin)),
-                notemaximale: evaluationItem.notemaximale,
-                coefficient: evaluationItem.coefficient,
-                notes: evaluationItem.notes.map((noteItem: any) => {
-                  return {
-                    numero_etudiant: noteItem.etudiant.numeroetudiant,
-                    nom: noteItem.etudiant.utilisateur.nom,
-                    prenom: noteItem.etudiant.utilisateur.prenom,
-                    note: noteItem.note,
-                    commentaire: noteItem.commentaire
-                  }
-                })
-              }
-            })
-          }
-        }))
+        setModuleEvalNotes(data)
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des modules:', error)
+      })
+
+    fetch(`${API_URL}/api/classgrades/cours/`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCours(data)
+      }
+      )
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des cours:', error)
       })
   }, [])
 
@@ -93,6 +79,29 @@ export function ClassGrades() {
       module.libelle.toLowerCase().includes(searchQuery.toLowerCase()) ||
       module.codeapogee.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const calculateEvaluationAverage = (evaluation: ClassGradesEvaluation) => {
+    if (evaluation.notes.length === 0) return ''
+    const notes = evaluation.notes
+    const notemaximale = evaluation.notemaximale
+  
+    // Filtrer les notes valides (non nulles)
+    const validNotes = notes.filter((n) => n.note !== null)
+  
+    // Si aucune note valide, retourner '-'
+    if (validNotes.length === 0) return '-'
+  
+    // Calculer la somme des notes ramenées sur 20
+    const sumNotes = validNotes.reduce((sum, n) => {
+      return sum + (n.note / notemaximale) * 20
+    }, 0)
+  
+    // Calculer la moyenne
+    const average = sumNotes / validNotes.length
+  
+    // Retourner la moyenne formatée avec 2 décimales
+    return ' - Moyenne : ' + average.toFixed(2)
+  }  
 
   const handleAddNote = (evaluation: any) => {
     setSelectedEvaluation(evaluation); // Stocker l'évaluation sélectionnée
@@ -149,7 +158,7 @@ export function ClassGrades() {
                       </Text>
                       <Text style={styles.evaluationSubtitle}>
                         Période de l'évaluation :{' ' + periodeLabels[e.periode]} -{' '}
-                        Date :{' ' + e.date + ' '} - Coefficient : {e.coefficient}
+                        Date :{' ' + e.date + ' '} - Coefficient : {e.coefficient} {calculateEvaluationAverage(e)}
                       </Text>
                     </View>
                     <View key={'m' + module.id_module + 'e' + e.id_eval} style={styles.table}>

@@ -157,6 +157,20 @@ router.put('/update-note/:id_utilisateur/:id_eval', async (req, res) => {
   }
 });
 
+// Route pour récupérer la liste des cours
+router.get('/cours', async (req, res) => {
+  try {
+    const cours = await prisma.cours.findMany({
+      orderBy: {
+        id_cours: 'asc',  // Tri par id de cours
+      },
+    });
 
+    res.json(cours);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des cours.' });
+  }
+});
 
 module.exports = router;
