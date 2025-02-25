@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from 'react-native'
 import { Utilisateur } from '../../../../shared/src/types/types'
 import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
-import { FileUp } from 'lucide-react'
+import { FileDown, FileUp } from 'lucide-react'
 import Papa from 'papaparse'
 import * as XLSX from 'xlsx'
 import { useState } from 'react'
@@ -10,6 +10,7 @@ import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import '../../styles/dataTables.dataTables.min.css'
 import { roleFinder } from '../../../../shared/src/lib/utils'
+// import model from '/public/import_model.csv'
 // import model_csv from '../../assets/import_model.csv'
 // import model_xlsx from '../../assets/import_model.xlsx'
 
@@ -56,9 +57,23 @@ export function UserImport() {
     }
   }
 
-
   const handleImportUsers = () => {
     console.log('Importer les utilisateurs')
+  }
+
+  const handleDownloadModel = (type: 'csv' | 'xlsx') => { // TODO: Finir la fonction de téléchargement du modèle
+    console.log('Télécharger le modèle', type)
+    fetch('../../assets/import_model.csv')
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(new Blob([blob]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'import_model.csv')
+        document.body.appendChild(link)
+        link.click()
+        link.parentNode?.removeChild(link)
+      })
   }
 
   return (
@@ -79,12 +94,12 @@ export function UserImport() {
               style={{ display: 'none' }}
               onChange={handleFileUpload}
             />
-            <a href="/import_model.csv" download="import_model.csv" style={styles.addButton}>
-              <span style={styles.addButtonText}>Télécharger le fichier modèle CSV</span>
-            </a>
-            <a href="/import_model.xlsx" download="import_model.xlsx" style={styles.addButton}>
-              <span style={styles.addButtonText}>Télécharger le fichier modèle XLSX</span>
-            </a>
+            <button onClick={() => handleDownloadModel('csv')} className='btn btn-outline flex flex-row items-center gap-2'>
+              <FileDown style={styles.addIcon} /> Modèle CSV
+            </button>
+            <button onClick={() => handleDownloadModel('xlsx')} className='btn btn-outline flex flex-row items-center gap-2'>
+              <FileDown style={styles.addIcon} /> Modèle XLSX
+            </button>
           </div>
         </div>
       </header>
@@ -93,7 +108,7 @@ export function UserImport() {
       <p>Modalités d'importation des utilisateurs :</p>
       <ul className="list-disc list-inside ml-4">
         <li>Le fichier doit être au format CSV ou XLSX.</li>
-        <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Tout autre colonne sera ignorée.</li>
+        <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
         {/* <li>Le fichier modèle peut être téléchargé ci-dessus.</li> */}
         <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
         <li>Les utilisateurs seront créés après validation des données.</li>
