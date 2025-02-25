@@ -4,6 +4,8 @@
 
 * PostgreSQL database and ingrid schema
 
+.![Static Badge](https://img.shields.io/badge/npm-v10.9.0-green)
+
 ## Installation
 
 Run the following command at root of the project : `npm install`
