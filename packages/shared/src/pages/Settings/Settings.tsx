@@ -52,8 +52,9 @@ export function Settings() {
     loadComponents()
   }, [])
 
-  const [date, setDate] = useState(localStorage.getItem('dateFormat') || 'DD/MM/YYYY')
+  const [date, setDate] = useState(localStorage.getItem('dateFormat') || 'DD/MM/YYYY') // TODO: Faire un hook pour gérer le format de date
   const { theme, setTheme } = useTheme()
+  const [language, setLanguage] = useState('fr') // TODO: Faire un hook pour gérer la langue
 
   // États temporaires pour stocker les modifications
   const [tempDate, setTempDate] = useState(date)
@@ -77,7 +78,7 @@ export function Settings() {
         <View style={{ marginVertical: 20 }} />
         <SecuritySettings />
         <View style={{ marginVertical: 20 }} />
-        <PersonalizationSettings dateFormat={date} setDate={setTempDate} theme={theme} setTheme={setTempTheme} />
+        <PersonalizationSettings dateFormat={date} setDate={setTempDate} theme={theme} setTheme={setTempTheme} language={language} setLanguage={setLanguage} />
         <View style={{ marginVertical: 20 }} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSave}>

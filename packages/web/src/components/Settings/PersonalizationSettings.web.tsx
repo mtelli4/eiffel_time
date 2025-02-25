@@ -6,6 +6,8 @@ interface PersonalizationSettingsProps {
   setDate: (newDate: string) => void
   theme: string
   setTheme: (newTheme: string) => void
+  language: string
+  setLanguage: (newLanguage: string) => void
 }
 
 const themesSelectOptions: { value: string; label: string }[] = [
@@ -25,21 +27,12 @@ const languagesSelectOptions: { value: string; label: string }[] = [
   { value: 'en', label: 'Anglais' },
 ]
 
-export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme }: PersonalizationSettingsProps) {
-  // const [date, setDate] = useState(sessionStorage.getItem('dateFormat') || dateFormat.fr)
-  // const { theme, setTheme, themes } = useTheme()
-
+export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme, language, setLanguage }: PersonalizationSettingsProps) {
   const handleDateChange = (newFormat: string) => {
     sessionStorage.setItem('dateFormat', newFormat)
     window.dispatchEvent(new Event("dateChange")); // Notifie les autres composants
     setDate(newFormat); // Met à jour l'état local pour forcer le rendu
   }
-
-  /* useEffect(() => {
-    if (!sessionStorage.getItem('dateFormat')) {
-      sessionStorage.setItem('dateFormat', dateFormat.fr)
-    }
-  }) */
 
   return (
     <div className="bg-white dark:bg-primary rounded-lg shadow-sm p-6">
@@ -65,10 +58,10 @@ export default function PersonalizationSettings({ dateFormat, setDate, theme, se
         <div>
           <label className="block text-sm text-gray-600 dark:text-white mb-1">Langue</label>
           <Select
-            defaultValue={languagesSelectOptions.find((option) => option.value === 'fr')}
+            defaultValue={languagesSelectOptions.find((option) => option.value === language)}
             placeholder="Choisissez une langue"
             options={languagesSelectOptions}
-            onChange={(option) => console.log(option)}
+            onChange={(option) => setLanguage(option?.value as string)}
             className="w-full"
           />
         </div>
