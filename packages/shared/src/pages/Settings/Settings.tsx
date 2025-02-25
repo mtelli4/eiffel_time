@@ -1,3 +1,4 @@
+import { useTheme } from '../../../../web/src/hooks/useTheme'
 import React, { useEffect, useState } from 'react'
 import {
   Platform,
@@ -15,8 +16,7 @@ export function Settings() {
   const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(
     null
   )
-  const [PersonalizationSettings, setPersonalizationSettings] =
-    useState<React.FC | null>(null)
+  const [PersonalizationSettings, setPersonalizationSettings] = useState<any>(null)
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -52,8 +52,19 @@ export function Settings() {
     loadComponents()
   }, [])
 
+  const [date, setDate] = useState(localStorage.getItem('dateFormat') || 'DD/MM/YYYY')
+  const { theme, setTheme } = useTheme()
+
+  // États temporaires pour stocker les modifications
+  const [tempDate, setTempDate] = useState(date)
+  const [tempTheme, setTempTheme] = useState(theme)
+
   const handleSave = () => {
-    // Implement save functionality
+    setDate(tempDate)          // On applique le format de date
+    setTheme(tempTheme)        // On applique le thème
+
+    localStorage.setItem('dateFormat', tempDate)
+    localStorage.setItem('theme', tempTheme)
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {
@@ -67,7 +78,7 @@ export function Settings() {
         <View style={{ marginVertical: 20 }} />
         <SecuritySettings />
         <View style={{ marginVertical: 20 }} />
-        <PersonalizationSettings />
+        <PersonalizationSettings dateFormat={date} setDate={setTempDate} theme={theme} setTheme={setTempTheme} />
         <View style={{ marginVertical: 20 }} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSave}>
