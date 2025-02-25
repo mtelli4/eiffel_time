@@ -10,7 +10,7 @@ const teacherAttendanceRouter = require('./teacher-attendance');
 const adminRouter = require('./admin');
 const scheduleRouter = require('./schedule')
 const signupRouter = require('./signup')
-const noteRouter = require('./note');
+const classgradesRouter = require('./classgrades');
 const messagingRouter = require('./messaging');
 const userRouter = require('./user');
 
@@ -26,7 +26,7 @@ router.use('/absences', absenceRouter);
 router.use('/teacher-attendance', teacherAttendanceRouter);
 router.use('/admin', adminRouter);
 router.use('/schedule', scheduleRouter);
-router.use('/note', noteRouter);
+router.use('/classgrades', classgradesRouter);
 router.use('/messaging', messagingRouter);
 router.use('/signup', signupRouter)
 router.use('/user', userRouter);
