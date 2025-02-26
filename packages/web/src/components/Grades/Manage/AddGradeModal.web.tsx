@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   AddGradeModalProps,
   FormEvaluation,
@@ -6,42 +6,55 @@ import {
 import { getTime } from '../../../../../shared/src/utils/stringUtils'
 
 export default function WebAddGradeModal({
-  isOpen,
-  onClose,
-  modules,
-  cours,
+    isOpen,
+    onClose,
+    moduleName,
+    modules, 
+    students,
+    cours,
 }: AddGradeModalProps) {
-  const [formData, setFormData] = useState<FormEvaluation>({
-    libelle: '',
-    coefficient: 1,
-    notemaximale: 20,
-    periode: 'Semestre 1',
-    id_cours: 0,
-    id_module: 0,
-  })
+    const [formData, setFormData] = useState<FormEvaluation>({
+        libelle: '',
+        coefficient: 1,
+        notemaximale: 20,
+        periode: 'Semestre 1',
+        id_cours: 0,
+        id_module: 0, 
+    })
 
-  const handleSubmit = async () => {
-    if (!formData.libelle) {
-      alert("Le nom de l'évaluation est requis")
-      return
-    }
-    if (!formData.id_module || formData.id_module === 0) {
-      alert('Le module est requis')
-      return
-    }
-    if (!formData.id_cours || formData.id_cours === 0) {
-      alert('Le cours est requis')
-      return
-    }
-    try {
-      const response = await fetch(
-        'http://localhost:4000/api/evaluation/insert-evaluation',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+
+    useEffect(() => {
+        const selectedModule = modules.find(m => m.getLibelle() === moduleName);
+        if (selectedModule) {
+            setFormData(prev => ({
+                ...prev,
+                id_module: selectedModule.getId() 
+            }));
         }
-      )
+    }, [moduleName, modules]);
+
+    const handleSubmit = async () => {
+        if (!formData.libelle) {
+            alert("Le nom de l'évaluation est requis")
+            return
+        }
+        if (!formData.id_module || formData.id_module === 0) {
+            alert('Le module est requis')
+            return
+        }
+        if (!formData.id_cours || formData.id_cours === 0) {
+            alert('Le cours est requis')
+            return
+        }
+        try {
+            const response = await fetch(
+                'http://localhost:4000/api/evaluation/insert-evaluation',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                }
+            )
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -78,76 +91,58 @@ export default function WebAddGradeModal({
           </button>
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Module
-            </label>
-            <select
-              value={formData.id_module}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  id_module: parseInt(e.target.value),
-                })
-              }
-              className="w-full p-2 border rounded"
-            >
-              <option value="">Sélectionner un module</option>
-              {modules.map((module) => (
-                <option
-                  key={module.id_module}
-                  value={module.id_module}
-                >
-                  {module.libelle}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Module sélectionné
+                        </label>
+                        <p className="p-2 border rounded bg-gray-100">
+                            {moduleName ?? "Aucun module sélectionné"} 
+                        </p>
+                    </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Nom de l'évaluation
-            </label>
-            <input
-              type="text"
-              value={formData.libelle}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  libelle: e.target.value,
-                })
-              }
-              className="w-full p-2 border rounded"
-            />
-          </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Nom de l'évaluation
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.libelle}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    libelle: e.target.value,
+                                })
+                            }
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Cours
-            </label>
-            <select
-              value={formData.id_cours}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  id_cours: parseInt(e.target.value),
-                })
-              }
-              className="w-full p-2 border rounded"
-            >
-              <option value="">Sélectionner un cours</option>
-              {cours.map((c) => {
-                if (c.id_module !== formData.id_module)
-                  return null
-                return (
-                  <option key={c.id_cours} value={c.id_cours}>
-                    {getTime(new Date(c.debut), new Date(c.fin))}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
+               
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Cours
+                        </label>
+                        <select
+                            value={formData.id_cours}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    id_cours: parseInt(e.target.value),
+                                })
+                            }
+                            className="w-full p-2 border rounded"
+                        >
+                            <option value="">Sélectionner un cours</option>
+                            {cours
+                                .filter(c => c.getIdModule() === formData.id_module) 
+                                .map(c => (
+                                    <option key={c.getId()} value={c.getId()}>
+                                        {c.getTime()}
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">

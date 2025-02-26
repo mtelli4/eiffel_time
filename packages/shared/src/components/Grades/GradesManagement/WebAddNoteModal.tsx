@@ -1,34 +1,36 @@
 import { useState, useEffect } from 'react';
-import { Evaluation } from '../../../backend/classes';
+import { Evaluation, Note } from '@shared/backend/classes';
 
 interface AddNoteModalProps {
-  isOpen: boolean
-  onClose: () => void
-  evaluation: Evaluation | null
-  students: any[]
+    isOpen: boolean;
+    onClose: () => void;
+    evaluation: Evaluation | null;
+    students: any[];
+    notes: Note[]; 
 }
 
 export default function WebAddNoteModal({
-  isOpen,
-  onClose,
-  evaluation,
-  students,
+    isOpen,
+    onClose,
+    evaluation,
+    students,
+    notes, 
 }: AddNoteModalProps) {
-  const [formData, setFormData] = useState({
-    id_eval: 0,
-    id_utilisateur: 0,
-    note: 0,
-    commentaire: '',
-  })
+    const [formData, setFormData] = useState({
+        id_eval: 0,
+        id_utilisateur: 0,
+        note: 0,
+        commentaire: '',
+    });
 
-  useEffect(() => {
-    if (evaluation) {
-      setFormData((prev) => ({
-        ...prev,
-        id_eval: evaluation.getId(),
-      }))
-    }
-  }, [evaluation])
+    useEffect(() => {
+        if (evaluation) {
+            setFormData((prev) => ({
+                ...prev,
+                id_eval: evaluation.getId(),
+            }));
+        }
+    }, [evaluation]);
 
   const handleSubmit = async () => {
     console.log('Données envoyées :', formData)
@@ -59,18 +61,16 @@ export default function WebAddNoteModal({
         )
       }
 
-      const result = await response.json()
-      console.log('Note ajoutée avec succès:', result)
-      onClose()
-    } catch (error: any) {
-      console.error('Erreur:', error)
-      alert(
-        "Une erreur s'est produite lors de l'ajout de la note: " + error.message
-      )
-    }
-  }
+            const result = await response.json();
+            console.log('Note ajoutée avec succès:', result);
+            onClose();
+        } catch (error: any) {
+            console.error('Erreur:', error);
+            alert("Une erreur s'est produite lors de l'ajout de la note: " + error.message);
+        }
+    };
 
-  if (!isOpen || !evaluation) return null
+    if (!isOpen || !evaluation) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -95,81 +95,86 @@ export default function WebAddNoteModal({
             </p>
           </div>
 
-          {/* Sélection de l'étudiant */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Étudiant</label>
-            <select
-              value={formData.id_utilisateur}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  id_utilisateur: parseInt(e.target.value),
-                })
-              }
-              className="w-full p-2 border rounded"
-            >
-              <option value="">Sélectionner un étudiant</option>
-              {students.map((student) => (
-                <option key={student.getId()} value={student.getId()}>
-                  {student.getFullName()}
-                </option>
-              ))}
-            </select>
-          </div>
+             
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Étudiant
+                        </label>
+                        <select
+                            value={formData.id_utilisateur || ''}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    id_utilisateur: parseInt(e.target.value) || 0, 
+                                })
+                            }
+                            className="w-full p-2 border rounded"
+                        >
+                            <option value="">Sélectionner un étudiant</option>
+                            
+                            {students
+                                .filter((student) => 
+                                    !notes.some((note) => 
+                                        note.getUtilisateurId() === student.getId() &&
+                                        note.getEvaluationId() === formData.id_eval
+                                    )
+                                )
+                                .map((student) => (
+                                    <option key={student.getId()} value={student.getId()}>
+                                        {student.getFullName()}
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
 
-          {/* Champ pour entrer la note */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Note</label>
-            <input
-              type="number"
-              value={formData.note}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  note: parseFloat(e.target.value),
-                })
-              }
-              className="w-full p-2 border rounded"
-              min="0"
-              max="20"
-            />
-          </div>
+             
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Note
+                        </label>
+                        <input
+                            type="number"
+                            value={formData.note}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    note: parseFloat(e.target.value),
+                                })
+                            }
+                            className="w-full p-2 border rounded"
+                            min="0"
+                            max="20"
+                        />
+                    </div>
 
-          {/* Commentaire optionnel */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Commentaire (optionnel)
-            </label>
-            <input
-              type="text"
-              value={formData.commentaire}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  commentaire: e.target.value,
-                })
-              }
-              className="w-full p-2 border rounded"
-            />
-          </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Commentaire (optionnel)
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.commentaire}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    commentaire: e.target.value,
+                                })
+                            }
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
+                </div>
+
+     
+                <div className="flex justify-end gap-3 mt-4">
+                    <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">
+                        Annuler
+                    </button>
+                    <button onClick={handleSubmit} className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90">
+                        Enregistrer
+                    </button>
+                </div>
+            </div>
         </div>
-
-        {/* Boutons Annuler / Enregistrer */}
-        <div className="flex justify-end gap-3 mt-4">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90"
-          >
-            Enregistrer
-          </button>
-        </div>
-      </div>
-    </div>
-  )
+    );
 }
