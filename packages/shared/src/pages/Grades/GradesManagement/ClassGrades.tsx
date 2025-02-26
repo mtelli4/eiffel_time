@@ -20,8 +20,10 @@ import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebD
 import WebEditNoteModal from '../../../components/Grades/GradesManagement/WebEditNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 
+import WebDeleteGradeModal from '../../../components/Grades/GradesManagement/WebDeleteGradeModal'
+
 export function ClassGrades() {
-  const [selectedModule, setSelectedModule] = useState<string | null>(null)
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
   const [showAddGrade, setShowAddGrade] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [modules, setModules] = useState<Module[]>([])
@@ -30,12 +32,14 @@ export function ClassGrades() {
   const [cours, setCours] = useState<Cours[]>([])
   const [evaluations, setEvaluations] = useState<Evaluation[]>([])
   const [showAddNote, setShowAddNote] = useState(false)
-  const [selectedEvaluation, setSelectedEvaluation] =
-    useState<Evaluation | null>(null)
+  const [selectedEvaluation, setSelectedEvaluation] =useState<Evaluation | null>(null)
   const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
-  const [showEditNote, setShowEditNote] = useState(false)
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null)
-  const [showDeleteNote, setShowDeleteNote] = useState(false)
+  const [showEditNote, setShowEditNote] = useState(false);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [showDeleteNote, setShowDeleteNote] = useState(false);
+  const [showDeleteEvaluation, setShowDeleteEvaluation] = useState(false);
+
+  
 
   useEffect(() => {
     fetch('http://localhost:4000/api/data/data')
@@ -68,11 +72,10 @@ export function ClassGrades() {
       })
   }, [])
 
-  const handleAddGrade = (e: any) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setShowAddGrade(true)
-  }
+  const handleAddGrade = (module: Module) => {
+    setSelectedModule(module); 
+    setShowAddGrade(true);
+};
 
   const filteredModules = modules.filter(
     (module) =>
@@ -80,12 +83,12 @@ export function ClassGrades() {
       module.getCodeApogee().toLowerCase().includes(searchQuery.toLowerCase())
   )
   const handleAddNote = (evaluation: Evaluation) => {
-    setSelectedEvaluation(evaluation) // Stocker l'évaluation sélectionnée
-    setShowAddNote(true) // Ouvrir le modal d'ajout de note
+    setSelectedEvaluation(evaluation) 
+    setShowAddNote(true) 
   }
 
   const hasEvaluations = (id_module: number) => {
-    /* récupérer le nombre de notes pour un module donné, sachant que chaque note est liée à une évaluation qui est liée à un cours qui est lié à un module */
+   
     const count = notes.filter((note) => {
       return evaluations.find((evaluation) => {
         return cours.find((c) => {
@@ -100,25 +103,32 @@ export function ClassGrades() {
   }
 
   const handleEditNote = (note: Note) => {
-    const student = etudiants.find(
-      (etudiant) => etudiant.getId() === note.getUtilisateurId()
-    )
-    setSelectedNote(note)
-    setSelectedStudent(student || null) // Si l'étudiant n'est pas trouvé, on met `null`
-    setShowEditNote(true)
-  }
-
+    const student = etudiants.find((etudiant) => etudiant.getId() === note.getUtilisateurId());
+    setSelectedNote(note);
+    setSelectedStudent(student || null); 
+    setShowEditNote(true);
+  };
+  
   const handleDeleteNote = (note: Note) => {
-    setSelectedNote(note)
-    setShowDeleteNote(true)
-  }
+    setSelectedNote(note);
+    setShowDeleteNote(true);
+  };
+
+  const handleDelModal =(evaluation: Evaluation) => {
+    setSelectedEvaluation(evaluation); 
+    setShowDeleteEvaluation(true);
+  };
+  
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleAddGrade} style={styles.addButton}>
-          <Plus className="w-4 h-4" />
-        </TouchableOpacity>
+        
+         
+        
+     
+       
       </View>
 
       <View style={styles.searchContainer}>
@@ -128,13 +138,21 @@ export function ClassGrades() {
           placeholder="Rechercher un module..."
           style={styles.searchInput}
         />
-        {/* Replace with appropriate icon */}
+      
       </View>
       <ScrollView>
         {filteredModules.map((module) => (
           <View key={module.getId()} style={styles.moduleCard}>
             <View style={styles.moduleHeader}>
-              <Text style={styles.moduleTitle}>{module.getName()}</Text>
+              <Text style={styles.moduleTitle}>{module.getName()}   
+              
+              <TouchableOpacity onPress={() =>handleAddGrade(module)} >
+
+            <Plus className="w-4 h-4" />
+          </TouchableOpacity>
+    
+          </Text> 
+          
             </View>
 
             {hasEvaluations(module.getId()) &&
@@ -144,13 +162,15 @@ export function ClassGrades() {
                     <View key={e.getId()} style={styles.evaluationCard}>
                       <View style={styles.evaluationHeader}>
                         <Text style={styles.evaluationTitle}>
-                          {e.getLibelle()}{' '}
-                          <TouchableOpacity
-                            onPress={() => handleAddNote(e)}
-                            style={styles.addButton}
-                          >
-                            <Plus className="w-4 h-4" />
-                          </TouchableOpacity>
+                          {e.getLibelle()} 
+                              <TouchableOpacity onPress={() => handleAddNote(e)} >
+                    <Plus className="w-4 h-4" />
+               </TouchableOpacity>
+
+               <TouchableOpacity onPress={() => handleDelModal(e)} >
+                    <Trash2 className="w-4 h-4" />
+               </TouchableOpacity>
+
                         </Text>
 
                         <Text style={styles.evaluationSubtitle}>
@@ -223,25 +243,29 @@ export function ClassGrades() {
         ))}
       </ScrollView>
 
-      {showAddGrade && (
-        <AddGradeModal
-          isOpen={showAddGrade}
-          onClose={() => {
-            setShowAddGrade(false)
-          }}
-          modules={modules}
-          students={etudiants}
-          cours={cours}
-        />
-      )}
-      {showAddNote && selectedEvaluation && (
-        <WebAddNoteModal
-          isOpen={showAddNote}
-          onClose={() => setShowAddNote(false)}
-          evaluation={selectedEvaluation}
-          students={etudiants}
-        />
-      )}
+      {showAddGrade && selectedModule && (
+    <AddGradeModal
+        isOpen={showAddGrade}
+        onClose={() => setShowAddGrade(false)}
+        moduleName={selectedModule.getLibelle()} 
+        modules={modules} 
+        students={etudiants} 
+        cours={cours} 
+    />
+)}
+
+ {showAddNote && selectedEvaluation && (
+    <WebAddNoteModal
+        isOpen={showAddNote}
+        onClose={() => setShowAddNote(false)}
+        evaluation={selectedEvaluation}
+        students={etudiants}
+        notes={notes} 
+    />
+)}
+
+
+
 
       {showEditNote && selectedNote && selectedStudent && (
         <WebEditNoteModal
@@ -275,16 +299,47 @@ export function ClassGrades() {
                 )
               )
 
-              console.log('Note supprimée avec succès.')
+        console.log("Note supprimée avec succès.");
+      } catch (error) {
+        console.error("Erreur :", error);
+        alert("Une erreur s'est produite lors de la suppression de la note.");
+      }
+    }}
+  />
+)}
+
+
+
+{showDeleteEvaluation && selectedEvaluation && (
+    <WebDeleteGradeModal
+        isOpen={showDeleteEvaluation}
+        onClose={() => setShowDeleteEvaluation(false)}
+        onDelete={async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:4000/api/evaluation/delete-evaluation/${selectedEvaluation.getId()}`,
+                    { method: "DELETE" }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la suppression de l'évaluation.");
+                }
+
+                setEvaluations((prevEvaluations) =>
+                    prevEvaluations.filter((e) => e.getId() !== selectedEvaluation.getId())
+                );
+
+                console.log("Évaluation supprimée avec succès.");
             } catch (error) {
-              console.error('Erreur :', error)
-              alert(
-                "Une erreur s'est produite lors de la suppression de la note."
-              )
+                console.error("Erreur :", error);
+                alert("Une erreur s'est produite lors de la suppression de l'évaluation.");
             }
-          }}
-        />
-      )}
+        }}
+    />
+)}
+
+
+
     </View>
   )
 }

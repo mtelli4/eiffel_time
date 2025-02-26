@@ -103,6 +103,7 @@ export interface AddGradeModalProps {
   isOpen: boolean
   onClose: () => void
   modules: Modul[]
+  moduleName: string; 
   students: Etudiant[]
   cours: Cours[]
 }

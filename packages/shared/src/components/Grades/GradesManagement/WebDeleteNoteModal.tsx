@@ -3,7 +3,7 @@ import { useState } from "react";
 interface DeleteNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => Promise<void>; // 🔥 Exécute la suppression après confirmation
+  onDelete: () => Promise<void>; 
 }
 
 export default function WebDeleteNoteModal({
@@ -15,9 +15,9 @@ export default function WebDeleteNoteModal({
 
   const handleDelete = async () => {
     setLoading(true);
-    await onDelete(); // 🔥 Exécute la suppression
+    await onDelete(); 
     setLoading(false);
-    onClose(); // Ferme la modal
+    onClose(); 
   };
 
   if (!isOpen) return null;

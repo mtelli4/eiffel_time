@@ -7,7 +7,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 interface EditNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  note: Note | null; // 📌 La note sélectionnée
+  note: Note | null; 
   student: Etudiant | null;
 }
 
@@ -24,7 +24,7 @@ export default function WebEditNoteModal({
     commentaire: '',
   });
 
-  // 📌 Charger les données de la note sélectionnée
+
   useEffect(() => {
     if (note) {
       setFormData({
@@ -81,7 +81,7 @@ export default function WebEditNoteModal({
         </div>
 
         <div className="space-y-4">
-           {/* 🔥 Affichage du nom de l'étudiant */}
+        
            <div>
             <label className="block text-sm font-medium mb-1">Étudiant</label>
             <div className="w-full p-2 border rounded bg-gray-100 text-gray-700">
