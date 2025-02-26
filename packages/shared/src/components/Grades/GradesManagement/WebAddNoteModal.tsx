@@ -32,32 +32,34 @@ export default function WebAddNoteModal({
         }
     }, [evaluation]);
 
-    const handleSubmit = async () => {
-        console.log("Données envoyées :", formData);
+  const handleSubmit = async () => {
+    console.log('Données envoyées :', formData)
 
-        if (!formData.id_utilisateur || formData.id_utilisateur === 0) {
-            alert('L’étudiant est requis');
-            return;
+    if (!formData.id_utilisateur || formData.id_utilisateur === 0) {
+      alert('L’étudiant est requis')
+      return
+    }
+    if (formData.note < 0 || formData.note > 20) {
+      alert('La note doit être comprise entre 0 et 20')
+      return
+    }
+
+    try {
+      const response = await fetch(
+        'http://localhost:4000/api/note/insert-note',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
         }
-        if (formData.note < 0 || formData.note > 20) {
-            alert('La note doit être comprise entre 0 et 20');
-            return;
-        }
+      )
 
-        try {
-            const response = await fetch(
-                'http://localhost:4000/api/note/insert-note',
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
-                }
-            );
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Erreur lors de l'ajout de la note.");
-            }
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(
+          errorData.message || "Erreur lors de l'ajout de la note."
+        )
+      }
 
             const result = await response.json();
             console.log('Note ajoutée avec succès:', result);
@@ -70,24 +72,28 @@ export default function WebAddNoteModal({
 
     if (!isOpen || !evaluation) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-[90%] max-w-2xl">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Ajouter une Note</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-                        ×
-                    </button>
-                </div>
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-[90%] max-w-2xl">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Ajouter une Note</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ×
+          </button>
+        </div>
 
-                <div className="space-y-4">
-                    
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Évaluation sélectionnée
-                        </label>
-                        <p className="p-2 border rounded bg-gray-100">{evaluation.getLibelle()}</p>
-                    </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Évaluation sélectionnée
+            </label>
+            <p className="p-2 border rounded bg-gray-100">
+              {evaluation.getLibelle()}
+            </p>
+          </div>
 
              
                     <div>

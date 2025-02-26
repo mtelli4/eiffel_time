@@ -8,8 +8,8 @@ const ical = require('node-ical')
 
 async function fetchCalendar() {
   try {
-    const data = await ical.async.parseFile(
-      'packages/shared/src/backend/ADECal.ics'
+    const data = await ical.async.fromURL(
+      'https://edt.univ-eiffel.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=1510&projectId=26&calType=ical&nbWeeks=40'
     )
     return data
   } catch (error) {

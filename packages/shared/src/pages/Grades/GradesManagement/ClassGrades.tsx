@@ -1,3 +1,4 @@
+import { Edit2, Plus, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   ScrollView,
@@ -13,14 +14,13 @@ import {
   Module,
   Note,
 } from '../../../backend/classes'
-import { Button } from '../../../components/Button/Button'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
 import WebAddNoteModal from '../../../components/Grades/GradesManagement/WebAddNoteModal'
+import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebDeleteNoteModal'
+import WebEditNoteModal from '../../../components/Grades/GradesManagement/WebEditNoteModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
-import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
-import { Edit2, Plus, Trash2 } from 'lucide-react'
-import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
-import WebDeleteGradeModal from '@shared/components/Grades/GradesManagement/WebDeleteGradeModal'
+
+import WebDeleteGradeModal from '../../../components/Grades/GradesManagement/WebDeleteGradeModal'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
@@ -83,10 +83,9 @@ export function ClassGrades() {
       module.getCodeApogee().toLowerCase().includes(searchQuery.toLowerCase())
   )
   const handleAddNote = (evaluation: Evaluation) => {
-    setSelectedEvaluation(evaluation); 
-    setShowAddNote(true); 
-  };
-  
+    setSelectedEvaluation(evaluation) 
+    setShowAddNote(true) 
+  }
 
   const hasEvaluations = (id_module: number) => {
    
@@ -173,8 +172,7 @@ export function ClassGrades() {
                </TouchableOpacity>
 
                         </Text>
-      
-                 
+
                         <Text style={styles.evaluationSubtitle}>
                           Période de l'évaluation :{' ' + e.getPeriodeName()} -{' '}
                           Date :{' '}
@@ -222,27 +220,18 @@ export function ClassGrades() {
                                   'Publiée'
                                 </Text>
                               </Text>
-                      
 
-                 
-                             
-        <TouchableOpacity 
-          onPress={() => handleEditNote(n)}
-          
-        >
-        
-          <Edit2 className="w-4 h-4" />
-        </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={() => handleEditNote(n)}
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </TouchableOpacity>
 
-        <TouchableOpacity 
-          onPress={() => handleDeleteNote(n)}
-          
-        >
-        
-          <Trash2 className="w-4 h-4" />
-          
-          
-        </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={() => handleDeleteNote(n)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </TouchableOpacity>
                             </View>
                           )
                         })}
@@ -278,38 +267,37 @@ export function ClassGrades() {
 
 
 
-{showEditNote && selectedNote && selectedStudent && (
-  <WebEditNoteModal
-    isOpen={showEditNote}
-    onClose={() => setShowEditNote(false)}
-    note={selectedNote}
-    student={selectedStudent} 
-  />
-)}
+      {showEditNote && selectedNote && selectedStudent && (
+        <WebEditNoteModal
+          isOpen={showEditNote}
+          onClose={() => setShowEditNote(false)}
+          note={selectedNote}
+          student={selectedStudent}
+        />
+      )}
 
+      {showDeleteNote && selectedNote && (
+        <WebDeleteNoteModal
+          isOpen={showDeleteNote}
+          onClose={() => setShowDeleteNote(false)}
+          onDelete={async () => {
+            try {
+              const response = await fetch(
+                `http://localhost:4000/api/note/delete-note/${selectedNote.getUtilisateurId()}/${selectedNote.getEvaluationId()}`,
+                { method: 'DELETE' }
+              )
 
-{showDeleteNote && selectedNote && (
-  <WebDeleteNoteModal
-    isOpen={showDeleteNote}
-    onClose={() => setShowDeleteNote(false)}
-    onDelete={async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:4000/api/note/delete-note/${selectedNote.getUtilisateurId()}/${selectedNote.getEvaluationId()}`,
-          { method: "DELETE" }
-        );
+              if (!response.ok) {
+                throw new Error('Erreur lors de la suppression de la note.')
+              }
 
-        if (!response.ok) {
-          throw new Error("Erreur lors de la suppression de la note.");
-        }
-
-        setNotes((prevNotes) =>
-          prevNotes.filter(
-            (n) =>
-              n.getUtilisateurId() !== selectedNote.getUtilisateurId() ||
-              n.getEvaluationId() !== selectedNote.getEvaluationId()
-          )
-        );
+              setNotes((prevNotes) =>
+                prevNotes.filter(
+                  (n) =>
+                    n.getUtilisateurId() !== selectedNote.getUtilisateurId() ||
+                    n.getEvaluationId() !== selectedNote.getEvaluationId()
+                )
+              )
 
         console.log("Note supprimée avec succès.");
       } catch (error) {
