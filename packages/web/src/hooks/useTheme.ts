@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 
-const themes = ['light', 'dark', 'system'] as const
-type Theme = (typeof themes)[number]
+const themesSelectOptions: { value: string; label: string }[] = [
+  { value: 'light', label: 'Clair' },
+  { value: 'dark', label: 'Sombre' },
+  { value: 'system', label: 'Système' },
+]
+
+type Theme = (typeof themesSelectOptions)[number]['value']
 
 export const useTheme = (initialTheme?: Theme) => {
   const getInitialTheme = (): Theme => {
@@ -30,5 +35,5 @@ export const useTheme = (initialTheme?: Theme) => {
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  return { theme, setTheme, themes }
+  return { theme, setTheme, themesSelectOptions }
 }
