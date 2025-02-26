@@ -57,25 +57,25 @@ export function NotificationCenter() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
+        className="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none"
       >
         <Bell className="w-6 h-6" />
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
+          <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white dark:text-primary bg-red-500 dark:bg-red-600 rounded-full">
             {unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-primary rounded-lg shadow-lg ring-1 ring-black dark:ring-white ring-opacity-5 z-50">
           <div className="p-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Notifications
             </h3>
             <div className="space-y-4">
               {notifications.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
                   Aucune notification
                 </p>
               ) : (
@@ -84,27 +84,27 @@ export function NotificationCenter() {
                     key={notification.id}
                     className={cn(
                       'p-3 rounded-lg cursor-pointer transition-colors',
-                      !notification.read && 'bg-blue-50',
-                      notification.read && 'bg-gray-50',
-                      'hover:bg-gray-100'
+                      !notification.read && 'bg-blue-50 dark:bg-blue-950',
+                      notification.read && 'bg-gray-50 dark:bg-gray-950',
+                      'hover:bg-gray-100 dark:hover:bg-gray-900'
                     )}
                     onClick={() => markAsRead(notification.id)}
                   >
                     <div className="flex items-start justify-between">
-                      <h4 className="font-medium text-gray-900">
+                      <h4 className="font-medium text-gray-900 dark:text-gray-100">
                         {notification.title}
                       </h4>
                       <span
                         className={cn(
                           'w-2 h-2 rounded-full',
-                          !notification.read && 'bg-blue-500'
+                          !notification.read && 'bg-blue-500 dark:bg-blue-400',
                         )}
                       />
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                       {notification.message}
                     </p>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                       {formatDate(notification.date)}
                     </p>
                   </div>
