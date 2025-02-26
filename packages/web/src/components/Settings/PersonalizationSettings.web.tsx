@@ -1,5 +1,8 @@
 import { Palette } from 'lucide-react'
+import { useTheme } from '../../hooks/useTheme'
 import Select from 'react-select'
+import { useDateFormat } from '../../hooks/useDateFormat'
+import { useLanguage } from '../../hooks/useLanguage'
 
 interface PersonalizationSettingsProps {
   dateFormat: string
@@ -10,24 +13,11 @@ interface PersonalizationSettingsProps {
   setLanguage: (newLanguage: string) => void
 }
 
-const themesSelectOptions: { value: string; label: string }[] = [
-  { value: 'light', label: 'Clair' },
-  { value: 'dark', label: 'Sombre' },
-  { value: 'system', label: 'Système' },
-]
-
-const dateSelectOptions: { value: string; label: string }[] = [
-  { value: 'DD/MM/YYYY', label: 'DD/MM/YYYY' },
-  { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY' },
-  { value: 'YYYY-MM-DD', label: 'YYYY-MM-DD' },
-]
-
-const languagesSelectOptions: { value: string; label: string }[] = [
-  { value: 'fr', label: 'Français' },
-  { value: 'en', label: 'Anglais' },
-]
-
 export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme, language, setLanguage }: PersonalizationSettingsProps) {
+  const { themesSelectOptions } = useTheme()
+  const { dateSelectOptions } = useDateFormat()
+  const { languagesSelectOptions } = useLanguage()
+  
   const handleDateChange = (newFormat: string) => {
     sessionStorage.setItem('dateFormat', newFormat)
     window.dispatchEvent(new Event("dateChange")); // Notifie les autres composants

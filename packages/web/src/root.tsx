@@ -3,6 +3,9 @@ import { Layout } from "./components/Layout";
 import { UserProvider, useUser } from "./context/UserContext";
 import { useEffect } from "react";
 import useAuthCheck from "../../shared/src/hooks/useAuthCheck";
+import { useTheme } from "./hooks/useTheme";
+import { useDateFormat } from "./hooks/useDateFormat";
+import { useLanguage } from "./hooks/useLanguage";
 
 export default function Root() {
   return (
@@ -34,14 +37,13 @@ export function Error() {
 function InnerError() {
   const location = useLocation();
   const { role } = useUser();
-
   useAuthCheck()
 
   useEffect(() => {
-    if (!sessionStorage.getItem("dateFormat")) {
-      sessionStorage.setItem("dateFormat", "DD/MM/YYYY");
-    }
-  })
+    useTheme()
+    useDateFormat()
+    useLanguage()
+  }, [])
 
   return (
     <>
