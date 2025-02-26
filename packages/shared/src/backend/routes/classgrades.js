@@ -173,4 +173,34 @@ router.get('/cours', async (req, res) => {
   }
 });
 
+// Route pour récupérer la liste des étudiants
+router.get('/etudiants', async (req, res) => {
+  try {
+    const etudiants = await prisma.etudiant.findMany({
+      select: {
+        id_utilisateur: true,
+        utilisateur: {
+          select: {
+            nom: true,
+            prenom: true,
+          }
+        }
+      },
+      orderBy: {
+        utilisateur: {
+          nom: 'asc',  // Tri par nom
+        },
+        utilisateur: {
+          prenom: 'asc',  // Puis par prénom
+        }
+      },
+    });
+
+    res.json(etudiants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des étudiants.' });
+  }
+});
+
 module.exports = router;
