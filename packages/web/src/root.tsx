@@ -37,13 +37,14 @@ export function Error() {
 function InnerError() {
   const location = useLocation();
   const { role } = useUser();
+  const { theme, setTheme } = useTheme()
   useAuthCheck()
 
   useEffect(() => {
-    useTheme()
+    setTheme(theme)
     useDateFormat()
     useLanguage()
-  }, [])
+  }, [theme])
 
   return (
     <>
