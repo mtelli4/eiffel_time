@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 
 const dateSelectOptions: { value: string; label: string }[] = [
-  { value: 'DD/MM/YYYY', label: 'DD/MM/YYYY' },
-  { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY' },
-  { value: 'YYYY-MM-DD', label: 'YYYY-MM-DD' },
+  { value: 'dd/MM/yyyy', label: 'DD/MM/YYYY' },
+  { value: 'MM/dd/yyyy', label: 'MM/DD/YYYY' },
+  { value: 'yyyy-MM-dd', label: 'YYYY-MM-DD' },
 ]
 
 type DateFormat = (typeof dateSelectOptions)[number]['value']
@@ -11,7 +11,7 @@ type DateFormat = (typeof dateSelectOptions)[number]['value']
 export const useDateFormat = (initialFormat?: DateFormat) => {
   const getInitialDateFormat = (): DateFormat => {
     const savedFormat = localStorage.getItem('dateFormat') as DateFormat
-    return initialFormat || savedFormat || 'DD/MM/YYYY'
+    return initialFormat || savedFormat || 'dd/MM/yyyy'
   }
 
   const [dateFormat, setDateFormat] = useState<DateFormat>(getInitialDateFormat)

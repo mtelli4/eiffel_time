@@ -6,7 +6,7 @@ import { MessagingConversation, MessagingMessage } from '../../../../shared/src/
 import useAuthCheck from '@shared/hooks/useAuthCheck'
 
 export function Messages() {
-  useAuthCheck()
+  // useAuthCheck()
 
   const [conversations, setConversations] = useState<MessagingConversation[]>([])
   const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null)
