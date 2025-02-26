@@ -20,6 +20,7 @@ import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebEditNoteModal from '@shared/components/Grades/GradesManagement/WebEditNoteModal'
 import { Edit2, Plus, Trash2 } from 'lucide-react'
 import WebDeleteNoteModal from '@shared/components/Grades/GradesManagement/WebDeleteNoteModal'
+import WebDeleteGradeModal from '@shared/components/Grades/GradesManagement/WebDeleteGradeModal'
 
 export function ClassGrades() {
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
@@ -31,12 +32,12 @@ export function ClassGrades() {
   const [cours, setCours] = useState<Cours[]>([])
   const [evaluations, setEvaluations] = useState<Evaluation[]>([])
   const [showAddNote, setShowAddNote] = useState(false)
-  const [selectedEvaluation, setSelectedEvaluation] =
-    useState<Evaluation | null>(null)
+  const [selectedEvaluation, setSelectedEvaluation] =useState<Evaluation | null>(null)
   const [selectedStudent, setSelectedStudent] = useState<Etudiant | null>(null)
   const [showEditNote, setShowEditNote] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showDeleteNote, setShowDeleteNote] = useState(false);
+  const [showDeleteEvaluation, setShowDeleteEvaluation] = useState(false);
 
   
 
@@ -105,13 +106,18 @@ export function ClassGrades() {
   const handleEditNote = (note: Note) => {
     const student = etudiants.find((etudiant) => etudiant.getId() === note.getUtilisateurId());
     setSelectedNote(note);
-    setSelectedStudent(student || null); // Si l'étudiant n'est pas trouvé, on met `null`
+    setSelectedStudent(student || null); 
     setShowEditNote(true);
   };
   
   const handleDeleteNote = (note: Note) => {
     setSelectedNote(note);
     setShowDeleteNote(true);
+  };
+
+  const handleDelModal =(evaluation: Evaluation) => {
+    setSelectedEvaluation(evaluation); 
+    setShowDeleteEvaluation(true);
   };
   
   
@@ -139,10 +145,14 @@ export function ClassGrades() {
         {filteredModules.map((module) => (
           <View key={module.getId()} style={styles.moduleCard}>
             <View style={styles.moduleHeader}>
-              <Text style={styles.moduleTitle}>{module.getName()}    <TouchableOpacity onPress={() =>handleAddGrade(module)} >
+              <Text style={styles.moduleTitle}>{module.getName()}   
+              
+              <TouchableOpacity onPress={() =>handleAddGrade(module)} >
 
             <Plus className="w-4 h-4" />
-          </TouchableOpacity></Text> 
+          </TouchableOpacity>
+    
+          </Text> 
           
             </View>
 
@@ -156,6 +166,10 @@ export function ClassGrades() {
                           {e.getLibelle()} 
                               <TouchableOpacity onPress={() => handleAddNote(e)} >
                     <Plus className="w-4 h-4" />
+               </TouchableOpacity>
+
+               <TouchableOpacity onPress={() => handleDelModal(e)} >
+                    <Trash2 className="w-4 h-4" />
                </TouchableOpacity>
 
                         </Text>
@@ -304,6 +318,36 @@ export function ClassGrades() {
       }
     }}
   />
+)}
+
+
+
+{showDeleteEvaluation && selectedEvaluation && (
+    <WebDeleteGradeModal
+        isOpen={showDeleteEvaluation}
+        onClose={() => setShowDeleteEvaluation(false)}
+        onDelete={async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:4000/api/evaluation/delete-evaluation/${selectedEvaluation.getId()}`,
+                    { method: "DELETE" }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la suppression de l'évaluation.");
+                }
+
+                setEvaluations((prevEvaluations) =>
+                    prevEvaluations.filter((e) => e.getId() !== selectedEvaluation.getId())
+                );
+
+                console.log("Évaluation supprimée avec succès.");
+            } catch (error) {
+                console.error("Erreur :", error);
+                alert("Une erreur s'est produite lors de la suppression de l'évaluation.");
+            }
+        }}
+    />
 )}
 
 
