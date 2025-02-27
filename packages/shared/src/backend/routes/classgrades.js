@@ -1,5 +1,5 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient, periode } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -52,6 +52,72 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erreur lors de la récupération des évaluations et des notes." });
+  }
+});
+
+// Route pour créer une nouvelle évaluation
+router.post('/insert-evaluation', async (req, res) => {
+  const formData = req.body;
+  try {
+    const result = await prisma.$transaction(async (prisma) => {
+      const maxId = await prisma.evaluation.aggregate({
+        _max: {
+          id_eval: true,
+        },
+      });
+      const newId = maxId._max.id_eval + 1;
+      const evaluation = await prisma.evaluation.create({
+        data: {
+          id_eval: newId,
+          libelle: formData.libelle,
+          coefficient: formData.coefficient,
+          notemaximale: formData.notemaximale,
+          periode: periode[formData.periode],
+          createdat: new Date(),
+          id_cours: formData.id_cours,
+          id_notif: 3,
+          id_module: formData.id_module,
+        },
+      });
+
+      return evaluation;
+    });
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Une erreur s\'est produite lors de la création de l\'évaluation.', details: error });
+  }
+});
+
+// Route pour supprimer une évaluation
+router.delete('/delete-evaluation/:id_evaluation', async (req, res) => {
+  const { id_evaluation } = req.params;
+  try {
+    const result = await prisma.$transaction(async (prisma) => {
+      const existingEvaluation = await prisma.evaluation.findUnique({
+        where: { id_eval: parseInt(id_evaluation) },
+      });
+
+      // Si l'évaluation n'existe pas
+      if (!existingEvaluation) {
+        return res.status(404).json({ error: "Évaluation non trouvée." });
+      }
+
+      // Suppression des notes associées à l'évaluation
+      await prisma.notes.deleteMany({
+        where: { id_eval: parseInt(id_evaluation) },
+      });
+
+      // Suppression de l'évaluation
+      await prisma.evaluation.delete({
+        where: { id_eval: parseInt(id_evaluation) },
+      });
+      
+      return { message: "Évaluation supprimée avec succès." };
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de la suppression de l'évaluation." });
   }
 });
 
