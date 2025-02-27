@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 
 export const API_URL = Platform.select({
-  web: 'http://localhost:4000',
-  ios: 'http://localhost:4000',
-  android: 'http://10.0.2.2:4000', // Pour l'émulateur Android
+  web: `http://localhost:4000`,
+  ios: `http://localhost:4000`,
+  android: `http://192.168.1.15:4000`, // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
   // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
-  // android: 'http://192.168.1.XX:4000',
+  // android: 'http://192.168.1.XX:4000', // 10.0.2.2
 });
 
 export const ROLES = [
@@ -136,7 +136,8 @@ export type ClassGradesCours = {
 export interface AddGradeModalProps {
   isOpen: boolean
   onClose: () => void
-  modules: ClassGradesModule[]
+  onSubmit: (data: FormEvaluation) => void
+  module: ClassGradesModule
   cours: ClassGradesCours[]
 }
 

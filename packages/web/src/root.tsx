@@ -38,7 +38,7 @@ function InnerError() {
   const location = useLocation();
   const { role } = useUser();
   const { theme, setTheme } = useTheme()
-  useAuthCheck()
+  // useAuthCheck()
 
   useEffect(() => {
     setTheme(theme)

@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { Platform } from "react-native";
 
 /*
  * Return the given text with the first letter capitalized and the rest of the text in lowercase.
@@ -33,7 +34,12 @@ export function getTime(debut: Date, fin: Date) {
 }
 
 export function dateFormatting(debut: Date, fin?: Date) {
-  const dateFormat = localStorage.getItem('dateFormat') || 'dd/MM/yyyy'
+  let dateFormat: string;
+  if (Platform.OS === 'web') {
+    dateFormat = localStorage.getItem('dateFormat') || 'dd/MM/yyyy'
+  } else {
+    dateFormat = 'dd/MM/yyyy'
+  }
   if (fin === undefined) {
     return format(debut, dateFormat)
   }
