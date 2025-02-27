@@ -5,14 +5,16 @@ SET search_path SET ingrid;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.2 (Ubuntu 17.2-1.pgdg24.04+1)
--- Dumped by pg_dump version 17.2 (Ubuntu 17.2-1.pgdg24.04+1)
+-- Dumped from database version 17.4 (Ubuntu 17.4-1.pgdg24.04+2)
+-- Dumped by pg_dump version 17.4 (Ubuntu 17.4-1.pgdg24.04+2)
 
 
 --
 -- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid._prisma_migrations VALUES ('0f913a62-ea49-4986-8d28-b99586151748', '2bef64ddfa02eb26d4b62fa5d4ce5ae12c5800d1f5f62a040c73e7d0b515041d', '2025-02-27 17:09:11.019107+01', '0_init', NULL, NULL, '2025-02-27 17:09:10.99609+01', 1);
+INSERT INTO ingrid._prisma_migrations VALUES ('e8a1b317-343c-4f7d-b0fe-a5e749a5ec4f', '326be9082e94cbdf38c9f61c3dd8cd176e02184323711bd8fde4891c29c94a2c', '2025-02-27 17:09:11.02438+01', '20250227160528_', NULL, NULL, '2025-02-27 17:09:11.019945+01', 1);
 INSERT INTO ingrid._prisma_migrations VALUES ('6f8cae26-0877-4b59-b2c5-a6a26aef01e7', '066280158a609145362a619a3c91c09f26130c9afbe7e658c2ce18fbde7110d9', '2024-12-12 12:10:06.15293+01', '0_init', '', NULL, '2024-12-12 12:10:06.15293+01', 0);
 
 
@@ -250,9 +252,6 @@ INSERT INTO ingrid.evaluation VALUES (8, 'Devoir surveillé', 2, 15, 'Semestre 4
 INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2025-02-10 13:00:00', '2025-02-11 13:00:00', 9, 3, 30);
 INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3, 33);
 INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3, 39);
-INSERT INTO ingrid.evaluation VALUES (100, 'test', 1, 20, NULL, '2025-01-27 21:39:05.254', NULL, 1, 3, 1);
-INSERT INTO ingrid.evaluation VALUES (101, 'derrick', 1, 100, NULL, '2025-02-13 07:38:55.519', NULL, 1, 3, 1);
-INSERT INTO ingrid.evaluation VALUES (102, 'Testest', 1, 20, NULL, '2025-02-13 13:33:47.324', NULL, 1, 3, 1);
 
 
 --
@@ -309,12 +308,8 @@ INSERT INTO ingrid.groupe_etudiant VALUES (15, 4);
 -- Data for Name: message; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.message VALUES (53, 'Je pense qu''il faut d''abord décomposer le problème en étapes. Peut-être qu''on devrait revoir les bases sur les matrices.', '2025-01-08 10:10:00', 3, 8, 52);
 INSERT INTO ingrid.message VALUES (51, 'Salut, tu as compris le dernier exercice sur les matrices ?', '2025-01-08 10:00:00', 3, 8, NULL);
 INSERT INTO ingrid.message VALUES (52, 'Non, pas vraiment. Tu as des idées pour le résoudre ?', '2025-01-08 10:05:00', 8, 3, 51);
-INSERT INTO ingrid.message VALUES (54, 'Bonne idée, je vais regarder le cours à nouveau. Tu veux qu''on réessaie ensemble après ? ', '2025-01-08 10:15:00', 8, 3, 53);
-INSERT INTO ingrid.message VALUES (55, 'Oui, ça me va. On peut se retrouver à la bibliothèque à 14h ?', '2025-01-08 10:20:00', 3, 8, 54);
-INSERT INTO ingrid.message VALUES (56, 'Ok, c''est parfait. À tout à l''heure !', '2025-01-08 10:25:00', 8, 3, 55);
 INSERT INTO ingrid.message VALUES (57, 'Alors, tu penses que la méthode de Gauss est la bonne approche pour résoudre ce système ?', '2025-01-08 14:05:00', 3, 8, NULL);
 INSERT INTO ingrid.message VALUES (58, 'Oui, exactement ! Ça semble bien fonctionner avec l''exercice. Tu veux qu''on passe à l''étape suivante ?', '2025-01-08 14:10:00', 8, 3, 57);
 INSERT INTO ingrid.message VALUES (59, 'Je crois que c''est bon, on a tout résolu. Tu veux qu''on en parle en classe ?', '2025-01-08 14:15:00', 3, 8, 58);
@@ -422,8 +417,6 @@ INSERT INTO ingrid.notes VALUES (15, 10, 16.00, 'Bonne préparation.', '2025-02-
 INSERT INTO ingrid.notes VALUES (16, 10, 15.50, 'Quelques lacunes dans les détails.', '2025-02-15 14:20:00', '2025-02-16 14:20:00');
 INSERT INTO ingrid.notes VALUES (17, 11, 4.00, 'Manque de révision.', '2025-02-20 12:00:00', '2025-02-21 12:00:00');
 INSERT INTO ingrid.notes VALUES (8, 11, 5.00, 'Réponse correcte, mais incomplète.', '2025-02-20 12:30:00', '2025-02-21 12:30:00');
-INSERT INTO ingrid.notes VALUES (17, 101, 0.00, 'Horrible', '2025-02-13 07:40:04.669', '2025-02-13 07:40:04.669');
-INSERT INTO ingrid.notes VALUES (9, 102, 0.00, 'NUl', '2025-02-13 13:34:14.231', '2025-02-13 13:34:14.231');
 
 
 --
