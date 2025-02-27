@@ -151,7 +151,7 @@ const TABS_CONFIG = {
       icon: {name: 'calendar', source: 'Feather'},
     },
     {
-      name: 'Grades',
+      name: 'Notes',
       component: ClassGrades,
       icon: {name: 'clipboard', source: 'Feather'},
     },
