@@ -8,31 +8,15 @@ import {
   View,
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import { ClassGradesEvaluation } from '../../../../../shared/src/types/types';
 
 interface NoteFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
-  isEdit?: boolean;
+  evaluation: ClassGradesEvaluation
 }
 
-export function NoteForm({
-  isOpen,
-  onClose,
-  onSubmit,
-  initialData,
-  isEdit,
-}: NoteFormProps) {
-  const [id, setId] = React.useState(initialData?.id || '');
-  const [name, setName] = React.useState(initialData?.name || '');
-  const [email, setEmail] = React.useState(initialData?.email || '');
-  const [role, setRole] = React.useState(initialData?.role || '');
-
-  const handleSubmit = () => {
-    onSubmit({id, name, email, role});
-  };
-
+export function NoteForm({ isOpen, onClose, evaluation, }: NoteFormProps) {
   return (
     <Modal visible={isOpen} transparent animationType="fade">
       <View style={styles.overlay}>

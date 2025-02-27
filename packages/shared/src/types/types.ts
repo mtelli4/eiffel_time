@@ -100,8 +100,8 @@ export type GradeStatus =
 
 export type ClassGradesNote = {
   id_eval: number
-  numero_etudiant: string
   id_utilisateur: number
+  numero_etudiant: string
   nom: string
   prenom: string
   note: number
@@ -131,6 +131,13 @@ export type ClassGradesCours = {
   fin: string
   type: string
   id_module: number
+}
+
+export type ClassGradesStudent = {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  numero_etudiant: string
 }
 
 export interface AddGradeModalProps {
@@ -165,6 +172,16 @@ export interface FormEvaluation {
   periode: string
   id_cours: number
   id_module: number
+}
+
+export interface FormNote {
+  id_eval: number
+  id_utilisateur: number
+  note: number
+  commentaire: string
+  numero_etudiant: string
+  nom: string
+  prenom: string
 }
 
 export interface ModuleHours {

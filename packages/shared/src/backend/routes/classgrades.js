@@ -1,5 +1,5 @@
 const express = require('express');
-const { PrismaClient, periode } = require('@prisma/client');
+const { PrismaClient, periode, statut_utilisateur } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -123,8 +123,8 @@ router.delete('/delete-evaluation/:id_evaluation', async (req, res) => {
 
 // 🔹 Route pour insérer une nouvelle note
 router.post('/insert-note', async (req, res) => {
+  const { id_eval, id_utilisateur, note, commentaire } = req.body;
   try {
-    const { id_eval, id_utilisateur, note, commentaire } = req.body;
 
     const result = await prisma.notes.create({
       data: {
@@ -136,7 +136,7 @@ router.post('/insert-note', async (req, res) => {
         updatedat: new Date(),
       },
     });
-
+    // TODO: UpdatedAt de évaluation
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
@@ -245,11 +245,17 @@ router.get('/etudiants', async (req, res) => {
     const etudiants = await prisma.etudiant.findMany({
       select: {
         id_utilisateur: true,
+        numeroetudiant: true,
         utilisateur: {
           select: {
             nom: true,
             prenom: true,
           }
+        }
+      },
+      where: {
+        utilisateur: {
+          statut: statut_utilisateur.student,
         }
       },
       orderBy: {

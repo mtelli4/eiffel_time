@@ -11,7 +11,7 @@ import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGr
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
 import WebEditNoteModal from '../../../components/Grades/GradesManagement/WebEditNoteModal'
 import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebDeleteNoteModal'
-import { API_URL, ClassGradesEvaluation, ClassGradesModule, ClassGradesNote, FormEvaluation, periodeLabels } from '../../../types/types'
+import { API_URL, ClassGradesEvaluation, ClassGradesModule, ClassGradesNote, ClassGradesStudent, FormEvaluation, FormNote, periodeLabels } from '../../../types/types'
 import { useEditDeleteLoader } from '../../../components/Button/EditDeleteLoader'
 // import { dateFormatting, getTime } from '../../../utils/stringUtils'
 import { fetchClassGrades } from '../../../backend/services/classgrades'
@@ -19,6 +19,29 @@ import { fetchClassGrades } from '../../../backend/services/classgrades'
 import WebDeleteGradeModal from '../../../components/Grades/GradesManagement/WebDeleteGradeModal'
 import { PlusButton } from '../../../components/Button/PlusButton'
 import { dateFormatting } from '../../../utils/stringUtils'
+
+const calculateEvaluationAverage = (evaluation: ClassGradesEvaluation) => {
+  if (evaluation.notes.length === 0) return ''
+  const notes = evaluation.notes
+  const notemaximale = evaluation.notemaximale
+
+  // Filtrer les notes valides (non nulles)
+  const validNotes = notes.filter((n) => n.note !== null)
+
+  // Si aucune note valide, retourner '-'
+  if (validNotes.length === 0) return '-'
+
+  // Calculer la somme des notes ramenées sur 20
+  const sumNotes = validNotes.reduce((sum, n) => {
+    return sum + (n.note / notemaximale) * 20
+  }, 0)
+
+  // Calculer la moyenne
+  const average = sumNotes / validNotes.length
+
+  // Retourner la moyenne formatée avec 2 décimales
+  return ' - Moyenne : ' + average.toFixed(2)
+}
 
 export function ClassGrades() {
   const { Edit, Delete } = useEditDeleteLoader()
@@ -29,12 +52,14 @@ export function ClassGrades() {
   const [NoteForm, setNoteForm] = useState<any>(null)
 
   const [selectedModule, setSelectedModule] = useState<ClassGradesModule | null>(null)
-
+  const [selectedEvaluation, setSelectedEvaluation] = useState<ClassGradesEvaluation | null>(null)
+  const [selectedNote, setSelectedNote] = useState<ClassGradesNote | null>(null)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [modulesEvalNotes, setModuleEvalNotes] = useState<ClassGradesModule[]>([])
   const [cours, setCours] = useState<any>(null)
-  const [etudiants, setEtudiants] = useState<any>(null)
+  const [students, setStudents] = useState<any>(null)
+
   const [showAddNote, setShowAddNote] = useState(false)
   const [showEditNote, setShowEditNote] = useState(false);
   const [showDeleteNote, setShowDeleteNote] = useState(false);
@@ -61,7 +86,14 @@ export function ClassGrades() {
     fetch(`${API_URL}/api/classgrades/etudiants`)
       .then((res) => res.json())
       .then((data) => {
-        setEtudiants(data)
+        setStudents(data.map((etudiant: any) => {
+          return {
+            id_utilisateur: etudiant.id_utilisateur,
+            nom: etudiant.utilisateur.nom,
+            prenom: etudiant.utilisateur.prenom,
+            numero_etudiant: etudiant.numeroetudiant
+          }
+        }))
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des étudiants:', error)
@@ -155,38 +187,88 @@ export function ClassGrades() {
         })
         return newModules
       })
-     
+
     } catch (error: any) {
       console.error('Erreur:', error)
     }
   }
 
-  /* const handleAddGrade = (module: ClassGradesModule) => {
-    // setSelectedModule(module);
-    setShowAddGrade(true);
-  }; */
+  const handleAddNote = (evaluation: ClassGradesEvaluation) => {
+    setSelectedEvaluation(evaluation); // Stocker l'évaluation sélectionnée
+    setShowNoteForm(true); // Ouvrir le formulaire de note
+  }
 
-  const calculateEvaluationAverage = (evaluation: ClassGradesEvaluation) => {
-    if (evaluation.notes.length === 0) return ''
-    const notes = evaluation.notes
-    const notemaximale = evaluation.notemaximale
+  const handleEditNote = (evaluation: ClassGradesEvaluation, note: ClassGradesNote) => {
+    setSelectedEvaluation(evaluation);
+    setSelectedNote(note);
+    setShowNoteForm(true);
+  }
 
-    // Filtrer les notes valides (non nulles)
-    const validNotes = notes.filter((n) => n.note !== null)
+  const handleSubmitNote = async (data: FormNote) => {
+    if (!selectedNote) {
+      try {
+        const response = await fetch(`${API_URL}/api/classgrades/insert-note`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
 
-    // Si aucune note valide, retourner '-'
-    if (validNotes.length === 0) return '-'
+        if (!response.ok) throw new Error('Erreur réseau')
 
-    // Calculer la somme des notes ramenées sur 20
-    const sumNotes = validNotes.reduce((sum, n) => {
-      return sum + (n.note / notemaximale) * 20
-    }, 0)
+        const result = await response.json()
+        const newNote: ClassGradesNote = {
+          id_eval: data.id_eval,
+          id_utilisateur: result.id_utilisateur,
+          numero_etudiant: data.numero_etudiant,
+          nom: data.nom,
+          prenom: data.prenom,
+          note: data.note,
+          commentaire: data.commentaire,
+        }
 
-    // Calculer la moyenne
-    const average = sumNotes / validNotes.length
+        setModuleEvalNotes((prev) => {
+          const newModules = prev.map((m) => {
+            m.evaluations.map((e) => {
+              if (e.id_eval === data.id_eval) {
+                e.notes.push(newNote)
+              }
+              return e
+            })
+            return m
+          })
+          return newModules
+        })
+      } catch (error: any) {
+        console.error('Erreur:', error)
+      }
+    } else {
 
-    // Retourner la moyenne formatée avec 2 décimales
-    return ' - Moyenne : ' + average.toFixed(2)
+    }
+  }
+
+  const handleDeleteNote = async (evaluation: ClassGradesEvaluation, note: ClassGradesNote) => {
+    try {
+      const response = await fetch(`${API_URL}/api/classgrades/delete-note/${note.id_utilisateur}/${evaluation.id_eval}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) throw new Error('Erreur réseau')
+
+      setModuleEvalNotes((prev) => {
+        const newModules = prev.map((m) => {
+          m.evaluations.map((e) => {
+            if (e.id_eval === evaluation.id_eval) {
+              e.notes = e.notes.filter((n) => n.id_utilisateur !== note.id_utilisateur)
+            }
+            return e
+          })
+          return m
+        })
+        return newModules
+      })
+    } catch (error: any) {
+      console.error('Erreur:', error)
+    }
   }
 
   /* const handleAddNote = (evaluation: any) => {
@@ -270,7 +352,7 @@ export function ClassGrades() {
                   <View style={styles.evaluationHeader}>
                     <Text style={styles.evaluationTitle}>
                       {e.libelle} {''}
-                      <TouchableOpacity onPress={() => setShowNoteForm(true)} style={{ marginLeft: 10 }}>
+                      <TouchableOpacity onPress={() => handleAddNote(e)} style={{ marginLeft: 10 }}>
                         <PlusButton />
                       </TouchableOpacity>
                       <Delete onDelete={() => handleDeleteGrade(e)} confirmMessage={`Voulez-vous supprimer l'évaluation ${e.libelle} du ${e.periode.replace('_', ' ')}. Attention cette action supprimera toutes les notes de l'évaluation !`} />
@@ -294,8 +376,8 @@ export function ClassGrades() {
                             </Text>
                           </Text> 
                           */}
-                        {/* <Edit onEdit={() => handleEditNote(n)} /> */}
-                        {/* <Delete onDelete={() => handleDeleteNote(n)} /> */}
+                        <Edit onEdit={() => handleEditNote(e, n)} />
+                        <Delete onDelete={() => handleDeleteNote(e, n)} confirmMessage={`Voulez-vous supprimer la note de ${n.nom} ${n.prenom} (${n.numero_etudiant}) ?`} />
                       </View>
                     ))}
                   </View>
@@ -315,6 +397,22 @@ export function ClassGrades() {
           onSubmit={handleSubmitGrade}
           module={selectedModule}
           cours={cours}
+        />
+      )}
+
+      {showNoteForm && selectedEvaluation && (
+        <NoteForm
+          isOpen={showNoteForm}
+          onClose={() => {
+            setShowNoteForm(false)
+            setSelectedEvaluation(null)
+            setSelectedNote(null)
+          }}
+          onSubmit={handleSubmitNote}
+          isEdit={!!selectedNote}
+          evaluation={selectedEvaluation}
+          students={students.filter((student: ClassGradesStudent) => !selectedEvaluation.notes.some((note) => note.id_utilisateur === student.id_utilisateur))}
+          note={selectedNote}
         />
       )}
     </View>

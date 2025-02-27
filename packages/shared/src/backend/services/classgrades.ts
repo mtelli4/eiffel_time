@@ -15,6 +15,7 @@ const processClassGradesData = (data: any): ClassGradesModule[] => {
       notemaximale: evaluationItem.notemaximale,
       coefficient: evaluationItem.coefficient,
       notes: evaluationItem.notes.map((noteItem: any) => ({
+        id_utilisateur: noteItem.etudiant.utilisateur.id_utilisateur,
         numero_etudiant: noteItem.etudiant.numeroetudiant,
         nom: noteItem.etudiant.utilisateur.nom,
         prenom: noteItem.etudiant.utilisateur.prenom,
