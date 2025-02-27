@@ -1,11 +1,13 @@
 import {
   ScrollView,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import { ROLES, Utilisateur } from '../../../../shared/src/types/types';
 import { DataTable } from 'react-native-paper';
 import { useEditDeleteLoader } from '../../../../shared/src/components/Button/EditDeleteLoader';
+import { statut_utilisateur } from '@prisma/client';
 
 interface UserTableProps {
   users: Utilisateur[];
@@ -16,23 +18,73 @@ interface UserTableProps {
     role: string,
     formation: string,
     groupe: string,
-    type: string,
+    type: boolean,
     search: string,
   };
   loading: boolean;
 }
 
-export function UserTable({
-  users,
-  isAdmin,
-  onEdit,
-  onDelete,
-  filters,
-  loading,
-}: UserTableProps) {
+export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading, }: UserTableProps) {
   const { Edit, Delete } = useEditDeleteLoader();
 
+  let filteredData = users
+  if (filters.search !== '') {
+    filteredData = users.filter((user) =>
+      user.nom.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.prenom.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.email.toLowerCase().includes(filters.search.toLowerCase())
+    );
+  }
+
+  if (filters.role) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.statut.toLowerCase() === filters.role.toLowerCase()
+    );
+  }
+
+  if (filters.formation) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.formations.some(
+          (f) => f.id_formation === parseInt(filters.formation)
+        )
+    );
+  }
+
+  if (filters.groupe && !isNaN(Number(filters.groupe))) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.groupes.some(
+          (g) => g.id_grp === Number(filters.groupe)
+        )
+    );
+  }
+
+  if (filters.type === true || filters.type === false || filters.type === null) {
+    filteredData = filteredData.filter(
+      (utilisateur: Utilisateur) => utilisateur.statut === statut_utilisateur.teacher && utilisateur.vacataire === filters.type
+    );
+  }
+
+  filteredData = filteredData.sort((a, b) => {
+    // Tri principal par ID utilisateur
+    if (a.id_utilisateur !== b.id_utilisateur) {
+      return a.id_utilisateur - b.id_utilisateur;
+    }
+    // Tri secondaire par nombre de formations
+    if (a.formations.length !== b.formations.length) {
+      return a.formations.length - b.formations.length;
+    }
+    // Tri tertiaire par nombre de groupes
+    return a.groupes.length - b.groupes.length;
+  });
+
   if (!Edit || !Delete) return null;
+
+  if (loading) {
+    return <Text>Chargement...</Text>;
+  }
 
   return (
     <View style={styles.mainContainer}>
@@ -59,8 +111,8 @@ export function UserTable({
             </DataTable.Row>
           ) : (
             users.map((user) => (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <DataTable.Row key={user.id_utilisateur} style={styles.row}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} key={user.id_utilisateur}>
+                <DataTable.Row style={styles.row}>
                   <DataTable.Cell style={styles.idCell}>{user.id_utilisateur}</DataTable.Cell>
                   <DataTable.Cell style={styles.nameCell}>{user.nom}</DataTable.Cell>
                   <DataTable.Cell style={styles.nameCell}>{user.prenom}</DataTable.Cell>

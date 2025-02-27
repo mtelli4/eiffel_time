@@ -25,14 +25,7 @@ interface UserTableProps {
 
 DataTable.use(DT)
 
-export function UserTable({
-  users,
-  isAdmin,
-  onEdit,
-  onDelete,
-  filters,
-  loading,
-}: UserTableProps) {
+export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading, }: UserTableProps) {
   const { Edit, Delete } = useEditDeleteLoader()
 
   if (!Edit || !Delete) return null
@@ -89,7 +82,7 @@ export function UserTable({
     }
     // Tri tertiaire par nombre de groupes
     return a.groupes.length - b.groupes.length;
-  });  
+  });
 
   if (loading) {
     return (
