@@ -7,7 +7,7 @@ import { fetchUsers } from '../../backend/services/admin'
 type Tab = 'users' | 'import'
 
 export function Admin() {
-  const [activeTab, setActiveTab] = useState<Tab>('users' as const)
+  const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
   const [loading, setLoading] = useState(true)
 
