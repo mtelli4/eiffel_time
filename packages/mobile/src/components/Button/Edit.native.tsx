@@ -1,5 +1,5 @@
 import Feather from 'react-native-vector-icons/Feather'
-import { StyleProp, TouchableOpacity } from "react-native"
+import { TouchableOpacity } from "react-native"
 
 interface EditProps {
   onEdit: () => void

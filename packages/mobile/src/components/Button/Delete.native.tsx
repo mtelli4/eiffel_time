@@ -1,5 +1,5 @@
 import { Alert, TouchableOpacity } from 'react-native'
-import { Feather } from 'lucide-react'
+import Feather from 'react-native-vector-icons/Feather'
 
 interface DeleteProps {
   onDelete: () => void
