@@ -9,7 +9,8 @@ const teacherAttendanceRouter = require('./teacher-attendance');
 const adminRouter = require('./admin');
 const scheduleRouter = require('./schedule')
 const signupRouter = require('./signup')
-const noteRouter = require('./note'); // 🔥 Import de la route pour "note.js"
+const noteRouter = require('./note'); 
+const averagesRouter = require('./averages');
 
 const router = express.Router();
 
@@ -22,7 +23,8 @@ router.use('/absences', absenceRouter);
 router.use('/teacher-attendance', teacherAttendanceRouter);
 router.use('/admin', adminRouter);
 router.use('/schedule', scheduleRouter);
-router.use('/note', noteRouter); // 🔥 Ajout de la route pour "note.js"
+router.use('/note', noteRouter); 
+router.use('/averages', averagesRouter);
 router.use('/signup', signupRouter)
 
 module.exports = router;
