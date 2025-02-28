@@ -170,8 +170,6 @@ export default function MobileAddGradeModal({ isOpen, onClose, onSubmit, module,
             <TouchableOpacity style={customStyles.submitButton} onPress={handleSubmit}>
               <Text style={customStyles.submitButtonText}>Enregistrer</Text>
             </TouchableOpacity>
-            {/* <Button onPress={onClose} title="Annuler" style={styles.cancelButton} /> */}
-            {/* <Button onPress={handleSubmit} title="Enregistrer" style={styles.saveButton} /> */}
           </View>
         </View>
       </View>
