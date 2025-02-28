@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Button, Modal, Text, TextInput, View, FlatList, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { Alert, Modal, Text, TextInput, View, FlatList, TouchableOpacity } from 'react-native';
 import { AddGradeModalProps, FormEvaluation } from '../../../../../shared/src/types/types';
 import { styles } from '../../../styles/Grades/GradesManagement/AddGradeModal';
 import { dateFormatting } from '../../../../../shared/src/utils/stringUtils';
