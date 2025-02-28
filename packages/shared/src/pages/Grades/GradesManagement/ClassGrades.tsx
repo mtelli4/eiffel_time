@@ -96,14 +96,12 @@ export function ClassGrades() {
 
     loadComponents().then(r => r)
   }, [])
-
+  
   if (!Edit || !Delete) return null;
 
-  const filteredGradeModules = modulesEvalNotes.filter(
-    (module: ClassGradesModule) =>
-      module.libelle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      module.codeapogee.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGradeModules = modulesEvalNotes.filter((module) => {
+    return module.libelle.toLowerCase().includes(searchQuery.toLowerCase())
+  })
 
   const handleAddGrade = (module: ClassGradesModule) => {
     setSelectedModule(module);
@@ -221,16 +219,6 @@ export function ClassGrades() {
           return m
         })
         setModuleEvalNotes(modules)
-        /* setModuleEvalNotes((prev) =>
-          prev.map((m) => ({
-            ...m,
-            evaluations: m.evaluations.map((e) =>
-              e.id_eval === newNote.id_eval
-                ? { ...e, notes: [...e.notes, newNote] }
-                : e
-            ),
-          }))
-        ) */
       } catch (error) {
         console.error('Erreur:', error)
       }
@@ -303,59 +291,6 @@ export function ClassGrades() {
     }
   }
 
-  /* const handleAddNote = (evaluation: any) => {
-    setSelectedEvaluation(evaluation); // Stocker l'évaluation sélectionnée
-    // setShowAddNote(true); // Ouvrir le modal d'ajout de note
-    setShowNoteForm(true); // Ouvrir le formulaire de note
-  };
- 
-  const handleEditNote = (note: ClassGradesNote) => {
-    setSelectedNote(note);
-    setShowEditNote(true);
-  };
- 
-  const handleDeleteNote = (note: ClassGradesNote) => {
-    setSelectedNote(note);
-    setShowDeleteNote(true);
-  };
- 
-  const handleAddNote = (evaluation: Evaluation) => {
-    setSelectedEvaluation(evaluation) 
-    setShowAddNote(true) 
-  } */
-
-  /* const hasEvaluations = (id_module: number) => {
-   
-    const count = notes.filter((note) => {
-      return evaluations.find((evaluation) => {
-        return cours.find((c) => {
-          return (
-            c.getId() === evaluation.getCoursId() &&
-            c.getIdModule() === id_module
-          )
-        })
-      })
-    })
-    return count.length > 0
-  } */
-
-  /* const handleEditNote = (note: Note) => {
-    const student = etudiants.find((etudiant) => etudiant.getId() === note.getUtilisateurId());
-    setSelectedNote(note);
-    setSelectedStudent(student || null); 
-    setShowEditNote(true);
-  }; */
-
-  /* const handleDeleteNote = (note: Note) => {
-    setSelectedNote(note);
-    setShowDeleteNote(true);
-  }; */
-
-  /* const handleDelModal =(evaluation: Evaluation) => {
-    setSelectedEvaluation(evaluation); 
-    setShowDeleteEvaluation(true);
-  }; */
-
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -364,7 +299,6 @@ export function ClassGrades() {
           placeholder="Rechercher un module..."
           style={styles.searchInput}
         />
-
       </View>
       <ScrollView>
         {filteredGradeModules.map((module) => (
