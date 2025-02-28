@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { Platform } from "react-native";
+
 /*
  * Return the given text with the first letter capitalized and the rest of the text in lowercase.
  *
@@ -6,8 +9,8 @@
  * @returns The capitalized text.
  */
 export function capitalizeFirstLetter(text: string): string {
-    if (!text) return ''
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+  if (!text) return ''
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
 }
 
 /*
@@ -18,9 +21,28 @@ export function capitalizeFirstLetter(text: string): string {
  * @returns The capitalized text.
  */
 export function capitalizeWords(text: string): string {
-    if (!text) return ''
-    return text
-        .split(' ')
-        .map((word) => capitalizeFirstLetter(word))
-        .join(' ')
+  if (!text) return ''
+  return text
+    .split(' ')
+    .map((word) => capitalizeFirstLetter(word))
+    .join(' ')
+}
+
+export function getTime(debut: Date, fin: Date) {
+  const date = debut.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  return `${date} : ${debut.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${fin.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+export function dateFormatting(debut: Date, fin?: Date) {
+  let dateFormat: string;
+  if (Platform.OS === 'web') {
+    dateFormat = localStorage.getItem('dateFormat') || 'dd/MM/yyyy'
+  } else {
+    dateFormat = 'dd/MM/yyyy'
+  }
+  if (fin === undefined) {
+    return format(debut, dateFormat)
+  }
+  const heures = format(debut, 'HH:mm') + ' - ' + format(fin, 'HH:mm')
+  return `${format(debut, dateFormat)} ${heures}`
 }

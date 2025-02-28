@@ -22,7 +22,8 @@ router.get('/users', async (req, res) => {
         etudiant: etudiant,
         enseignant: enseignant,
       },
-      // where: { premiereconnexion: { not: null }, }, // On exclut les utilisateurs supprimés
+      // On exclut les utilisateurs supprimés
+      where: { OR: [ { mdp: { not: 'motdepasse' } }, { mdp: null } ] },      
     });
 
     res.json(users);
@@ -174,7 +175,7 @@ router.delete('/delete-user/:id', async (req, res) => {
     const deleteUser = await prisma.$transaction(async (tx) => {
       // On met à jour la table utilisateur pour considérer l'utilisateur comme supprimé
       const user = await tx.utilisateur.update({
-        // data: { premiereconnexion: null, }, // On met à null pour considérer l'utilisateur comme supprimé
+        data: { mdp: 'motdepasse', }, // On met un mot de passe bidon pour signifier que l'utilisateur est supprimé
         where: { id_utilisateur: parseInt(id) },
       });
 

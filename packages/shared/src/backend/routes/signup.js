@@ -17,16 +17,19 @@ router.post('/signup', async (req, res) => {
         },
       })
 
-      const user = await tx.utilisateur.create({
-        data: {
-          id_utilisateur: lastUser._max.id_utilisateur + 1,
-          nom: lastname,
-          prenom: firstname,
+      const user = await tx.utilisateur.update({
+        where: {
           email: email,
+        },
+        data: {
+          // id_utilisateur: lastUser._max.id_utilisateur + 1,
+          // nom: lastname,
+          // prenom: firstname,
+          // email: email,
           mdp: hashedPassword,
           salt: salt,
-          statut: 'student',
-          createdat: new Date(),
+          // statut: 'student',
+          // createdat: new Date(),
           updatedat: new Date(),
         },
       })

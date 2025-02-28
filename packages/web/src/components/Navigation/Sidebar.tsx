@@ -32,7 +32,7 @@ interface SidebarProps {
 const navigationConfig = {
   student: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
-    { icon: UserCheck, label: 'Absences', path: '/absences' },
+    { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     { icon: ClipboardList, label: 'Notes', path: '/grades' },
   ],
   teacher: [
@@ -140,7 +140,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
 
   return (
     <div
-      className={`sidebar h-screen w-[280px] bg-[#2E3494] text-white fixed top-0 p-4 flex flex-col justify-between transition-transform ${
+      className={`sidebar h-screen w-[280px] bg-[#2E3494] dark:bg-white  text-white dark:text-primary dark:border-primary fixed top-0 p-4 flex flex-col justify-between transition-transform ${
         isVisible ? 'left-0' : '-left-[280px]'
       }`}
     >
@@ -177,7 +177,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                 cn(
                   'flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors',
                   'hover:bg-white/10',
-                  isActive ? 'bg-white/20' : 'text-white/80'
+                  isActive ? 'bg-white/20 dark:bg-secondary' : 'text-white/80 dark:text-primary'
                 )
               }
             >

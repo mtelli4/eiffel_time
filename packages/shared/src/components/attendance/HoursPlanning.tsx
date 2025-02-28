@@ -57,6 +57,7 @@ export function HoursPlanning({ modules }: HoursPlanningProps) {
               <View style={styles.moduleColumn}>
                 <Text style={styles.moduleCode}>{module.codeapogee}</Text>
                 <Text style={styles.moduleName}>{module.libelle}</Text>
+                <Text style={styles.moduleName}>{module.periodes.join(', ')}</Text>
               </View>
               <View style={styles.hourColumn}>
                 <View style={styles.centerContent}>

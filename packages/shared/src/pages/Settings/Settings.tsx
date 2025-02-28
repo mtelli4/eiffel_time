@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import { useTheme } from '../../../../web/src/hooks/useTheme'
+import { useDateFormat } from '../../../../web/src/hooks/useDateFormat'
+import { useLanguage } from '../../../../web/src/hooks/useLanguage'
 // import { Save } from 'lucide-react-native' // Assurez-vous d'avoir une version compatible de lucide-react pour React Native
 
 export function Settings() {
@@ -15,8 +18,7 @@ export function Settings() {
   const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(
     null
   )
-  const [PersonalizationSettings, setPersonalizationSettings] =
-    useState<React.FC | null>(null)
+  const [PersonalizationSettings, setPersonalizationSettings] = useState<any>(null)
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -52,8 +54,25 @@ export function Settings() {
     loadComponents()
   }, [])
 
+  // const { theme, setTheme } = useTheme()
+  // const { dateFormat, setDateFormat } = useDateFormat()
+  // const { language, setLanguage } = useLanguage()
+  const theme = 'light'
+  const setTheme = () => {}
+  const dateFormat = 'DD/MM/YYYY'
+  const setDateFormat = () => {}
+  const language = 'fr'
+  const setLanguage = () => {}
+
+  // États temporaires pour stocker les modifications
+  const [tempDate, setTempDate] = useState(dateFormat)
+  const [tempTheme, setTempTheme] = useState(theme)
+  const [tempLanguage, setTempLanguage] = useState(language)
+
   const handleSave = () => {
-    // Implement save functionality
+    // setDateFormat(tempDate)
+    // setTheme(tempTheme)
+    // setLanguage(tempLanguage)
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {
@@ -67,7 +86,7 @@ export function Settings() {
         <View style={{ marginVertical: 20 }} />
         <SecuritySettings />
         <View style={{ marginVertical: 20 }} />
-        <PersonalizationSettings />
+        <PersonalizationSettings dateFormat={tempDate} setDate={setTempDate} theme={theme} setTheme={setTempTheme} language={tempLanguage} setLanguage={setTempLanguage} />
         <View style={{ marginVertical: 20 }} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSave}>

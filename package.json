@@ -1,56 +1,67 @@
 {
-    "name": "eiffel_time",
-    "version": "1.0.0",
-    "private": true,
-    "workspaces": [
-        "packages/web",
-        "packages/mobile",
-        "packages/shared",
-        "backend/classes"
-    ],
-    "resolutions": {
-        "@babel/runtime": "^7.26.0"
-    },
-    "scripts": {
-        "build": "npm run build --workspaces",
-        "start:web": "npm run dev --workspace web",
-        "start:mobile": "npm run start --workspace mobile",
-        "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-        "start:server": "nodemon packages/shared/src/backend/server.js"
-    },
-    "devDependencies": {
-        "@react-native/gradle-plugin": "^0.76.5",
-        "@types/jest": "^29.5.14",
-        "@types/react": "^18.2.6",
-        "@types/react-dom": "^18.2.6",
-        "@types/react-router-dom": "^5.3.3",
-        "datatables.net": "^2.2.1",
-        "eslint": "^8.50.0",
-        "jquery": "^3.7.1",
-        "nodemon": "^3.1.9",
-        "typescript": "^5.2.0"
-    },
-    "dependencies": {
-        "@babel/plugin-transform-runtime": "^7.25.9",
-        "@babel/runtime": "^7.26.0",
-        "@prisma/client": "^6.2.1",
-        "@react-navigation/stack": "^7.1.1",
-        "@types/datatables.net": "^1.12.3",
-        "@types/jquery": "^3.5.32",
-        "axios": "^1.7.9",
-        "cors": "^2.8.5",
-        "crypto": "^1.0.1",
-        "datatables.net-dt": "^2.2.1",
-        "datatables.net-react": "^1.0.0",
-        "express": "^4.21.2",
-        "node-ical": "^0.20.1",
-        "prisma": "^6.2.1",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-native-paper": "^5.13.1",
-        "react-native-safe-area-context": "^5.2.0",
-        "react-native-toast-message": "^2.2.1",
-        "react-router-dom": "^7.1.1",
-        "react-toastify": "^11.0.3"
-    }
+  "name": "eiffel_time",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/web",
+    "packages/mobile",
+    "packages/shared",
+    "backend/classes"
+  ],
+  "resolutions": {
+    "@babel/runtime": "^7.26.0"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "start:web": "npm run dev --workspace web",
+    "start:mobile": "npm run start --workspace mobile",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "start:server": "nodemon packages/shared/src/backend/server.js",
+    "db:pull:full": "npx prisma migrate dev && psql -U $USER -d $DATABASE -f prisma/migrations/0_init/ingrid_data.sql && npx prisma generate && \necho -e '\\033[31mRécupération de la base de données terminée\\033[0m'",
+    "db:pull": "npx prisma generate && \necho -e '\\033[31mGénération des modèles terminée\\033[0m'",
+    "db:export": "npx prisma db pull && npx prisma generate && npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql && \necho -e '\\033[31mExport de la base de données terminé\\033[0m'",
+    "db:data": "python prisma/migrations/0_init/pg_dump_clean.py --user $USER --database $DATABASE --output prisma/migrations/0_init/ingrid_data.sql --schema $SCHEMA && \necho -e '\\033[31mExport des données terminé\\033[0m'"
+  },
+  "devDependencies": {
+    "@react-native/gradle-plugin": "^0.76.5",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.6",
+    "@types/react-router-dom": "^5.3.3",
+    "datatables.net": "^2.2.2",
+    "eslint": "^8.50.0",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.2.0"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/runtime": "^7.26.0",
+    "@prisma/client": "^6.2.1",
+    "@react-navigation/native": "^7.0.14",
+    "@react-navigation/native-stack": "^7.2.0",
+    "@react-navigation/stack": "^7.1.1",
+    "@types/datatables.net": "^1.12.3",
+    "@types/jquery": "^3.5.32",
+    "@types/papaparse": "^5.3.15",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "datatables.net-dt": "^2.2.2",
+    "datatables.net-react": "^1.0.0",
+    "date-fns": "^4.1.0",
+    "dotenv-webpack": "^8.1.0",
+    "express": "^4.21.2",
+    "node-ical": "^0.20.1",
+    "papaparse": "^5.5.2",
+    "prisma": "^6.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-native-dotenv": "^3.4.11",
+    "react-native-paper": "^5.13.1",
+    "react-native-safe-area-context": "^5.2.0",
+    "react-native-screens": "^4.9.0",
+    "react-native-toast-message": "^2.2.1",
+    "react-router-dom": "^7.1.1",
+    "xlsx": "^0.18.5"
+  }
 }

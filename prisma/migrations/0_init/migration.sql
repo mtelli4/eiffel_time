@@ -78,6 +78,7 @@ CREATE TABLE "enseignant" (
 CREATE TABLE "enseignant_module" (
     "id_module" INTEGER NOT NULL,
     "id_utilisateur" INTEGER NOT NULL,
+    "heures" VARCHAR(50),
 
     CONSTRAINT "enseignant_module_pkey" PRIMARY KEY ("id_module","id_utilisateur")
 );
@@ -161,6 +162,7 @@ CREATE TABLE "module_bloc_competence" (
     "id_module" INTEGER NOT NULL,
     "id_bloc_comp" INTEGER NOT NULL,
     "periode" "periode",
+    "coefficient" INTEGER,
 
     CONSTRAINT "module_bloc_competence_pkey" PRIMARY KEY ("id_module","id_bloc_comp")
 );
@@ -193,8 +195,7 @@ CREATE TABLE "utilisateur" (
     "prenom" VARCHAR(255) NOT NULL,
     "email" VARCHAR(255),
     "mdp" VARCHAR(255),
-    "salt" VARBIT(16),
-    "premiereconnexion" BOOLEAN,
+    "salt" VARCHAR(64),
     "statut" "statut_utilisateur",
     "createdat" TIMESTAMP(6) NOT NULL,
     "updatedat" TIMESTAMP(6) NOT NULL,
@@ -268,6 +269,9 @@ ALTER TABLE "etudiant" ADD CONSTRAINT "etudiant_id_utilisateur_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "evaluation" ADD CONSTRAINT "evaluation_id_cours_fkey" FOREIGN KEY ("id_cours") REFERENCES "cours"("id_cours") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "evaluation" ADD CONSTRAINT "evaluation_id_module_fkey" FOREIGN KEY ("id_module") REFERENCES "module"("id_module") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "evaluation" ADD CONSTRAINT "evaluation_id_notif_fkey" FOREIGN KEY ("id_notif") REFERENCES "notification"("id_notif") ON DELETE NO ACTION ON UPDATE NO ACTION;

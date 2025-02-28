@@ -1,12 +1,13 @@
 import {
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
+  Text,
   View,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
 import { ROLES, Utilisateur } from '../../../../shared/src/types/types';
 import { DataTable } from 'react-native-paper';
+import { useEditDeleteLoader } from '../../../../shared/src/components/Button/EditDeleteLoader';
+import { statut_utilisateur } from '@prisma/client';
 
 interface UserTableProps {
   users: Utilisateur[];
@@ -17,72 +18,73 @@ interface UserTableProps {
     role: string,
     formation: string,
     groupe: string,
-    type: string,
+    type: boolean,
     search: string,
   };
   loading: boolean;
 }
 
-export function UserTable({
-  users,
-  isAdmin,
-  onEdit,
-  onDelete,
-  filters,
-  loading,
-}: UserTableProps) {
-  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
-  const [chargement, setChargement] = useState<boolean>(true);
+export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading, }: UserTableProps) {
+  const { Edit, Delete } = useEditDeleteLoader();
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/admin/users`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Erreur réseau');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const utilisateurs = data.map((utilisateur: any) => ({
-          id_utilisateur: utilisateur.id_utilisateur,
-          nom: utilisateur.nom,
-          prenom: utilisateur.prenom,
-          email: utilisateur.email,
-          statut: utilisateur.statut,
-          formations: utilisateur.formation_utilisateur.map((f: any) => f.formation),
-          groupes: utilisateur.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: utilisateur.enseignant?.vacataire
-        }));
-        setUtilisateurs(utilisateurs)
-        setChargement(false)
-      })
-      .catch(error => {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error,
-        );
-      });
-  }, []);
+  let filteredData = users
+  if (filters.search !== '') {
+    filteredData = users.filter((user) =>
+      user.nom.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.prenom.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.email.toLowerCase().includes(filters.search.toLowerCase())
+    );
+  }
 
-  const renderHeader = () => (
-    <View style={styles.headerContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.headerRow}>
-          <Text style={[styles.headerCell, styles.idCell]}>ID</Text>
-          <Text style={[styles.headerCell, styles.nameCell]}>Nom</Text>
-          <Text style={[styles.headerCell, styles.nameCell]}>Prénom</Text>
-          <Text style={[styles.headerCell, styles.emailCell]}>Email</Text>
-          <Text style={[styles.headerCell, styles.roleCell]}>Rôle</Text>
-          <Text style={[styles.headerCell, styles.formationCell]}>
-            Formation
-          </Text>
-          <Text style={[styles.headerCellActions, styles.actionsHeaderCell]}>
-            Actions
-          </Text>
-        </View>
-      </ScrollView>
-    </View>
-  );
+  if (filters.role) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.statut.toLowerCase() === filters.role.toLowerCase()
+    );
+  }
+
+  if (filters.formation) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.formations.some(
+          (f) => f.id_formation === parseInt(filters.formation)
+        )
+    );
+  }
+
+  if (filters.groupe && !isNaN(Number(filters.groupe))) {
+    filteredData = filteredData.filter(
+      (utilisateur) =>
+        utilisateur.groupes.some(
+          (g) => g.id_grp === Number(filters.groupe)
+        )
+    );
+  }
+
+  if (filters.type === true || filters.type === false || filters.type === null) {
+    filteredData = filteredData.filter(
+      (utilisateur: Utilisateur) => utilisateur.statut === statut_utilisateur.teacher && utilisateur.vacataire === filters.type
+    );
+  }
+
+  filteredData = filteredData.sort((a, b) => {
+    // Tri principal par ID utilisateur
+    if (a.id_utilisateur !== b.id_utilisateur) {
+      return a.id_utilisateur - b.id_utilisateur;
+    }
+    // Tri secondaire par nombre de formations
+    if (a.formations.length !== b.formations.length) {
+      return a.formations.length - b.formations.length;
+    }
+    // Tri tertiaire par nombre de groupes
+    return a.groupes.length - b.groupes.length;
+  });
+
+  if (!Edit || !Delete) return null;
+
+  if (loading) {
+    return <Text>Chargement...</Text>;
+  }
 
   return (
     <View style={styles.mainContainer}>
@@ -109,8 +111,8 @@ export function UserTable({
             </DataTable.Row>
           ) : (
             users.map((user) => (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <DataTable.Row key={user.id_utilisateur} style={styles.row}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} key={user.id_utilisateur}>
+                <DataTable.Row style={styles.row}>
                   <DataTable.Cell style={styles.idCell}>{user.id_utilisateur}</DataTable.Cell>
                   <DataTable.Cell style={styles.nameCell}>{user.nom}</DataTable.Cell>
                   <DataTable.Cell style={styles.nameCell}>{user.prenom}</DataTable.Cell>
@@ -121,16 +123,8 @@ export function UserTable({
                   </DataTable.Cell>
                   {isAdmin && (
                     <DataTable.Cell style={styles.actionsCell}>
-                      <TouchableOpacity
-                        style={styles.iconButton}
-                        onPress={() => onEdit(user)}>
-                        <Feather name="edit" size={16} color="#3498DB" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.iconButton}
-                        onPress={() => onDelete(user)}>
-                        <Feather name="trash-2" size={16} color="#E74C3C" />
-                      </TouchableOpacity>
+                      <Edit onEdit={() => onEdit(user)} />
+                      <Delete onDelete={() => onDelete(user)} confirmMessage={`Voulez-vous vraiment supprimer l'utilisateur ${user.nom} ${user.prenom} ?`} />
                     </DataTable.Cell>
                   )}
                 </DataTable.Row>
