@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ClassGradesEvaluation, ClassGradesNote, ClassGradesStudent, FormNote } from '../../../../../shared/src/types/types';
 import Select from 'react-select';
 
@@ -18,16 +18,15 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
     id_utilisateur: 0,
     note: 0,
     commentaire: '',
-    numero_etudiant: '',
-    nom: '',
-    prenom: '',
   })
 
-  if (isEdit && note) {
-    formData.id_utilisateur = note.id_utilisateur;
-    formData.note = note.note;
-    formData.commentaire = note.commentaire;
-  }
+  useEffect(() => {
+    if (isEdit && note) {
+      formData.id_utilisateur = note.id_utilisateur;
+      formData.note = note.note;
+      formData.commentaire = note.commentaire;
+    }
+  }, [isEdit, note])
 
   const handleSubmit = () => {
     if (formData.id_utilisateur === 0) {

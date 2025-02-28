@@ -116,6 +116,7 @@ export type ClassGradesEvaluation = {
   notemaximale: number
   coefficient: number
   notes: ClassGradesNote[]
+  id_module: number
 }
 
 export type ClassGradesModule = {
@@ -179,9 +180,6 @@ export interface FormNote {
   id_utilisateur: number
   note: number
   commentaire: string
-  numero_etudiant: string
-  nom: string
-  prenom: string
 }
 
 export interface ModuleHours {

@@ -42,7 +42,8 @@ router.get('/', async (req, res) => {
                 note: true,
                 commentaire: true,
               }
-            }
+            },
+            id_module: true,
           }
         }
       }
@@ -112,7 +113,7 @@ router.delete('/delete-evaluation/:id_evaluation', async (req, res) => {
       await prisma.evaluation.delete({
         where: { id_eval: parseInt(id_evaluation) },
       });
-      
+
       return { message: "Évaluation supprimée avec succès." };
     });
     res.status(200).json(result);
@@ -125,18 +126,19 @@ router.delete('/delete-evaluation/:id_evaluation', async (req, res) => {
 router.post('/insert-note', async (req, res) => {
   const { id_eval, id_utilisateur, note, commentaire } = req.body;
   try {
+    const result = await prisma.$transaction(async (prisma) => {
+      const result = await prisma.notes.create({
+        data: {
+          id_utilisateur,
+          id_eval,
+          note,
+          commentaire,
+          createdat: new Date(),
+        },
+      });
 
-    const result = await prisma.notes.create({
-      data: {
-        id_utilisateur,
-        id_eval,
-        note,
-        commentaire,
-        createdat: new Date(),
-        updatedat: new Date(),
-      },
+      return result;
     });
-    // TODO: UpdatedAt de évaluation
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
@@ -183,10 +185,9 @@ router.delete("/delete-note/:id_utilisateur/:id_eval", async (req, res) => {
 
 // 🔹 Route pour mettre à jour une note existante
 router.put('/update-note/:id_utilisateur/:id_eval', async (req, res) => {
+  const { id_utilisateur, id_eval } = req.params;
+  const { note, commentaire } = req.body;
   try {
-    const { id_utilisateur, id_eval } = req.params;
-    const { note, commentaire } = req.body;
-
     // Vérifie si la note existe déjà
     const existingNote = await prisma.notes.findUnique({
       where: {

@@ -1,22 +1,10 @@
 import { useEffect, useState } from 'react'
-import {
-  Platform,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { AddGradeModal } from '../../../components/Grades/GradesManagement/AddGradeModal'
 import { styles } from '../../../styles/Grades/GradesManagement/GradesStyles'
-import WebEditNoteModal from '../../../components/Grades/GradesManagement/WebEditNoteModal'
-import WebDeleteNoteModal from '../../../components/Grades/GradesManagement/WebDeleteNoteModal'
 import { API_URL, ClassGradesEvaluation, ClassGradesModule, ClassGradesNote, ClassGradesStudent, FormEvaluation, FormNote, periodeLabels } from '../../../types/types'
 import { useEditDeleteLoader } from '../../../components/Button/EditDeleteLoader'
-// import { dateFormatting, getTime } from '../../../utils/stringUtils'
 import { fetchClassGrades } from '../../../backend/services/classgrades'
-
-import WebDeleteGradeModal from '../../../components/Grades/GradesManagement/WebDeleteGradeModal'
 import { PlusButton } from '../../../components/Button/PlusButton'
 import { dateFormatting } from '../../../utils/stringUtils'
 
@@ -60,11 +48,6 @@ export function ClassGrades() {
   const [cours, setCours] = useState<any>(null)
   const [students, setStudents] = useState<any>(null)
 
-  const [showAddNote, setShowAddNote] = useState(false)
-  const [showEditNote, setShowEditNote] = useState(false);
-  const [showDeleteNote, setShowDeleteNote] = useState(false);
-  const [showDeleteEvaluation, setShowDeleteEvaluation] = useState(false);
-
   useEffect(() => {
     fetchClassGrades()
       .then((data) => {
@@ -97,9 +80,8 @@ export function ClassGrades() {
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des étudiants:', error)
-      }
-      )
-  }, [])
+      })
+  }, [modulesEvalNotes, cours, students])
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -118,7 +100,7 @@ export function ClassGrades() {
   if (!Edit || !Delete) return null;
 
   const filteredGradeModules = modulesEvalNotes.filter(
-    (module) =>
+    (module: ClassGradesModule) =>
       module.libelle.toLowerCase().includes(searchQuery.toLowerCase()) ||
       module.codeapogee.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -149,8 +131,9 @@ export function ClassGrades() {
         notemaximale: data.notemaximale,
         coefficient: data.coefficient,
         notes: [],
+        id_module: data.id_module,
       }
-      setModuleEvalNotes((prev) => {
+      setModuleEvalNotes((prev: ClassGradesModule[]) => {
         const newModules = prev.map((m) => {
           if (m.id_module === data.id_module) {
             return { ...m, evaluations: [...m.evaluations, newEvaluation] }
@@ -214,36 +197,85 @@ export function ClassGrades() {
         })
 
         if (!response.ok) throw new Error('Erreur réseau')
-
         const result = await response.json()
+        const student = students.find((s: ClassGradesStudent) => s.id_utilisateur === result.id_utilisateur)
         const newNote: ClassGradesNote = {
-          id_eval: data.id_eval,
+          id_eval: result.id_eval,
           id_utilisateur: result.id_utilisateur,
-          numero_etudiant: data.numero_etudiant,
-          nom: data.nom,
-          prenom: data.prenom,
-          note: data.note,
-          commentaire: data.commentaire,
+          numero_etudiant: student,
+          nom: student,
+          prenom: student,
+          note: result.note,
+          commentaire: result.commentaire,
         }
-
-        setModuleEvalNotes((prev) => {
-          const newModules = prev.map((m) => {
-            m.evaluations.map((e) => {
-              if (e.id_eval === data.id_eval) {
-                e.notes.push(newNote)
+        const modules = modulesEvalNotes.map((m) => {
+          if (m.id_module === selectedEvaluation?.id_module) {
+            const evaluations = m.evaluations.map((e) => {
+              if (e.id_eval === selectedEvaluation.id_eval) {
+                return { ...e, notes: [...e.notes, newNote] }
               }
               return e
             })
-            return m
-          })
-          return newModules
+            return { ...m, evaluations }
+          }
+          return m
         })
-      } catch (error: any) {
+        setModuleEvalNotes(modules)
+        /* setModuleEvalNotes((prev) =>
+          prev.map((m) => ({
+            ...m,
+            evaluations: m.evaluations.map((e) =>
+              e.id_eval === newNote.id_eval
+                ? { ...e, notes: [...e.notes, newNote] }
+                : e
+            ),
+          }))
+        ) */
+      } catch (error) {
         console.error('Erreur:', error)
       }
     } else {
+      try {
+        const response = await fetch(`${API_URL}/api/classgrades/update-note/${selectedNote.id_utilisateur}/${selectedEvaluation?.id_eval}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
 
+        if (!response.ok) throw new Error('Erreur réseau')
+
+        const result = await response.json()
+        const student = students.find((s: ClassGradesStudent) => s.id_utilisateur === result.id_utilisateur)
+        const updatedNote: ClassGradesNote = {
+          id_eval: result.id_eval,
+          id_utilisateur: result.id_utilisateur,
+          numero_etudiant: student,
+          nom: student,
+          prenom: student,
+          note: result.note,
+          commentaire: result.commentaire,
+        }
+        const modules = modulesEvalNotes.map((m) => {
+          if (m.id_module === selectedEvaluation?.id_module) {
+            const evaluations = m.evaluations.map((e) => {
+              if (e.id_eval === selectedEvaluation.id_eval) {
+                return { ...e, notes: e.notes.map((n) => n.id_utilisateur === updatedNote.id_utilisateur ? updatedNote : n) }
+              }
+              return e
+            })
+            return { ...m, evaluations }
+          }
+          return m
+        })
+        setModuleEvalNotes(modules)
+      } catch (error) {
+        console.error('Erreur:', error)
+      }
     }
+
+    setShowNoteForm(false)
+    setSelectedEvaluation(null)
+    setSelectedNote(null)
   }
 
   const handleDeleteNote = async (evaluation: ClassGradesEvaluation, note: ClassGradesNote) => {
