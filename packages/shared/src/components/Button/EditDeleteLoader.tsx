@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Platform } from 'react-native'
 
 type ComponentType = React.ComponentType<any>
@@ -7,31 +7,35 @@ export function useEditDeleteLoader() {
   const [Edit, setEdit] = useState<ComponentType | null>(null)
   const [Delete, setDelete] = useState<ComponentType | null>(null)
 
-  useEffect(() => {
-    const loadComponents = async () => {
+  const loadComponents = useCallback(async () => {
+    try {
       if (Platform.OS === 'web') {
-        const { Edit } = await import(
+        const { Edit: WebEdit } = await import(
           '../../../../web/src/components/Button/Edit.web'
         )
-        const { Delete } = await import(
+        const { Delete: WebDelete } = await import(
           '../../../../web/src/components/Button/Delete.web'
         )
-        setEdit(() => Edit)
-        setDelete(() => Delete)
+        setEdit(() => WebEdit)
+        setDelete(() => WebDelete)
       } else {
-        const { Edit } = await import(
+        const { Edit: NativeEdit } = await import(
           '../../../../mobile/src/components/Button/Edit.native'
         )
-        const { Delete } = await import(
+        const { Delete: NativeDelete } = await import(
           '../../../../mobile/src/components/Button/Delete.native'
         )
-        setEdit(() => Edit)
-        setDelete(() => Delete)
+        setEdit(() => NativeEdit)
+        setDelete(() => NativeDelete)
       }
+    } catch (error) {
+      console.error('Failed to load components:', error)
     }
-
-    loadComponents().then((r) => r)
   }, [])
+
+  useEffect(() => {
+    loadComponents()
+  }, [loadComponents])
 
   return { Edit, Delete }
 }
