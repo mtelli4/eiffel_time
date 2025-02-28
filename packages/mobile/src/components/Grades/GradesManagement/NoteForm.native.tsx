@@ -1,29 +1,65 @@
-import React from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { ClassGradesEvaluation } from '../../../../../shared/src/types/types';
+import { FormNote, NoteFormProps } from '../../../../../shared/src/types/types';
+import DropDownPicker from 'react-native-dropdown-picker';
 
-interface NoteFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  evaluation: ClassGradesEvaluation
-}
+export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, students, note }: NoteFormProps) {
+  const [formData, setFormData] = useState({
+    id_eval: evaluation.id_eval,
+    id_utilisateur: 0,
+    note: '',
+    commentaire: '',
+  })
 
-export function NoteForm({ isOpen, onClose, evaluation, }: NoteFormProps) {
+  useEffect(() => {
+    if (isEdit && note) {
+      formData.id_utilisateur = note.id_utilisateur;
+      formData.note = note.note.toString();
+      formData.commentaire = note.commentaire;
+      setValueStudent(note.id_utilisateur)
+    }
+  }, [isEdit, note])
+
+  const [openStudent, setOpenStudent] = useState(false);
+  const [valueStudent, setValueStudent] = useState(0);
+  const [itemsStudent, setItemsStudent] = useState(isEdit ? students.map(s => ({
+    label: `${note?.nom} ${note?.prenom}`,
+    value: note?.id_utilisateur
+  })) : students.map(s => ({
+    label: `${s.nom} ${s.prenom}`,
+    value: s.id_utilisateur
+  })));
+
+  const handleSubmit = () => {
+    formData.id_utilisateur = valueStudent
+    const note = parseFloat(formData.note)
+
+    if (formData.id_utilisateur === 0) {
+      Alert.alert('Un étudiant doit être sélectionné')
+      return
+    }
+    if (isNaN(note) || note < 0 || note > evaluation.notemaximale) {
+      Alert.alert(`La note doit être comprise entre 0 et ${evaluation.notemaximale}`)
+      return
+    }
+    const submittedNote: FormNote = {
+      ...formData,
+      note: note
+    }
+    onSubmit(submittedNote)
+    onClose()
+  }
+
+  if (!isOpen) return null;
+
   return (
     <Modal visible={isOpen} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>
-              {isEdit ? 'Modifier une évaluation' : 'Ajouter une évaluation'}
+              {isEdit ? 'Modifier une note' : 'Ajouter une note'}
             </Text>
             <TouchableOpacity onPress={onClose}>
               <FontAwesome6 name="x" size={20} color="gray" />
@@ -32,61 +68,61 @@ export function NoteForm({ isOpen, onClose, evaluation, }: NoteFormProps) {
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>ID</Text>
+              <Text style={styles.label}>Évaluation sélectionnée</Text>
               <TextInput
                 style={styles.input}
-                value={id}
-                onChangeText={setId}
-                placeholder="Entrez l'ID"
+                value={evaluation.libelle}
+                editable={false}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Nom complet</Text>
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="Entrez le nom complet"
+              <Text style={styles.label}>Étudiant</Text>
+              <DropDownPicker
+                open={openStudent}
+                value={valueStudent}
+                items={itemsStudent}
+                setOpen={setOpenStudent}
+                setValue={setValueStudent}
+                setItems={setItemsStudent}
+                placeholder='Sélectionner un étudiant'
+                disabled={isEdit}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={styles.label}>Note</Text>
               <TextInput
                 style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Entrez l'email"
-                keyboardType="email-address"
+                value={formData.note}
+                onChangeText={text => {
+                  const regex = /^[0-9]*[.,]?[0-9]*$/;
+                  if (regex.test(text)) {
+                    setFormData({ 
+                      ...formData, 
+                      note: text.replace(',', '.') // Remplace la virgule par un point
+                    });
+                  }
+                }}
+                keyboardType="numeric"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Rôle</Text>
-              <View style={styles.pickerContainer}>
-                {/* <Picker
-                  selectedValue={role}
-                  onValueChange={value => setRole(value)}>
-                  <Picker.Item label="Sélectionner un rôle" value="" />
-                  <Picker.Item label="Élève" value="student" />
-                  <Picker.Item label="Professeur" value="teacher" />
-                  <Picker.Item label="Gestionnaire" value="manager" />
-                  <Picker.Item label="Administrateur" value="admin" />
-                </Picker> */}
-              </View>
+              <Text style={styles.label}>Commentaire</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.commentaire}
+                onChangeText={text => setFormData({ ...formData, commentaire: text })}
+              />
             </View>
 
             <View style={styles.actions}>
               <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
                 <Text style={styles.cancelButtonText}>Annuler</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.submitButton}
-                onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>
-                  {isEdit ? 'Modifier' : 'Ajouter'}
-                </Text>
+              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <Text style={styles.submitButtonText}>{isEdit ? 'Modifier' : 'Ajouter'}</Text>
               </TouchableOpacity>
             </View>
           </View>

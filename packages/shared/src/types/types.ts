@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { Float } from 'react-native/Libraries/Types/CodegenTypes';
 
 export const API_URL = Platform.select({
   web: `http://localhost:4000`,
@@ -180,6 +181,16 @@ export interface FormNote {
   id_utilisateur: number
   note: number
   commentaire: string
+}
+
+export interface NoteFormProps {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: FormNote) => void
+  isEdit: boolean
+  evaluation: ClassGradesEvaluation
+  students: ClassGradesStudent[]
+  note?: ClassGradesNote
 }
 
 export interface ModuleHours {

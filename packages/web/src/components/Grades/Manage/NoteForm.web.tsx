@@ -1,16 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ClassGradesEvaluation, ClassGradesNote, ClassGradesStudent, FormNote } from '../../../../../shared/src/types/types';
+import { NoteFormProps } from '../../../../../shared/src/types/types';
 import Select from 'react-select';
-
-interface NoteFormProps {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (data: FormNote) => void
-  isEdit: boolean
-  evaluation: ClassGradesEvaluation
-  students: ClassGradesStudent[]
-  note?: ClassGradesNote
-}
 
 export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, students, note }: NoteFormProps) {
   const [formData, setFormData] = useState({
@@ -90,7 +80,7 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
             <input
               type="number"
               value={formData.note}
-              onChange={(e) => setFormData({ ...formData, note: parseInt(e.target.value) })}
+              onChange={(e) => setFormData({ ...formData, note: parseFloat(e.target.value) })}
               className="w-full p-2 border rounded"
               min="0"
               max="20"
@@ -117,7 +107,7 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
             Annuler
           </button>
           <button onClick={handleSubmit} className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90">
-            Enregistrer
+          {isEdit ? 'Modifier' : 'Ajouter'}
           </button>
         </div>
       </div>
