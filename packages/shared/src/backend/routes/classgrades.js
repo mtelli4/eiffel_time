@@ -1,5 +1,6 @@
 const express = require('express');
 const { PrismaClient, periode, statut_utilisateur } = require('@prisma/client');
+const { Decimal } = require('@prisma/client/runtime/library');
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -211,8 +212,8 @@ router.put('/update-note/:id_utilisateur/:id_eval', async (req, res) => {
         },
       },
       data: {
-        note,
-        commentaire,
+        note: new Decimal(note),
+        commentaire: commentaire,
         updatedat: new Date(),
       },
     });
