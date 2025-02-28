@@ -21,7 +21,7 @@ const calculateEvaluationAverage = (evaluation: ClassGradesEvaluation) => {
 
   // Calculer la somme des notes ramenées sur 20
   const sumNotes = validNotes.reduce((sum, n) => {
-    return sum + (n.note / notemaximale) * 20
+    return sum + (n.note / notemaximale) * evaluation.notemaximale
   }, 0)
 
   // Calculer la moyenne
