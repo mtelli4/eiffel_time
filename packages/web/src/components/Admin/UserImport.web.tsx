@@ -134,7 +134,10 @@ export function UserImport() {
             </thead>
             <tbody>
               {jsonData.map((user, index) => (
-                <tr key={index} className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] ${!isEmailValid(user.email) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}>
+                <tr 
+                key={index} 
+                className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
+                ${!isEmailValid(user.email) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}>
                   <td className="py-3 px-4">{user.nom}</td>
                   <td className="py-3 px-4">{user.prenom}</td>
                   <td className={`py-3 px-4`}>{user.email}</td>
