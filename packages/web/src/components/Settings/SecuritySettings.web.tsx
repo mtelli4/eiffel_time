@@ -2,7 +2,7 @@ import { Shield } from 'lucide-react'
 
 export default function SecuritySettings() {
   return (
-    <div className="bg-white dark:bg-primary rounded-lg shadow-sm p-6 transition-colors duration-200">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors duration-200">
       <div className="flex items-center gap-2 mb-4">
         <Shield className="w-5 h-5 text-primary dark:text-white" />
         <h2 className="text-lg font-semibold text-primary dark:text-white">

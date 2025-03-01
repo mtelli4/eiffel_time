@@ -174,7 +174,7 @@ export function Messages() {
 
   return (
     <div className="h-full">
-      <div className="flex h-[calc(100vh-8rem)] bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="flex h-[calc(100vh-8rem)] bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
         {/* Zone de conversation */}
         <div className="flex-1 flex flex-col">
           {selectedConversation ? (
@@ -201,7 +201,7 @@ export function Messages() {
                     </div>
                   )}
                   <div>
-                    <h2 className="font-medium text-gray-900">
+                    <h2 className="font-medium text-gray-900 dark:text-white">
                       {selectedConversation.utilisateur.prenom +
                         ' ' +
                         selectedConversation.utilisateur.nom}
