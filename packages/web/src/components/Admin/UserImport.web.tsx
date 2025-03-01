@@ -1,6 +1,8 @@
 import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
+import '../../styles/dataTables.dataTables.min.css'
+import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
 import { FileDown, FileUp } from 'lucide-react'
 import Papa from 'papaparse'
 import { useState } from 'react'
@@ -13,9 +15,9 @@ import { useDropzone } from 'react-dropzone'
 
 DataTable.use(DT)
 
-interface UserImportProps {
+/* interface UserImportProps {
   users: Utilisateur[]
-}
+} */
 
 export function UserImport() {
   const [jsonData, setJsonData] = useState<any[]>([])
