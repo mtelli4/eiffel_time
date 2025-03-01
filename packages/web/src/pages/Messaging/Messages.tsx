@@ -21,23 +21,15 @@ import {
 } from '../../../../shared/src/types/types'
 
 export function Messages() {
-  // useAuthCheck()
-
-  const [conversations, setConversations] = useState<MessagingConversation[]>(
-    []
-  )
-  const [selectedConversation, setSelectedConversation] =
-    useState<MessagingConversation | null>(null)
+  const [conversations, setConversations] = useState<MessagingConversation[]>([])
+  const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null)
   const [messages, setMessages] = useState<MessagingMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
-  const [showNewConversationModal, setShowNewConversationModal] =
-    useState(false)
+  const [showNewConversationModal, setShowNewConversationModal] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>([])
   const [userSearchQuery, setUserSearchQuery] = useState('')
-  const [availableUsers, setAvailableUsers] = useState<MessagingUtilisateur[]>(
-    []
-  )
+  const [availableUsers, setAvailableUsers] = useState<MessagingUtilisateur[]>([])
 
   const userId = 3
 
@@ -47,10 +39,7 @@ export function Messages() {
         const conversations = await fetchConversations(userId)
         setConversations(conversations)
       } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des conversations:',
-          error
-        )
+        console.error('Erreur lors de la récupération des conversations:', error)
       }
     }
 
@@ -72,7 +61,6 @@ export function Messages() {
     }
   }, [selectedConversation])
 
-  // Fetch users when search query changes or modal opens
   useEffect(() => {
     if (showNewConversationModal) {
       const getUsers = async () => {
