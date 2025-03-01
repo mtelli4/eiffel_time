@@ -1,8 +1,7 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { Layout } from "./components/Layout";
-import { UserProvider, useUser } from "./context/UserContext";
-import { useEffect } from "react";
-import useAuthCheck from "../../shared/src/hooks/useAuthCheck";
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Layout } from './components/Layout'
+import { UserProvider, useUser } from './context/UserContext'
+import { useEffect, useMemo } from 'react'
 import { useTheme } from "./hooks/useTheme";
 import { useDateFormat } from "./hooks/useDateFormat";
 import { useLanguage } from "./hooks/useLanguage";
@@ -12,18 +11,35 @@ export default function Root() {
     <UserProvider>
       <InnerRoot />
     </UserProvider>
-  );
+  )
 }
 
 function InnerRoot() {
-  const { role } = useUser();
+
+  const user = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem('user') || '{}')
+    } catch (error) {
+      console.error('Error parsing user data:', error)
+      return {}
+    }
+  }, [])
+
+  // console.log(user);
+
+  // useEffect(() => {
+  //   if (!user || Object.keys(user).length === 0) {
+  //     window.location.href = '/signin'
+  //   }
+  // }, [user])
+
   return (
     <>
-      <Layout userRole={role}>
+      <Layout userRole={user.statut}>
         <Outlet />
       </Layout>
     </>
-  );
+  )
 }
 
 export function Error() {
@@ -31,12 +47,12 @@ export function Error() {
     <UserProvider>
       <InnerError />
     </UserProvider>
-  );
+  )
 }
 
 function InnerError() {
-  const location = useLocation();
-  const { role } = useUser();
+  const location = useLocation()
+  const { role } = useUser()
   const { theme, setTheme } = useTheme()
   // useAuthCheck()
 
@@ -49,8 +65,9 @@ function InnerError() {
   return (
     <>
       <Layout userRole={role}>
-        Aie une erreur s'est produite ! La page {location.pathname} est introuvable.
+        Aie une erreur s'est produite ! La page {location.pathname} est
+        introuvable.
       </Layout>
     </>
-  );
+  )
 }

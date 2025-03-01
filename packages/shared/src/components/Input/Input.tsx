@@ -1,9 +1,9 @@
-import { TextInput, View, Text, Animated, TouchableOpacity } from 'react-native'
+import { TextInput, View, Text, TouchableOpacity } from 'react-native'
 import { EyeIcon, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { styles } from './InputStyle'
 
-interface InputProps {
+export interface InputProps {
   label?: string
   placeholder?: string
   type?: 'text' | 'password'
@@ -19,20 +19,20 @@ const TYPES = {
 }
 
 const STATUS = {
-  normal: { borderColor: '#2E3494', helperColor: '#2E3494' },
-  error: { borderColor: '#CC0000', helperColor: '#AA0000' },
-  success: { borderColor: '#00CC00', helperColor: '#00AA00' },
+  normal: { borderColor: '#2E3494', helperColor: '#2E3494', color: '#2E3494' },
+  error: { borderColor: '#FF0000', helperColor: '#FF0000', color: '#FF0000' },
+  success: { borderColor: '#00CC00', helperColor: '#00AA00', color: '#2E3494' },
 }
 
 export function Input({
   label,
-  color = '#2E3494',
+  // color = '#2E3494',
   type = 'text',
   status = 'normal',
   helper,
   onChangeText,
 }: InputProps) {
-  const { borderColor, helperColor } = STATUS[status]
+  const { borderColor, helperColor, color } = STATUS[status]
   const [value, setValue] = useState('')
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
@@ -43,7 +43,7 @@ export function Input({
   return (
     <View>
       <View style={styles.inputContainer}>
-        {<Animated.Text style={[styles.label]}>{label}</Animated.Text>}
+        {<Text style={[styles.label, { color }]}>{label}</Text>}
         {type === 'password' && value !== '' && (
           <TouchableOpacity onPress={handleClickOnEye} style={styles.eye}>
             {isPasswordVisible ? (
@@ -53,19 +53,26 @@ export function Input({
             )}
           </TouchableOpacity>
         )}
-        <TextInput
-          style={[styles.input, { color, borderColor }]}
-          secureTextEntry={type === 'password' && !isPasswordVisible}
-          onChangeText={(text) => {
-            onChangeText?.(text)
-            setValue(text)
-          }}
-        />
+        <View style={styles.helperContainer}>
+          <TextInput
+            style={[
+              styles.input,
+              { borderColor },
+              { outlineStyle: 'none' } as any,
+            ]}
+            secureTextEntry={type === 'password' && !isPasswordVisible}
+            onChangeText={(text) => {
+              onChangeText?.(text)
+              setValue(text)
+            }}
+          />
+          {helper && (
+            <Text style={[styles.helper, { color: helperColor }]}>
+              {helper}
+            </Text>
+          )}
+        </View>
       </View>
-
-      {helper && (
-        <Text style={[styles.helper, { color: helperColor }]}>{helper}</Text>
-      )}
     </View>
   )
 }

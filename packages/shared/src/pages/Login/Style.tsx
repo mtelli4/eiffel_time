@@ -35,5 +35,16 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 400,
     color: '#2E3494'
+  },
+  passwordContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 2,
+  },
+  passwordConditions: {
+    position: 'absolute',
+    // right: 0,
+    backgroundColor: '#2E3494'
   }
 })
