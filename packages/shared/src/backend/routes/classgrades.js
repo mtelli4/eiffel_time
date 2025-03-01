@@ -8,52 +8,24 @@ const router = express.Router();
 // Route pour récupérer toutes les évaluations et les notes d'un étudiant
 router.get('/', async (req, res) => {
   try {
-    const evaluationsAndNotes = await prisma.module.findMany({
-      select: {
-        id_module: true,
-        libelle: true,
-        codeapogee: true,
-        evaluation: {
-          select: {
-            id_eval: true,
-            libelle: true,
-            periode: true,
-            cours: {
-              select: {
-                debut: true,
-                fin: true,
-              },
-            },
-            notemaximale: true,
-            coefficient: true,
-            notes: {
-              select: {
-                etudiant: {
-                  select: {
-                    numeroetudiant: true,
-                    utilisateur: {
-                      select: {
-                        id_utilisateur: true,
-                        nom: true,
-                        prenom: true,
-                      }
-                    }
-                  }
-                },
-                note: true,
-                commentaire: true,
-              }
-            },
-            id_module: true,
-          }
-        }
-      }
-    });
+    const test = await prisma.$queryRaw`SELECT m.id_module, m.libelle, m.codeapogee,
+    e.id_eval, e.libelle AS eval_libelle, e.periode, 
+    c.debut, c.fin, 
+    e.notemaximale, e.coefficient, e.id_module,
+    n.note, n.commentaire,
+    et.numeroetudiant, u.id_utilisateur, u.nom, u.prenom
+FROM module m
+JOIN evaluation e ON e.id_module = m.id_module
+JOIN cours c ON c.id_module = m.id_module
+JOIN notes n ON n.id_eval = e.id_eval
+JOIN etudiant et ON et.id_utilisateur = n.id_utilisateur
+JOIN utilisateur u ON u.id_utilisateur = et.id_utilisateur
+ORDER BY m.id_module, e.createdat, u.nom, u.prenom`;
 
-    res.status(200).json(evaluationsAndNotes);
+    res.json(test);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erreur lors de la récupération des évaluations et des notes." });
+    res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
   }
 });
 
