@@ -46,7 +46,7 @@ const processRawClassGradesData = (data: any): ClassGradesModule[] => {
 
 // Fonction pour récupérer les notes depuis l'API avec la requête brute
 export const fetchClassGrades = async (): Promise<ClassGradesModule[]> => {
-  const response = await fetch(`${API_URL}/api/all/test`)
+  const response = await fetch(`${API_URL}/api/classgrades/`)
   if (!response.ok) {
     throw new Error('Erreur réseau')
   }

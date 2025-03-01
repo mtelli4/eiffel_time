@@ -34,10 +34,6 @@ const calculateEvaluationAverage = (evaluation: ClassGradesEvaluation) => {
 export function ClassGrades() {
   const { Edit, Delete } = useEditDeleteLoader()
 
-  const [refresh, setRefresh] = useState(false);
-
-  const forceUpdate = () => setRefresh((prev) => !prev);
-
   const [showAddGradeModal, setShowAddGradeModal] = useState(false)
   const [showNoteForm, setShowNoteForm] = useState(false)
 
@@ -231,7 +227,6 @@ export function ClassGrades() {
             return module
           })
         })
-        forceUpdate()
       } catch (error) {
         console.error('Erreur:', error)
       }
