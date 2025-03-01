@@ -18,7 +18,7 @@ export function Admin() {
     formation: '',
     groupe: '',
     type: '',
-    search: ''
+    search: '',
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
   const [formations, setFormations] = useState<Formation[]>([])
@@ -30,9 +30,9 @@ export function Admin() {
   const [UserImport, setUserImport] = useState<any>(null)
 
   const handleFilterChange = (filterName: string, value: string) => {
-    setFilters(prevFilters => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
-      [filterName]: value
+      [filterName]: value,
     }))
   }
 
@@ -109,10 +109,13 @@ export function Admin() {
       }
     }
 
-    loadComponents().then(r => r)
+    loadComponents().then((r) => r)
   }, [])
 
-  const tabs = [{ id: 'users' as const, label: 'Utilisateurs' }, { id: 'import' as const, label: 'Importation' }]
+  const tabs = [
+    { id: 'users' as const, label: 'Utilisateurs' },
+    { id: 'import' as const, label: 'Importation' },
+  ]
 
   const handleEditUser = (user: Utilisateur) => {
     setSelectedUser(user)
@@ -122,16 +125,21 @@ export function Admin() {
   const handleDeleteUser = (user: Utilisateur) => {
     if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
       fetch(`${API_URL}/api/admin/delete-user/${user.id_utilisateur}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
         .then((response) => {
           if (!response.ok) {
             throw new Error('Erreur réseau')
           }
-          setUtilisateurs(utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur))
+          setUtilisateurs(
+            utilisateurs.filter((u) => u.id_utilisateur !== user.id_utilisateur)
+          )
         })
         .catch((error) => {
-          console.error('Erreur lors de la suppression de l\'utilisateur:', error)
+          console.error(
+            "Erreur lors de la suppression de l'utilisateur:",
+            error
+          )
         })
     }
   }
@@ -140,17 +148,20 @@ export function Admin() {
     if (selectedUser) {
       try {
         // alert(`Données valides: ${JSON.stringify(data)}`)
-        const response = await fetch(`${API_URL}/api/admin/update-user/${selectedUser.id_utilisateur}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        })
+        const response = await fetch(
+          `${API_URL}/api/admin/update-user/${selectedUser.id_utilisateur}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          }
+        )
         if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Erreur API :", errorData);
-          throw new Error('Erreur réseau : ' + errorData.message);
+          const errorData = await response.json()
+          console.error('Erreur API :', errorData)
+          throw new Error('Erreur réseau : ' + errorData.message)
         }
         const updatedUser = await response.json()
         selectedUser.id_utilisateur = updatedUser.id_utilisateur
@@ -161,18 +172,25 @@ export function Admin() {
         selectedUser.formations = updatedUser.formations.map((f: any) => {
           return { id_formation: parseInt(f.value), libelle: f.label }
         })
-        setUtilisateurs(utilisateurs.map((u) => u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u))
+        setUtilisateurs(
+          utilisateurs.map((u) =>
+            u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u
+          )
+        )
       } catch (error) {
-        console.error("Erreur lors de la modification de l'utilisateur : ", error)
+        console.error(
+          "Erreur lors de la modification de l'utilisateur : ",
+          error
+        )
       }
     } else {
       try {
         const response = await fetch(`${API_URL}/api/admin/create-user`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
         })
 
         if (!response.ok) {
@@ -186,9 +204,12 @@ export function Admin() {
           prenom: newUser.prenom,
           email: newUser.email,
           statut: newUser.statut,
-          formations: newUser.formations.map((f: any) => { return { id_formation: f.value, libelle: f.label } }),
-          groupes: newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: newUser.enseignant?.vacataire
+          formations: newUser.formations.map((f: any) => {
+            return { id_formation: f.value, libelle: f.label }
+          }),
+          groupes:
+            newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+          vacataire: newUser.enseignant?.vacataire,
         }
         setUtilisateurs((prev) => [...prev, utilisateur])
       } catch (error) {
@@ -233,9 +254,7 @@ export function Admin() {
       {activeTab === 'users' && (
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.subtitle}>
-              Gestion des utilisateurs
-            </Text>
+            <Text style={styles.subtitle}>Gestion des utilisateurs</Text>
             <TouchableOpacity
               onPress={() => {
                 setSelectedUser(null)
@@ -243,9 +262,7 @@ export function Admin() {
               }}
               style={styles.addButton}
             >
-              <Text style={styles.addButtonText}>
-                Ajouter un utilisateur
-              </Text>
+              <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
             </TouchableOpacity>
           </View>
 
@@ -262,9 +279,7 @@ export function Admin() {
         </View>
       )}
 
-      {activeTab === 'import' && (
-        <UserImport users={utilisateurs} />
-      )}
+      {activeTab === 'import' && <UserImport users={utilisateurs} />}
 
       {showUserForm && (
         <UserForm
@@ -282,16 +297,8 @@ export function Admin() {
   )
 
   if (Platform.OS === 'web') {
-    return (
-      <View style={styles.container}>
-        {content}
-      </View>
-    )
+    return <View style={styles.container}>{content}</View>
   } else {
-    return (
-      <ScrollView style={styles.container}>
-        {content}
-      </ScrollView>
-    )
+    return <ScrollView style={styles.container}>{content}</ScrollView>
   }
 }

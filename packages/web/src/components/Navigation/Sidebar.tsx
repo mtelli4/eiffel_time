@@ -10,8 +10,8 @@ import {
   Users,
   Wrench,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import logo from '../../../../shared/src/assets/logo.svg'
 import { cn } from '../../../../shared/src/lib/utils'
 import { ROLES } from '../../../../shared/src/types/types'
@@ -90,6 +90,25 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   const navigation = navigationConfig[userRole]
   const { role, setRole } = useUser()
 
+  const user = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem('user') || '{}')
+    } catch (error) {
+      console.error('Error parsing user data:', error)
+      return {}
+    }
+  }, [])
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    console.log('test')
+
+    if (!user || Object.keys(user).length === 0) {
+      navigate('/signin')
+    }
+  }, [user, navigate])
+  
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(
       event.target.value as
@@ -103,6 +122,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   }
 
   useEffect(() => {
+    
     const handleMouseEnter = () => {
       if (!isVisible) {
         setIsVisible(true)
@@ -141,7 +161,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
 
   return (
     <div
-      className={`sidebar h-screen w-[280px] bg-[#2E3494] dark:bg-white  text-white dark:text-primary dark:border-primary fixed top-0 p-4 flex flex-col justify-between transition-transform ${
+      className={`sidebar h-screen w-[280px] bg-[#2E3494] dark:text-primary  text-white dark:text-white dark:border-primary fixed top-0 p-4 flex flex-col justify-between transition-transform ${
         isVisible ? 'left-0' : '-left-[280px]'
       }`}
     >
@@ -178,7 +198,9 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                 cn(
                   'flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors',
                   'hover:bg-white/10',
-                  isActive ? 'bg-white/20 dark:bg-secondary' : 'text-white/80 dark:text-primary'
+                  isActive
+                    ? 'bg-white/20 dark:bg-white/10'
+                    : 'text-white/80 dark:text-white/70'
                 )
               }
             >

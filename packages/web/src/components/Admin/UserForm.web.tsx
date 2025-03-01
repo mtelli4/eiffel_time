@@ -1,11 +1,20 @@
-import { X } from 'lucide-react'
-import Select from 'react-select'
-import { Formation, Groupe, ROLES, TEACHER_TYPES, UserUpdate } from '../../../../shared/src/types/types'
-import { Utilisateur } from '../../../../shared/src/types/types'
-import { useEffect, useState } from 'react'
 import { formation, groupe, statut_utilisateur } from '@prisma/client'
+import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import Select from 'react-select'
+import {
+  Formation,
+  Groupe,
+  ROLES,
+  TEACHER_TYPES,
+  UserUpdate,
+  Utilisateur,
+} from '../../../../shared/src/types/types'
 
-const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
+const roleOptions = ROLES.map((role) => ({
+  value: role.value as statut_utilisateur,
+  label: role.label,
+}))
 
 interface UserFormProps {
   isOpen: boolean
@@ -39,26 +48,36 @@ export function UserForm({
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:4000/api/all/formations').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (formations)');
-        return response.json();
+        if (!response.ok) throw new Error('Erreur réseau (formations)')
+        return response.json()
       }),
       fetch('http://localhost:4000/api/all/groupes').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (groupes)');
-        return response.json();
-      })
+        if (!response.ok) throw new Error('Erreur réseau (groupes)')
+        return response.json()
+      }),
     ])
       .then(([formationsData, groupesData]) => {
-        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
+        setFormations(
+          formationsData.map((f: formation) => ({
+            value: f.id_formation,
+            label: f.libelle,
+          }))
+        )
 
-        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
+        setGroupes(
+          groupesData.map((g: groupe) => ({
+            value: g.id_grp,
+            label: g.libelle,
+          }))
+        )
       })
       .catch((error) => {
-        console.error('Erreur lors de la récupération des données:', error);
-      });
-  }, []);
+        console.error('Erreur lors de la récupération des données:', error)
+      })
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }))
@@ -71,7 +90,11 @@ export function UserForm({
     if (!formData.prenom.trim()) {
       alert('Le prénom est obligatoire')
     }
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
+    if (
+      !formData.email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    ) {
+      // Exemple : test@test
       alert('Veuillez saisir une adresse email valide')
     }
     if (!formData.statut) {
@@ -86,18 +109,60 @@ export function UserForm({
     if (formData.statut === 'teacher' && formData.vacataire === undefined) {
       alert('Un enseignant doit être soit titulaire soit vacataire')
     }
-    
+
     onSubmit(formData)
     onClose()
   }
-
+  const customSelectStyles = {
+    control: (base: any, state: any) => ({
+      ...base,
+      borderColor: state.isFocused ? '#3498DB' : '#E2E8F0',
+      boxShadow: state.isFocused ? '0 0 0 1px #3498DB' : 'none',
+      '&:hover': {
+        borderColor: '#3498DB',
+      },
+      backgroundColor: 'var(--select-bg)',
+      borderRadius: '0.375rem',
+    }),
+    menu: (base: any) => ({
+      ...base,
+      backgroundColor: 'var(--select-bg)',
+      borderRadius: '0.375rem',
+      boxShadow:
+        '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? '#3498DB'
+        : state.isFocused
+        ? 'var(--select-hover)'
+        : 'transparent',
+      color: state.isSelected ? 'white' : 'var(--select-text)',
+      '&:hover': {
+        backgroundColor: state.isSelected ? '#3498DB' : 'var(--select-hover)',
+      },
+    }),
+    singleValue: (base: any) => ({
+      ...base,
+      color: 'var(--select-text)',
+    }),
+    placeholder: (base: any) => ({
+      ...base,
+      color: 'var(--select-placeholder)',
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: 'var(--select-text)',
+    }),
+  }
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full p-6">
+      <div className="bg-white dark:bg-primary rounded-lg max-w-2xl w-full p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-[#2C3E50]">
+          <h2 className="text-xl font-bold text-[#2C3E50] dark:text-gray-100">
             {isEdit ? 'Modifier un utilisateur' : 'Ajouter un utilisateur'}
           </h2>
           <button
@@ -125,7 +190,7 @@ export function UserForm({
           )} */}
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Nom
             </label>
             <input
@@ -133,12 +198,12 @@ export function UserForm({
               name="nom"
               value={formData.nom}
               onChange={handleChange}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:bg-primary dark:text-white dark:border-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Prénom
             </label>
             <input
@@ -146,12 +211,12 @@ export function UserForm({
               name="prenom"
               value={formData.prenom}
               onChange={handleChange}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:bg-primary dark:text-white dark:border-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -159,44 +224,70 @@ export function UserForm({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:bg-primary dark:text-white dark:border-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
-
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+        :root {
+          --select-bg: #ffffff;
+          --select-text: #2C3E50;
+          --select-placeholder: #718096;
+          --select-hover: #EDF2F7;
+        }
+        
+        .dark {
+          --select-bg: #2E3494;
+          --select-text: #E2E8F0;
+          --select-placeholder: #A0AEC0;
+          --select-hover: #3D45A5;
+        }
+      `,
+            }}
+          />
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Rôle
             </label>
             <Select
               options={roleOptions}
               isClearable
               placeholder="Sélectionner un rôle"
-              value={roleOptions.find(option => option.value === formData.statut)}
-              onChange={(option: any) => setFormData(prevState => ({
-                ...prevState,
-                statut: option?.value || null,
-              }))}
+              value={roleOptions.find(
+                (option) => option.value === formData.statut
+              )}
+              onChange={(option: any) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  statut: option?.value || null,
+                }))
+              }
               className="text-sm"
+              styles={customSelectStyles}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Formation(s)
             </label>
             <Select
-              defaultValue={initialData?.formations.map(f => ({
+              defaultValue={initialData?.formations.map((f) => ({
                 value: f.id_formation,
                 label: f.libelle,
               }))}
               isMulti
               options={formations}
-              onChange={(options: any) => setFormData(prevState => ({
-                ...prevState,
-                formations: options,
-              }))}
+              onChange={(options: any) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  formations: options,
+                }))
+              }
               placeholder="Aucune formation"
               className="text-sm"
+              styles={customSelectStyles}
             />
           </div>
 
@@ -206,18 +297,21 @@ export function UserForm({
                 Groupes
               </label>
               <Select
-                defaultValue={initialData?.groupes.map(g => ({
+                defaultValue={initialData?.groupes.map((g) => ({
                   value: g.id_grp,
                   label: g.libelle,
                 }))}
                 isMulti
                 options={groupes}
-                onChange={(options: any) => setFormData(prevState => ({
-                  ...prevState,
-                  groupes: options,
-                }))}
+                onChange={(options: any) =>
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    groupes: options,
+                  }))
+                }
                 placeholder="Aucun groupe"
                 className="text-sm"
+                styles={customSelectStyles}
               />
             </div>
           )}
@@ -231,12 +325,17 @@ export function UserForm({
                 options={TEACHER_TYPES}
                 isClearable
                 placeholder="Sélectionner un type"
-                value={TEACHER_TYPES.find(option => option.value === formData.vacataire)}
-                onChange={(option: any) => setFormData(prevState => ({
-                  ...prevState,
-                  vacataire: option?.value ?? null, // Utilisez null si l'option est undefined
-                }))}
+                value={TEACHER_TYPES.find(
+                  (option) => option.value === formData.vacataire
+                )}
+                onChange={(option: any) =>
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    vacataire: option?.value ?? null, // Utilisez null si l'option est undefined
+                  }))
+                }
                 className="text-sm"
+                styles={customSelectStyles}
               />
             </div>
           )}
@@ -246,14 +345,14 @@ export function UserForm({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-[#2C3E50] bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-4 py-2 border text-[#2C3E50] bg-gray-100 hover:bg-gray-200 dark:text-white dark:bg-primary dark:hover:bg-[#2980B9] dark:border-white rounded-lg transition-colors"
             >
               Annuler
             </button>
             <button
               // type="submit"
               onClick={handleSubmit}
-              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] rounded-lg transition-colors"
+              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] dark:text-[#2C3E50] dark:bg-gray-100 dark:hover:bg-gray-200 rounded-lg transition-colors"
             >
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>

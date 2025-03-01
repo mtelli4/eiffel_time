@@ -14,17 +14,19 @@ export const styles = StyleSheet.create({
   },
   helper: {
     fontFamily: 'Montserrat',
-    margin: 4,
+    marginTop: 2,
+    flexWrap: 'wrap',
+    width: 350,
   },
   eye: {
     position: 'absolute',
     right: 20,
     color: '#2E3494',
     cursor: 'pointer',
+    height: 50
   },
   inputContainer: {
     justifyContent: 'center',
-    marginTop: 8,
   },
   label: {
     left: 12,
@@ -35,6 +37,10 @@ export const styles = StyleSheet.create({
     color: '#2E3494',
     position: 'absolute',
     backgroundColor: 'white',
-    paddingHorizontal: 4,
+    paddingHorizontal: 6,
   },
+  helperContainer: {
+    height: 80,
+    zIndex: -1,
+  }
 })

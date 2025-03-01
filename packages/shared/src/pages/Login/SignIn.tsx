@@ -2,15 +2,17 @@ import { Button } from '../../components/Button/Button'
 import { Input } from '../../components/Input/Input'
 import { useEffect, useState } from 'react'
 import { Image, Text, View } from 'react-native'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import { styles } from './Style'
 import { API_URL } from '../../types/types'
+import { Logo } from '../../components/Logo/Logo'
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [valid, setValid] = useState(false)
+  const [user, setUser] = useState({})
 
   const handleSubmitUser = async () => {
     try {
@@ -35,7 +37,9 @@ export function Login() {
         localStorage.setItem('user', JSON.stringify(userData))
       }
       console.log(data)
-      setValid(data)
+
+      setValid(data.valid)
+      setUser(data.user)
     } catch {
       console.error('Erreur lors de la connexion')
     }
@@ -45,16 +49,18 @@ export function Login() {
 
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
-      navigate('/schedule')
+    if (valid) {
+      localStorage.setItem('user', JSON.stringify(user))
+      navigate('/')
     }
   }, [navigate])
 
   return (
     <View style={styles.root}>
-      <Image source={logo} style={styles.logo} />
+      {/* <Image source={logo} style={styles.logo} /> */}
+      <Logo source={logo} label="Eiffel TIME" size="xlarge" />
       <View style={styles.container}>
-        <Text style={styles.title}>Eiffel TIME</Text>
+        {/* <Text style={styles.title}>Eiffel TIME</Text> */}
         <Input label="Adresse mail" onChangeText={setEmail} />
         <Input
           label="Mot de passe"

@@ -1,8 +1,8 @@
 // src/web/components/Layout.tsx
 import { useEffect, useState } from 'react'
+import { useTheme } from '../hooks/useTheme'
 import { Sidebar } from './Navigation/Sidebar'
 import { NotificationCenter } from './Notifications/NotificationCenter.web'
-import { useTheme } from '../hooks/useTheme'
 
 interface LayoutProps {
   userRole:
@@ -60,8 +60,10 @@ export function Layout({ userRole, children }: LayoutProps) {
         setIsVisible={setIsSidebarVisible}
       />
       <div className={`flex-1 ${isSidebarVisible ? 'ml-[280px]' : 'ml-0'}`}>
-        <header className="h-16 bg-white dark:bg-primary border-b border-gray-200 dark:border-gray-800 px-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-primary dark:text-secondary">{pageTitle}</h1>
+        <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-8 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-primary dark:text-secondary">
+            {pageTitle}
+          </h1>
           <NotificationCenter />
         </header>
         <main className="p-8">{children}</main>
