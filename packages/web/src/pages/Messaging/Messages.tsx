@@ -68,10 +68,7 @@ export function Messages() {
           const users = await fetchUsers(userId)
           setAvailableUsers(users)
         } catch (error) {
-          console.error(
-            'Erreur lors de la récupération des utilisateurs:',
-            error
-          )
+          console.error('Erreur lors de la récupération des utilisateurs:', error)
         }
       }
 
@@ -80,11 +77,11 @@ export function Messages() {
   }, [userSearchQuery, showNewConversationModal])
 
   const handleSendMessage = () => {
-    /* if (!newMessage.trim() || !selectedConversation) return
+    if (!newMessage.trim() || !selectedConversation) return
 
     const message: MessagingMessage = {
       id_message: Date.now(),
-      emetteur: userId, 
+      emetteur: userId,
       recepteur: selectedConversation.utilisateur.id_utilisateur,
       message: newMessage,
       date: new Date().toISOString(),
@@ -92,7 +89,7 @@ export function Messages() {
     }
 
     setMessages([...messages, message])
-    setNewMessage('') */
+    setNewMessage('')
   }
 
   const formatTimestamp = (timestamp: string) => {
@@ -216,8 +213,8 @@ export function Messages() {
                       {selectedConversation.utilisateur.status === 'online'
                         ? 'En ligne'
                         : formatLastSeen(
-                            selectedConversation.utilisateur.lastSeen
-                          )}
+                          selectedConversation.utilisateur.lastSeen
+                        )}
                     </p>
                   </div>
                 </div>
@@ -233,7 +230,7 @@ export function Messages() {
                     (message.emetteur ===
                       selectedConversation.utilisateur.id_utilisateur ||
                       message.recepteur ===
-                        selectedConversation.utilisateur.id_utilisateur) && (
+                      selectedConversation.utilisateur.id_utilisateur) && (
                       <div
                         key={'m' + message.id_message}
                         className={cn(
@@ -338,7 +335,7 @@ export function Messages() {
                 className={cn(
                   'w-full p-4 flex items-start gap-3 hover:bg-gray-50 transition-colors',
                   selectedConversation?.utilisateur.id_utilisateur ===
-                    conversation.utilisateur.id_utilisateur && 'bg-gray-50'
+                  conversation.utilisateur.id_utilisateur && 'bg-gray-50'
                 )}
               >
                 {conversation.utilisateur.avatar ? (
