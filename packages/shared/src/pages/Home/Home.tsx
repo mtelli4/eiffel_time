@@ -16,8 +16,6 @@ export function Home() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log('test')
-
     if (!user || Object.keys(user).length === 0) {
       navigate('/signin')
     }

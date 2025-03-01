@@ -47,13 +47,13 @@ export function Login() {
 
   const navigate = useNavigate()
 
-
   useEffect(() => {
     if (valid) {
       localStorage.setItem('user', JSON.stringify(user))
       navigate('/')
+
     }
-  }, [navigate])
+  }, [valid, user])
 
   return (
     <View style={styles.root}>
