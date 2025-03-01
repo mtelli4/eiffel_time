@@ -1,13 +1,12 @@
-import { Platform } from 'react-native';
-import { Float } from 'react-native/Libraries/Types/CodegenTypes';
+import { Platform } from 'react-native'
 
 export const API_URL = Platform.select({
   web: `http://localhost:4000`,
   ios: `http://localhost:4000`,
-  android: `http://192.168.1.15:4000`, // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
+  android: `http://10.0.2.2:4000`, // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
   // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
   // android: 'http://192.168.1.XX:4000', // 10.0.2.2
-});
+})
 
 export const ROLES = [
   { value: 'student', label: 'Étudiant' },
@@ -71,7 +70,7 @@ export type COURSE = {
   location: string
   start: string
   end: string
-  group: string 
+  group: string
   day: string
   date: Date
   duration?: number
@@ -97,7 +96,6 @@ export type GradeStatus =
   | 'not_submitted'
   | 'exempted'
   | 'pending_makeup'
-
 
 export type ClassGradesNote = {
   id_eval: number
@@ -224,12 +222,12 @@ export interface TeacherPlanningForm {
 }
 
 export const periodeLabels: Record<string, string> = {
-  Semestre_1: "Semestre 1",
-  Semestre_2: "Semestre 2",
-  Semestre_3: "Semestre 3",
-  Semestre_4: "Semestre 4",
-  Semestre_5: "Semestre 5",
-  Semestre_6: "Semestre 6",
+  Semestre_1: 'Semestre 1',
+  Semestre_2: 'Semestre 2',
+  Semestre_3: 'Semestre 3',
+  Semestre_4: 'Semestre 4',
+  Semestre_5: 'Semestre 5',
+  Semestre_6: 'Semestre 6',
 }
 
 export type MessagingUtilisateur = {
@@ -237,7 +235,9 @@ export type MessagingUtilisateur = {
   nom: string
   prenom: string
   statut: string
-  avatar: string | 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'
+  avatar:
+    | string
+    | 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'
   status: 'online' | 'offline'
   lastSeen?: string
 }

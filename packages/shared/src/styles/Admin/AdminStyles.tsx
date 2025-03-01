@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     marginRight: 8,
   },
   activeTabButton: {
-    backgroundColor: '#2C3E50',
+    backgroundColor: '#2E3494',
   },
   inactiveTabButton: {
     backgroundColor: '#fff',

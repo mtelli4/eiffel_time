@@ -1,4 +1,9 @@
-import { API_URL, MessagingMessage, MessagingConversation } from '../../types/types'
+import {
+  API_URL,
+  MessagingConversation,
+  MessagingMessage,
+  MessagingUtilisateur,
+} from '../../types/types'
 
 // Fonction pour traiter les données des messages
 const processMessagesData = (data: any): MessagingMessage[] => {
@@ -8,7 +13,7 @@ const processMessagesData = (data: any): MessagingMessage[] => {
     recepteur: message.recepteur,
     message: message.contenu,
     date: message.createdat,
-  }));
+  }))
 }
 
 // Fonction pour traiter les données des conversations
@@ -19,7 +24,9 @@ const processConversationsData = (data: any): MessagingConversation[] => {
       nom: conversation.utilisateur.nom,
       prenom: conversation.utilisateur.prenom,
       statut: conversation.utilisateur.statut,
-      avatar: conversation.avatar || 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png',
+      avatar:
+        conversation.avatar ||
+        'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png',
       status: conversation.status || 'offline',
       lastSeen: conversation.last_seen || undefined,
     },
@@ -31,25 +38,72 @@ const processConversationsData = (data: any): MessagingConversation[] => {
       vu: conversation.last_message.vu,
     },
     unread: conversation.unread || 0,
-  }));
+  }))
 }
 
 // Récupérer les messages d'un utilisateur
-export const fetchMessages = async (id: number): Promise<MessagingMessage[]> => {
-  const response = await fetch(`${API_URL}/api/messaging/messages/${id}`);
+export const fetchMessages = async (
+  id: number
+): Promise<MessagingMessage[]> => {
+  const response = await fetch(`${API_URL}/api/messaging/messages/${id}`)
   if (!response.ok) {
-    throw new Error('Erreur réseau lors de la récupération des messages.');
+    throw new Error('Erreur réseau lors de la récupération des messages.')
   }
-  const data = await response.json();
-  return processMessagesData(data);
+  const data = await response.json()
+  return processMessagesData(data)
 }
 
 // Récupérer les conversations d'un utilisateur
-export const fetchConversations = async (id: number): Promise<MessagingConversation[]> => {
-  const response = await fetch(`${API_URL}/api/messaging/conversations/${id}`);
+export const fetchConversations = async (
+  id: number
+): Promise<MessagingConversation[]> => {
+  const response = await fetch(`${API_URL}/api/messaging/conversations/${id}`)
   if (!response.ok) {
-    throw new Error('Erreur réseau lors de la récupération des conversations.');
+    throw new Error('Erreur réseau lors de la récupération des conversations.')
   }
-  const data = await response.json();
-  return processConversationsData(data);
+  const data = await response.json()
+  return processConversationsData(data)
+}
+
+// Utilisateurs pour la messagerie
+interface MessagingUser {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  statut: string
+  avatar?: string
+}
+
+// Fonction pour traiter les données des utilisateurs
+const processUsersData = (data: any): MessagingUtilisateur[] => {
+  return data.map((user: any) => ({
+    id_utilisateur: user.id_utilisateur,
+    nom: user.nom,
+    prenom: user.prenom,
+    statut: user.statut,
+    avatar:
+      user.avatar ||
+      'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png',
+    status: user.status || 'offline',
+    lastSeen: user.lastSeen || undefined,
+  }))
+}
+
+// Récupérer les utilisateurs pour la messagerie
+export const fetchUsers = async (
+  searchQuery: string = ''
+): Promise<MessagingUtilisateur[]> => {
+  try {
+    const response = await fetch(
+      `${API_URL}/api/users?search=${encodeURIComponent(searchQuery)}`
+    )
+    if (!response.ok) {
+      throw new Error('Erreur réseau lors de la récupération des utilisateurs.')
+    }
+    const data = await response.json()
+    return processUsersData(data)
+  } catch (error) {
+    console.error('Erreur lors de la récupération des utilisateurs:', error)
+    return []
+  }
 }
