@@ -165,6 +165,8 @@ export interface FormData {
 
 export interface UserFiltersProps {
   onFilterChange: (filterName: string, value: string) => void
+  formations: { value: string; label: string }[]
+  groupes: { value: string; label: string }[]
 }
 
 export interface FormEvaluation {
