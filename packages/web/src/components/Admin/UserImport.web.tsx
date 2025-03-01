@@ -81,7 +81,7 @@ export function UserImport() {
         </span>
       </header>
       {jsonData.length === 0 && (
-        <div>
+        <div className='text-gray-600 dark:text-gray-300'>
           <p>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire.</p>
           <br />
           <p>Modalités d'importation des utilisateurs :</p>
