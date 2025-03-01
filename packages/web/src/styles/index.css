@@ -35,3 +35,50 @@
   justify-content: center;
   align-items: center;; */
 }
+
+/* Appliquer un style sombre aux éléments de DataTables */
+.dark .dataTables_wrapper {
+  color: white;
+  background-color: #1e293b; /* Fond sombre */
+}
+
+/* Style pour la barre de recherche */
+.dark .dataTables_filter input {
+  background-color: #334155; /* Fond du champ */
+  color: white;
+  border-color: #64748b;
+}
+
+/* Style pour la pagination */
+.dark .dataTables_paginate .paginate_button {
+  background-color: #334155;
+  color: white !important;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+.dark .dataTables_paginate .paginate_button:hover {
+  background-color: #475569;
+}
+
+/* Désactiver le texte grisé des boutons non actifs */
+.dark .dataTables_paginate .paginate_button.disabled {
+  color: #64748b !important;
+}
+
+/* Style pour l'en-tête du tableau */
+.dark .dataTables_wrapper thead {
+  background-color: #334155;
+  color: white;
+}
+
+/* Style pour les lignes du tableau */
+.dark .dataTables_wrapper tbody tr {
+  background-color: #1e293b;
+  color: white;
+}
+
+/* Style pour le hover sur les lignes */
+.dark .dataTables_wrapper tbody tr:hover {
+  background-color: #334155;
+}
