@@ -34,6 +34,10 @@ const calculateEvaluationAverage = (evaluation: ClassGradesEvaluation) => {
 export function ClassGrades() {
   const { Edit, Delete } = useEditDeleteLoader()
 
+  const [refresh, setRefresh] = useState(false);
+
+  const forceUpdate = () => setRefresh((prev) => !prev);
+
   const [showAddGradeModal, setShowAddGradeModal] = useState(false)
   const [showNoteForm, setShowNoteForm] = useState(false)
 
@@ -81,7 +85,7 @@ export function ClassGrades() {
       .catch((error) => {
         console.error('Erreur lors de la récupération des étudiants:', error)
       })
-  }, [modulesEvalNotes, cours, students])
+  }, [])
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -96,7 +100,7 @@ export function ClassGrades() {
 
     loadComponents().then(r => r)
   }, [])
-  
+
   if (!Edit || !Delete) return null;
 
   const filteredGradeModules = modulesEvalNotes.filter((module) => {
@@ -168,7 +172,6 @@ export function ClassGrades() {
         })
         return newModules
       })
-
     } catch (error: any) {
       console.error('Erreur:', error)
     }
@@ -197,6 +200,9 @@ export function ClassGrades() {
         if (!response.ok) throw new Error('Erreur réseau')
         const result = await response.json()
         const student = students.find((s: ClassGradesStudent) => s.id_utilisateur === result.id_utilisateur)
+
+        if (!student) return
+
         const newNote: ClassGradesNote = {
           id_eval: result.id_eval,
           id_utilisateur: result.id_utilisateur,
@@ -206,19 +212,26 @@ export function ClassGrades() {
           note: result.note,
           commentaire: result.commentaire,
         }
-        const modules = modulesEvalNotes.map((m) => {
-          if (m.id_module === selectedEvaluation?.id_module) {
-            const evaluations = m.evaluations.map((e) => {
-              if (e.id_eval === selectedEvaluation.id_eval) {
-                return { ...e, notes: [...e.notes, newNote] }
+        setModuleEvalNotes((prevModules) => {
+          return prevModules.map((module) => {
+            if (module.id_module === selectedEvaluation?.id_module) {
+              return {
+                ...module,
+                evaluations: module.evaluations.map((evalItem) => {
+                  if (evalItem.id_eval === selectedEvaluation?.id_eval) {
+                    return {
+                      ...evalItem,
+                      notes: [...evalItem.notes, newNote], // Ajout de la note
+                    }
+                  }
+                  return evalItem
+                }),
               }
-              return e
-            })
-            return { ...m, evaluations }
-          }
-          return m
+            }
+            return module
+          })
         })
-        setModuleEvalNotes(modules)
+        forceUpdate()
       } catch (error) {
         console.error('Erreur:', error)
       }
@@ -324,13 +337,13 @@ export function ClassGrades() {
                       <Delete onDelete={() => handleDeleteGrade(e)} confirmMessage={`Voulez-vous supprimer l'évaluation ${e.libelle} du ${e.periode.replace('_', ' ')}. Attention cette action supprimera toutes les notes de l'évaluation !`} />
                     </Text>
                     <Text style={styles.evaluationSubtitle}>
-                      Période de l'évaluation :{' ' + periodeLabels[e.periode]} -{' '}
+                      Période de l'évaluation :{' ' + e.periode} -{' '}
                       Date : {e.date} - Coefficient : {e.coefficient} {calculateEvaluationAverage(e)}
                     </Text>
                   </View>
                   <View key={'m' + module.id_module + 'e' + e.id_eval} style={styles.table}>
                     {e.notes.map((n: ClassGradesNote) => (
-                      <View key={'m' + module.id_module + 'e' + e.id_eval + 'u' + n.numero_etudiant} style={styles.tableRow}>
+                      <View key={`m${module.id_module}e${e.id_eval}u${n.id_utilisateur}`} style={styles.tableRow}>
                         <Text style={styles.tableCell}>{n.numero_etudiant}</Text>
                         <Text style={styles.tableCell}>{n.nom + ' ' + n.prenom}</Text>
                         <Text style={styles.tableCell}>{n.note !== null ? `${n.note}/${e.notemaximale}` : '-'}</Text>
