@@ -1,101 +1,48 @@
-import React, {useState} from 'react';
-import {
-  FlatList,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { FlatList, Image, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-
-// Types
-interface User {
-  id: string;
-  name: string;
-  role: string;
-  avatar?: string;
-  status: 'online' | 'offline';
-  lastSeen?: string;
-}
-
-interface Message {
-  id: string;
-  senderId: string;
-  content: string;
-  timestamp: string;
-  read: boolean;
-  attachments?: {
-    name: string;
-    url: string;
-    type: string;
-  }[];
-}
-
-interface Conversation {
-  id: string;
-  participants: User[];
-  lastMessage?: Message;
-  unreadCount: number;
-}
-
-// Données de démonstration
-const MOCK_USERS: User[] = [
-  {
-    id: '1',
-    name: 'Jean Dupont',
-    role: 'Professeur',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-    status: 'online',
-  },
-  {
-    id: '2',
-    name: 'Thomas Bernard',
-    role: 'Étudiant',
-    avatar:
-      'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop',
-    status: 'offline',
-    lastSeen: '2024-03-15T14:30:00',
-  },
-];
-
-const MOCK_MESSAGES: Message[] = [
-  {
-    id: 'm1',
-    senderId: '1',
-    content: 'Bonjour, pouvez-vous me confirmer la date du prochain contrôle ?',
-    timestamp: '2024-03-15T15:30:00',
-    read: false,
-  },
-  {
-    id: 'm2',
-    senderId: '2',
-    content: 'Bien sûr, le contrôle aura lieu le 25 mars.',
-    timestamp: '2024-03-15T15:32:00',
-    read: true,
-  },
-  {
-    id: 'm3',
-    senderId: '1',
-    content: 'Merci beaucoup !',
-    timestamp: '2024-03-15T15:33:00',
-    read: false,
-  },
-];
+import { MessagingConversation, MessagingMessage, MessagingUtilisateur } from '../../../../shared/src/types/types';
+import { fetchConversations, fetchMessages } from '../../../../shared/src/backend/services/messaging';
 
 export function Messages() {
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
-  const [newMessage, setNewMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [conversations, setConversations] = useState<MessagingConversation[]>([])
+  const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null)
+  const [messages, setMessages] = useState<MessagingMessage[]>([])
+  const [newMessage, setNewMessage] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const userId = 3
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const conversations = await fetchConversations(userId)
+        setConversations(conversations)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des conversations:', error)
+      }
+    }
+
+    getConversations()
+  }, [])
+
+  useEffect(() => {
+    if (selectedConversation) {
+      const getMessages = async () => {
+        try {
+          const messages = await fetchMessages(userId)
+          setMessages(messages)
+        } catch (error) {
+          console.error('Erreur lors de la récupération des messages:', error)
+        }
+      }
+
+      getMessages()
+    }
+  }, [selectedConversation])
 
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedUser) return;
+    /* if (!newMessage.trim() || !selectedUser) return;
 
     const message: Message = {
       id: `m${Date.now()}`,
@@ -106,27 +53,37 @@ export function Messages() {
     };
 
     setMessages([...messages, message]);
-    setNewMessage('');
+    setNewMessage(''); */
   };
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('fr-FR', {
+    const today = new Date();
+    if (date.toDateString() === today.toDateString()) {
+      return date.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
     });
   };
 
-  const renderUserItem = ({item}: {item: User}) => (
+  const renderUserItem = ({item}: {item: MessagingConversation}) => (
     <TouchableOpacity
       style={styles.userItem}
-      onPress={() => setSelectedUser(item)}>
+      onPress={() => setSelectedConversation(item)}>
       <View style={styles.avatarContainer}>
-        <Image source={{uri: item.avatar}} style={styles.avatarImage} />
-        {item.status === 'online' && <View style={styles.onlineStatus} />}
+        <Image source={{uri: item.utilisateur.avatar}} style={styles.avatarImage} />
+        {item.utilisateur.status === 'online' && <View style={styles.onlineStatus} />}
       </View>
       <Text style={styles.userName} numberOfLines={1}>
-        {item.name.split(' ')[0]}
+        {item.utilisateur.nom + ' ' + item.utilisateur.prenom}
       </Text>
     </TouchableOpacity>
   );
@@ -140,8 +97,8 @@ export function Messages() {
     </View>
   );
 
-  const renderMessage = ({item}: {item: Message}) => {
-    const isCurrentUser = item.senderId === '1';
+  const renderMessage = ({item}: {item: MessagingMessage}) => {
+    const isCurrentUser = item.emetteur === userId;
 
     return (
       <View
@@ -161,10 +118,10 @@ export function Messages() {
                 ? styles.sentMessageText
                 : styles.receivedMessageText,
             ]}>
-            {item.content}
+            {item.message}
           </Text>
         </View>
-        <Text style={styles.timestamp}>{formatTimestamp(item.timestamp)}</Text>
+        <Text style={styles.timestamp}>{formatTimestamp(item.date)}</Text>
       </View>
     );
   };
@@ -174,28 +131,28 @@ export function Messages() {
       <View style={styles.recentUsersContainer}>
         <FlatList
           horizontal
-          data={MOCK_USERS}
+          data={conversations}
           renderItem={renderUserItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.utilisateur.id_utilisateur.toString()}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.recentUsersList}
           ListFooterComponent={renderAddButton}
         />
       </View>
 
-      {selectedUser ? (
+      {selectedConversation ? (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.conversationContainer}>
           <View style={styles.selectedUserHeader}>
             <Image
-              source={{uri: selectedUser.avatar}}
+              source={{uri: selectedConversation.utilisateur.avatar}}
               style={styles.selectedUserAvatar}
             />
             <View>
-              <Text style={styles.selectedUserName}>{selectedUser.name}</Text>
+              <Text style={styles.selectedUserName}>{selectedConversation.utilisateur.nom + ' ' + selectedConversation.utilisateur.prenom}</Text>
               <Text style={styles.selectedUserStatus}>
-                {selectedUser.status === 'online' ? 'En ligne' : 'Hors ligne'}
+                {selectedConversation.utilisateur.status === 'online' ? 'En ligne' : 'Hors ligne'}
               </Text>
             </View>
           </View>
@@ -203,7 +160,7 @@ export function Messages() {
           <FlatList
             data={messages}
             renderItem={renderMessage}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id_message.toString()}
             contentContainerStyle={styles.messagesList}
             inverted={false}
           />
