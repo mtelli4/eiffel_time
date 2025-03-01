@@ -60,12 +60,22 @@ export function Messages() {
   }
 
   const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return date.toLocaleTimeString('fr-FR', {
+    const date = new Date(timestamp);
+    const today = new Date();
+    if (date.toDateString() === today.toDateString()) {
+      return date.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    })
-  }
+    });
+  };
 
   const formatLastSeen = (lastSeen?: string) => {
     if (!lastSeen) return ''
@@ -76,6 +86,14 @@ export function Messages() {
       day: 'numeric',
       month: 'long',
     })}`
+  }
+
+  let filteredConversations = conversations
+  if (searchQuery) {
+    filteredConversations = conversations.filter((conversation) =>
+      conversation.utilisateur.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      conversation.utilisateur.nom.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   }
 
   return (
@@ -223,7 +241,7 @@ export function Messages() {
           </div>
 
           <div className="overflow-y-auto h-[calc(100%-5rem)]">
-            {conversations.map((conversation) => (
+            {filteredConversations.map((conversation) => (
               <button
                 key={'u' + conversation.utilisateur.id_utilisateur}
                 onClick={() => setSelectedConversation(conversation)}
