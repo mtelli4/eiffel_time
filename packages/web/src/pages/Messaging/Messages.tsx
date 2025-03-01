@@ -419,7 +419,7 @@ export function Messages() {
                 {selectedUsers.map((user) => (
                   <div
                     key={user.id_utilisateur}
-                    className="flex items-center gap-1 bg-primary/10 dark:bg-dark-primary/20 text-primary dark:text-dark-primary px-2 py-1 rounded-full"
+                    className="flex items-center gap-1 bg-primary/10 dark:bg-dark-primary/20 text-primary dark:white px-2 py-1 rounded-full"
                   >
                     <span className="text-sm">
                       {user.prenom + ' ' + user.nom}
