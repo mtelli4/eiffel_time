@@ -87,9 +87,8 @@ export function UserImport() {
           <br />
           <p>Modalités d'importation des utilisateurs :</p>
           <ul className="list-disc list-inside ml-4">
-            <li>Le fichier doit être au format CSV ou XLSX.</li>
+            <li>Le fichier doit être au format CSV, XLSX, XLS ou JSON.</li>
             <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
-            {/* <li>Le fichier modèle peut être téléchargé ci-dessus.</li> */}
             <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
             <li>Les utilisateurs seront créés après validation des données.</li>
           </ul>
@@ -109,7 +108,7 @@ export function UserImport() {
       <br />
       {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre><br /> */}
       {jsonData.length > 0 && (
-        <div>
+        <div className='dark:text-white'>
           <DataTable
             options={{
               info: true,
@@ -123,7 +122,7 @@ export function UserImport() {
               },
               pageLength: 10,
             }}
-            className="table table-striped table-bordered"
+            className="table table-striped table-bordered dark:text-white"
           >
             <thead>
               <tr className="bg-[#ECF0F1] border-b border-gray-200">
