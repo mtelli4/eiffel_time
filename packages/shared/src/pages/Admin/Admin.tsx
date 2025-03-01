@@ -83,7 +83,7 @@ export function Admin() {
           '../../../../web/src/components/Admin/UserTable.web'
         )
         const { UserImport } = await import(
-          '../../../../web/src/components/Admin/UserImport.web'
+          '../../../../web/src/pages/ImportUser/UserImport.web'
         )
         setUserFilters(() => UserFilters)
         setUserForm(() => UserForm)
