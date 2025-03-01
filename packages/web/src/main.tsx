@@ -9,16 +9,13 @@ import { ClassGrades } from '../../shared/src/pages/Grades/GradesManagement/Clas
 import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
 import { Login } from '../../shared/src/pages/Login/SignIn'
 import { SignUp } from '../../shared/src/pages/Login/SignUp'
+import { Home } from '../../shared/src/pages/Home/Home'
 import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
 import { Settings } from '../../shared/src/pages/Settings/Settings'
 import { ManageAbsences } from './pages/Attendance/ManageAbsences'
 import { Messages } from './pages/Messaging/Messages'
 import Root, { Error } from './root'
 import './styles/index.css'
-// import { createStackNavigator } from '@react-navigation/stack'
-// import { NavigationContainer } from '@react-navigation/native';
-
-// const Stack = createStackNavigator();
 
 const router = createBrowserRouter([
   {
@@ -26,6 +23,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <Error />,
     children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
       {
         path: '/schedule',
         element: <Schedule />,

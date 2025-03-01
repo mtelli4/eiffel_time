@@ -8,18 +8,22 @@ const { comparePasswords } = require('../password')
 router.post('/signin', async (req, res) => {
   try {
     const { email, password } = req.body
-    console.log(email)
 
     const user = await prisma.utilisateur.findUnique({
+      select: {
+        id_utilisateur: true, prenom: true, nom: true, email: true, statut: true, mdp: true, salt: true
+      },
       where: {
         email: email,
       },
     })
     if (user) {
       const valid = comparePasswords(password, user.salt, user.mdp)
-      res.json(valid)
+      if (valid) {
+        res.json({valid: valid, user: user})
+      }
     } else {
-      res.json(false)
+      res.json({valid: false, user: false})
     }
   } catch (error) {
     res.status(500).json({

@@ -77,35 +77,29 @@ export function SignUp() {
       <Image source={logo} style={styles.logo} />
       <View style={styles.container}>
         <Text style={styles.title}>Eiffel TIME</Text>
-        <Input
+        {/* <Input
           label="Nom"
           onChangeText={setlastname}
           status={formValidation.lastname.status}
           helper={formValidation.lastname.helper}
-        />
-        <Input
+        /> */}
+        {/* <Input
           label="Prénom"
           onChangeText={setfirstname}
           status={formValidation.firstname.status}
           helper={formValidation.firstname.helper}
-        />
+        /> */}
         <Input
           label="Adresse mail"
           onChangeText={setEmail}
           status={formValidation.email.status}
           helper={formValidation.email.helper}
         />
-        <View style={styles.passwordContainer}>
           <Input
             label="Mot de passe"
             type="password"
             onChangeText={setPassword}
           />
-          <View style={styles.passwordConditions}>
-            test
-          </View>
-        </View>
-        {/* <Input label='Mot de passe' type='password' helper='Confirmer le mot de passe' /> */}
         <Button label="Inscription" onPress={handleSubmitSignUp} />
         <Button
           label="Connexion"

@@ -10,8 +10,8 @@ import {
   Users,
   Wrench,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import logo from '../../../../shared/src/assets/logo.svg'
 import { cn } from '../../../../shared/src/lib/utils'
 import { ROLES } from '../../../../shared/src/types/types'
@@ -89,6 +89,25 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   const navigation = navigationConfig[userRole]
   const { role, setRole } = useUser()
 
+  const user = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem('user') || '{}')
+    } catch (error) {
+      console.error('Error parsing user data:', error)
+      return {}
+    }
+  }, [])
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    console.log('test')
+
+    if (!user || Object.keys(user).length === 0) {
+      navigate('/signin')
+    }
+  }, [user, navigate])
+  
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(
       event.target.value as
@@ -102,6 +121,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   }
 
   useEffect(() => {
+    
     const handleMouseEnter = () => {
       if (!isVisible) {
         setIsVisible(true)
