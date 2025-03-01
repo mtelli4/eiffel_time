@@ -1,37 +1,55 @@
-import { dateFormatting, getTime } from '../../utils/stringUtils'
+import { dateFormatting } from '../../utils/stringUtils'
 import { API_URL, ClassGradesModule } from '../../types/types'
 
-// Fonction pour traiter les données de notes
-const processClassGradesData = (data: any): ClassGradesModule[] => {
-  return data.map((module: any) => ({
-    id_module: module.id_module,
-    libelle: module.libelle,
-    codeapogee: module.codeapogee,
-    evaluations: module.evaluation.map((evaluationItem: any) => ({
-      id_eval: evaluationItem.id_eval,
-      libelle: evaluationItem.libelle,
-      periode: evaluationItem.periode,
-      date: dateFormatting(new Date(evaluationItem.cours.debut), new Date(evaluationItem.cours.fin)),
-      notemaximale: evaluationItem.notemaximale,
-      coefficient: evaluationItem.coefficient,
-      notes: evaluationItem.notes.map((noteItem: any) => ({
-        id_utilisateur: noteItem.etudiant.utilisateur.id_utilisateur,
-        numero_etudiant: noteItem.etudiant.numeroetudiant,
-        nom: noteItem.etudiant.utilisateur.nom,
-        prenom: noteItem.etudiant.utilisateur.prenom,
-        note: noteItem.note,
-        commentaire: noteItem.commentaire
-      }))
-    }))
-  }))
+// Fonction pour traiter les données brutes SQL
+const processRawClassGradesData = (data: any): ClassGradesModule[] => {
+  const modulesMap = new Map()
+  
+  data.forEach((row: any) => {
+    if (!modulesMap.has(row.id_module)) {
+      modulesMap.set(row.id_module, {
+        id_module: row.id_module,
+        libelle: row.libelle,
+        codeapogee: row.codeapogee,
+        evaluations: []
+      })
+    }
+
+    const module = modulesMap.get(row.id_module)
+    let evaluation = module.evaluations.find((e: any) => e.id_eval === row.id_eval)
+
+    if (!evaluation) {
+      evaluation = {
+        id_eval: row.id_eval,
+        libelle: row.eval_libelle,
+        periode: row.periode,
+        date: dateFormatting(new Date(row.debut), new Date(row.fin)),
+        notemaximale: row.notemaximale,
+        coefficient: row.coefficient,
+        notes: []
+      }
+      module.evaluations.push(evaluation)
+    }
+
+    evaluation.notes.push({
+      id_utilisateur: row.id_utilisateur,
+      numero_etudiant: row.numeroetudiant,
+      nom: row.nom,
+      prenom: row.prenom,
+      note: row.note,
+      commentaire: row.commentaire
+    })
+  })
+
+  return Array.from(modulesMap.values())
 }
 
-// Fonction pour récupérer les notes depuis l'API
+// Fonction pour récupérer les notes depuis l'API avec la requête brute
 export const fetchClassGrades = async (): Promise<ClassGradesModule[]> => {
-  const response = await fetch(`${API_URL}/api/classgrades/`)
+  const response = await fetch(`${API_URL}/api/all/test`)
   if (!response.ok) {
     throw new Error('Erreur réseau')
   }
   const data = await response.json()
-  return processClassGradesData(data)
+  return processRawClassGradesData(data)
 }
