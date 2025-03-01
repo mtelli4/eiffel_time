@@ -52,6 +52,7 @@ const navigationConfig = {
       path: '/teacher-attendance',
     },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
+    { icon: Users, label: 'Importation des utilisateurs', path: '/import-users' },
   ],
   director: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },

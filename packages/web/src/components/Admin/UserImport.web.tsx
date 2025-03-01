@@ -10,6 +10,7 @@ import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import '../../styles/dataTables.dataTables.min.css'
 import { roleFinder } from '../../../../shared/src/lib/utils'
+import { useDropzone } from 'react-dropzone'
 // import model from '/public/import_model.csv'
 // import model_csv from '../../assets/import_model.csv'
 // import model_xlsx from '../../assets/import_model.xlsx'
@@ -23,11 +24,15 @@ interface UserImportProps {
 export function UserImport() {
   const [jsonData, setJsonData] = useState<any[]>([])
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+  const isEmailValid = (email: string) => {
+    
+  }
 
-    const fileExtension = (file.name.split('.').pop()?.toLowerCase() || '')
+  const onDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles.length === 0) return
+
+    const file = acceptedFiles[0]
+    const fileExtension = file.name.split('.').pop()?.toLowerCase() || ''
 
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -45,35 +50,27 @@ export function UserImport() {
         const worksheet = workbook.Sheets[sheetName]
         const parsedData = XLSX.utils.sheet_to_json(worksheet)
         setJsonData(parsedData)
-      } else {
-        alert('Format de fichier non pris en charge')
+      } else if (fileExtension === 'json') {
+        setJsonData(JSON.parse(data as string))
       }
     }
 
     if (fileExtension === 'csv') {
       reader.readAsText(file)
-    } else {
+    } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
       reader.readAsArrayBuffer(file)
+    } else if (fileExtension === 'json') {
+      reader.readAsText(file)
     }
   }
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'text/csv': ['.csv'], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'], 'application/vnd.ms-excel': ['.xls'], /* json */ 'application/json': ['.json'] },
+  })
+
   const handleImportUsers = () => {
     console.log('Importer les utilisateurs')
-  }
-
-  const handleDownloadModel = (type: 'csv' | 'xlsx') => { // TODO: Finir la fonction de téléchargement du modèle
-    console.log('Télécharger le modèle', type)
-    fetch('../../assets/import_model.csv')
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(new Blob([blob]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', 'import_model.csv')
-        document.body.appendChild(link)
-        link.click()
-        link.parentNode?.removeChild(link)
-      })
   }
 
   return (
@@ -82,37 +79,32 @@ export function UserImport() {
         <span style={styles.subtitle}>
           Importation des utilisateurs
         </span>
-        <div className='flex gap-2'>
-          <button onClick={() => document.getElementById('file-input')?.click()} className='btn btn-outline flex flex-row items-center gap-2'>
-            <FileUp style={styles.addIcon} /> Importer CSV/XLSX
-          </button>
-          <div className='flex flex-row-reverse gap-2'>
-            <input
-              id="file-input"
-              type="file"
-              accept=".csv, .xlsx"
-              style={{ display: 'none' }}
-              onChange={handleFileUpload}
-            />
-            <button onClick={() => handleDownloadModel('csv')} className='btn btn-outline flex flex-row items-center gap-2'>
-              <FileDown style={styles.addIcon} /> Modèle CSV
-            </button>
-            <button onClick={() => handleDownloadModel('xlsx')} className='btn btn-outline flex flex-row items-center gap-2'>
-              <FileDown style={styles.addIcon} /> Modèle XLSX
-            </button>
+      </header>
+      {jsonData.length === 0 && (
+        <div>
+          <p>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire.</p>
+          <br />
+          <p>Modalités d'importation des utilisateurs :</p>
+          <ul className="list-disc list-inside ml-4">
+            <li>Le fichier doit être au format CSV ou XLSX.</li>
+            <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
+            {/* <li>Le fichier modèle peut être téléchargé ci-dessus.</li> */}
+            <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
+            <li>Les utilisateurs seront créés après validation des données.</li>
+          </ul>
+          <br />
+          {/* Zone de drag & drop */}
+          <div {...getRootProps()} className="border-2 border-dashed p-6 text-center cursor-pointer bg-gray-100 hover:bg-gray-200 transition">
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p className="text-blue-600 font-medium">Déposez votre fichier ici...</p>
+            ) : (
+              <p className="text-gray-600">Glissez-déposez un fichier ici ou cliquez pour sélectionner un fichier</p>
+            )}
+            <FileUp className="mx-auto mt-2 text-gray-500" size={24} />
           </div>
         </div>
-      </header>
-      <p>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire.</p>
-      <br />
-      <p>Modalités d'importation des utilisateurs :</p>
-      <ul className="list-disc list-inside ml-4">
-        <li>Le fichier doit être au format CSV ou XLSX.</li>
-        <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
-        {/* <li>Le fichier modèle peut être téléchargé ci-dessus.</li> */}
-        <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
-        <li>Les utilisateurs seront créés après validation des données.</li>
-      </ul>
+      )}
       <br />
       {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre><br /> */}
       {jsonData.length > 0 && (
@@ -128,6 +120,7 @@ export function UserImport() {
                 searchPlaceholder: 'Rechercher un utilisateur',
                 infoEmpty: 'Aucun utilisateur trouvé',
               },
+              pageLength: 10,
             }}
             className="table table-striped table-bordered"
           >
@@ -150,7 +143,7 @@ export function UserImport() {
               ))}
             </tbody>
           </DataTable>
-          <button className='btn btn-primary' onClick={handleImportUsers}>Importer les utilisateurs</button>
+          <button className='btn btn-primary' onClick={handleImportUsers} disabled={true}>Importer les utilisateurs</button>
         </div>
       )}
     </div>
