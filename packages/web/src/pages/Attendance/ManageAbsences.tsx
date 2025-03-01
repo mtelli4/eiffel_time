@@ -46,7 +46,9 @@ interface Absence {
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<Absence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedStatut, setSelectedStatut] = useState<Absence['statut'] | 'all'>('all')
+  const [selectedStatut, setSelectedStatut] = useState<
+    Absence['statut'] | 'all'
+  >('all')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [showFilters, setShowFilters] = useState(false)
@@ -65,29 +67,31 @@ export function ManageAbsences() {
     fetch(`${API_URL}/api/absences/`)
       .then((res) => res.json())
       .then((data) => {
-        setAbsences(data.map((absence: any) => ({
-          id_absence: absence.id_absence,
-          etudiant: {
-            id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
-            nom: absence.etudiant.utilisateur.nom,
-            prenom: absence.etudiant.utilisateur.prenom,
-            groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
-              id_grp: groupe.groupe.id_grp,
-              libelle: groupe.groupe.libelle,
-            })),
-          },
-          module: {
-            id_module: absence.cours.module.id_module,
-            codeapogee: absence.cours.module.codeapogee,
-            libelle: absence.cours.module.libelle,
-          },
-          date: absence.cours.debut,
-          envoye: absence.envoye,
-          valide: absence.valide,
-          updatedat: absence.updatedat,
-          statut: setAbsenceStatut(absence),
-          path: absence.justificatif,
-        })))
+        setAbsences(
+          data.map((absence: any) => ({
+            id_absence: absence.id_absence,
+            etudiant: {
+              id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
+              nom: absence.etudiant.utilisateur.nom,
+              prenom: absence.etudiant.utilisateur.prenom,
+              groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
+                id_grp: groupe.groupe.id_grp,
+                libelle: groupe.groupe.libelle,
+              })),
+            },
+            module: {
+              id_module: absence.cours.module.id_module,
+              codeapogee: absence.cours.module.codeapogee,
+              libelle: absence.cours.module.libelle,
+            },
+            date: absence.cours.debut,
+            envoye: absence.envoye,
+            valide: absence.valide,
+            updatedat: absence.updatedat,
+            statut: setAbsenceStatut(absence),
+            path: absence.justificatif,
+          }))
+        )
       })
       .catch((error) => console.error('Error:', error))
   })
@@ -113,7 +117,9 @@ export function ManageAbsences() {
   }
 
   const filteredAbsences = absences.filter((absence) => {
-    const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
+    const student = absences.find(
+      (s) => s.id_absence === absence.id_absence
+    )?.etudiant
     const searchString =
       `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
@@ -153,14 +159,14 @@ export function ManageAbsences() {
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={handleExport}
-          className="btn btn-outline flex items-center gap-2"
+          className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
         >
           <FileDown className="w-4 h-4" />
           Exporter
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="relative flex-1 max-w-md">
             <input
@@ -174,7 +180,7 @@ export function ManageAbsences() {
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn btn-outline flex items-center gap-2"
+            className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
           >
             <Filter className="w-4 h-4" />
             Filtres
@@ -184,7 +190,7 @@ export function ManageAbsences() {
         {showFilters && (
           <div className="grid grid-cols-3 gap-4 pt-4 border-t">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Statut
               </label>
               <select
@@ -201,7 +207,7 @@ export function ManageAbsences() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Date début
               </label>
               <input
@@ -212,7 +218,7 @@ export function ManageAbsences() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Date fin
               </label>
               <input
@@ -226,23 +232,23 @@ export function ManageAbsences() {
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+            <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Étudiant
               </th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Module
               </th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Date
               </th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Statut
               </th>
-              <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-right py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Actions
               </th>
             </tr>
@@ -256,31 +262,33 @@ export function ManageAbsences() {
                 >
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-white">
                         {absence.etudiant.nom} {absence.etudiant.prenom}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {absence.etudiant.groupes.map((groupe) => groupe.libelle).join(', ')}
+                      <div className="text-sm text-gray-500 dark:text-gray-300">
+                        {absence.etudiant.groupes
+                          .map((groupe) => groupe.libelle)
+                          .join(', ')}
                       </div>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-gray-300">
                         {absence.module.codeapogee}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 dark:text-gray-300">
                         {absence.module.libelle}
                       </div>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-white">
                         {new Date(absence.date).toLocaleDateString('fr-FR')}
                       </div>
                       {absence.updatedat && (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-300">
                           Soumis le{' '}
                           {new Date(absence.updatedat).toLocaleDateString(
                             'fr-FR'
@@ -307,21 +315,21 @@ export function ManageAbsences() {
                           className="p-1 text-gray-500 hover:text-primary"
                           title="Voir le justificatif"
                         >
-                          <FileText className="w-4 h-4" />
+                          <FileText className="w-4 h-4 dark:text-white" />
                         </button>
                       )}
                       {absence.statut === 'pending' && (
                         <>
                           <button
                             onClick={() => handleApprove(absence.id_absence)}
-                            className="p-1 text-green-600 hover:text-green-700"
+                            className="p-1 text-green-600 dark:text-green-300 hover:text-green-700"
                             title="Valider"
                           >
                             <Check className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleReject(absence.id_absence)}
-                            className="p-1 text-red-600 hover:text-red-700"
+                            className="p-1 text-red-600 dark:text-red-300 hover:text-red-700"
                             title="Refuser"
                           >
                             <XIcon className="w-4 h-4" />
