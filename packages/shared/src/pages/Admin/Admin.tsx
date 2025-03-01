@@ -204,6 +204,10 @@ export function Admin() {
     setSelectedUser(null)
   }
 
+  if (!UserFilters || !UserForm || !UserTable) {
+    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
+  }
+
   const content = (
     <View>
       <View style={styles.tabContainer}>
@@ -275,10 +279,6 @@ export function Admin() {
       )}
     </View>
   )
-
-  if (!UserFilters || !UserForm || !UserTable) {
-    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
-  }
 
   if (Platform.OS === 'web') {
     return <View style={styles.container}>{content}</View>
