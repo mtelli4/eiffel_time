@@ -198,8 +198,8 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
                   'flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors',
                   'hover:bg-white/10',
                   isActive
-                    ? 'bg-white/20 dark:bg-secondary'
-                    : 'text-white/80 dark:bg-primary'
+                    ? 'bg-white/20 dark:bg-white/10'
+                    : 'text-white/80 dark:text-white/70'
                 )
               }
             >
