@@ -1,7 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native'
-import { Utilisateur } from '../../../../shared/src/types/types'
 import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
-import { FileDown, FileUp } from 'lucide-react'
+import { FileUp } from 'lucide-react'
 import Papa from 'papaparse'
 import * as XLSX from 'xlsx'
 import { useState } from 'react'
