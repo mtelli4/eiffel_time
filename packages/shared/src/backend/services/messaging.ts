@@ -90,13 +90,9 @@ const processUsersData = (data: any): MessagingUtilisateur[] => {
 }
 
 // Récupérer les utilisateurs pour la messagerie
-export const fetchUsers = async (
-  searchQuery: string = ''
-): Promise<MessagingUtilisateur[]> => {
+export const fetchUsers = async (id_utilisateur: number): Promise<MessagingUtilisateur[]> => {
   try {
-    const response = await fetch(
-      `${API_URL}/api/users?search=${encodeURIComponent(searchQuery)}`
-    )
+    const response = await fetch(`${API_URL}/api/messaging/users/${id_utilisateur}`)
     if (!response.ok) {
       throw new Error('Erreur réseau lors de la récupération des utilisateurs.')
     }

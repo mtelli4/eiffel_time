@@ -77,7 +77,7 @@ export function Messages() {
     if (showNewConversationModal) {
       const getUsers = async () => {
         try {
-          const users = await fetchUsers(userSearchQuery)
+          const users = await fetchUsers(userId)
           setAvailableUsers(users)
         } catch (error) {
           console.error(

@@ -54,15 +54,15 @@ export function Settings() {
     loadComponents()
   }, [])
 
-  // const { theme, setTheme } = useTheme()
-  // const { dateFormat, setDateFormat } = useDateFormat()
-  // const { language, setLanguage } = useLanguage()
-  const theme = 'light'
-  const setTheme = () => {}
-  const dateFormat = 'DD/MM/YYYY'
-  const setDateFormat = () => {}
-  const language = 'fr'
-  const setLanguage = () => {}
+  const { theme, setTheme } = useTheme()
+  const { dateFormat, setDateFormat } = useDateFormat()
+  const { language, setLanguage } = useLanguage()
+  // const theme = 'light'
+  // const setTheme = () => {}
+  // const dateFormat = 'DD/MM/YYYY'
+  // const setDateFormat = () => {}
+  // const language = 'fr'
+  // const setLanguage = () => {}
 
   // États temporaires pour stocker les modifications
   const [tempDate, setTempDate] = useState(dateFormat)
@@ -70,9 +70,9 @@ export function Settings() {
   const [tempLanguage, setTempLanguage] = useState(language)
 
   const handleSave = () => {
-    // setDateFormat(tempDate)
-    // setTheme(tempTheme)
-    // setLanguage(tempLanguage)
+    setDateFormat(tempDate)
+    setTheme(tempTheme)
+    setLanguage(tempLanguage)
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {

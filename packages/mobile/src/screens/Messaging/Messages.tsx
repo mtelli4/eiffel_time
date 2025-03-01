@@ -166,9 +166,9 @@ export function Messages() {
           />
 
           <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.attachButton}>
+            {/* <TouchableOpacity style={styles.attachButton}>
               <Icon name="paperclip" size={24} color="#666" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TextInput
               style={styles.messageInput}
               value={newMessage}

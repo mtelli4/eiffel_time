@@ -88,4 +88,23 @@ router.get('/conversations/:id', async (req, res) => {
   }
 });
 
+// Route pour récupérer les utilisateurs avec lesquels l'utilisateur n'a pas de conversation
+router.get('/users/:id', async (req, res) => {
+  const userId = parseInt(req.params.id);
+
+  try {
+    const utilisateurs = await prisma.$queryRaw`
+    SELECT u.id_utilisateur, u.nom, u.prenom, u.statut
+    FROM utilisateur u, message m
+    WHERE u.id_utilisateur != ${userId} AND u.id_utilisateur != m.emetteur AND u.id_utilisateur != m.recepteur
+    GROUP BY u.id_utilisateur, u.nom, u.prenom, u.statut
+    ORDER BY u.nom, u.prenom;`;
+
+    res.json(utilisateurs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
+  }
+});
+
 module.exports = router;

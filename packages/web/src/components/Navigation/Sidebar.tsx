@@ -102,8 +102,6 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log('test')
-
     if (!user || Object.keys(user).length === 0) {
       navigate('/signin')
     }
