@@ -4,6 +4,31 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Route pour récupérer l'ensemble des absences d'un étudiant
+router.get("/absences/:id", async (req, res) => {
+  const { id } = req.params;
+  const userId = parseInt(id);
+
+  try {
+    const absences = await prisma.$queryRaw`
+    SELECT a.id_absence, m.libelle AS module, CONCAT(u.nom, ' ', u.prenom) AS enseignant, 
+    c.debut AS date_absence, a.justificatif, a.updatedat AS date_justificatif, 
+    a.message, a.envoye, a.valide
+    FROM absence a
+    JOIN cours c ON a.id_cours = c.id_cours
+    JOIN module m ON c.id_module = m.id_module
+    JOIN enseignant_module em ON m.id_module = em.id_module
+    JOIN enseignant e ON em.id_utilisateur = e.id_utilisateur
+    JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+    JOIN etudiant et ON a.id_utilisateur = et.id_utilisateur
+    WHERE a.id_utilisateur = ${userId}`;
+
+    res.json(absences);
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de la récupération des absences" });
+  }
+})
+
 // Route pour récupérer l'ensemble des notes d'un étudiant
 router.get("/notes/:id", async (req, res) => {
   const { id } = req.params;

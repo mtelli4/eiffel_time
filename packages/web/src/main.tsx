@@ -16,6 +16,7 @@ import { ManageAbsences } from './pages/Attendance/ManageAbsences'
 import { Messages } from './pages/Messaging/Messages'
 import Root, { Error } from './root'
 import './styles/index.css'
+import { UserImport } from './pages/ImportUser/UserImport.web'
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
         path: '/settings',
         element: <Settings />,
       },
+      {
+        path: '/import-users',
+        element: <UserImport />,
+      }
     ],
   },
   {

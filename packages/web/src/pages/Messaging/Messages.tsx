@@ -21,23 +21,15 @@ import {
 } from '../../../../shared/src/types/types'
 
 export function Messages() {
-  // useAuthCheck()
-
-  const [conversations, setConversations] = useState<MessagingConversation[]>(
-    []
-  )
-  const [selectedConversation, setSelectedConversation] =
-    useState<MessagingConversation | null>(null)
+  const [conversations, setConversations] = useState<MessagingConversation[]>([])
+  const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null)
   const [messages, setMessages] = useState<MessagingMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
-  const [showNewConversationModal, setShowNewConversationModal] =
-    useState(false)
+  const [showNewConversationModal, setShowNewConversationModal] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>([])
   const [userSearchQuery, setUserSearchQuery] = useState('')
-  const [availableUsers, setAvailableUsers] = useState<MessagingUtilisateur[]>(
-    []
-  )
+  const [availableUsers, setAvailableUsers] = useState<MessagingUtilisateur[]>([])
 
   const userId = 3
 
@@ -47,10 +39,7 @@ export function Messages() {
         const conversations = await fetchConversations(userId)
         setConversations(conversations)
       } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des conversations:',
-          error
-        )
+        console.error('Erreur lors de la récupération des conversations:', error)
       }
     }
 
@@ -72,7 +61,6 @@ export function Messages() {
     }
   }, [selectedConversation])
 
-  // Fetch users when search query changes or modal opens
   useEffect(() => {
     if (showNewConversationModal) {
       const getUsers = async () => {
@@ -80,10 +68,7 @@ export function Messages() {
           const users = await fetchUsers(userId)
           setAvailableUsers(users)
         } catch (error) {
-          console.error(
-            'Erreur lors de la récupération des utilisateurs:',
-            error
-          )
+          console.error('Erreur lors de la récupération des utilisateurs:', error)
         }
       }
 
@@ -92,11 +77,11 @@ export function Messages() {
   }, [userSearchQuery, showNewConversationModal])
 
   const handleSendMessage = () => {
-    /* if (!newMessage.trim() || !selectedConversation) return
+    if (!newMessage.trim() || !selectedConversation) return
 
     const message: MessagingMessage = {
       id_message: Date.now(),
-      emetteur: userId, 
+      emetteur: userId,
       recepteur: selectedConversation.utilisateur.id_utilisateur,
       message: newMessage,
       date: new Date().toISOString(),
@@ -104,16 +89,26 @@ export function Messages() {
     }
 
     setMessages([...messages, message])
-    setNewMessage('') */
+    setNewMessage('')
   }
 
   const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return date.toLocaleTimeString('fr-FR', {
+    const date = new Date(timestamp);
+    const today = new Date();
+    if (date.toDateString() === today.toDateString()) {
+      return date.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    })
-  }
+    });
+  };
 
   const formatLastSeen = (lastSeen?: string) => {
     if (!lastSeen) return ''
@@ -172,6 +167,14 @@ export function Messages() {
       user.statut.toLowerCase().includes(userSearchQuery.toLowerCase())
   )
 
+  let filteredConversations = conversations
+  if (searchQuery) {
+    filteredConversations = conversations.filter((conversation) =>
+      conversation.utilisateur.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      conversation.utilisateur.nom.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }
+
   return (
     <div className="h-full">
       <div className="flex h-[calc(100vh-8rem)] bg-white rounded-lg shadow-sm overflow-hidden">
@@ -210,8 +213,8 @@ export function Messages() {
                       {selectedConversation.utilisateur.status === 'online'
                         ? 'En ligne'
                         : formatLastSeen(
-                            selectedConversation.utilisateur.lastSeen
-                          )}
+                          selectedConversation.utilisateur.lastSeen
+                        )}
                     </p>
                   </div>
                 </div>
@@ -227,7 +230,7 @@ export function Messages() {
                     (message.emetteur ===
                       selectedConversation.utilisateur.id_utilisateur ||
                       message.recepteur ===
-                        selectedConversation.utilisateur.id_utilisateur) && (
+                      selectedConversation.utilisateur.id_utilisateur) && (
                       <div
                         key={'m' + message.id_message}
                         className={cn(
@@ -325,14 +328,14 @@ export function Messages() {
           </div>
 
           <div className="overflow-y-auto h-[calc(100%-5rem)]">
-            {conversations.map((conversation) => (
+            {filteredConversations.map((conversation) => (
               <button
                 key={'u' + conversation.utilisateur.id_utilisateur}
                 onClick={() => setSelectedConversation(conversation)}
                 className={cn(
                   'w-full p-4 flex items-start gap-3 hover:bg-gray-50 transition-colors',
                   selectedConversation?.utilisateur.id_utilisateur ===
-                    conversation.utilisateur.id_utilisateur && 'bg-gray-50'
+                  conversation.utilisateur.id_utilisateur && 'bg-gray-50'
                 )}
               >
                 {conversation.utilisateur.avatar ? (
