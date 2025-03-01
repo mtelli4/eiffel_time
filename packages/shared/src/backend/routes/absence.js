@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 // Route pour récupérer toutes les absences
-router.get('/select', async (req, res) => {
+router.get('/', async (req, res) => {
   const absences = await prisma.absence.findMany({
     select: {
       id_absence: true,
@@ -48,7 +48,7 @@ router.get('/select', async (req, res) => {
       justificatif: true,
     },
     orderBy: {
-      createdat: 'asc',  // Tri par date de création
+      createdat: 'desc',  // Tri par date de création
     }
   });
   res.json(absences);

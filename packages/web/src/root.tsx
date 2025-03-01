@@ -1,8 +1,10 @@
-// web/src/root.tsx
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { UserProvider, useUser } from './context/UserContext'
 import { useEffect, useMemo } from 'react'
+import { useTheme } from "./hooks/useTheme";
+import { useDateFormat } from "./hooks/useDateFormat";
+import { useLanguage } from "./hooks/useLanguage";
 
 export default function Root() {
   return (
@@ -13,8 +15,6 @@ export default function Root() {
 }
 
 function InnerRoot() {
-  // const { role } = useUser()
-  // const navigate = useNavigate();
 
   const user = useMemo(() => {
     try {
@@ -53,6 +53,14 @@ export function Error() {
 function InnerError() {
   const location = useLocation()
   const { role } = useUser()
+  const { theme, setTheme } = useTheme()
+  // useAuthCheck()
+
+  useEffect(() => {
+    setTheme(theme)
+    useDateFormat()
+    useLanguage()
+  }, [theme])
 
   return (
     <>

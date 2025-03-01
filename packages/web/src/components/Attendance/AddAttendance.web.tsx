@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
-import { COURSE_TYPES, TeacherPlanning } from '../../../../shared/src/types/types'
+import { COURSE_TYPES, TeacherPlanning, TeacherPlanningForm } from '../../../../shared/src/types/types'
 import Select from 'react-select'
-
 
 interface AddAttendanceProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: () => void
+  onSubmit: (data: TeacherPlanningForm) => void
   teachers: TeacherPlanning[]
 }
 
@@ -30,19 +29,32 @@ export function AddAttendance({
   onSubmit,
   teachers,
 }: AddAttendanceProps) {
-  const [formData, setFormData] = useState({
-    teacherId: '',
-    date: '',
-    courseName: '',
+  const [formData, setFormData] = useState<TeacherPlanningForm>({
+    id_utilisateur: 0,
+    id_module: 0,
     type: '',
-    hours: 2,
-    semester: 1,
-    year: 1,
+    presences: 0,
   })
 
   const handleSubmit = () => {
-    console.log('Submitting attendance:', formData)
-    onClose()
+    if (formData.id_utilisateur === 0) {
+      alert('Veuillez sélectionner un enseignant')
+      return
+    }
+    if (formData.id_module === 0) {
+      alert('Veuillez sélectionner un module')
+      return
+    }
+    if (!formData.type) {
+      alert('Veuillez sélectionner un type de cours')
+      return
+    }
+    if (formData.presences === 0) {
+      alert('Veuillez saisir le nombre d\'heures')
+      return
+    }
+    alert(`Envoi des données: ${JSON.stringify(formData)}`)
+    onSubmit(formData)
   }
 
   if (!isOpen) return null
@@ -65,34 +77,55 @@ export function AddAttendance({
               Enseignant
             </label>
             <Select
+              isClearable
               options={teachers.map(t => ({
-                value: t.id,
+                value: t.id_utilisateur,
                 label: t.prenom + ' ' + t.nom,
               }))}
-              onChange={(options: any) => setFormData(prevState => ({
-                ...prevState,
-                formations: options,
-              }))}
+              onChange={(option: any) => setFormData(prevState => ({
+                  ...prevState,
+                  id_utilisateur: option ? option.value : 0,
+                }))}
               placeholder="Sélectionner un enseignant"
               className="text-sm"
             />
           </div>
+          <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            Module
+          </label>
+          <Select
+            isClearable
+            isDisabled={formData.id_utilisateur === 0}
+            options={teachers.find(t => t.id_utilisateur === formData.id_utilisateur)?.modules.map(m => ({
+              value: m.id_module,
+              label: m.libelle,
+            }))}
+            onChange={(option: any) => setFormData(prevState => ({
+              ...prevState,
+              id_module: option ? option.value : 0,
+            }))}
+            placeholder="Sélectionner un module"
+            className="text-sm"
+          />
+          <div>
+
+          </div>
 
           <div className="flex gap-3">
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
                 Date
               </label>
               <input
                 type="date"
-                value={formData.date}
+                value={'0'}
                 onChange={(e) => setFormData(prevState => ({
                   ...prevState,
                   date: e.target.value,
                 }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-[#2C3E50] mb-1">
@@ -118,10 +151,10 @@ export function AddAttendance({
               </label>
               <input
                 type="number"
-                value={formData.hours}
+                value={formData.presences}
                 onChange={(e) => setFormData(prevState => ({
                   ...prevState,
-                  hours: parseFloat(e.target.value) || 0,
+                  presences: parseInt(e.target.value),
                 }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />

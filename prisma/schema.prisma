@@ -76,6 +76,7 @@ model enseignant {
 model enseignant_module {
   id_module      Int
   id_utilisateur Int
+  heures         String?    @db.VarChar(50)
   module         module     @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   enseignant     enseignant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 
@@ -106,6 +107,7 @@ model evaluation {
   id_notif     Int
   id_module    Int
   cours        cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
+  module       module       @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   notification notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
   notes        notes[]
 }
@@ -159,6 +161,7 @@ model module {
   heures                 String?                  @db.VarChar(50)
   cours                  cours[]
   enseignant_module      enseignant_module[]
+  evaluation             evaluation[]
   module_bloc_competence module_bloc_competence[]
 }
 
@@ -166,6 +169,7 @@ model module_bloc_competence {
   id_module       Int
   id_bloc_comp    Int
   periode         periode?
+  coefficient     Int?
   bloc_competence bloc_competence @relation(fields: [id_bloc_comp], references: [id_bloc_comp], onDelete: NoAction, onUpdate: NoAction)
   module          module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
 
@@ -199,7 +203,7 @@ model utilisateur {
   prenom                                 String                  @db.VarChar(255)
   email                                  String?                 @unique(map: "utilisateur_email") @db.VarChar(255)
   mdp                                    String?                 @db.VarChar(255)
-  salt                                   String?                 @db.VarBit(16)
+  salt                                   String?                 @db.VarChar(64)
   statut                                 statut_utilisateur?
   createdat                              DateTime                @db.Timestamp(6)
   updatedat                              DateTime                @db.Timestamp(6)

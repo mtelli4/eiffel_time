@@ -1,30 +1,12 @@
+import { Button } from '../../components/Button/Button'
+import { Input } from '../../components/Input/Input'
 import { useEffect, useState } from 'react'
 import { Image, Text, View } from 'react-native'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.png'
-import { Button } from '../../components/Button/Button'
-import { Input } from '../../components/Input/Input'
 import { styles } from './Style'
+import { API_URL } from '../../types/types'
 import { Logo } from '../../components/Logo/Logo'
-
-import { getSession, commitSession } from '../../../../web/session.server'
-
-// export async function loader({ request }: any) {
-//   const session = await getSession(request.headers.get('Cookie'))
-//   if (session.has('userId')) {
-//     return redirect('/')
-//   }
-//   return data(
-//     {
-//       session,
-//     },
-//     {
-//       headers: {
-//         'Set-Cookie': await commitSession(session),
-//       },
-//     }
-//   )
-// }
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -34,7 +16,7 @@ export function Login() {
 
   const handleSubmitUser = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/signin/signin`, {
+      const response = await fetch(`${API_URL}/api/signin/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,23 +24,36 @@ export function Login() {
         body: JSON.stringify({ email, password }),
       })
       const data = await response.json()
+      if (data) {
+        const user = await fetch(`${API_URL}/api/user/me/${email}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        })
+        const userData = await user.json()
+        console.log(userData)
+        localStorage.setItem('user', JSON.stringify(userData))
+      }
       console.log(data)
 
       setValid(data.valid)
       setUser(data.user)
     } catch {
-      console.log('error')
+      console.error('Erreur lors de la connexion')
     }
   }
 
   const navigate = useNavigate()
+
 
   useEffect(() => {
     if (valid) {
       localStorage.setItem('user', JSON.stringify(user))
       navigate('/')
     }
-  }, [valid, navigate])
+  }, [navigate])
 
   return (
     <View style={styles.root}>

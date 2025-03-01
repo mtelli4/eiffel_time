@@ -1,13 +1,12 @@
-import { Cours, Etudiant } from '@shared/backend/classes'
 import { Platform } from 'react-native';
-import { Module as Modul } from '../backend/classes/'
+import { Float } from 'react-native/Libraries/Types/CodegenTypes';
 
 export const API_URL = Platform.select({
-  web: 'http://localhost:4000',
-  ios: 'http://localhost:4000',
-  android: 'http://10.0.2.2:4000', // Pour l'émulateur Android
+  web: `http://localhost:4000`,
+  ios: `http://localhost:4000`,
+  android: `http://192.168.1.15:4000`, // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
   // Si vous utilisez un appareil physique Android, utilisez l'IP de votre machine
-  // android: 'http://192.168.1.XX:4000',
+  // android: 'http://192.168.1.XX:4000', // 10.0.2.2
 });
 
 export const ROLES = [
@@ -99,12 +98,56 @@ export type GradeStatus =
   | 'exempted'
   | 'pending_makeup'
 
+
+export type ClassGradesNote = {
+  id_eval: number
+  id_utilisateur: number
+  numero_etudiant: string
+  nom: string
+  prenom: string
+  note: number
+  commentaire: string
+}
+
+export type ClassGradesEvaluation = {
+  id_eval: number
+  libelle: string
+  periode: string
+  date: string
+  notemaximale: number
+  coefficient: number
+  notes: ClassGradesNote[]
+  id_module: number
+}
+
+export type ClassGradesModule = {
+  id_module: number
+  libelle: string
+  codeapogee: string
+  evaluations: ClassGradesEvaluation[]
+}
+
+export type ClassGradesCours = {
+  id_cours: number
+  debut: string
+  fin: string
+  type: string
+  id_module: number
+}
+
+export type ClassGradesStudent = {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  numero_etudiant: string
+}
+
 export interface AddGradeModalProps {
   isOpen: boolean
   onClose: () => void
-  modules: Modul[]
-  students: Etudiant[]
-  cours: Cours[]
+  onSubmit: (data: FormEvaluation) => void
+  module: ClassGradesModule
+  cours: ClassGradesCours[]
 }
 
 export interface FormData {
@@ -133,6 +176,23 @@ export interface FormEvaluation {
   id_module: number
 }
 
+export interface FormNote {
+  id_eval: number
+  id_utilisateur: number
+  note: number
+  commentaire: string
+}
+
+export interface NoteFormProps {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: FormNote) => void
+  isEdit: boolean
+  evaluation: ClassGradesEvaluation
+  students: ClassGradesStudent[]
+  note?: ClassGradesNote
+}
+
 export interface ModuleHours {
   code: string
   name: string
@@ -146,6 +206,7 @@ export type Module = {
   codeapogee: string
   prevu: { CM: number; TD: number; TP: number }
   effectue: { CM: number; TD: number; TP: number }
+  periodes: string[]
 }
 
 export type TeacherPlanning = {
@@ -153,4 +214,50 @@ export type TeacherPlanning = {
   prenom: string
   nom: string
   modules: Module[]
+}
+
+export interface TeacherPlanningForm {
+  id_utilisateur: number
+  id_module: number
+  type: any
+  presences: number // It's the number of hours to add for the selected type
+}
+
+export const periodeLabels: Record<string, string> = {
+  Semestre_1: "Semestre 1",
+  Semestre_2: "Semestre 2",
+  Semestre_3: "Semestre 3",
+  Semestre_4: "Semestre 4",
+  Semestre_5: "Semestre 5",
+  Semestre_6: "Semestre 6",
+}
+
+export type MessagingUtilisateur = {
+  id_utilisateur: number
+  nom: string
+  prenom: string
+  statut: string
+  avatar: string | 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'
+  status: 'online' | 'offline'
+  lastSeen?: string
+}
+
+export type MessagingMessage = {
+  id_message: number
+  emetteur: number
+  recepteur: number
+  message: string
+  date: string
+  vu: boolean
+  attachments?: {
+    name: string
+    url: string
+    type: string
+  }[]
+}
+
+export type MessagingConversation = {
+  utilisateur: MessagingUtilisateur
+  last_message: MessagingMessage
+  unread: number
 }

@@ -124,7 +124,7 @@ export function Schedule() {
   // }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View>
         <Text>
           Du {monday.toLocaleDateString('fr-FR')} au{' '}
@@ -231,6 +231,6 @@ export function Schedule() {
           onPresenceCheck={handlePresenceCheck}
         />
       )}
-    </View>
+    </ScrollView>
   )
 }

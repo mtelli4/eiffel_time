@@ -6,6 +6,7 @@ const router = express.Router()
 
 const ical = require('node-ical')
 
+
 async function fetchCalendar() {
   try {
     const data = await ical.async.fromURL(

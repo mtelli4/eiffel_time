@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router'
 import { styles } from './Style'
 import { useEffect, useState } from 'react'
 import { InputProps } from '../../components/Input/Input'
+import { API_URL } from '../../types/types';
 
 type FormField = 'lastname' | 'firstname' | 'email'
 type ValidationState = { status: InputProps['status']; helper: string }
@@ -26,7 +27,7 @@ export function SignUp() {
 
   const handleSubmitSignUp = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/signup/signup`, {
+      const response = await fetch(`${API_URL}/api/signup/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
