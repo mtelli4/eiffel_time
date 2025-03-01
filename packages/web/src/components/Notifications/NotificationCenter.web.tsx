@@ -61,14 +61,14 @@ export function NotificationCenter() {
       >
         <Bell className="w-6 h-6" />
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white dark:text-primary bg-red-500 dark:bg-red-600 rounded-full">
+          <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white dark:text-white bg-red-500 dark:bg-red-600 rounded-full">
             {unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-primary rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 ring-opacity-5 z-50">
           <div className="p-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Notifications
@@ -98,8 +98,7 @@ export function NotificationCenter() {
                       <span
                         className={cn(
                           'w-2 h-2 rounded-full',
-                          !notification.read &&
-                            'bg-primary dark:bg-dark-primary'
+                          !notification.read && 'bg-primary dark:bg-white'
                         )}
                       />
                     </div>
