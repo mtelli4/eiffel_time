@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
+import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 import { fetchUsers } from '../../backend/services/admin'
+import { formation, groupe } from '@prisma/client'
 
 type Tab = 'users' | 'import'
 
@@ -20,6 +21,8 @@ export function Admin() {
     search: ''
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
   const [UserFilters, setUserFilters] = useState<any>(null)
   const [UserForm, setUserForm] = useState<any>(null)
@@ -46,12 +49,31 @@ export function Admin() {
     }
 
     getUsers()
+
+    Promise.all([
+      fetch(`${API_URL}/api/all/formations`).then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (formations)');
+        return response.json();
+      }),
+      fetch(`${API_URL}/api/all/groupes`).then((response) => {
+        if (!response.ok) throw new Error('Erreur réseau (groupes)');
+        return response.json();
+      })
+    ])
+      .then(([formationsData, groupesData]) => {
+        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
+
+        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
   }, [])
 
   useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
-        const { UserFilters } = await import(
+        const { default: UserFilters } = await import(
           '../../../../web/src/components/Admin/UserFilters.web'
         )
         const { UserForm } = await import(
@@ -177,6 +199,10 @@ export function Admin() {
     setSelectedUser(null)
   }
 
+  if (!UserFilters || !UserForm || !UserTable) {
+    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
+  }
+
   const content = (
     <View>
       <View style={styles.tabContainer}>
@@ -223,9 +249,7 @@ export function Admin() {
             </TouchableOpacity>
           </View>
 
-          <UserFilters
-            onFilterChange={handleFilterChange}
-          />
+          <UserFilters onFilterChange={handleFilterChange} formations={formations} groupes={groupes} />
 
           <UserTable
             users={utilisateurs}
@@ -256,10 +280,6 @@ export function Admin() {
       )}
     </View>
   )
-
-  if (!UserFilters || !UserForm || !UserTable) {
-    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
-  }
 
   if (Platform.OS === 'web') {
     return (

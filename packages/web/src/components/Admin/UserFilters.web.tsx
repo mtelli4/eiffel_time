@@ -1,42 +1,8 @@
-import { formation, groupe } from '@prisma/client'
 import { Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import Select from 'react-select'
-import {
-  Formation,
-  Groupe,
-  ROLES,
-  TEACHER_TYPES,
-  UserFiltersProps,
-} from '../../../../shared/src/types/types'
+import { ROLES, TEACHER_TYPES, UserFiltersProps } from '../../../../shared/src/types/types'
 
-export function UserFilters({
-  onFilterChange,
-}: UserFiltersProps) {
-  const [formations, setFormations] = useState<Formation[]>([])
-  const [groupes, setGroupes] = useState<Groupe[]>([])
-
-  useEffect(() => {
-    Promise.all([
-      fetch('http://localhost:4000/api/all/formations').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (formations)');
-        return response.json();
-      }),
-      fetch('http://localhost:4000/api/all/groupes').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (groupes)');
-        return response.json();
-      })
-    ])
-      .then(([formationsData, groupesData]) => {
-        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
-
-        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la récupération des données:', error);
-      });
-  }, []);
-
+export default function UserFilters({ onFilterChange, formations, groupes }: UserFiltersProps) {
   const handleFilterChange = (filterName: string, value: string) => {
     onFilterChange(filterName, value)
   }
