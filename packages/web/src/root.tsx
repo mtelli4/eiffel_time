@@ -25,13 +25,12 @@ function InnerRoot() {
     }
   }, [])
 
-  // console.log(user);
-
+  // const { theme, setTheme } = useTheme()
   // useEffect(() => {
-  //   if (!user || Object.keys(user).length === 0) {
-  //     window.location.href = '/signin'
-  //   }
-  // }, [user])
+  //   setTheme(theme)
+  //   useDateFormat()
+  //   useLanguage()
+  // }, [theme])
 
   return (
     <>
@@ -51,16 +50,10 @@ export function Error() {
 }
 
 function InnerError() {
-  const location = useLocation()
+  // const location = useLocation()
   const { role } = useUser()
-  const { theme, setTheme } = useTheme()
-  // useAuthCheck()
-
-  useEffect(() => {
-    setTheme(theme)
-    useDateFormat()
-    useLanguage()
-  }, [theme])
+  // const { theme, setTheme } = useTheme()
+  // // useAuthCheck()
 
   return (
     <>
