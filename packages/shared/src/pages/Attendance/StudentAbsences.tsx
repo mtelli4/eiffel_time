@@ -1,68 +1,86 @@
 import { useEffect, useState } from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {
-  Absence,
-  Cours,
-  Enseignant,
-  EnseignantModule,
-  Etudiant,
-  Module,
-} from '../../backend/classes'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Badge } from '../../components/attendance/Badge'
 import { Button } from '../../components/attendance/Button'
 import { Card } from '../../components/attendance/Card'
 import { Input } from '../../components/attendance/Input'
+import { API_URL } from '../../types/types'
+
+type StudentAbsences = {
+  id_absence: number
+  module: string
+  enseignant: string
+  dateAbsence: Date
+  justificatif: string
+  dateJustificatif: Date
+  message: string
+  status: 'approved' | 'rejected' | 'pending' | 'unjustified'
+}
+
+type StatusKey = 'justified' | 'unjustified' | 'pending' | 'undefined';
+
+const statusConfig: Record<StatusKey, { variant: 'success' | 'error' | 'warning' | 'default'; text: string }> = {
+  justified: {
+    variant: 'success' as const,
+    text: 'Justifiée',
+  },
+  unjustified: {
+    variant: 'error' as const,
+    text: 'Non justifiée',
+  },
+  pending: {
+    variant: 'warning' as const,
+    text: 'En attente',
+  },
+  undefined: {
+    variant: 'default' as const,
+    text: 'Indéfini',
+  },
+}
+
+const setAbsenceStatut = (envoye: boolean, valide: boolean) => {
+  if (envoye && valide) {
+    return 'approved'
+  } else if (envoye && !valide) {
+    return 'rejected'
+  } else if (envoye && valide === null) {
+    return 'pending'
+  } else {
+    'unjusitified'
+  }
+}
+
+const setVariant = (status: string): 'success' | 'error' | 'warning' | 'default' => {
+  return statusConfig[status as StatusKey].variant
+}
+
+const setBadgeText = (status: string): string => {
+  return statusConfig[status as StatusKey].text
+}
 
 export function Absences() {
-  const [absences, setAbsences] = useState<Absence[]>([])
-  const [modules, setModules] = useState<Module[]>([])
-  const [etudiants, setEtudiants] = useState<Etudiant[]>([])
-  const [enseignants, setEnseignants] = useState<Enseignant[]>([])
-  const [enseignant_modules, setEnseignantModules] = useState<
-    EnseignantModule[]
-  >([])
-  const [cours, setCours] = useState<Cours[]>([])
+  const [studentAbsences, setStudentAbsences] = useState<StudentAbsences[]>([])
   const [justification, setJustification] = useState<Record<string, string>>({})
 
+  const userId = 3
+
   useEffect(() => {
-    fetch('http://localhost:4000/api/data/data')
+    fetch(`${API_URL}/api/student/absences/${userId}`)
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Erreur réseau')
-        }
+        if (!response.ok) throw new Error('Erreur réseau')
         return response.json()
       })
       .then((data) => {
-        const absences = data.absences.map((a: any) => {
-          return new Absence(a)
-        })
-        const cours = data.cours.map((c: any) => {
-          return new Cours(c)
-        })
-        const enseignants = data.enseignants.map((e: any) => {
-          return new Enseignant(e, e.utilisateur)
-        })
-        const enseignant_modules = data.enseignant_module.map((em: any) => {
-          return new EnseignantModule(em)
-        })
-        const etudiants = data.etudiants.map((e: any) => {
-          return new Etudiant(e, e.utilisateur)
-        })
-        const modules = data.modules.map((m: any) => {
-          return new Module(m)
-        })
-        setAbsences(absences)
-        setCours(cours)
-        setEnseignants(enseignants)
-        setEnseignantModules(enseignant_modules)
-        setEtudiants(etudiants)
-        setModules(modules)
+        setStudentAbsences(data.map((absence: any) => ({
+          id_absence: absence.id_absence,
+          module: absence.module,
+          enseignant: absence.enseignant,
+          dateAbsence: new Date(absence.date_absence),
+          justificatif: absence.justificatif,
+          dateJustificatif: new Date(absence.date_justificatif),
+          message: absence.message,
+          status: setAbsenceStatut(absence.envoye, absence.valide),
+        })))
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des absences:', error)
@@ -74,8 +92,8 @@ export function Absences() {
     // Implement submission logic
   }
 
-  const getStatusBadge = (absence: Absence) => {
-    const config = absence.getStatusConfig()
+  const getStatusBadge = (status: string) => {
+    const config = statusConfig[status as StatusKey]
 
     return (
       <View style={styles.badgeContainer}>
@@ -84,69 +102,32 @@ export function Absences() {
     )
   }
 
-  const getModuleFromAbsence = (absence: Absence) => {
-    return modules
-      .find(
-        (m) =>
-          cours
-            .find((c) => c.getId() === absence.getIdCours())
-            ?.getIdModule() === m.getId()
-      )
-      ?.getName()
-  }
-
-  const getEnseignantFromAbsence = (absence: Absence) => {
-    return enseignants
-      .find(
-        (e) =>
-          enseignant_modules
-            .find(
-              (em) =>
-                modules
-                  .find(
-                    (m) =>
-                      cours
-                        .find((c) => c.getId() === absence.getIdCours())
-                        ?.getIdModule() === m.getId()
-                  )
-                  ?.getId() === em.getIdModule()
-            )
-            ?.getIdEnseignant() === e.getId()
-      )
-      ?.getFullName()
-  }
-
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <View style={styles.cardContainer}>
-          {absences.map((absence) => (
-            <Card key={absence.getId()}>
+          {studentAbsences.map((absence) => (
+            <Card key={absence.id_absence}>
               <View style={styles.cardContent}>
                 <View style={styles.cardHeader}>
                   <View>
-                    {/* TODO: Afficher le nom de l'étudiant côté admin */}
-                    {/*<Text style={styles.moduleText}>
-                                            {etudiants.find((e) => e.getId() === absence.getIdUtilisateur())?.getFullName() || 'Étudiant inconnu'}
-                                        </Text>*/}
                     <View style={styles.moduleContainer}>
                       <Text style={styles.moduleText}>
-                        {getModuleFromAbsence(absence) || 'Module inconnu'}
+                        {absence.module || 'Module inconnu'}
                       </Text>
-                      {getStatusBadge(absence)}
+                      <View style={styles.badgeContainer}>
+                        <Text>yo</Text>
+                        {/* <Badge variant={setVariant(absence.status)}>yo</Badge> */}
+                      </View>
                     </View>
                     <Text style={styles.professorText}>
-                      {cours
-                        .find((c) => c.getId() === absence.getIdCours())
-                        ?.getDebut()
-                        ?.toLocaleDateString('fr-FR') || 'Date inconnue'}{' '}
-                      •{' '}
-                      {getEnseignantFromAbsence(absence) ||
-                        'Enseignant inconnu'}
+                      {absence.dateAbsence.toLocaleDateString('fr-FR') || 'Date inconnue'}{' '}
+                      •{' '} {/* TODO: Ajouter la date de soumission du justificatif */}
+                      {`${absence.enseignant}` || 'Enseignant inconnu'}
                     </Text>
                   </View>
 
-                  {absence.getJustificatifLink() && (
+                  {absence.justificatif && (
                     <TouchableOpacity
                       onPress={() => {
                         /* Implement document view */
@@ -160,21 +141,21 @@ export function Absences() {
                   )}
                 </View>
 
-                {absence.getMessage() && (
+                {absence.message && (
                   <Text style={styles.justificationText}>
-                    Motif : {absence.getMessage()}
+                    Motif : {absence.message}
                   </Text>
                 )}
 
-                {absence.getStatus() === 'unjustified' && (
+                {absence.status === 'unjustified' && (
                   <View style={styles.justificationContainer}>
                     <Input
                       label="Motif de l'absence"
-                      value={justification[absence.getId()] || ''}
+                      value={justification[absence.id_absence]}
                       onChangeText={(text) =>
                         setJustification((prev) => ({
                           ...prev,
-                          [absence.getId()]: text,
+                          [absence.id_absence]: text,
                         }))
                       }
                       placeholder="Saisissez le motif de l'absence"
@@ -197,9 +178,9 @@ export function Absences() {
                       <Button
                         variant="primary"
                         onPress={() =>
-                          handleJustificationSubmit(absence.getId())
+                          handleJustificationSubmit(absence.id_absence)
                         }
-                        disabled={!justification[absence.getId()]}
+                        disabled={!justification[absence.id_absence]}
                       >
                         Soumettre
                       </Button>
