@@ -84,9 +84,8 @@ export function NotificationCenter() {
                     key={notification.id}
                     className={cn(
                       'p-3 rounded-lg cursor-pointer transition-colors',
-                      !notification.read &&
-                        'bg-primary-10 dark:bg-dark-primary/20',
-                      notification.read && 'bg-gray-50 dark:bg-gray-700/30',
+                      !notification.read && 'bg-primary-10 dark:bg-gray-400/20',
+                      notification.read && 'bg-gray-50 dark:bg-gray-900/30',
                       'hover:bg-gray-100 dark:hover:bg-gray-700/50'
                     )}
                     onClick={() => markAsRead(notification.id)}
