@@ -166,7 +166,7 @@ export function ManageAbsences() {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="relative flex-1 max-w-md">
             <input
@@ -174,7 +174,7 @@ export function ManageAbsences() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher un étudiant, un module..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 dark:bg-gray-800 dark:text-white rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
           </div>
@@ -232,10 +232,10 @@ export function ManageAbsences() {
         )}
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200">
+            <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Étudiant
               </th>
@@ -258,7 +258,7 @@ export function ManageAbsences() {
               return (
                 <tr
                   key={absence.id_absence}
-                  className="border-b border-gray-100 hover:bg-gray-50"
+                  className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                   <td className="py-3 px-4">
                     <div>

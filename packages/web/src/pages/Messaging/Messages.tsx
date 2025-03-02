@@ -174,7 +174,7 @@ export function Messages() {
 
   return (
     <div className="h-full">
-      <div className="flex h-[calc(100vh-8rem)] bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+      <div className="flex h-[calc(100vh-8rem)] bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
         {/* Zone de conversation */}
         <div className="flex-1 flex flex-col">
           {selectedConversation ? (
@@ -242,7 +242,7 @@ export function Messages() {
                             'rounded-lg px-4 py-2',
                             message.emetteur === userId
                               ? 'bg-primary text-white'
-                              : 'bg-gray-100 text-gray-900'
+                              : 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
                           )}
                         >
                           <p>{message.message}</p>
@@ -262,7 +262,7 @@ export function Messages() {
                             </a>
                           ))}
                         </div>
-                        <span className="text-xs text-gray-500 mt-1">
+                        <span className="text-xs text-gray-500 dark:text-gray-300 mt-1">
                           {formatTimestamp(message.date)}
                         </span>
                       </div>
@@ -278,7 +278,7 @@ export function Messages() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Écrivez votre message..."
-                    className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="flex-1 px-4 py-2 dark:bg-gray-800 dark:text-white rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         handleSendMessage()
@@ -311,7 +311,7 @@ export function Messages() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher une conversation..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2  dark:bg-gray-800 dark:text-white rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
             </div>
@@ -330,9 +330,10 @@ export function Messages() {
                 key={'u' + conversation.utilisateur.id_utilisateur}
                 onClick={() => setSelectedConversation(conversation)}
                 className={cn(
-                  'w-full p-4 flex items-start gap-3 hover:bg-gray-50 transition-colors',
+                  'w-full p-4 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors',
                   selectedConversation?.utilisateur.id_utilisateur ===
-                    conversation.utilisateur.id_utilisateur && 'bg-gray-50'
+                    conversation.utilisateur.id_utilisateur &&
+                    'bg-gray-50 dark:bg-gray-800'
                 )}
               >
                 {conversation.utilisateur.avatar ? (
@@ -355,22 +356,22 @@ export function Messages() {
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="font-medium text-gray-900 truncate">
+                    <p className="font-medium text-gray-900 dark:text-white truncate">
                       {conversation.utilisateur.prenom +
                         ' ' +
                         conversation.utilisateur.nom}
                     </p>
                     {conversation.last_message && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-300">
                         {formatTimestamp(conversation.last_message.date)}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-300 text-left">
                     {roleFinder(conversation.utilisateur.statut)}
                   </p>
                   {conversation.last_message && (
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                       {conversation.last_message.message}
                     </p>
                   )}
@@ -408,7 +409,7 @@ export function Messages() {
                   value={userSearchQuery}
                   onChange={(e) => setUserSearchQuery(e.target.value)}
                   placeholder="Rechercher un utilisateur..."
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary dark:focus:ring-dark-primary focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary dark:focus:ring-dark-primary focus:border-transparent"
                 />
                 <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
               </div>
@@ -419,14 +420,14 @@ export function Messages() {
                 {selectedUsers.map((user) => (
                   <div
                     key={user.id_utilisateur}
-                    className="flex items-center gap-1 bg-primary/10 dark:bg-dark-primary/20 text-primary dark:white px-2 py-1 rounded-full"
+                    className="flex items-center gap-1 bg-primary/10 dark:bg-primary/60 text-primary dark:text-blue-500 px-2 py-1 rounded-full"
                   >
                     <span className="text-sm">
                       {user.prenom + ' ' + user.nom}
                     </span>
                     <button
                       onClick={() => handleToggleUserSelection(user)}
-                      className="text-primary dark:text-dark-primary hover:text-primary/80 dark:hover:text-dark-primary/80"
+                      className="text-primary dark:text-blue-500 hover:text-primary/80 dark:hover:text-blue-500/80"
                     >
                       <X className="w-4 h-4" />
                     </button>

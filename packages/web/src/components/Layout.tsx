@@ -53,7 +53,7 @@ export function Layout({ userRole, children }: LayoutProps) {
   }, [theme])
 
   return (
-    <div className="relative flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="relative flex min-h-screen bg-gray-50 dark:bg-gray-800">
       <Sidebar
         userRole={userRole}
         isVisible={isSidebarVisible}
