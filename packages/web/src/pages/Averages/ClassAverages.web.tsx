@@ -182,14 +182,14 @@ export default function Averages() {
         <div className="flex gap-3">
           <button
             onClick={handleExportXLSX}
-            className="btn btn-outline flex items-center gap-2"
+            className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
           >
             <FileSpreadsheet className="w-4 h-4" />
             Exporter XLSX
           </button>
           <button
             onClick={handleExportPDF}
-            className="btn btn-outline flex items-center gap-2"
+            className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
           >
             <FileDown className="w-4 h-4" />
             Exporter PDF
@@ -197,10 +197,10 @@ export default function Averages() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Semestre
             </label>
             <select
@@ -222,7 +222,7 @@ export default function Averages() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Groupe
             </label>
             <select
@@ -243,16 +243,16 @@ export default function Averages() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 sticky left-0 bg-white">
+              <tr className="border-b-2 border-gray-300 dark:border-gray-500">
+                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-900">
                   Étudiant
                 </th>
                 {UES.map((ue) => (
                   <React.Fragment key={ue.code}>
-                    <th className="text-center py-3 px-4 text-sm font-medium text-gray-500 border-l-2 border-gray-300 bg-gray-50">
+                    <th className="text-center py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 border-l-2 border-gray-300 bg-gray-50 dark:bg-gray-800">
                       <button
                         onClick={() => toggleUE(ue.code)}
-                        className="flex items-center gap-2 mx-auto font-bold text-primary"
+                        className="flex items-center gap-2 mx-auto font-bold text-primary dark:text-white"
                       >
                         <ChevronDown
                           className={cn(
@@ -268,7 +268,7 @@ export default function Averages() {
                       ue.modules.map((module) => (
                         <th
                           key={module.code}
-                          className="text-center py-3 px-4 text-sm font-medium text-gray-500 border-l border-gray-200 whitespace-nowrap"
+                          className="text-center py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 border-l border-gray-200 dark:border-gray-500 whitespace-nowrap"
                         >
                           {module.code}
                         </th>
@@ -276,18 +276,18 @@ export default function Averages() {
                   </React.Fragment>
                 ))}
               </tr>
-              <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 sticky left-0 bg-white"></th>
+              <tr className="border-b-2 border-gray-300 dark:border-gray-500">
+                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-900"></th>
                 {UES.map((ue) => (
                   <React.Fragment key={ue.code}>
-                    <th className="text-center py-3 px-4 text-sm font-medium text-gray-600 border-l-2 border-gray-300 bg-gray-50">
+                    <th className="text-center py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 border-l-2 border-gray-300 bg-gray-50 dark:bg-gray-800">
                       {ue.name}
                     </th>
                     {expandedUEs.includes(ue.code) &&
                       ue.modules.map((module) => (
                         <th
                           key={module.code}
-                          className="text-center py-3 px-4 text-sm font-medium text-gray-500 border-l border-gray-200"
+                          className="text-center py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 border-l border-gray-200"
                         >
                           {module.name}
                         </th>
@@ -302,21 +302,21 @@ export default function Averages() {
               ).map((student) => (
                 <tr
                   key={student.id}
-                  className="border-b border-gray-200 hover:bg-gray-50"
+                  className="border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900"
                 >
-                  <td className="py-3 px-4 sticky left-0 bg-white font-medium">
+                  <td className="py-3 px-4 sticky left-0 bg-white dark:bg-gray-900 dark:text-gray-300 font-medium">
                     {student.lastName} {student.firstName}
                   </td>
                   {UES.map((ue) => (
                     <React.Fragment key={ue.code}>
-                      <td className="text-center py-3 px-4 border-l-2 border-gray-300 font-bold bg-gray-50">
+                      <td className="text-center py-3 px-4 border-l-2 border-gray-300 font-bold bg-gray-50 dark:bg-gray-800 dark:text-gray-300">
                         {student.ueAverages[ue.code]?.toFixed(2) || '-'}
                       </td>
                       {expandedUEs.includes(ue.code) &&
                         ue.modules.map((module) => (
                           <td
                             key={module.code}
-                            className="text-center py-3 px-4 border-l border-gray-200"
+                            className="text-center py-3 px-4 border-l border-gray-200 dark:border-gray-500 dark:text-gray-300"
                           >
                             {student.grades[module.code]?.toFixed(2) || '-'}
                           </td>
