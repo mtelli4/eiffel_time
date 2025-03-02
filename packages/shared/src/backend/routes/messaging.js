@@ -107,4 +107,29 @@ router.get('/users/:id', async (req, res) => {
   }
 });
 
+// Route pour envoyer un message
+router.post('/send', async (req, res) => {
+  const { emetteur, recepteur, message, date } = req.body;
+
+  try {
+    const newMessage = await prisma.$transaction(async (tx) => {
+      const newMessage = await tx.message.create({
+        data: {
+          emetteur,
+          recepteur,
+          contenu: message,
+          createdat: date
+        }
+      });
+
+      return newMessage;
+    });
+
+    res.json(newMessage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: `Erreur lors de l'envoi du message ; ${error}.` });
+  }
+});
+
 module.exports = router;

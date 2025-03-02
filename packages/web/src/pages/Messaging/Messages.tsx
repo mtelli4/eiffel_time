@@ -12,13 +12,16 @@ import {
   fetchConversations,
   fetchMessages,
   fetchUsers,
+  sendMessage,
 } from '../../../../shared/src/backend/services/messaging'
 import { cn, roleFinder } from '../../../../shared/src/lib/utils'
 import {
+  API_URL,
   MessagingConversation,
   MessagingMessage,
   MessagingUtilisateur,
 } from '../../../../shared/src/types/types'
+import { useNavigate } from 'react-router-dom'
 
 export function Messages() {
   const [conversations, setConversations] = useState<MessagingConversation[]>([])
@@ -31,7 +34,8 @@ export function Messages() {
   const [userSearchQuery, setUserSearchQuery] = useState('')
   const [availableUsers, setAvailableUsers] = useState<MessagingUtilisateur[]>([])
 
-  const userId = 3
+  const user = localStorage.getItem('user')
+  const userId = user ? JSON.parse(user).id_utilisateur : null
 
   useEffect(() => {
     const getConversations = async () => {
@@ -76,17 +80,23 @@ export function Messages() {
     }
   }, [userSearchQuery, showNewConversationModal])
 
-  const handleSendMessage = () => {
+  let filteredUsers = availableUsers.filter(
+    (user) => !conversations.some((c) => c.utilisateur.id_utilisateur === user.id_utilisateur)
+  )
+
+  const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return
 
     const message: MessagingMessage = {
-      id_message: Date.now(),
+      id_message: messages.length + 1,
       emetteur: userId,
       recepteur: selectedConversation.utilisateur.id_utilisateur,
       message: newMessage,
       date: new Date().toISOString(),
       vu: false,
     }
+    
+    message.id_message = await sendMessage(message)
 
     setMessages([...messages, message])
     setNewMessage('')
@@ -160,7 +170,7 @@ export function Messages() {
     setUserSearchQuery('')
   }
 
-  const filteredUsers = availableUsers.filter(
+  filteredUsers = filteredUsers.filter(
     (user) =>
       user.prenom.toLowerCase().includes(userSearchQuery.toLowerCase()) ||
       user.nom.toLowerCase().includes(userSearchQuery.toLowerCase()) ||
@@ -282,11 +292,6 @@ export function Messages() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Écrivez votre message..."
                     className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSendMessage()
-                      }
-                    }}
                   />
                   <button
                     onClick={handleSendMessage}
