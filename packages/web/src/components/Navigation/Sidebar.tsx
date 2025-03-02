@@ -35,11 +35,13 @@ const navigationConfig = {
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     { icon: ClipboardList, label: 'Notes', path: '/grades' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   teacher: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   secretary: [
     {
@@ -54,18 +56,21 @@ const navigationConfig = {
     },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserPlus, label: 'Importation des utilisateurs', path: '/import-users' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   director: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences et retards', path: '/manage-absences' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   manager: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences', path: '/absences' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   administrator: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
