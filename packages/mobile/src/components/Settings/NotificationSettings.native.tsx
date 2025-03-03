@@ -6,7 +6,7 @@ export default function NotificationSettings() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Feather name="bell" style={styles.icon} />
+        <Feather name="bell" style={styles.icon} size={20} />
         <Text style={styles.title}>Notifications</Text>
       </View>
 

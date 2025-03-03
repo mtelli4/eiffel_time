@@ -1,8 +1,8 @@
 import { Palette } from 'lucide-react'
 import Select from 'react-select'
-import { useDateFormat } from '../../hooks/useDateFormat'
-import { useLanguage } from '../../hooks/useLanguage'
-import { useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../../../shared/src/hooks/useTheme'
+import { useDateFormat } from '../../../../shared/src/hooks/useDateFormat'
+import { useLanguage } from '../../../../shared/src/hooks/useLanguage'
 
 interface PersonalizationSettingsProps {
   dateFormat: string

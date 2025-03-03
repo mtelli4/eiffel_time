@@ -1,6 +1,6 @@
 // src/web/components/Layout.tsx
 import { useEffect, useState } from 'react'
-import { useTheme } from '../hooks/useTheme'
+import { useTheme } from '../../../shared/src/hooks/useTheme'
 import { Sidebar } from './Navigation/Sidebar'
 import { NotificationCenter } from './Notifications/NotificationCenter.web'
 
