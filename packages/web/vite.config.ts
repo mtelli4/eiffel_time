@@ -15,7 +15,8 @@ export default defineConfig({
     exclude: [
       'react-native-vector-icons',
       'react-native/Libraries/Utilities/codegenNativeComponent',
-      'react-native-dropdown-picker'
+      'react-native-dropdown-picker',
+      'react-native-mmkv'
     ],
   },
   server: {

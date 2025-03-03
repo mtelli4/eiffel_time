@@ -33,14 +33,14 @@ ORDER BY m.id_module, e.createdat, u.nom, u.prenom`;
 router.post('/insert-evaluation', async (req, res) => {
   const formData = req.body;
   try {
-    const result = await prisma.$transaction(async (prisma) => {
-      const maxId = await prisma.evaluation.aggregate({
+    const result = await prisma.$transaction(async (tx) => {
+      const maxId = await tx.evaluation.aggregate({
         _max: {
           id_eval: true,
         },
       });
       const newId = maxId._max.id_eval + 1;
-      const evaluation = await prisma.evaluation.create({
+      const evaluation = await tx.evaluation.create({
         data: {
           id_eval: newId,
           libelle: formData.libelle,
