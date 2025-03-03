@@ -11,7 +11,7 @@
 .dark {
   --select-text: white;
   --select-bg: #1f2937; /* gray-800 */
-  --select-border: #374151; /* gray-700 */
+  --select-border: #d1d5db; /* gray-300 */
   --select-focus-border: #3b82f6; /* blue-500 */
   --select-menu-bg: #1f2937; /* gray-800 */
   --select-selected-bg: #2e3494; /* blue-500 */

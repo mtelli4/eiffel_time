@@ -7,6 +7,8 @@ import {
   X as XIcon,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
 import { API_URL } from '../../../../shared/src/types/types'
@@ -162,6 +164,20 @@ export function ManageAbsences() {
     { value: 'rejected', label: 'Refusées' },
   ]
 
+  const CustomDatePicker = ({
+    selectedDate,
+    onChange,
+    label,
+  }: {
+    selectedDate: string | Date | null
+    onChange: (date: string) => void
+    label: string
+  }) => {
+    // Convertir la chaîne en objet Date si nécessaire
+    const dateValue =
+      typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
+  }
+
   return (
     <div className="h-full">
       <div className="flex items-center justify-between mb-6">
@@ -214,7 +230,7 @@ export function ManageAbsences() {
                 styles={{
                   control: (baseStyles, state) => ({
                     ...baseStyles,
-                    backgroundColor: 'var(--select-bg)',
+                    backgroundColor: 'var(--select-bg, --select-bg)',
                     borderColor: state.isFocused
                       ? 'var(--select-focus-border, white)'
                       : 'var(--select-border, #cccccc)',
@@ -229,7 +245,7 @@ export function ManageAbsences() {
                       ? 'var(--select-selected-bg, #2e3494)'
                       : state.isFocused
                       ? 'var(--select-hover-bg, #deebff)'
-                      : 'var(--select-menu-bg, white)',
+                      : 'var(--select-menu-bg, --select-menu-bg)',
                   }),
                   singleValue: (baseStyles) => ({
                     ...baseStyles,
@@ -239,25 +255,59 @@ export function ManageAbsences() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date début
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Date de début
               </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
+              <DatePicker
+                selected={startDate ? new Date(startDate) : null}
+                onChange={(date: Date | null) =>
+                  setStartDate(date ? date.toISOString().split('T')[0] : '')
+                }
+                className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                calendarClassName="dark:bg-gray-800"
+                dayClassName={(date) =>
+                  'dark:hover:bg-gray-700 dark:text-white'
+                }
+                wrapperClassName="w-full"
+                dateFormat="dd/MM/yyyy"
+                placeholderText="jj/mm/aaaa"
+                popperProps={{
+                  strategy: 'fixed',
+                }}
+                customInput={
+                  <input
+                    className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="jj/mm/aaaa"
+                  />
+                }
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Date fin
               </label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
+              <DatePicker
+                selected={endDate ? new Date(endDate) : null}
+                onChange={(date: Date | null) =>
+                  setEndDate(date ? date.toISOString().split('T')[0] : '')
+                }
+                className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                calendarClassName="dark:bg-gray-800"
+                dayClassName={(date) =>
+                  'dark:hover:bg-gray-700 dark:text-white'
+                }
+                wrapperClassName="w-full"
+                dateFormat="dd/MM/yyyy" // Format de date français
+                placeholderText="jj/mm/aaaa"
+                popperProps={{
+                  strategy: 'fixed',
+                }}
+                customInput={
+                  <input
+                    className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="jj/mm/aaaa"
+                  />
+                }
               />
             </div>
           </div>
