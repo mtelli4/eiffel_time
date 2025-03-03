@@ -3,7 +3,7 @@ import Select from 'react-select'
 import { useDateFormat } from '../../hooks/useDateFormat'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useTheme } from '../../hooks/useTheme'
-
+import '../../styles/select-styles.css'
 interface PersonalizationSettingsProps {
   dateFormat: string
   setDate: (newDate: string) => void
@@ -49,10 +49,35 @@ export default function PersonalizationSettings({
             defaultValue={themesSelectOptions.find(
               (option) => option.value === theme
             )}
-            placeholder="Choisissez un thème"
             options={themesSelectOptions}
+            isSearchable={false}
             onChange={(option) => setTheme(option?.value as string)}
-            className="w-full"
+            className="w-full dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+            }}
           />
         </div>
 
@@ -64,10 +89,35 @@ export default function PersonalizationSettings({
             defaultValue={languagesSelectOptions.find(
               (option) => option.value === language
             )}
-            placeholder="Choisissez une langue"
             options={languagesSelectOptions}
+            isSearchable={false}
             onChange={(option) => setLanguage(option?.value as string)}
-            className="w-full"
+            className="w-full dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+            }}
           />
         </div>
 
@@ -79,13 +129,38 @@ export default function PersonalizationSettings({
             defaultValue={dateSelectOptions.find(
               (option) => option.value === dateFormat
             )}
-            placeholder="Choisissez un format de date"
             options={dateSelectOptions}
+            isSearchable={false}
             value={dateSelectOptions.find(
               (option) => option.value === dateFormat
             )}
             onChange={(option) => handleDateChange(option?.value as string)}
-            className="w-full"
+            className="w-full dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+            }}
           />
         </div>
       </div>
