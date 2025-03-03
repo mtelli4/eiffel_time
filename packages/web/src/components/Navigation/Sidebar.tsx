@@ -105,7 +105,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
       navigate('/signin')
     }
   }, [user, navigate])
-  
+
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(
       event.target.value as
@@ -119,7 +119,6 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   }
 
   useEffect(() => {
-    
     const handleMouseEnter = () => {
       if (!isVisible) {
         setIsVisible(true)
@@ -168,23 +167,27 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
           <span className="ml-3 text-xl font-semibold">Eiffel Time</span>
         </div>
 
-        <div className="mb-6 px-4">
-          <select
-            value={role}
-            onChange={handleRoleChange}
-            className="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
-          >
-            {ROLES.map((role) => (
-              <option
-                value={role.value}
-                key={role.value}
-                className="text-gray-900"
-              >
-                {role.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        {(userRole === 'administrator' ||
+          userRole === 'manager' ||
+          userRole === 'director') && (
+          <div className="mb-6 px-4">
+            <select
+              value={role}
+              onChange={handleRoleChange}
+              className="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
+            >
+              {ROLES.map((role) => (
+                <option
+                  value={role.value}
+                  key={role.value}
+                  className="text-gray-900"
+                >
+                  {role.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <nav className="space-y-2">
           {navigation.map((item) => (

@@ -17,7 +17,7 @@ export default function SecuritySettings() {
           </label>
           <input
             type="password"
-            className="input dark:bg-gray-800 dark:text-white w-full"
+            className="input dark:bg-gray-800 dark:text-white focus-border:bg-[#2e3494] w-full"
             placeholder="••••••••"
           />
         </div>
