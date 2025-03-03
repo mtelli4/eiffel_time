@@ -259,6 +259,8 @@ export function ManageAbsences() {
                 Date de début
               </label>
               <DatePicker
+                // showIcon
+                calendarIconClassName="w-5 h-5 text-gray-400 dark:text-white"
                 selected={startDate ? new Date(startDate) : null}
                 onChange={(date: Date | null) =>
                   setStartDate(date ? date.toISOString().split('T')[0] : '')
