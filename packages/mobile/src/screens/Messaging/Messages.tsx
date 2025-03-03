@@ -1,49 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {
-  FlatList,
-  Image,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, Image, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import {
-  fetchConversations,
-  fetchMessages,
-} from '../../../../shared/src/backend/services/messaging';
-import {
-  MessagingConversation,
-  MessagingMessage,
-  MessagingUtilisateur,
-} from '../../../../shared/src/types/types';
+import { fetchConversations, fetchMessages, fetchUsers } from '../../../../shared/src/backend/services/messaging';
+import { MessagingConversation, MessagingMessage, MessagingUtilisateur } from '../../../../shared/src/types/types';
 
 export function Messages() {
-  const [conversations, setConversations] = useState<MessagingConversation[]>(
-    [],
-  );
-  const [selectedConversation, setSelectedConversation] =
-    useState<MessagingConversation | null>(null);
+  const [conversations, setConversations] = useState<MessagingConversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null);
   const [messages, setMessages] = useState<MessagingMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   // États pour le modal de nouvelle conversation
-  const [showNewConversationModal, setShowNewConversationModal] =
-    useState(false);
+  const [showNewConversationModal, setShowNewConversationModal] = useState(false);
   const [userSearchQuery, setUserSearchQuery] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>(
-    [],
-  );
-  const [filteredUsers, setFilteredUsers] = useState<MessagingUtilisateur[]>(
-    [],
-  );
+  const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<MessagingUtilisateur[]>([]);
   const [allUsers, setAllUsers] = useState<MessagingUtilisateur[]>([]);
 
   const userId = 3;
@@ -54,10 +26,7 @@ export function Messages() {
         const conversations = await fetchConversations(userId);
         setConversations(conversations);
       } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des conversations:',
-          error,
-        );
+        console.error('Erreur lors de la récupération des conversations:', error);
       }
     };
 
@@ -79,25 +48,20 @@ export function Messages() {
     }
   }, [selectedConversation]);
 
-  // Effet pour filtrer les utilisateurs lors de la recherche
   useEffect(() => {
-    // Cette fonction devrait être remplacée par votre appel API réel
-    const fetchAllUsers = async () => {
-      try {
-        // Remplacer par votre appel API pour obtenir tous les utilisateurs
-        // Exemple de données simulées
-        const usersData = conversations.map(conv => conv.utilisateur);
-        setAllUsers(usersData);
-      } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des utilisateurs:',
-          error,
-        );
+    if (showNewConversationModal) {
+      const getUsers = async () => {
+        try {
+          const users = await fetchUsers(userId)
+          setAllUsers(users)
+        } catch (error) {
+          console.error('Erreur lors de la récupération des utilisateurs:', error)
+        }
       }
-    };
 
-    fetchAllUsers();
-  }, [conversations]);
+      getUsers()
+    }
+  }, [userSearchQuery, showNewConversationModal])
 
   // Filtrer les utilisateurs en fonction de la recherche
   useEffect(() => {

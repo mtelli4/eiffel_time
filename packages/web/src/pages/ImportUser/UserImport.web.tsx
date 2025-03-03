@@ -1,7 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native'
-import { Utilisateur } from '../../../../shared/src/types/types'
 import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
-import { FileDown, FileUp } from 'lucide-react'
+import { FileUp } from 'lucide-react'
 import Papa from 'papaparse'
 import * as XLSX from 'xlsx'
 import { useState } from 'react'
@@ -17,15 +15,16 @@ import { useDropzone } from 'react-dropzone'
 
 DataTable.use(DT);
 
-interface UserImportProps {
+/* interface UserImportProps {
   users: Utilisateur[]
-}
+} */
 
 export function UserImport() {
   const [jsonData, setJsonData] = useState<any[]>([])
 
+  // Vérifie si l'email correspond à celui de l'Université Gustave Eiffel
   const isEmailValid = (email: string) => {
-    
+    return email.endsWith('@u-pem.fr') || email.endsWith('@univ-eiffel.fr') || email.endsWith('@edu.univ-eiffel.fr')
   }
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -86,9 +85,8 @@ export function UserImport() {
           <br />
           <p>Modalités d'importation des utilisateurs :</p>
           <ul className="list-disc list-inside ml-4">
-            <li>Le fichier doit être au format CSV ou XLSX.</li>
+            <li>Le fichier doit être au format CSV, XLSX, XLS ou JSON.</li>
             <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
-            {/* <li>Le fichier modèle peut être téléchargé ci-dessus.</li> */}
             <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
             <li>Les utilisateurs seront créés après validation des données.</li>
           </ul>
@@ -108,7 +106,7 @@ export function UserImport() {
       <br />
       {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre><br /> */}
       {jsonData.length > 0 && (
-        <div>
+        <div className='dark:text-white'>
           <DataTable
             options={{
               info: true,
@@ -122,7 +120,7 @@ export function UserImport() {
               },
               pageLength: 10,
             }}
-            className="table table-striped table-bordered"
+            className="table table-striped table-bordered dark:text-white"
           >
             <thead>
               <tr className="bg-[#ECF0F1] border-b border-gray-200">
@@ -134,10 +132,13 @@ export function UserImport() {
             </thead>
             <tbody>
               {jsonData.map((user, index) => (
-                <tr key={index} className="border-b border-gray-100 hover:bg-[#ECF0F1]">
+                <tr 
+                key={index} 
+                className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
+                ${!isEmailValid(user.email) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}>
                   <td className="py-3 px-4">{user.nom}</td>
                   <td className="py-3 px-4">{user.prenom}</td>
-                  <td className="py-3 px-4">{user.email}</td>
+                  <td className={`py-3 px-4`}>{user.email}</td>
                   <td className="py-3 px-4">{roleFinder(user.statut)}</td>
                 </tr>
               ))}

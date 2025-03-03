@@ -9,6 +9,7 @@ import {
   UserCheck,
   Users,
   Wrench,
+  UserPlus
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -52,6 +53,7 @@ const navigationConfig = {
       path: '/teacher-attendance',
     },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
+    { icon: UserPlus, label: 'Importation des utilisateurs', path: '/import-users' },
   ],
   director: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },

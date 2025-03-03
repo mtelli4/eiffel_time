@@ -72,7 +72,6 @@ export function Messages() {
     }
   }, [selectedConversation])
 
-  // Fetch users when search query changes or modal opens
   useEffect(() => {
     if (showNewConversationModal) {
       const getUsers = async () => {
@@ -92,11 +91,11 @@ export function Messages() {
   }, [userSearchQuery, showNewConversationModal])
 
   const handleSendMessage = () => {
-    /* if (!newMessage.trim() || !selectedConversation) return
+    if (!newMessage.trim() || !selectedConversation) return
 
     const message: MessagingMessage = {
       id_message: Date.now(),
-      emetteur: userId, 
+      emetteur: userId,
       recepteur: selectedConversation.utilisateur.id_utilisateur,
       message: newMessage,
       date: new Date().toISOString(),
@@ -104,7 +103,7 @@ export function Messages() {
     }
 
     setMessages([...messages, message])
-    setNewMessage('') */
+    setNewMessage('')
   }
 
   const formatTimestamp = (timestamp: string) => {

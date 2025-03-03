@@ -4,20 +4,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {UserFiltersProps} from '../../../../shared/src/types/types';
 import { ROLES, TEACHER_TYPES } from '../../../../shared/src/types/types';
 
-const GROUPS = [
-  {value: 'A1', label: 'Groupe A1'},
-  {value: 'A2', label: 'Groupe A2'},
-  {value: 'B1', label: 'Groupe B1'},
-  {value: 'B2', label: 'Groupe B2'},
-];
-
-const FORMATIONS = [
-  {value: 'info', label: 'Informatique'},
-  {value: 'gea', label: 'GEA'},
-  {value: 'tc', label: 'TC'},
-];
-
-export function UserFilters({ onFilterChange }: UserFiltersProps) {
+export function UserFilters({ onFilterChange, formations, groupes }: UserFiltersProps) {
   const renderDropdown = (
     data: {label: string; value: string}[],
     placeholder: string,
@@ -66,13 +53,13 @@ export function UserFilters({ onFilterChange }: UserFiltersProps) {
 
         <View style={styles.column}>
           <Text style={styles.label}>Groupe</Text>
-          {renderDropdown(GROUPS, 'Tous les groupes', onGroupChange)}
+          {/* {renderDropdown(, 'Tous les groupes', onGroupChange)} */}
         </View>
 
         <View style={styles.column}>
           <Text style={styles.label}>Formation</Text>
           {renderDropdown(
-            FORMATIONS,
+            formations,
             'Toutes les formations',
             onFormationChange,
           )}
@@ -80,7 +67,7 @@ export function UserFilters({ onFilterChange }: UserFiltersProps) {
 
         <View style={styles.column}>
           <Text style={styles.label}>Type de professeur</Text>
-          {renderDropdown(TEACHER_TYPES, 'Tous les types', onTypeChange)}
+          {/* {renderDropdown(TEACHER_TYPES, 'Tous les types', onTypeChange)} */}
         </View>
       </View>
 

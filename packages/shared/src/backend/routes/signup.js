@@ -11,25 +11,13 @@ router.post('/signup', async (req, res) => {
   const hashedPassword = hashPassword(password, salt)
   try {
     const createUser = await prisma.$transaction(async (tx) => {
-      const lastUser = await tx.utilisateur.aggregate({
-        _max: {
-          id_utilisateur: true,
-        },
-      })
-
       const user = await tx.utilisateur.update({
         where: {
           email: email,
         },
         data: {
-          // id_utilisateur: lastUser._max.id_utilisateur + 1,
-          // nom: lastname,
-          // prenom: firstname,
-          // email: email,
           mdp: hashedPassword,
           salt: salt,
-          // statut: 'student',
-          // createdat: new Date(),
           updatedat: new Date(),
         },
       })

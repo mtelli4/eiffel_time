@@ -53,7 +53,6 @@ function InnerError() {
   // const location = useLocation()
   const { role } = useUser()
   // const { theme, setTheme } = useTheme()
-  // // useAuthCheck()
 
   return (
     <>
