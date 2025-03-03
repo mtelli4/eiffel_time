@@ -67,7 +67,7 @@ export default function NotificationSettings() {
               styles={{
                 control: (baseStyles, state) => ({
                   ...baseStyles,
-                  backgroundColor: 'var(--select-bg, white)',
+                  backgroundColor: 'var(--select-bg)',
                   borderColor: state.isFocused
                     ? 'var(--select-focus-border, #2684FF)'
                     : 'var(--select-border, #cccccc)',

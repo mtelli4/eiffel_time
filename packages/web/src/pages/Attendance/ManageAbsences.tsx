@@ -7,6 +7,7 @@ import {
   X as XIcon,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
 import { API_URL } from '../../../../shared/src/types/types'
 
@@ -52,7 +53,7 @@ export function ManageAbsences() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [showFilters, setShowFilters] = useState(false)
-
+  const [alertFrequency, setAlertFrequency] = useState('immediate')
   const setAbsenceStatut = (absence: Absence) => {
     if (absence.envoye && absence.valide) {
       return 'approved'
@@ -153,6 +154,13 @@ export function ManageAbsences() {
         return 'Refusée'
     }
   }
+  // Définition des options pour la fréquence des alertes
+  const statusOptions = [
+    { value: 'all', label: 'Tous les statuts' },
+    { value: 'pending', label: 'En attente' },
+    { value: 'approved', label: 'Validées' },
+    { value: 'rejected', label: 'Refusées' },
+  ]
 
   return (
     <div className="h-full">
@@ -193,18 +201,42 @@ export function ManageAbsences() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Statut
               </label>
-              <select
-                value={selectedStatut}
-                onChange={(e) =>
-                  setSelectedStatut(e.target.value as Absence['statut'] | 'all')
+              <Select
+                defaultValue={statusOptions.find(
+                  (option) => option.value === selectedStatut
+                )}
+                options={statusOptions}
+                isSearchable={false}
+                onChange={(option) =>
+                  setSelectedStatut(option?.value as Absence['statut'] | 'all')
                 }
-                className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="pending">En attente</option>
-                <option value="approved">Validées</option>
-                <option value="rejected">Refusées</option>
-              </select>
+                className="w-full dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, white)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2e3494)'
+                      : state.isFocused
+                      ? 'var(--select-hover-bg, #deebff)'
+                      : 'var(--select-menu-bg, white)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
