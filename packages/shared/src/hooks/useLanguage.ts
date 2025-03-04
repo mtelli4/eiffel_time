@@ -33,11 +33,11 @@ export const useLanguage = (initialLanguage?: Language) => {
   // Effet pour appliquer les modifications de langue
   useEffect(() => {
     if (Platform.OS === 'web') {
-      localStorage.setItem('language', language || 'fr');
+      localStorage.setItem('language', language || localStorage.getItem('language'));
     } else {
       import('react-native-mmkv').then(({ MMKV }) => {
         const storage = new MMKV();
-        storage.set('language', language || 'fr');
+        storage.set('language', language || storage.getString('language'));
       });
     }
   }, [language]);

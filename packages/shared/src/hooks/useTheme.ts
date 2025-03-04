@@ -44,7 +44,7 @@ export const useTheme = (initialTheme?: Theme) => {
           root.classList.remove('dark')
         }
 
-        localStorage.setItem('theme', theme || 'system')
+        localStorage.setItem('theme', theme || localStorage.getItem('theme'))
       } else {
         const { Appearance } = require('react-native')
         const systemTheme = Appearance.getColorScheme() === 'dark' ? 'dark' : 'light'
@@ -58,7 +58,7 @@ export const useTheme = (initialTheme?: Theme) => {
         
         import('react-native-mmkv').then(({ MMKV }) => {
           const storage = new MMKV()
-          storage.set('theme', theme || 'system')
+          storage.set('theme', theme || storage.getString('theme'))
         })
       }
     }

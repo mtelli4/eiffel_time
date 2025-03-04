@@ -25,12 +25,6 @@ export default function PersonalizationSettings({
   const { dateSelectOptions } = useDateFormat()
   const { languagesSelectOptions } = useLanguage()
 
-  const handleDateChange = (newFormat: string) => {
-    sessionStorage.setItem('dateFormat', newFormat)
-    window.dispatchEvent(new Event('dateChange')) // Notifie les autres composants
-    setDate(newFormat) // Met à jour l'état local pour forcer le rendu
-  }
-
   return (
     <div className="bg-white dark:bg-primary rounded-lg shadow-sm p-6">
       <div className="flex items-center gap-2 mb-4">
@@ -84,7 +78,7 @@ export default function PersonalizationSettings({
             value={dateSelectOptions.find(
               (option) => option.value === dateFormat
             )}
-            onChange={(option) => handleDateChange(option?.value as string)}
+            onChange={(option) => setDate(option?.value as string)}
             className="w-full"
           />
         </div>

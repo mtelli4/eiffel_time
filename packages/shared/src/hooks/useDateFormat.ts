@@ -31,11 +31,11 @@ export const useDateFormat = (initialFormat?: DateFormat) => {
   // Effet pour appliquer les modifications du format de date
   useEffect(() => {
     if (Platform.OS === 'web') {
-      localStorage.setItem('dateFormat', dateFormat || 'dd/MM/yyyy')
+      localStorage.setItem('dateFormat', dateFormat || localStorage.getItem('dateFormat'))
     } else {
       import('react-native-mmkv').then(({ MMKV }) => {
         const storage = new MMKV()
-        storage.set('dateFormat', dateFormat || 'dd/MM/yyyy')
+        storage.set('dateFormat', dateFormat || storage.getString('dateFormat'))
       })
     }
   }, [dateFormat])
