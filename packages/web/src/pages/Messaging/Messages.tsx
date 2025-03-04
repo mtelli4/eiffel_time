@@ -1,27 +1,8 @@
-import {
-  Edit2,
-  MoreVertical,
-  Paperclip,
-  Search,
-  Send,
-  User,
-  X,
-} from 'lucide-react'
+import { Edit2, MoreVertical, Paperclip, Search, Send, User, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import {
-  fetchConversations,
-  fetchMessages,
-  fetchUsers,
-  sendMessage,
-} from '../../../../shared/src/backend/services/messaging'
+import { fetchConversations, fetchMessages, fetchUsers, sendMessage } from '../../../../shared/src/backend/services/messaging'
 import { cn, roleFinder } from '../../../../shared/src/lib/utils'
-import {
-  API_URL,
-  MessagingConversation,
-  MessagingMessage,
-  MessagingUtilisateur,
-} from '../../../../shared/src/types/types'
-import { useNavigate } from 'react-router-dom'
+import { MessagingConversation, MessagingMessage, MessagingUtilisateur } from '../../../../shared/src/types/types'
 
 export function Messages() {
   const [conversations, setConversations] = useState<MessagingConversation[]>([])
