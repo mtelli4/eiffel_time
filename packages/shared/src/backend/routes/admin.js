@@ -90,7 +90,7 @@ router.post('/create-user', async (req, res) => {
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
   const data = req.body;
-  const userId = parseInt(data.id_utilisateur);
+  const userId = parseInt(id);
 
   try {
     const updateUser = await prisma.$transaction(async (tx) => {
@@ -122,19 +122,19 @@ router.put('/update-user/:id', async (req, res) => {
 
       // Suppression de tous les groupes liés à l'utilisateur
       await tx.groupe_etudiant.deleteMany({
-        where: { id_utilisateur: parseInt(id) },
+        where: { id_utilisateur: userId },
       });
 
       // Ajout des nouveaux groupes liés à l'utilisateur
       const updateUserGroupes = data.groupes.map((groupe) =>
         tx.groupe_etudiant.create({
           data: {
-            id_utilisateur: parseInt(id),
-            id_grp: groupe.value,
+            id_utilisateur: userId,
+            id_grp: groupe.id_grp,
           },
         })
       );
-      await Promise.all(updateUserFormations, updateUserGroupes);
+      await Promise.all([...updateUserFormations, ...updateUserGroupes]);
 
       // Mise à jour des données de l'enseignant
       const isEnseignant = await tx.enseignant.findUnique({
@@ -160,7 +160,6 @@ router.put('/update-user/:id', async (req, res) => {
 
       return { ...user, formations: data.formations, groupes: data.groupes, vacataire: data.vacataire };
     });
-
     res.json(updateUser);
   } catch (error) {
     console.error(error);

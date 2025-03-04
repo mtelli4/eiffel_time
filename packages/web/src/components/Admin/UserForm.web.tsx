@@ -43,7 +43,7 @@ export function UserForm({
     statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
     groupes: initialData?.groupes || [],
-    vacataire: initialData?.vacataire || null,
+    vacataire: initialData?.vacataire,
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +83,7 @@ export function UserForm({
     onSubmit(formData)
     onClose()
   }
-  
+
   const customSelectStyles = {
     control: (base: any, state: any) => ({
       ...base,
@@ -252,7 +252,7 @@ export function UserForm({
 
           {formData.statut === 'student' && (
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+              <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
                 Groupes
               </label>
               <Select
@@ -265,7 +265,10 @@ export function UserForm({
                 onChange={(options: any) =>
                   setFormData((prevState) => ({
                     ...prevState,
-                    groupes: options,
+                    groupes: options.map((o: any) => ({
+                      id_grp: o.value,
+                      libelle: o.label,
+                    })),
                   }))
                 }
                 placeholder="Aucun groupe"
@@ -277,13 +280,11 @@ export function UserForm({
 
           {formData.statut === 'teacher' && (
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+              <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
                 Type
               </label>
               <Select
-                defaultValue={TEACHER_TYPES.find(
-                  (option) => option.value === formData.vacataire
-                )}
+                defaultValue={TEACHER_TYPES.find((t) => t.value === formData.vacataire)}
                 options={TEACHER_TYPES}
                 isClearable
                 placeholder="Sélectionner un type"

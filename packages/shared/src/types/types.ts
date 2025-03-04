@@ -46,7 +46,7 @@ export type Utilisateur = {
   statut: string
   formations: Formation[]
   groupes: Groupe[]
-  vacataire?: boolean | null
+  vacataire: true | false | null
 }
 
 export interface UserUpdate {

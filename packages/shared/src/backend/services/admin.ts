@@ -1,4 +1,4 @@
-import { API_URL, Utilisateur } from '../../types/types'
+import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
 
 // Fonction pour traiter les données utilisateur
 const processUserData = (data: any): Utilisateur[] => {
@@ -25,7 +25,7 @@ export const fetchUsers = async (): Promise<Utilisateur[]> => {
 }
 
 // Fonction pour modifier un utilisateur
-export const updateUser = async (data: Utilisateur): Promise<Utilisateur> => {
+export const updateUser = async (data: UserUpdate): Promise<Utilisateur> => {
   try {
     const response = await fetch(`${API_URL}/api/admin/update-user/${data.id_utilisateur}`, {
       method: 'PUT',
@@ -46,14 +46,13 @@ export const updateUser = async (data: Utilisateur): Promise<Utilisateur> => {
       email: updatedUser.email,
       statut: updatedUser.statut,
       formations: updatedUser.formations,
-      groupes: updatedUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+      groupes: updatedUser.groupes,
       vacataire: updatedUser.vacataire
     }
   } catch (error) {
     console.error('Erreur lors de la modification de l\'utilisateur : ', error)
+    throw error
   }
-
-  return data
 }
 
 // Fonction pour importer les utilisateurs

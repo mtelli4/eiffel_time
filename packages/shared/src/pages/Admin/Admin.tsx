@@ -148,7 +148,9 @@ export function Admin() {
 
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
+      console.log('data', data)
       const updatedUser = await updateUser(data)
+      console.log('updatedUser', updatedUser)
       setUtilisateurs((prev) => prev.map((u) => (u.id_utilisateur === data.id_utilisateur ? updatedUser : u)))
     } else {
       try {
