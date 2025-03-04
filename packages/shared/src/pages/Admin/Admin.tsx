@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { fetchUsers } from '../../backend/services/admin'
+import { fetchUsers, updateUser } from '../../backend/services/admin'
 import { formation, groupe } from '@prisma/client'
 
 type Tab = 'users' | 'import'
@@ -148,43 +148,8 @@ export function Admin() {
 
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
-      try {
-        // alert(`Données valides: ${JSON.stringify(data)}`)
-        const response = await fetch(
-          `${API_URL}/api/admin/update-user/${selectedUser.id_utilisateur}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          }
-        )
-        if (!response.ok) {
-          const errorData = await response.json()
-          console.error('Erreur API :', errorData)
-          throw new Error('Erreur réseau : ' + errorData.message)
-        }
-        const updatedUser = await response.json()
-        selectedUser.id_utilisateur = updatedUser.id_utilisateur
-        selectedUser.nom = updatedUser.nom
-        selectedUser.prenom = updatedUser.prenom
-        selectedUser.email = updatedUser.email
-        selectedUser.statut = updatedUser.statut
-        selectedUser.formations = updatedUser.formations.map((f: any) => {
-          return { id_formation: parseInt(f.value), libelle: f.label }
-        })
-        setUtilisateurs(
-          utilisateurs.map((u) =>
-            u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u
-          )
-        )
-      } catch (error) {
-        console.error(
-          "Erreur lors de la modification de l'utilisateur : ",
-          error
-        )
-      }
+      const updatedUser = await updateUser(data)
+      setUtilisateurs((prev) => prev.map((u) => (u.id_utilisateur === data.id_utilisateur ? updatedUser : u)))
     } else {
       try {
         const response = await fetch(`${API_URL}/api/admin/create-user`, {
@@ -293,6 +258,8 @@ export function Admin() {
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
           isEdit={!!selectedUser}
+          formations={formations}
+          groupes={groupes}
         />
       )}
     </View>

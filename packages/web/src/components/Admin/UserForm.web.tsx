@@ -22,6 +22,8 @@ interface UserFormProps {
   onSubmit: (data: UserUpdate) => void
   initialData?: Utilisateur
   isEdit?: boolean
+  formations: Formation[]
+  groupes: Groupe[]
 }
 
 export function UserForm({
@@ -30,6 +32,8 @@ export function UserForm({
   onSubmit,
   initialData,
   isEdit,
+  formations,
+  groupes,
 }: UserFormProps) {
   const [formData, setFormData] = useState<UserUpdate>({
     id_utilisateur: initialData?.id_utilisateur || 0,
@@ -41,40 +45,6 @@ export function UserForm({
     groupes: initialData?.groupes || [],
     vacataire: initialData?.vacataire || null,
   })
-
-  const [formations, setFormations] = useState<Formation[]>([])
-  const [groupes, setGroupes] = useState<Groupe[]>([])
-
-  useEffect(() => {
-    Promise.all([
-      fetch('http://localhost:4000/api/all/formations').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (formations)')
-        return response.json()
-      }),
-      fetch('http://localhost:4000/api/all/groupes').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (groupes)')
-        return response.json()
-      }),
-    ])
-      .then(([formationsData, groupesData]) => {
-        setFormations(
-          formationsData.map((f: formation) => ({
-            value: f.id_formation,
-            label: f.libelle,
-          }))
-        )
-
-        setGroupes(
-          groupesData.map((g: groupe) => ({
-            value: g.id_grp,
-            label: g.libelle,
-          }))
-        )
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la récupération des données:', error)
-      })
-  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({
@@ -113,6 +83,7 @@ export function UserForm({
     onSubmit(formData)
     onClose()
   }
+  
   const customSelectStyles = {
     control: (base: any, state: any) => ({
       ...base,
@@ -136,8 +107,8 @@ export function UserForm({
       backgroundColor: state.isSelected
         ? '#3498DB'
         : state.isFocused
-        ? 'var(--select-hover)'
-        : 'transparent',
+          ? 'var(--select-hover)'
+          : 'transparent',
       color: state.isSelected ? 'white' : 'var(--select-text)',
       '&:hover': {
         backgroundColor: state.isSelected ? '#3498DB' : 'var(--select-hover)',
@@ -174,21 +145,6 @@ export function UserForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* TODO: Demander à l'équipe s'il faut garder {!isEdit && (
-            <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                ID {!isEdit ? '' : 'utilisateur (optionnel)'}
-              </label>
-              <input
-                type="text"
-                name="id_utilisateur"
-                value={formData.id_utilisateur}
-                onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
-              />
-            </div>
-          )} */}
-
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Nom
@@ -282,7 +238,10 @@ export function UserForm({
               onChange={(options: any) =>
                 setFormData((prevState) => ({
                   ...prevState,
-                  formations: options,
+                  formations: options.map((o: any) => ({
+                    id_formation: o.value,
+                    libelle: o.label,
+                  })),
                 }))
               }
               placeholder="Aucune formation"
@@ -322,12 +281,12 @@ export function UserForm({
                 Type
               </label>
               <Select
+                defaultValue={TEACHER_TYPES.find(
+                  (option) => option.value === formData.vacataire
+                )}
                 options={TEACHER_TYPES}
                 isClearable
                 placeholder="Sélectionner un type"
-                value={TEACHER_TYPES.find(
-                  (option) => option.value === formData.vacataire
-                )}
                 onChange={(option: any) =>
                   setFormData((prevState) => ({
                     ...prevState,

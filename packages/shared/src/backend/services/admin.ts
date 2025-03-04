@@ -24,6 +24,38 @@ export const fetchUsers = async (): Promise<Utilisateur[]> => {
   return processUserData(data)
 }
 
+// Fonction pour modifier un utilisateur
+export const updateUser = async (data: Utilisateur): Promise<Utilisateur> => {
+  try {
+    const response = await fetch(`${API_URL}/api/admin/update-user/${data.id_utilisateur}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error('Erreur réseau : ' + errorData.message)
+    }
+    const updatedUser = await response.json()
+    return {
+      id_utilisateur: updatedUser.id_utilisateur,
+      nom: updatedUser.nom,
+      prenom: updatedUser.prenom,
+      email: updatedUser.email,
+      statut: updatedUser.statut,
+      formations: updatedUser.formations,
+      groupes: updatedUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
+      vacataire: updatedUser.vacataire
+    }
+  } catch (error) {
+    console.error('Erreur lors de la modification de l\'utilisateur : ', error)
+  }
+
+  return data
+}
+
 // Fonction pour importer les utilisateurs
 export const importUsers = async (users: Utilisateur[]): Promise<void> => {
   const response = await fetch(`${API_URL}/api/admin/users`, {

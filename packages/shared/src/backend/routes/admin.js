@@ -90,11 +90,12 @@ router.post('/create-user', async (req, res) => {
 router.put('/update-user/:id', async (req, res) => {
   const { id } = req.params;
   const data = req.body;
+  const userId = parseInt(data.id_utilisateur);
 
   try {
     const updateUser = await prisma.$transaction(async (tx) => {
       const user = await tx.utilisateur.update({
-        where: { id_utilisateur: parseInt(id) },
+        where: { id_utilisateur: userId },
         data: {
           nom: data.nom,
           prenom: data.prenom,
@@ -106,14 +107,14 @@ router.put('/update-user/:id', async (req, res) => {
 
       // Suppression de toutes les formations liées à l'utilisateur
       await tx.formation_utilisateur.deleteMany({
-        where: { id_utilisateur: parseInt(id) },
+        where: { id_utilisateur: userId },
       });
 
       // Ajout des nouvelles formations liées à l'utilisateur
       const updateUserFormations = data.formations.map((formation) =>
         tx.formation_utilisateur.create({
           data: {
-            id_utilisateur: parseInt(id),
+            id_utilisateur: userId,
             id_formation: formation.id_formation,
           },
         })
@@ -157,7 +158,7 @@ router.put('/update-user/:id', async (req, res) => {
         });
       }
 
-      return { ...user, formations: data.formations, groupes: data.groupes };
+      return { ...user, formations: data.formations, groupes: data.groupes, vacataire: data.vacataire };
     });
 
     res.json(updateUser);
