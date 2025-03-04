@@ -11,6 +11,8 @@ export function Admin() {
   const [activeTab, setActiveTab] = useState<Tab>('users')
   const [showUserForm, setShowUserForm] = useState(false)
   const [loading, setLoading] = useState(true)
+  const user = localStorage.getItem('user')
+  const isAdmin = user ? JSON.parse(user).statut === 'administrator' : false
 
   // État unique pour les filtres
   const [filters, setFilters] = useState({
@@ -270,7 +272,7 @@ export function Admin() {
 
           <UserTable
             users={utilisateurs}
-            isAdmin={true}
+            isAdmin={isAdmin}
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
             filters={filters}
