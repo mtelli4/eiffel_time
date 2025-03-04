@@ -1,5 +1,6 @@
 const express = require('express');
 
+// Import des routes
 const usersRouter = require('./signin');
 const allRouter = require('./all');
 const studentRouter = require('./student');
@@ -12,7 +13,7 @@ const classgradesRouter = require('./classgrades');
 const messagingRouter = require('./messaging');
 const userRouter = require('./user');
 
-const router = express.Router();
+const router = express.Router(); // Création d'un routeur Express
 
 // Utilisation des routes
 router.use('/signin', usersRouter);
