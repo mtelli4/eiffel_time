@@ -16,6 +16,8 @@ interface LayoutProps {
 
 const getPageTitle = (pathname: string): string => {
   switch (pathname) {
+    case '/':
+      return 'Accueil'
     case '/schedule':
       return 'Emploi du temps'
     case '/grades':

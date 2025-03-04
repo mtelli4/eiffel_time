@@ -170,12 +170,14 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
       }`}
     >
       <div>
+        <NavLink to="/">
         <div className="flex items-center justify-start mb-8 pt-4 ml-9">
           <img src={logo} alt="Logo" className="w-10 h-10" />
           <span className="ml-3 text-xl font-semibold">Eiffel Time</span>
         </div>
+        </NavLink>
 
-        <div className="mb-6 px-4">
+        {/* <div className="mb-6 px-4">
           <select
             value={role}
             onChange={handleRoleChange}
@@ -191,7 +193,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <nav className="space-y-2">
           {navigation.map((item) => (
