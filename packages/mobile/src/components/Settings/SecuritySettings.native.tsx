@@ -6,7 +6,7 @@ export default function SecuritySettings() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Feather name="shield" style={styles.icon} />
+        <Feather name="shield" style={styles.icon} size={20} />
         <Text style={styles.title}>Sécurité</Text>
       </View>
 

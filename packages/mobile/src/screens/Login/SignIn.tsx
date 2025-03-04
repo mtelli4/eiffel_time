@@ -1,18 +1,20 @@
-import { Button } from '../../components/Button/Button'
-import { Input } from '../../components/Input/Input'
+import { Button } from '../../../../shared/src/components/Button/Button'
+import { Input } from '../../../../shared/src/components/Input/Input'
 import { useEffect, useState } from 'react'
-import { Image, Platform, Text, View } from 'react-native'
-import { useNavigate } from 'react-router-dom'
-import logo from '../../assets/logo.png'
-import { styles } from './Style'
-import { API_URL } from '../../types/types'
-import { Logo } from '../../components/Logo/Logo'
+import { View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import logo from '../../../../shared/src/assets/logo.png'
+import { styles } from '../../../../shared/src/pages/Login/Style'
+import { API_URL } from '../../../../shared/src/types/types'
+import { Logo } from '../../../../shared/src/components/Logo/Logo'
+import { MMKV } from 'react-native-mmkv'
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [valid, setValid] = useState(false)
-  const navigate = useNavigate()
+  const navigation = useNavigation()
+  const storage = new MMKV()
 
   const handleSubmitUser = async () => {
     try {
@@ -33,14 +35,7 @@ export function Login() {
           body: JSON.stringify({ email }),
         })
         const userData = await user.json()
-        if (Platform.OS === 'web') {
-          localStorage.setItem('user', JSON.stringify(userData))
-        } else {
-          import('react-native-mmkv').then(({ MMKV }) => {
-            const storage = new MMKV()
-            storage.set('user', JSON.stringify(userData))
-          })
-        }
+        storage.set('user', JSON.stringify(userData))
       }
 
       setValid(data.valid)
@@ -51,7 +46,7 @@ export function Login() {
 
   useEffect(() => {
     if (valid) {
-      navigate('/')
+      navigation.navigate('Home')
     }
   }, [valid])
 
@@ -71,7 +66,7 @@ export function Login() {
         <Button
           label="Inscription"
           variant="secondary"
-          onPress={() => navigate('/signup')}
+          onPress={() => {}/* navigate('/signup') */}
         />
       </View>
     </View>

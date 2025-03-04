@@ -1,18 +1,56 @@
 import React from 'react';
 import {StyleSheet /*Picker*/, Text, View} from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from '../../../../shared/src/hooks/useTheme'
+import { useDateFormat } from '../../../../shared/src/hooks/useDateFormat'
+import { useLanguage } from '../../../../shared/src/hooks/useLanguage'
 
-export default function PersonalizationSettings() {
+interface PersonalizationSettingsProps {
+  dateFormat: string
+  setDate: (newDate: string) => void
+  theme: string
+  setTheme: (newTheme: string) => void
+  language: string
+  setLanguage: (newLanguage: string) => void
+}
+
+export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme, language, setLanguage }: PersonalizationSettingsProps) {
+  const { themesSelectOptions } = useTheme()
+  const { dateSelectOptions } = useDateFormat()
+  const { languagesSelectOptions } = useLanguage()
+
+  const [isThemeOpen, setIsThemeOpen] = React.useState(false);
+  const [themeValue, setThemeValue] = React.useState('light');
+  const [themeItems, setThemeItems] = React.useState(themesSelectOptions);
+
+  const [isLanguageOpen, setIsLanguageOpen] = React.useState(false);
+  const [languageValue, setLanguageValue] = React.useState('fr');
+  const [languageItems, setLanguageItems] = React.useState(languagesSelectOptions);
+
+  const [isDateFormatOpen, setIsDateFormatOpen] = React.useState(false);
+  const [dateFormatValue, setDateFormatValue] = React.useState('fr');
+  const [dateFormatItems, setDateFormatItems] = React.useState(dateSelectOptions);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name="palette" style={styles.icon} />
+        <MaterialCommunityIcons name="palette" style={styles.icon} size={20} />
         <Text style={styles.title}>Personnalisation</Text>
       </View>
 
       <View style={styles.settings}>
         <View style={styles.settingItem}>
           <Text style={styles.label}>Thème d'interface</Text>
+          <DropDownPicker
+            open={isThemeOpen}
+            setOpen={setIsThemeOpen}
+            value={themeValue}
+            setValue={setThemeValue}
+            items={themeItems}
+            setItems={setThemeItems}
+            placeholder='Choisissez un thème'
+          />
           {/* <Picker style={styles.picker} selectedValue="light">
             <Picker.Item label="Clair" value="light" />
             <Picker.Item label="Sombre" value="dark" />

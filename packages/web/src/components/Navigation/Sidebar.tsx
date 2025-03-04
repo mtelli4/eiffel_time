@@ -35,11 +35,13 @@ const navigationConfig = {
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: UserCheck, label: 'Absences et retards', path: '/absences' },
     { icon: ClipboardList, label: 'Notes', path: '/grades' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   teacher: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   secretary: [
     {
@@ -54,18 +56,21 @@ const navigationConfig = {
     },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserPlus, label: 'Importation des utilisateurs', path: '/import-users' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   director: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences et retards', path: '/manage-absences' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   manager: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
     { icon: ClipboardList, label: 'Notes', path: '/class-grades' },
     { icon: GraduationCap, label: 'Moyennes', path: '/class-averages' },
     { icon: UserCheck, label: 'Absences', path: '/absences' },
+    { icon: MessageCircleMore, label: 'Messages', path: '/messaging' },
   ],
   administrator: [
     { icon: Calendar, label: 'Emploi du temps', path: '/schedule' },
@@ -164,32 +169,30 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
       }`}
     >
       <div>
+        <NavLink to="/">
         <div className="flex items-center justify-start mb-8 pt-4 ml-9">
           <img src={logo} alt="Logo" className="w-10 h-10" />
           <span className="ml-3 text-xl font-semibold">Eiffel Time</span>
         </div>
+        </NavLink>
 
-        {(userRole === 'administrator' ||
-          userRole === 'manager' ||
-          userRole === 'director') && (
-          <div className="mb-6 px-4">
-            <select
-              value={role}
-              onChange={handleRoleChange}
-              className="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
-            >
-              {ROLES.map((role) => (
-                <option
-                  value={role.value}
-                  key={role.value}
-                  className="text-gray-900"
-                >
-                  {role.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        {/* <div className="mb-6 px-4">
+          <select
+            value={role}
+            onChange={handleRoleChange}
+            className="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
+          >
+            {ROLES.map((role) => (
+              <option
+                value={role.value}
+                key={role.value}
+                className="text-gray-900"
+              >
+                {role.label}
+              </option>
+            ))}
+          </select>
+        </div> */}
 
         <nav className="space-y-2">
           {navigation.map((item) => (
