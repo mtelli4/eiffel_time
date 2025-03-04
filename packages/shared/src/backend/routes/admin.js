@@ -23,7 +23,7 @@ router.get('/users', async (req, res) => {
         enseignant: enseignant,
       },
       // On exclut les utilisateurs supprimés
-      where: { OR: [ { mdp: { not: 'motdepasse' } }, { mdp: null } ] },      
+      where: { OR: [{ mdp: { not: 'motdepasse' } }, { mdp: null }] },
     });
 
     res.json(users);
@@ -53,6 +53,7 @@ router.post('/create-user', async (req, res) => {
           email: data.email,
           statut: data.statut,
           createdat: new Date(),
+          updatedat: new Date(),
         },
       });
 
@@ -64,19 +65,36 @@ router.post('/create-user', async (req, res) => {
           },
         })
       );
-      await Promise.all(createUserFormations);
+      await Promise.all([...createUserFormations]);
 
-      const createUserGroupes = data.groupes.map((groupe) =>
-        tx.groupe_etudiant.create({
+      if (data.statut === 'teacher') {
+        await tx.enseignant.create({
           data: {
             id_utilisateur: user.id_utilisateur,
-            id_grp: groupe.value,
+            vacataire: data.vacataire,
           },
-        })
-      );
-      await Promise.all(createUserGroupes);
+        });
+      }
 
-      return user;
+      if (data.statut === 'student') {
+        await tx.etudiant.create({
+          data: {
+            id_utilisateur: user.id_utilisateur,
+            delegue: false,
+            tierstemps: false,
+          },
+        });
+        await data.groupes.map((groupe) =>
+          tx.groupe_etudiant.create({
+            data: {
+              id_utilisateur: user.id_utilisateur,
+              id_grp: groupe.id_grp,
+            },
+          })
+        );
+      }
+
+      return { ...user, formations: data.formations, groupes: data.groupes, vacataire: data.vacataire };
     });
 
     res.json(createUser);

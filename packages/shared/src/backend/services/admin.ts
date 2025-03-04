@@ -24,6 +24,38 @@ export const fetchUsers = async (): Promise<Utilisateur[]> => {
   return processUserData(data)
 }
 
+// Fonction pour créer un utilisateur
+export const createUser = async (data: UserUpdate): Promise<Utilisateur> => {
+  try {
+    const response = await fetch(`${API_URL}/api/admin/create-user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      throw new Error('Erreur réseau')
+    }
+
+    const newUser = await response.json()
+    return {
+      id_utilisateur: newUser.id_utilisateur,
+      nom: newUser.nom,
+      prenom: newUser.prenom,
+      email: newUser.email,
+      statut: newUser.statut,
+      formations: newUser.formations,
+      groupes: newUser.groupes,
+      vacataire: newUser.vacataire,
+    }
+  } catch (error) {
+    console.error("Erreur lors de la création de l'utilisateur : ", error)
+    throw error
+  }
+}
+
 // Fonction pour modifier un utilisateur
 export const updateUser = async (data: UserUpdate): Promise<Utilisateur> => {
   try {

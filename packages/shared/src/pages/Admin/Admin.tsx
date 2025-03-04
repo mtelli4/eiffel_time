@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
-import { fetchUsers, updateUser } from '../../backend/services/admin'
+import { createUser, fetchUsers, updateUser } from '../../backend/services/admin'
 import { formation, groupe } from '@prisma/client'
 
 type Tab = 'users' | 'import'
@@ -148,42 +148,11 @@ export function Admin() {
 
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
-      console.log('data', data)
       const updatedUser = await updateUser(data)
-      console.log('updatedUser', updatedUser)
       setUtilisateurs((prev) => prev.map((u) => (u.id_utilisateur === data.id_utilisateur ? updatedUser : u)))
     } else {
-      try {
-        const response = await fetch(`${API_URL}/api/admin/create-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        })
-
-        if (!response.ok) {
-          throw new Error('Erreur réseau')
-        }
-
-        const newUser = await response.json()
-        const utilisateur: Utilisateur = {
-          id_utilisateur: newUser.id_utilisateur,
-          nom: newUser.nom,
-          prenom: newUser.prenom,
-          email: newUser.email,
-          statut: newUser.statut,
-          formations: newUser.formations.map((f: any) => {
-            return { id_formation: f.value, libelle: f.label }
-          }),
-          groupes:
-            newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: newUser.enseignant?.vacataire,
-        }
-        setUtilisateurs((prev) => [...prev, utilisateur])
-      } catch (error) {
-        console.error("Erreur lors de la création de l'utilisateur : ", error)
-      }
+      const createdUser = await createUser(data)
+      setUtilisateurs((prev) => [...prev, createdUser])
     }
     setShowUserForm(false)
     setSelectedUser(null)
