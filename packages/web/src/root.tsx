@@ -2,9 +2,9 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { UserProvider, useUser } from './context/UserContext'
 import { useEffect, useMemo } from 'react'
-import { useTheme } from "./hooks/useTheme";
-import { useDateFormat } from "./hooks/useDateFormat";
-import { useLanguage } from "./hooks/useLanguage";
+import { useTheme } from '../../shared/src/hooks/useTheme'
+import { useDateFormat } from '../../shared/src/hooks/useDateFormat'
+import { useLanguage } from '../../shared/src/hooks/useLanguage'
 
 export default function Root() {
   return (
@@ -24,13 +24,6 @@ function InnerRoot() {
       return {}
     }
   }, [])
-
-  // const { theme, setTheme } = useTheme()
-  // useEffect(() => {
-  //   setTheme(theme)
-  //   useDateFormat()
-  //   useLanguage()
-  // }, [theme])
 
   return (
     <>
@@ -52,7 +45,17 @@ export function Error() {
 function InnerError() {
   // const location = useLocation()
   const { role } = useUser()
-  // const { theme, setTheme } = useTheme()
+
+  const { theme, setTheme } = useTheme()
+  const { dateFormat, setDateFormat } = useDateFormat()
+  const { language, setLanguage } = useLanguage()
+
+  useEffect(() => {
+    setTheme(theme)
+    setDateFormat(dateFormat)
+    setLanguage(language)
+  }, [theme, dateFormat, language])
+  
 
   return (
     <>
