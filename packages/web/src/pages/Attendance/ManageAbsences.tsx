@@ -7,6 +7,9 @@ import {
   X as XIcon,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
 import { API_URL } from '../../../../shared/src/types/types'
 
@@ -46,11 +49,13 @@ interface Absence {
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<Absence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedStatut, setSelectedStatut] = useState<Absence['statut'] | 'all'>('all')
+  const [selectedStatut, setSelectedStatut] = useState<
+    Absence['statut'] | 'all'
+  >('all')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [showFilters, setShowFilters] = useState(false)
-
+  const [alertFrequency, setAlertFrequency] = useState('immediate')
   const setAbsenceStatut = (absence: Absence) => {
     if (absence.envoye && absence.valide) {
       return 'approved'
@@ -65,29 +70,31 @@ export function ManageAbsences() {
     fetch(`${API_URL}/api/absences/`)
       .then((res) => res.json())
       .then((data) => {
-        setAbsences(data.map((absence: any) => ({
-          id_absence: absence.id_absence,
-          etudiant: {
-            id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
-            nom: absence.etudiant.utilisateur.nom,
-            prenom: absence.etudiant.utilisateur.prenom,
-            groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
-              id_grp: groupe.groupe.id_grp,
-              libelle: groupe.groupe.libelle,
-            })),
-          },
-          module: {
-            id_module: absence.cours.module.id_module,
-            codeapogee: absence.cours.module.codeapogee,
-            libelle: absence.cours.module.libelle,
-          },
-          date: absence.cours.debut,
-          envoye: absence.envoye,
-          valide: absence.valide,
-          updatedat: absence.updatedat,
-          statut: setAbsenceStatut(absence),
-          path: absence.justificatif,
-        })))
+        setAbsences(
+          data.map((absence: any) => ({
+            id_absence: absence.id_absence,
+            etudiant: {
+              id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
+              nom: absence.etudiant.utilisateur.nom,
+              prenom: absence.etudiant.utilisateur.prenom,
+              groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
+                id_grp: groupe.groupe.id_grp,
+                libelle: groupe.groupe.libelle,
+              })),
+            },
+            module: {
+              id_module: absence.cours.module.id_module,
+              codeapogee: absence.cours.module.codeapogee,
+              libelle: absence.cours.module.libelle,
+            },
+            date: absence.cours.debut,
+            envoye: absence.envoye,
+            valide: absence.valide,
+            updatedat: absence.updatedat,
+            statut: setAbsenceStatut(absence),
+            path: absence.justificatif,
+          }))
+        )
       })
       .catch((error) => console.error('Error:', error))
   })
@@ -113,7 +120,9 @@ export function ManageAbsences() {
   }
 
   const filteredAbsences = absences.filter((absence) => {
-    const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
+    const student = absences.find(
+      (s) => s.id_absence === absence.id_absence
+    )?.etudiant
     const searchString =
       `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
@@ -129,11 +138,11 @@ export function ManageAbsences() {
   const getStatutBadgeClass = (statut: Absence['statut']) => {
     switch (statut) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-600 dark:text-white'
       case 'approved':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
       case 'rejected':
-        return 'bg-red-100 text-red-800'
+        return 'bg-red-100 text-red-800 dark:bg-red-600 dark:text-white'
     }
   }
 
@@ -147,20 +156,41 @@ export function ManageAbsences() {
         return 'Refusée'
     }
   }
+  // Définition des options pour la fréquence des alertes
+  const statusOptions = [
+    { value: 'all', label: 'Tous les statuts' },
+    { value: 'pending', label: 'En attente' },
+    { value: 'approved', label: 'Validées' },
+    { value: 'rejected', label: 'Refusées' },
+  ]
+
+  const CustomDatePicker = ({
+    selectedDate,
+    onChange,
+    label,
+  }: {
+    selectedDate: string | Date | null
+    onChange: (date: string) => void
+    label: string
+  }) => {
+    // Convertir la chaîne en objet Date si nécessaire
+    const dateValue =
+      typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
+  }
 
   return (
     <div className="h-full">
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={handleExport}
-          className="btn btn-outline flex items-center gap-2"
+          className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
         >
           <FileDown className="w-4 h-4" />
           Exporter
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="relative flex-1 max-w-md">
             <input
@@ -168,13 +198,13 @@ export function ManageAbsences() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher un étudiant, un module..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 dark:bg-gray-800 dark:text-white rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn btn-outline flex items-center gap-2"
+            className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
           >
             <Filter className="w-4 h-4" />
             Filtres
@@ -184,65 +214,125 @@ export function ManageAbsences() {
         {showFilters && (
           <div className="grid grid-cols-3 gap-4 pt-4 border-t">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Statut
               </label>
-              <select
-                value={selectedStatut}
-                onChange={(e) =>
-                  setSelectedStatut(e.target.value as Absence['statut'] | 'all')
+              <Select
+                defaultValue={statusOptions.find(
+                  (option) => option.value === selectedStatut
+                )}
+                options={statusOptions}
+                isSearchable={false}
+                onChange={(option) =>
+                  setSelectedStatut(option?.value as Absence['statut'] | 'all')
                 }
-                className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="pending">En attente</option>
-                <option value="approved">Validées</option>
-                <option value="rejected">Refusées</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date début
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
+                className="w-full dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg, --select-bg)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, white)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2e3494)'
+                      : state.isFocused
+                      ? 'var(--select-hover-bg, #deebff)'
+                      : 'var(--select-menu-bg, --select-menu-bg)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Date de début
+              </label>
+              <DatePicker
+                // showIcon
+                calendarIconClassName="w-5 h-5 text-gray-400 dark:text-white"
+                selected={startDate ? new Date(startDate) : null}
+                onChange={(date: Date | null) =>
+                  setStartDate(date ? date.toISOString().split('T')[0] : '')
+                }
+                className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                calendarClassName="dark:bg-gray-800"
+                dayClassName={(date) =>
+                  'dark:hover:bg-gray-700 dark:text-white'
+                }
+                wrapperClassName="w-full"
+                dateFormat="dd/MM/yyyy"
+                placeholderText="jj/mm/aaaa"
+                popperProps={{
+                  strategy: 'fixed',
+                }}
+                customInput={
+                  <input
+                    className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="jj/mm/aaaa"
+                  />
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Date fin
               </label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
+              <DatePicker
+                selected={endDate ? new Date(endDate) : null}
+                onChange={(date: Date | null) =>
+                  setEndDate(date ? date.toISOString().split('T')[0] : '')
+                }
+                className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                calendarClassName="dark:bg-gray-800"
+                dayClassName={(date) =>
+                  'dark:hover:bg-gray-700 dark:text-white'
+                }
+                wrapperClassName="w-full"
+                dateFormat="dd/MM/yyyy" // Format de date français
+                placeholderText="jj/mm/aaaa"
+                popperProps={{
+                  strategy: 'fixed',
+                }}
+                customInput={
+                  <input
+                    className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="jj/mm/aaaa"
+                  />
+                }
               />
             </div>
           </div>
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+            <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Étudiant
               </th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Module
               </th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Date
               </th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Statut
               </th>
-              <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">
+              <th className="text-right py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Actions
               </th>
             </tr>
@@ -252,35 +342,37 @@ export function ManageAbsences() {
               return (
                 <tr
                   key={absence.id_absence}
-                  className="border-b border-gray-100 hover:bg-gray-50"
+                  className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-white">
                         {absence.etudiant.nom} {absence.etudiant.prenom}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {absence.etudiant.groupes.map((groupe) => groupe.libelle).join(', ')}
+                      <div className="text-sm text-gray-500 dark:text-gray-300">
+                        {absence.etudiant.groupes
+                          .map((groupe) => groupe.libelle)
+                          .join(', ')}
                       </div>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-gray-300">
                         {absence.module.codeapogee}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 dark:text-gray-300">
                         {absence.module.libelle}
                       </div>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-white">
                         {new Date(absence.date).toLocaleDateString('fr-FR')}
                       </div>
                       {absence.updatedat && (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-300">
                           Soumis le{' '}
                           {new Date(absence.updatedat).toLocaleDateString(
                             'fr-FR'
@@ -307,21 +399,21 @@ export function ManageAbsences() {
                           className="p-1 text-gray-500 hover:text-primary"
                           title="Voir le justificatif"
                         >
-                          <FileText className="w-4 h-4" />
+                          <FileText className="w-4 h-4 dark:text-white" />
                         </button>
                       )}
                       {absence.statut === 'pending' && (
                         <>
                           <button
                             onClick={() => handleApprove(absence.id_absence)}
-                            className="p-1 text-green-600 hover:text-green-700"
+                            className="p-1 text-green-600 dark:text-green-300 hover:text-green-700"
                             title="Valider"
                           >
                             <Check className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleReject(absence.id_absence)}
-                            className="p-1 text-red-600 hover:text-red-700"
+                            className="p-1 text-red-600 dark:text-red-300 hover:text-red-700"
                             title="Refuser"
                           >
                             <XIcon className="w-4 h-4" />

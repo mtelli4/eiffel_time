@@ -48,15 +48,15 @@ export function Layout({ userRole, children }: LayoutProps) {
   const pageTitle = getPageTitle(location.pathname)
 
   return (
-    <div className="relative flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="relative flex min-h-screen bg-gray-50 dark:bg-gray-800">
       <Sidebar
         userRole={userRole}
         isVisible={isSidebarVisible}
         setIsVisible={setIsSidebarVisible}
       />
       <div className={`flex-1 ${isSidebarVisible ? 'ml-[280px]' : 'ml-0'}`}>
-        <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-primary dark:text-secondary">
+        <header className="h-16 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-500 px-8 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-primary dark:text-white">
             {pageTitle}
           </h1>
           <NotificationCenter />

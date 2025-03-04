@@ -112,7 +112,7 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
       navigate('/signin')
     }
   }, [user, navigate])
-  
+
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(
       event.target.value as
@@ -126,7 +126,6 @@ export function Sidebar({ userRole, isVisible, setIsVisible }: SidebarProps) {
   }
 
   useEffect(() => {
-    
     const handleMouseEnter = () => {
       if (!isVisible) {
         setIsVisible(true)
