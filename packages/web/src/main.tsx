@@ -71,7 +71,7 @@ const router = createBrowserRouter([
       {
         path: '/import-users',
         element: <UserImport />,
-      }
+      },
     ],
   },
   {

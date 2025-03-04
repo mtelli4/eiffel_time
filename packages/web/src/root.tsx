@@ -1,10 +1,7 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { Outlet } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { UserProvider, useUser } from './context/UserContext'
-import { useEffect, useMemo } from 'react'
-import { useTheme } from "./hooks/useTheme";
-import { useDateFormat } from "./hooks/useDateFormat";
-import { useLanguage } from "./hooks/useLanguage";
 
 export default function Root() {
   return (
@@ -15,7 +12,6 @@ export default function Root() {
 }
 
 function InnerRoot() {
-
   const user = useMemo(() => {
     try {
       return JSON.parse(localStorage.getItem('user') || '{}')
