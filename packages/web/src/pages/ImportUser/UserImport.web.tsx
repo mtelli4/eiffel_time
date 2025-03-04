@@ -9,15 +9,8 @@ import DataTable from 'datatables.net-react'
 import '../../styles/dataTables.dataTables.min.css'
 import { roleFinder } from '../../../../shared/src/lib/utils'
 import { useDropzone } from 'react-dropzone'
-// import model from '/public/import_model.csv'
-// import model_csv from '../../assets/import_model.csv'
-// import model_xlsx from '../../assets/import_model.xlsx'
 
 DataTable.use(DT);
-
-/* interface UserImportProps {
-  users: Utilisateur[]
-} */
 
 export function UserImport() {
   const [jsonData, setJsonData] = useState<any[]>([])

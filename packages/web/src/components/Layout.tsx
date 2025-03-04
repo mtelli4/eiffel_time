@@ -1,7 +1,10 @@
 // src/web/components/Layout.tsx
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Sidebar } from './Navigation/Sidebar'
 import { NotificationCenter } from './Notifications/NotificationCenter.web'
+import { useTheme } from '@shared/hooks/useTheme'
+import { useDateFormat } from '@shared/hooks/useDateFormat'
+import { useLanguage } from '@shared/hooks/useLanguage'
 
 interface LayoutProps {
   userRole:
@@ -46,6 +49,10 @@ const getPageTitle = (pathname: string): string => {
 export function Layout({ userRole, children }: LayoutProps) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true)
   const pageTitle = getPageTitle(location.pathname)
+
+  const { theme } = useTheme()
+  const { dateFormat } = useDateFormat()
+  const { language } = useLanguage()
 
   return (
     <div className="relative flex min-h-screen bg-gray-50 dark:bg-gray-800">
