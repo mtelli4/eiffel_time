@@ -24,19 +24,13 @@ interface UserTableProps {
 
 DataTable.use(DT)
 
-export function UserTable({
-  users,
-  isAdmin,
-  onEdit,
-  onDelete,
-  filters,
-  loading,
-}: UserTableProps) {
+export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }: UserTableProps) {
   const { Edit, Delete } = useEditDeleteLoader()
 
   if (!Edit || !Delete) return null
 
-  /* roleSelected: string */
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
   let filteredData = users
   if (filters.search !== '') {
     filteredData = users.filter(
@@ -152,11 +146,9 @@ export function UserTable({
           {filteredData.map((utilisateur) => (
             <tr
               key={utilisateur.id_utilisateur}
-              className="border-b border-gray-100 hover:bg-[#ECF0F1]"
+              className={"border-b border-gray-100 hover:bg-[#ECF0F1] " + (user.id_utilisateur === utilisateur.id_utilisateur ? 'font-bold' : '')}
             >
-              <td className="py-3 px-4 dt-left">
-                {utilisateur.id_utilisateur}
-              </td>
+              <td className="py-3 px-4 dt-left">{utilisateur.id_utilisateur}</td>
               <td className="py-3 px-4">{utilisateur.nom}</td>
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>
