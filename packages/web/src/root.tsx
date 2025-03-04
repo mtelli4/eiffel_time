@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { UserProvider, useUser } from './context/UserContext'
+import { useEffect, useMemo } from 'react'
 
 export default function Root() {
   return (
@@ -20,13 +20,6 @@ function InnerRoot() {
       return {}
     }
   }, [])
-
-  // const { theme, setTheme } = useTheme()
-  // useEffect(() => {
-  //   setTheme(theme)
-  //   useDateFormat()
-  //   useLanguage()
-  // }, [theme])
 
   return (
     <>
@@ -48,7 +41,6 @@ export function Error() {
 function InnerError() {
   // const location = useLocation()
   const { role } = useUser()
-  // const { theme, setTheme } = useTheme()
 
   return (
     <>

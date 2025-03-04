@@ -1,8 +1,8 @@
 import { Palette } from 'lucide-react'
 import Select from 'react-select'
-import { useDateFormat } from '../../hooks/useDateFormat'
-import { useLanguage } from '../../hooks/useLanguage'
-import { useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../../../shared/src/hooks/useTheme'
+import { useDateFormat } from '../../../../shared/src/hooks/useDateFormat'
+import { useLanguage } from '../../../../shared/src/hooks/useLanguage'
 import '../../styles/select-styles.css'
 interface PersonalizationSettingsProps {
   dateFormat: string
@@ -24,12 +24,6 @@ export default function PersonalizationSettings({
   const { themesSelectOptions } = useTheme()
   const { dateSelectOptions } = useDateFormat()
   const { languagesSelectOptions } = useLanguage()
-
-  const handleDateChange = (newFormat: string) => {
-    sessionStorage.setItem('dateFormat', newFormat)
-    window.dispatchEvent(new Event('dateChange')) // Notifie les autres composants
-    setDate(newFormat) // Met à jour l'état local pour forcer le rendu
-  }
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6">
@@ -134,7 +128,7 @@ export default function PersonalizationSettings({
             value={dateSelectOptions.find(
               (option) => option.value === dateFormat
             )}
-            onChange={(option) => handleDateChange(option?.value as string)}
+            onChange={(option) => setDate(option?.value as string)}
             className="w-full dark:text-white"
             styles={{
               control: (baseStyles, state) => ({

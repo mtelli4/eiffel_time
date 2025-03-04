@@ -1,24 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import { useTheme } from '../../../../web/src/hooks/useTheme'
-import { useDateFormat } from '../../../../web/src/hooks/useDateFormat'
-import { useLanguage } from '../../../../web/src/hooks/useLanguage'
+import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useTheme } from '../../hooks/useTheme'
+import { useDateFormat } from '../../hooks/useDateFormat'
+import { useLanguage } from '../../hooks/useLanguage'
 // import { Save } from 'lucide-react-native' // Assurez-vous d'avoir une version compatible de lucide-react pour React Native
 
 export function Settings() {
-  const [NotificationSettings, setNotificationSettings] =
-    useState<React.FC | null>(null)
-  const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(
-    null
-  )
+  const [NotificationSettings, setNotificationSettings] = useState<React.FC | null>(null)
+  const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(null)
   const [PersonalizationSettings, setPersonalizationSettings] = useState<any>(null)
+
+  const { theme, setTheme } = useTheme()
+  const { dateFormat, setDateFormat } = useDateFormat()
+  const { language, setLanguage } = useLanguage()
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -54,19 +48,9 @@ export function Settings() {
     loadComponents()
   }, [])
 
-  const { theme, setTheme } = useTheme()
-  const { dateFormat, setDateFormat } = useDateFormat()
-  const { language, setLanguage } = useLanguage()
-  // const theme = 'light'
-  // const setTheme = () => {}
-  // const dateFormat = 'DD/MM/YYYY'
-  // const setDateFormat = () => {}
-  // const language = 'fr'
-  // const setLanguage = () => {}
-
   // États temporaires pour stocker les modifications
-  const [tempDate, setTempDate] = useState(dateFormat)
   const [tempTheme, setTempTheme] = useState(theme)
+  const [tempDate, setTempDate] = useState(dateFormat)
   const [tempLanguage, setTempLanguage] = useState(language)
 
   const handleSave = () => {
@@ -80,21 +64,40 @@ export function Settings() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.form}>
-        <NotificationSettings />
-        <View style={{ marginVertical: 20 }} />
-        <SecuritySettings />
-        <View style={{ marginVertical: 20 }} />
-        <PersonalizationSettings dateFormat={tempDate} setDate={setTempDate} theme={theme} setTheme={setTempTheme} language={tempLanguage} setLanguage={setTempLanguage} />
-        <View style={{ marginVertical: 20 }} />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleSave}>
-            <Text style={styles.button}>Enregistrer</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        data={[
+          { key: 'Notifications', component: <NotificationSettings /> },
+          { key: 'Sécurité', component: <SecuritySettings /> },
+          {
+            key: 'Personnalisation',
+            component: (
+              <PersonalizationSettings
+                dateFormat={tempDate}
+                setDate={setTempDate}
+                theme={theme}
+                setTheme={setTempTheme}
+                language={tempLanguage}
+                setLanguage={setTempLanguage}
+              />
+            ),
+          },
+          {
+            key: 'Enregistrer',
+            component: (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.button} onPress={handleSave}>
+                  <Text style={styles.button}>Enregistrer</Text>
+                </TouchableOpacity>
+              </View>
+            ),
+          },
+        ]}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: 20 }}>{item.component}</View>
+        )}
+      />
+    </View>
   )
 }
 

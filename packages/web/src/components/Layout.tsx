@@ -1,8 +1,10 @@
 // src/web/components/Layout.tsx
 import { useEffect, useState } from 'react'
-import { useTheme } from '../hooks/useTheme'
 import { Sidebar } from './Navigation/Sidebar'
 import { NotificationCenter } from './Notifications/NotificationCenter.web'
+import { useTheme } from '@shared/hooks/useTheme'
+import { useDateFormat } from '@shared/hooks/useDateFormat'
+import { useLanguage } from '@shared/hooks/useLanguage'
 
 interface LayoutProps {
   userRole:
@@ -17,6 +19,8 @@ interface LayoutProps {
 
 const getPageTitle = (pathname: string): string => {
   switch (pathname) {
+    case '/':
+      return 'Accueil'
     case '/schedule':
       return 'Emploi du temps'
     case '/grades':
@@ -46,11 +50,9 @@ export function Layout({ userRole, children }: LayoutProps) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true)
   const pageTitle = getPageTitle(location.pathname)
 
-  const { theme, setTheme } = useTheme()
-
-  useEffect(() => {
-    setTheme(theme)
-  }, [theme])
+  const { theme } = useTheme()
+  const { dateFormat } = useDateFormat()
+  const { language } = useLanguage()
 
   return (
     <div className="relative flex min-h-screen bg-gray-50 dark:bg-gray-800">

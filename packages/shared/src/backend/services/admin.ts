@@ -23,3 +23,17 @@ export const fetchUsers = async (): Promise<Utilisateur[]> => {
   const data = await response.json()
   return processUserData(data)
 }
+
+// Fonction pour importer les utilisateurs
+export const importUsers = async (users: Utilisateur[]): Promise<void> => {
+  const response = await fetch(`${API_URL}/api/admin/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(users)
+  })
+  if (!response.ok) {
+    throw new Error('Erreur réseau')
+  }
+}

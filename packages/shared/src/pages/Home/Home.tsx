@@ -36,7 +36,7 @@ export function Home() {
         gap: 20,
       }}
     >
-      <Text>Bonjour {user.prenom || 'utilisateur'}</Text>
+      <Text>Bonjour {user.prenom + ' ' + user.nom}</Text>
       <Button label="Déconnexion" onPress={handleLogout} />
     </View>
   )

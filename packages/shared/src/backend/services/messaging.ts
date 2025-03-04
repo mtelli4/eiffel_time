@@ -65,15 +65,6 @@ export const fetchConversations = async (
   return processConversationsData(data)
 }
 
-// Utilisateurs pour la messagerie
-interface MessagingUser {
-  id_utilisateur: number
-  nom: string
-  prenom: string
-  statut: string
-  avatar?: string
-}
-
 // Fonction pour traiter les données des utilisateurs
 const processUsersData = (data: any): MessagingUtilisateur[] => {
   return data.map((user: any) => ({
@@ -102,4 +93,20 @@ export const fetchUsers = async (id_utilisateur: number): Promise<MessagingUtili
     console.error('Erreur lors de la récupération des utilisateurs:', error)
     return []
   }
+}
+
+// Envoyer un message
+export const sendMessage = async (message: MessagingMessage): Promise<number> => {
+  const response = await fetch(`${API_URL}/api/messaging/send`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  })
+  if (!response.ok) {
+    throw new Error('Erreur réseau lors de l\'envoi du message.')
+  }
+  const data = await response.json()
+  return data.id_message
 }
