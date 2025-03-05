@@ -84,7 +84,7 @@ router.post('/create-user', async (req, res) => {
             tierstemps: false,
           },
         });
-        await data.groupes.map((groupe) =>
+        const createStudentGroups = data.groupes.map((groupe) =>
           tx.groupe_etudiant.create({
             data: {
               id_utilisateur: user.id_utilisateur,
@@ -92,6 +92,7 @@ router.post('/create-user', async (req, res) => {
             },
           })
         );
+        await Promise.all([...createStudentGroups]);
       }
 
       return { ...user, formations: data.formations, groupes: data.groupes, vacataire: data.vacataire };
@@ -204,6 +205,45 @@ router.delete('/delete-user/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: `Erreur lors de la suppression de l'utilisateur ${id} ; ${error}.` });
+  }
+});
+
+// Route pour importer/créer des utilisateurs
+router.post('/import-users', async (req, res) => {
+  const data = req.body;
+
+  try {
+    const importUsers = await prisma.$transaction(async (tx) => {
+      const lastUser = await tx.utilisateur.aggregate({
+        _max: {
+          id_utilisateur: true,
+        },
+      });
+
+      let lastId = lastUser._max.id_utilisateur;
+
+      const createUsers = data.map((user) =>
+        tx.utilisateur.create({
+          data: {
+            id_utilisateur: lastId++,
+            nom: user.nom,
+            prenom: user.prenom,
+            email: user.email,
+            statut: user.statut,
+            createdat: new Date(),
+            updatedat: new Date(),
+          },
+        })
+      );
+
+      await Promise.all([...createUsers]);
+
+      return data;
+    });
+    res.json(importUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: `Erreur lors de l'import des utilisateurs ; ${error}.` });
   }
 });
 
