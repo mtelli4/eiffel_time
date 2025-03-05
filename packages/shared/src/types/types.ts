@@ -266,3 +266,10 @@ export type MessagingConversation = {
   last_message: MessagingMessage
   unread: number
 }
+
+export type ImportUser = {
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+}
