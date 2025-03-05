@@ -7,7 +7,7 @@ import { TeacherAttendance } from '../../shared/src/pages/Attendance/TeacherAtte
 import { ClassAverages } from '../../shared/src/pages/Averages/ClassAverages'
 import { ClassGrades } from '../../shared/src/pages/Grades/GradesManagement/ClassGrades'
 import { Grades } from '../../shared/src/pages/Grades/StudentGrades'
-import { Login } from '../../shared/src/pages/Login/SignIn'
+import { Login } from '../../web/src/pages/Login/SignIn'
 import { SignUp } from '../../shared/src/pages/Login/SignUp'
 import { Home } from '../../shared/src/pages/Home/Home'
 import { Schedule } from '../../shared/src/pages/Schedule/Schedule'
