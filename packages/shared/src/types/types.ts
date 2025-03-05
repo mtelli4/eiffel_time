@@ -272,4 +272,5 @@ export type ImportUser = {
   prenom: string
   email: string
   statut: string
+  groupes?: string
 }
