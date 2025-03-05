@@ -2,21 +2,28 @@ import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
 import { FileUp } from 'lucide-react'
 import Papa from 'papaparse'
 import * as XLSX from 'xlsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import '../../styles/dataTables.dataTables.min.css'
 import { roleFinder } from '../../../../shared/src/lib/utils'
 import { useDropzone } from 'react-dropzone'
+import { importUsers } from '../../../../shared/src/backend/services/admin'
+import { ImportUser } from '../../../../shared/src/types/types'
 
 DataTable.use(DT);
 
 export function UserImport() {
-  const [jsonData, setJsonData] = useState<any[]>([])
+  const [jsonData, setJsonData] = useState<ImportUser[]>([])
+  const [validData, setValidData] = useState<ImportUser[]>([])
+
+  const user = localStorage.getItem('user')
+  const statut = JSON.parse(user as string).statut
 
   // Vérifie si l'email correspond à celui de l'Université Gustave Eiffel
-  const isEmailValid = (email: string) => {
+  const isEmailValid = (email: string, role?: string) => {
+    if (role === 'student' && statut === 'secretary') return email.endsWith('@edu.univ-eiffel.fr')
     return email.endsWith('@u-pem.fr') || email.endsWith('@univ-eiffel.fr') || email.endsWith('@edu.univ-eiffel.fr')
   }
 
@@ -35,13 +42,13 @@ export function UserImport() {
           header: true,
           skipEmptyLines: true,
         })
-        setJsonData(parsedData.data)
+        setJsonData(parsedData.data as ImportUser[])
       } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
         const workbook = XLSX.read(data)
         const sheetName = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[sheetName]
         const parsedData = XLSX.utils.sheet_to_json(worksheet)
-        setJsonData(parsedData)
+        setJsonData(parsedData as ImportUser[])
       } else if (fileExtension === 'json') {
         setJsonData(JSON.parse(data as string))
       }
@@ -62,14 +69,19 @@ export function UserImport() {
   })
 
   const handleImportUsers = () => {
-    console.log('Importer les utilisateurs')
+    importUsers(validData)
   }
+
+  useEffect(() => {
+    const filteredData = jsonData.filter((user) => isEmailValid(user.email) && user.statut !== 'administrator' || (statut === 'secretary' && isEmailValid(user.email, user.statut)))
+    setValidData(filteredData)
+  }, [jsonData])
 
   return (
     <div style={styles.content}>
       <header style={styles.header}>
         <span style={styles.subtitle}>
-          Importation des utilisateurs
+          Importation des {statut === 'secretary' ? 'étudiants' : 'utilisateurs'}
         </span>
       </header>
       {jsonData.length === 0 && (
@@ -82,6 +94,8 @@ export function UserImport() {
             <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
             <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
             <li>Les utilisateurs seront créés après validation des données.</li>
+            {statut === 'secretary' && <li>La création des utilisateurs est irréversible, veuillez vérifier les données avant de les importer.</li>}
+            <li>La création des utilisateurs sera limitée aux utilisateurs valides et aux 4 colonnes citées ci-dessus. {statut === 'secretary' && <>Veuillez faire appel à un administrateur ou un gestionnaire pour modifier.</>}</li>
           </ul>
           <br />
           {/* Zone de drag & drop */}
@@ -125,10 +139,10 @@ export function UserImport() {
             </thead>
             <tbody>
               {jsonData.map((user, index) => (
-                <tr 
-                key={index} 
-                className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
-                ${!isEmailValid(user.email) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}>
+                <tr
+                  key={index}
+                  className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
+                    ${!isEmailValid(user.email, user.statut) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}>
                   <td className="py-3 px-4">{user.nom}</td>
                   <td className="py-3 px-4">{user.prenom}</td>
                   <td className={`py-3 px-4`}>{user.email}</td>
@@ -137,7 +151,7 @@ export function UserImport() {
               ))}
             </tbody>
           </DataTable>
-          <button className='btn btn-primary' onClick={handleImportUsers} disabled={true}>Importer les utilisateurs</button>
+          <button className='btn btn-primary' onClick={handleImportUsers} disabled={validData.length === 0}>Importer les utilisateurs ({validData.length} valide{validData.length > 1 ? 's' : ''})</button>
         </div>
       )}
     </div>
