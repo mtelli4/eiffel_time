@@ -47,6 +47,13 @@ router.get('/', async (req, res) => {
       envoye: true,
       justificatif: true,
     },
+    where: {
+      etudiant: {
+        utilisateur: {
+          statut: 'student'
+        }
+      },
+    },
     orderBy: {
       createdat: 'desc',  // Tri par date de création
     }
