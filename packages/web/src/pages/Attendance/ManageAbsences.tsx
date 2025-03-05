@@ -38,13 +38,21 @@ interface Absence {
     codeapogee: string
     libelle: string
   }
-  date: string
+  date: Date
   envoye: boolean
   valide: boolean
-  updatedat: string
+  updatedat: Date
   statut: 'pending' | 'approved' | 'rejected'
   path?: string
 }
+
+// Définition des options pour la fréquence des alertes
+const statusOptions = [
+  { value: 'all', label: 'Tous les statuts' },
+  { value: 'pending', label: 'En attente' },
+  { value: 'approved', label: 'Validées' },
+  { value: 'rejected', label: 'Refusées' },
+]
 
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<Absence[]>([])
@@ -52,8 +60,8 @@ export function ManageAbsences() {
   const [selectedStatut, setSelectedStatut] = useState<
     Absence['statut'] | 'all'
   >('all')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [alertFrequency, setAlertFrequency] = useState('immediate')
   const setAbsenceStatut = (absence: Absence) => {
@@ -87,10 +95,10 @@ export function ManageAbsences() {
               codeapogee: absence.cours.module.codeapogee,
               libelle: absence.cours.module.libelle,
             },
-            date: absence.cours.debut,
+            date: new Date(absence.cours.debut),
             envoye: absence.envoye,
             valide: absence.valide,
-            updatedat: absence.updatedat,
+            updatedat: new Date(absence.updatedat),
             statut: setAbsenceStatut(absence),
             path: absence.justificatif,
           }))
@@ -156,13 +164,6 @@ export function ManageAbsences() {
         return 'Refusée'
     }
   }
-  // Définition des options pour la fréquence des alertes
-  const statusOptions = [
-    { value: 'all', label: 'Tous les statuts' },
-    { value: 'pending', label: 'En attente' },
-    { value: 'approved', label: 'Validées' },
-    { value: 'rejected', label: 'Refusées' },
-  ]
 
   const CustomDatePicker = ({
     selectedDate,
@@ -262,9 +263,7 @@ export function ManageAbsences() {
                 // showIcon
                 calendarIconClassName="w-5 h-5 text-gray-400 dark:text-white"
                 selected={startDate ? new Date(startDate) : null}
-                onChange={(date: Date | null) =>
-                  setStartDate(date ? date.toISOString().split('T')[0] : '')
-                }
+                onChange={(date: Date | null) => setStartDate(date)}
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
                 dayClassName={(date) =>
@@ -290,9 +289,7 @@ export function ManageAbsences() {
               </label>
               <DatePicker
                 selected={endDate ? new Date(endDate) : null}
-                onChange={(date: Date | null) =>
-                  setEndDate(date ? date.toISOString().split('T')[0] : '')
-                }
+                onChange={(date: Date | null) => setEndDate(date)}
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
                 dayClassName={(date) =>
