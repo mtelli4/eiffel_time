@@ -1,6 +1,6 @@
 import { Input } from '@shared/components/Input/Input'
 import { Button } from '@shared/components/Button/Button'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, ImageSourcePropType } from 'react-native'
 import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router'
 import { styles } from './Style'
@@ -75,7 +75,7 @@ export function SignUp() {
 
   return (
     <View style={styles.root}>
-      <Image source={logo} style={styles.logo} />
+      <Image source={logo as ImageSourcePropType} style={styles.logo} />
       <View style={styles.container}>
         <Text style={styles.title}>Eiffel TIME</Text>
         {/* <Input
