@@ -69,7 +69,7 @@ export function UserImport() {
   })
 
   const handleImportUsers = () => {
-    importUsers(validData)
+    importUsers(validData, statut)
   }
 
   useEffect(() => {

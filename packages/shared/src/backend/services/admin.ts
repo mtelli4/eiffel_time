@@ -88,8 +88,8 @@ export const updateUser = async (data: UserUpdate): Promise<Utilisateur> => {
 }
 
 // Fonction pour importer les utilisateurs
-export const importUsers = async (users: ImportUser[], statut?: string): Promise<void> => {
-  const response = await fetch(`${API_URL}/api/admin/import-users`, {
+export const importUsers = async (users: ImportUser[], statut: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/api/admin/import-users/${statut}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
