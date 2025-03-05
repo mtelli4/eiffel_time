@@ -1,4 +1,4 @@
-import { API_URL, UserUpdate, Utilisateur } from '../../types/types'
+import { API_URL, ImportUser, UserUpdate, Utilisateur } from '../../types/types'
 
 // Fonction pour traiter les données utilisateur
 const processUserData = (data: any): Utilisateur[] => {
@@ -88,8 +88,8 @@ export const updateUser = async (data: UserUpdate): Promise<Utilisateur> => {
 }
 
 // Fonction pour importer les utilisateurs
-export const importUsers = async (users: Utilisateur[]): Promise<void> => {
-  const response = await fetch(`${API_URL}/api/admin/users`, {
+export const importUsers = async (users: ImportUser[], statut?: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/api/admin/import-users`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
