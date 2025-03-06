@@ -274,3 +274,24 @@ export type ImportUser = {
   statut: string
   groupes?: string
 }
+
+export interface ManageAbsencesAbsence {
+  id_absence: string
+  etudiant: {
+    id_utilisateur: number
+    nom: string
+    prenom: string
+    groupes: Groupe[]
+  }
+  module: {
+    id_module: number
+    codeapogee: string
+    libelle: string
+  }
+  date: Date
+  envoye: boolean
+  valide: boolean
+  updatedat: Date
+  statut: 'pending' | 'approved' | 'rejected'
+  path?: string
+}
