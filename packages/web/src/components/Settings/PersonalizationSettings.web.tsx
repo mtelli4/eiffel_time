@@ -74,9 +74,7 @@ export default function PersonalizationSettings({ dateFormat, setDate, theme, se
             Langue
           </label>
           <Select
-            defaultValue={languagesSelectOptions.find(
-              (option) => option.value === language
-            )}
+            defaultValue={languagesSelectOptions.find((option) => option.value === language)}
             options={languagesSelectOptions}
             isSearchable={false}
             onChange={(option) => setLanguage(option?.value as string)}
@@ -107,6 +105,7 @@ export default function PersonalizationSettings({ dateFormat, setDate, theme, se
                 color: 'var(--select-text, black)',
               }),
             }}
+            isDisabled
           />
         </div>
 
