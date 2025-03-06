@@ -1,3 +1,4 @@
+import { useDateFormat } from "../hooks/useDateFormat";
 import { format } from "date-fns";
 import { Platform } from "react-native";
 
@@ -34,15 +35,10 @@ export function getTime(debut: Date, fin: Date) {
 }
 
 export function dateFormatting(debut: Date, fin?: Date) {
-  let dateFormat: string;
-  if (Platform.OS === 'web') {
-    dateFormat = localStorage.getItem('dateFormat') || 'dd/MM/yyyy'
-  } else {
-    dateFormat = 'dd/MM/yyyy'
-  }
+  const { dateFormat } = useDateFormat()
   if (fin === undefined) {
-    return format(debut, dateFormat)
+    return format(debut, dateFormat || 'dd/MM/yyyy')
   }
   const heures = format(debut, 'HH:mm') + ' - ' + format(fin, 'HH:mm')
-  return `${format(debut, dateFormat)} ${heures}`
+  return `${format(debut, dateFormat || 'dd/MM/yyyy')} ${heures}`
 }
