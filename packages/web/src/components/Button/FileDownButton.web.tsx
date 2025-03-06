@@ -5,10 +5,10 @@ interface PlusButtonProps {
   size?: number
 }
 
-export default function PlusButton({ color = "#2E3494", size = 16 }: PlusButtonProps) {
+export default function PlusButton({ color = "#2E3494", size = 4 }: PlusButtonProps) {
   return (
-    <div className={`text-${color} transition-colors w-${size} h-${size}`}>
-      <FileDown className="w-4 h-4" />
+    <div className={`text-red transition-colors`}>
+      <FileDown className={`w-${size} h-${size} text-${color}`} />
     </div>
   )
 }
