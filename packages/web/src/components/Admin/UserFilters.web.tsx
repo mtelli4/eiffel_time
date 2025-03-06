@@ -1,79 +1,22 @@
 import { Search } from 'lucide-react'
 import Select from 'react-select'
-import { ROLES, TEACHER_TYPES, UserFiltersProps } from '../../../../shared/src/types/types'
+import {
+  ROLES,
+  TEACHER_TYPES,
+  UserFiltersProps,
+} from '../../../../shared/src/types/types'
 
-export default function UserFilters({ onFilterChange, formations, groupes }: UserFiltersProps) {
+export default function UserFilters({
+  onFilterChange,
+  formations,
+  groupes,
+}: UserFiltersProps) {
   const handleFilterChange = (filterName: string, value: string) => {
     onFilterChange(filterName, value)
   }
 
-  // Styles personnalisés pour react-select en fonction du mode dark/light
-  const customSelectStyles = {
-    control: (base: any, state: any) => ({
-      ...base,
-      borderColor: state.isFocused ? '#3498DB' : '#E2E8F0',
-      boxShadow: state.isFocused ? '0 0 0 1px #3498DB' : 'none',
-      '&:hover': {
-        borderColor: '#3498DB',
-      },
-      backgroundColor: 'var(--select-bg)',
-      borderRadius: '0.375rem',
-    }),
-    menu: (base: any) => ({
-      ...base,
-      backgroundColor: 'var(--select-bg)',
-      borderRadius: '0.375rem',
-      boxShadow:
-        '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    }),
-    option: (base: any, state: any) => ({
-      ...base,
-      backgroundColor: state.isSelected
-        ? '#3498DB'
-        : state.isFocused
-        ? 'var(--select-hover)'
-        : 'transparent',
-      color: state.isSelected ? 'white' : 'var(--select-text)',
-      '&:hover': {
-        backgroundColor: state.isSelected ? '#3498DB' : 'var(--select-hover)',
-      },
-    }),
-    singleValue: (base: any) => ({
-      ...base,
-      color: 'var(--select-text)',
-    }),
-    placeholder: (base: any) => ({
-      ...base,
-      color: 'var(--select-placeholder)',
-    }),
-    input: (base: any) => ({
-      ...base,
-      color: 'var(--select-text)',
-    }),
-  }
-
   return (
-    <div className="space-y-4 bg-white dark:bg-primary p-4 rounded-lg shadow-sm">
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        :root {
-          --select-bg: #ffffff;
-          --select-text: #2C3E50;
-          --select-placeholder: #718096;
-          --select-hover: #EDF2F7;
-        }
-        
-        .dark {
-          --select-bg: #2E3494;
-          --select-text: #E2E8F0;
-          --select-placeholder: #A0AEC0;
-          --select-hover: #3D45A5;
-        }
-      `,
-        }}
-      />
-
+    <div className="space-y-4 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
@@ -86,8 +29,36 @@ export default function UserFilters({ onFilterChange, formations, groupes }: Use
             onChange={(option: any) =>
               handleFilterChange('role', option?.value || null)
             }
-            className="text-sm"
-            styles={customSelectStyles}
+            className="text-sm dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+              placeholder: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-placeholder, white)',
+              }),
+            }}
           />
         </div>
 
@@ -96,14 +67,45 @@ export default function UserFilters({ onFilterChange, formations, groupes }: Use
             Formation
           </label>
           <Select
-            options={formations}
+            options={formations.map((f) => ({
+              value: f.id_formation,
+              label: f.libelle,
+            }))}
             isClearable
             placeholder="Toutes les formations"
             onChange={(option: any) =>
               handleFilterChange('formation', option?.value || null)
             }
-            className="text-sm"
-            styles={customSelectStyles}
+            className="text-sm dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+              placeholder: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-placeholder, white)',
+              }),
+            }}
           />
         </div>
 
@@ -112,14 +114,45 @@ export default function UserFilters({ onFilterChange, formations, groupes }: Use
             Groupe
           </label>
           <Select
-            options={groupes}
+            options={groupes.map((g) => ({
+              value: g.id_grp,
+              label: g.libelle,
+            }))}
             isClearable
             placeholder="Tous les groupes"
             onChange={(option: any) =>
               handleFilterChange('groupe', option?.value || null)
             }
-            className="text-sm"
-            styles={customSelectStyles}
+            className="text-sm dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+              placeholder: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-placeholder, white)',
+              }),
+            }}
           />
         </div>
 
@@ -134,8 +167,36 @@ export default function UserFilters({ onFilterChange, formations, groupes }: Use
             onChange={(option: any) =>
               handleFilterChange('type', option?.value)
             }
-            className="text-sm"
-            styles={customSelectStyles}
+            className="text-sm dark:text-white"
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-bg, white)',
+                borderColor: state.isFocused
+                  ? 'var(--select-focus-border, #2684FF)'
+                  : 'var(--select-border, #cccccc)',
+              }),
+              menu: (baseStyles) => ({
+                ...baseStyles,
+                backgroundColor: 'var(--select-menu-bg, white)',
+              }),
+              option: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: state.isSelected
+                  ? 'var(--select-selected-bg, #2684FF)'
+                  : state.isFocused
+                  ? 'var(--select-hover-bg, #deebff)'
+                  : 'var(--select-menu-bg, white)',
+              }),
+              singleValue: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-text, black)',
+              }),
+              placeholder: (baseStyles) => ({
+                ...baseStyles,
+                color: 'var(--select-placeholder, white)',
+              }),
+            }}
           />
         </div>
       </div>
@@ -148,7 +209,7 @@ export default function UserFilters({ onFilterChange, formations, groupes }: Use
           onChange={(e) => handleFilterChange('search', e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-300 rounded-lg focus:outline-none focus:ring-2
           focus:ring-[#3498DB] dark:focus:ring-[#4A54C6] focus:border-transparent
-          bg-white dark:bg-[#2E3494] text-[#2C3E50] dark:text-gray-200
+          bg-white dark:bg-gray-800 ext-[#2C3E50] dark:text-gray-200
           placeholder-gray-400 dark:placeholder-gray-300"
         />
         <Search

@@ -16,7 +16,7 @@ interface UserTableProps {
     role: string
     formation: string
     groupe: string
-    type: boolean
+    type?: boolean | null
     search: string
   }
   loading: boolean
@@ -62,11 +62,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
     )
   }
 
-  if (
-    filters.type === true ||
-    filters.type === false ||
-    filters.type === null
-  ) {
+  if (filters.type === true || filters.type === false || filters.type === null) {
     filteredData = filteredData.filter(
       (utilisateur: Utilisateur) =>
         utilisateur.statut === statut_utilisateur.teacher &&
@@ -96,7 +92,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
   }
 
   return (
-    <div className="bg-white dark:bg-primary rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
       <DataTable
         className="w-full dark:text-gray-300"
         options={{
@@ -112,7 +108,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
         }}
       >
         <thead>
-          <tr className="bg-[#ECF0F1] dark:bg-primary border-b border-gray-200">
+          <tr className="bg-[#ECF0F1] dark:bg-gray-900 border-b border-gray-200">
             <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] dark:text-gray-300 cursor-pointer">
               ID
             </th>
@@ -146,7 +142,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
           {filteredData.map((utilisateur) => (
             <tr
               key={utilisateur.id_utilisateur}
-              className={"border-b border-gray-100 hover:bg-[#ECF0F1] " + (user.id_utilisateur === utilisateur.id_utilisateur ? 'font-bold' : '')}
+              className={"border-b border-gray-100 hover:bg-gray-600 " + (user.id_utilisateur === utilisateur.id_utilisateur ? 'font-bold' : '')}
             >
               <td className="py-3 px-4 dt-left">{utilisateur.id_utilisateur}</td>
               <td className="py-3 px-4">{utilisateur.nom}</td>
