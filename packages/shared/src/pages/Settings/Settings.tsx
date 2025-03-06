@@ -66,7 +66,7 @@ export function Settings() {
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {
-    return <Text style={styles.loading}>Loading...</Text>
+    return <Text style={styles.loading}>Chargement...</Text>
   }
 
   return (
