@@ -104,8 +104,8 @@ export function ManageAbsences() {
           }))
         )
       })
-      .catch((error) => console.error('Error:', error))
-  })
+      .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
+  }, [])
 
   const handleApprove = (absenceId: string) => {
     setAbsences((prev) =>
@@ -245,8 +245,8 @@ export function ManageAbsences() {
                     backgroundColor: state.isSelected
                       ? 'var(--select-selected-bg, #2e3494)'
                       : state.isFocused
-                      ? 'var(--select-hover-bg, #deebff)'
-                      : 'var(--select-menu-bg, --select-menu-bg)',
+                        ? 'var(--select-hover-bg, #deebff)'
+                        : 'var(--select-menu-bg, --select-menu-bg)',
                   }),
                   singleValue: (baseStyles) => ({
                     ...baseStyles,
@@ -336,7 +336,7 @@ export function ManageAbsences() {
           </thead>
           <tbody>
             {filteredAbsences.map((absence) => {
-              return (
+              return absence.etudiant.groupes.length > 0 && (
                 <tr
                   key={absence.id_absence}
                   className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
