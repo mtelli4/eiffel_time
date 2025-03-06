@@ -1,21 +1,16 @@
-import { formation, groupe } from '@prisma/client'
 import { useEffect, useState } from 'react'
-import {
-  Platform,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import { fetchUsers } from '../../backend/services/admin'
-import { styles } from '../../styles/Admin/AdminStyles'
+import { fetchUsers } from '../../../../shared/src/backend/services/admin'
 import {
   API_URL,
   Formation,
   Groupe,
   UserUpdate,
   Utilisateur,
-} from '../../types/types'
+} from '../../../../shared/src/types/types'
+import UserFilters from '../../components/Admin/UserFilters.web'
+import { UserForm } from '../../components/Admin/UserForm.web'
+import { UserTable } from '../../components/Admin/UserTable.web'
+import { UserImport } from '../ImportUser/UserImport.web'
 
 type Tab = 'users' | 'import'
 
@@ -31,19 +26,19 @@ export function Admin() {
     role: '',
     formation: '',
     groupe: '',
-    type: '',
+    type: false,
     search: '',
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
-  const [formations, setFormations] = useState<Formation[]>([])
-  const [groupes, setGroupes] = useState<Groupe[]>([])
-  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
-  const [UserFilters, setUserFilters] = useState<any>(null)
-  const [UserForm, setUserForm] = useState<any>(null)
-  const [UserTable, setUserTable] = useState<any>(null)
-  const [UserImport, setUserImport] = useState<any>(null)
+  const [formations, setFormations] = useState<
+    { value: string; label: string }[]
+  >([])
+  const [groupes, setGroupes] = useState<{ value: string; label: string }[]>([])
+  const [selectedUser, setSelectedUser] = useState<Utilisateur | undefined>(
+    undefined
+  )
 
-  const handleFilterChange = (filterName: string, value: string) => {
+  const handleFilterChange = (filterName: string, value: string | boolean) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterName]: value,
@@ -76,15 +71,15 @@ export function Admin() {
     ])
       .then(([formationsData, groupesData]) => {
         setFormations(
-          formationsData.map((f: formation) => ({
-            value: f.id_formation,
+          formationsData.map((f: Formation) => ({
+            value: f.id_formation.toString(),
             label: f.libelle,
           }))
         )
 
         setGroupes(
-          groupesData.map((g: groupe) => ({
-            value: g.id_grp,
+          groupesData.map((g: Groupe) => ({
+            value: g.id_grp.toString(),
             label: g.libelle,
           }))
         )
@@ -92,48 +87,6 @@ export function Admin() {
       .catch((error) => {
         console.error('Erreur lors de la récupération des données:', error)
       })
-  }, [])
-
-  useEffect(() => {
-    const loadComponents = async () => {
-      if (Platform.OS === 'web') {
-        const { default: UserFilters } = await import(
-          '../../../../web/src/components/Admin/UserFilters.web'
-        )
-        const { UserForm } = await import(
-          '../../../../web/src/components/Admin/UserForm.web'
-        )
-        const { UserTable } = await import(
-          '../../../../web/src/components/Admin/UserTable.web'
-        )
-        const { UserImport } = await import(
-          '../../../../web/src/pages/ImportUser/UserImport.web'
-        )
-        setUserFilters(() => UserFilters)
-        setUserForm(() => UserForm)
-        setUserTable(() => UserTable)
-        setUserImport(() => UserImport)
-      } else {
-        const { UserFilters } = await import(
-          '../../../../mobile/src/components/Admin/UserFilters.native'
-        )
-        const { UserForm } = await import(
-          '../../../../mobile/src/components/Admin/UserForm.native'
-        )
-        const { UserTable } = await import(
-          '../../../../mobile/src/components/Admin/UserTable.native'
-        )
-        const { UserImport } = await import(
-          '../../../../mobile/src/components/Admin/UserImport.native'
-        )
-        setUserFilters(() => UserFilters)
-        setUserForm(() => UserForm)
-        setUserTable(() => UserTable)
-        setUserImport(() => UserImport)
-      }
-    }
-
-    loadComponents().then((r) => r)
   }, [])
 
   const tabs = [
@@ -171,7 +124,6 @@ export function Admin() {
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
       try {
-        // alert(`Données valides: ${JSON.stringify(data)}`)
         const response = await fetch(
           `${API_URL}/api/admin/update-user/${selectedUser.id_utilisateur}`,
           {
@@ -241,54 +193,47 @@ export function Admin() {
       }
     }
     setShowUserForm(false)
-    setSelectedUser(null)
+    setSelectedUser(undefined)
   }
 
   if (!UserFilters || !UserForm || !UserTable) {
-    return <Text>Chargement...</Text> // Message ou spinner pendant le chargement
+    return <div>Chargement...</div> // Message ou spinner pendant le chargement
   }
 
-  const content = (
-    <View>
-      <View style={styles.tabContainer}>
+  return (
+    <div className="p-4">
+      <div className="flex space-x-4 mb-6">
         {tabs.map((tab) => (
-          <TouchableOpacity
+          <button
             key={tab.id}
-            onPress={() => setActiveTab(tab.id)}
-            style={[
-              styles.tabButton,
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2 rounded-md ${
               activeTab === tab.id
-                ? styles.activeTabButton
-                : styles.inactiveTabButton,
-            ]}
+                ? 'bg-primary text-white'
+                : 'bg-white text-gray-600'
+            }`}
           >
-            <Text
-              style={
-                activeTab === tab.id
-                  ? styles.activeTabText
-                  : styles.inactiveTabText
-              }
-            >
-              {tab.label}
-            </Text>
-          </TouchableOpacity>
+            {tab.label}
+          </button>
         ))}
-      </View>
+      </div>
 
       {activeTab === 'users' && (
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.subtitle}>Gestion des utilisateurs</Text>
-            <TouchableOpacity
-              onPress={() => {
-                setSelectedUser(null)
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold dark:text-white">
+              Gestion des utilisateurs
+            </h2>
+            <button
+              onClick={() => {
+                setSelectedUser(undefined)
                 setShowUserForm(true)
               }}
-              style={styles.addButton}
+              className="flex items-center bg-primary text-white px-4 py-2 rounded-md"
             >
-              <Text style={styles.addButtonText}>Ajouter un utilisateur</Text>
-            </TouchableOpacity>
-          </View>
+              Ajouter un utilisateur
+            </button>
+          </div>
 
           <UserFilters
             onFilterChange={handleFilterChange}
@@ -304,29 +249,23 @@ export function Admin() {
             filters={filters}
             loading={loading}
           />
-        </View>
+        </div>
       )}
 
-      {activeTab === 'import' && <UserImport users={utilisateurs} />}
+      {activeTab === 'import' && <UserImport />}
 
       {showUserForm && (
         <UserForm
           isOpen={showUserForm}
           onClose={() => {
             setShowUserForm(false)
-            setSelectedUser(null)
+            setSelectedUser(undefined)
           }}
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
           isEdit={!!selectedUser}
         />
       )}
-    </View>
+    </div>
   )
-
-  if (Platform.OS === 'web') {
-    return <View style={styles.container}>{content}</View>
-  } else {
-    return <ScrollView style={styles.container}>{content}</ScrollView>
-  }
 }
