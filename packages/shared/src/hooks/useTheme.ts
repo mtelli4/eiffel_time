@@ -3,9 +3,10 @@ import { Platform } from 'react-native';
 
 // Déclaration des options de thème
 const themesSelectOptions: { value: string; label: string }[] = [
-  { value: 'light', label: 'Clair' },
-  { value: 'dark', label: 'Sombre' },
-  { value: 'system', label: 'Système' },
+  /* Ajoute une icône pour chaque thème */
+  { value: 'light', label: 'Clair 🌞' },
+  { value: 'dark', label: 'Sombre 🌙' },
+  { value: 'system', label: 'Système 🌓' },
 ]
 
 type Theme = (typeof themesSelectOptions)[number]['value']
