@@ -20,7 +20,6 @@ export function Admin() {
     formation: '',
     groupe: '',
     type: '',
-    typeSelected: false,
     search: '',
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
@@ -37,12 +36,6 @@ export function Admin() {
       ...prevFilters,
       [filterName]: value,
     }))
-    if (filterName === 'type') {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        typeSelected: !filters['typeSelected'],
-      }))
-    }
   }
 
   useEffect(() => {

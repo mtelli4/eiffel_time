@@ -20,7 +20,7 @@ interface UserFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: UserUpdate) => void
-  initialData?: Utilisateur
+  initialData?: Utilisateur | null
   isEdit?: boolean
   formations: Formation[]
   groupes: Groupe[]

@@ -16,8 +16,7 @@ interface UserTableProps {
     role: string
     formation: string
     groupe: string
-    type: boolean
-    typeSelected: boolean
+    type?: boolean | null
     search: string
   }
   loading: boolean
@@ -63,7 +62,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
     )
   }
 
-  if (filters.typeSelected && (filters.type === true || filters.type === false || filters.type === null)) {
+  if (filters.type === true || filters.type === false || filters.type === null) {
     filteredData = filteredData.filter(
       (utilisateur: Utilisateur) =>
         utilisateur.statut === statut_utilisateur.teacher &&

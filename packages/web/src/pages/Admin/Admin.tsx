@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react'
-import { fetchUsers } from '../../../../shared/src/backend/services/admin'
-import {
-  API_URL,
-  Formation,
-  Groupe,
-  UserUpdate,
-  Utilisateur,
-} from '../../../../shared/src/types/types'
+import { createUser, fetchUsers, updateUser } from '../../../../shared/src/backend/services/admin'
+import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../../../shared/src/types/types'
 import UserFilters from '../../components/Admin/UserFilters.web'
 import { UserForm } from '../../components/Admin/UserForm.web'
 import { UserTable } from '../../components/Admin/UserTable.web'
@@ -26,17 +20,12 @@ export function Admin() {
     role: '',
     formation: '',
     groupe: '',
-    type: false,
     search: '',
   })
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([])
-  const [formations, setFormations] = useState<
-    { value: string; label: string }[]
-  >([])
-  const [groupes, setGroupes] = useState<{ value: string; label: string }[]>([])
-  const [selectedUser, setSelectedUser] = useState<Utilisateur | undefined>(
-    undefined
-  )
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [groupes, setGroupes] = useState<Groupe[]>([])
+  const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null)
 
   const handleFilterChange = (filterName: string, value: string | boolean) => {
     setFilters((prevFilters) => ({
@@ -123,77 +112,14 @@ export function Admin() {
 
   const handleSubmitUser = async (data: UserUpdate) => {
     if (selectedUser) {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/admin/update-user/${selectedUser.id_utilisateur}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          }
-        )
-        if (!response.ok) {
-          const errorData = await response.json()
-          console.error('Erreur API :', errorData)
-          throw new Error('Erreur réseau : ' + errorData.message)
-        }
-        const updatedUser = await response.json()
-        selectedUser.id_utilisateur = updatedUser.id_utilisateur
-        selectedUser.nom = updatedUser.nom
-        selectedUser.prenom = updatedUser.prenom
-        selectedUser.email = updatedUser.email
-        selectedUser.statut = updatedUser.statut
-        selectedUser.formations = updatedUser.formations.map((f: any) => {
-          return { id_formation: parseInt(f.value), libelle: f.label }
-        })
-        setUtilisateurs(
-          utilisateurs.map((u) =>
-            u.id_utilisateur === selectedUser.id_utilisateur ? selectedUser : u
-          )
-        )
-      } catch (error) {
-        console.error(
-          "Erreur lors de la modification de l'utilisateur : ",
-          error
-        )
-      }
+      const updatedUser = await updateUser(data)
+      setUtilisateurs((prev) => prev.map((u) => (u.id_utilisateur === data.id_utilisateur ? updatedUser : u)))
     } else {
-      try {
-        const response = await fetch(`${API_URL}/api/admin/create-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        })
-
-        if (!response.ok) {
-          throw new Error('Erreur réseau')
-        }
-
-        const newUser = await response.json()
-        const utilisateur: Utilisateur = {
-          id_utilisateur: newUser.id_utilisateur,
-          nom: newUser.nom,
-          prenom: newUser.prenom,
-          email: newUser.email,
-          statut: newUser.statut,
-          formations: newUser.formations.map((f: any) => {
-            return { id_formation: f.value, libelle: f.label }
-          }),
-          groupes:
-            newUser.etudiant?.groupe_etudiant.map((g: any) => g.groupe) || [],
-          vacataire: newUser.enseignant?.vacataire,
-        }
-        setUtilisateurs((prev) => [...prev, utilisateur])
-      } catch (error) {
-        console.error("Erreur lors de la création de l'utilisateur : ", error)
-      }
+      const createdUser = await createUser(data)
+      setUtilisateurs((prev) => [...prev, createdUser])
     }
     setShowUserForm(false)
-    setSelectedUser(undefined)
+    setSelectedUser(null)
   }
 
   if (!UserFilters || !UserForm || !UserTable) {
@@ -207,11 +133,10 @@ export function Admin() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-md ${
-              activeTab === tab.id
+            className={`px-4 py-2 rounded-md ${activeTab === tab.id
                 ? 'bg-primary text-white'
                 : 'bg-white text-gray-600'
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -226,7 +151,7 @@ export function Admin() {
             </h2>
             <button
               onClick={() => {
-                setSelectedUser(undefined)
+                setSelectedUser(null)
                 setShowUserForm(true)
               }}
               className="flex items-center bg-primary text-white px-4 py-2 rounded-md"
@@ -259,11 +184,13 @@ export function Admin() {
           isOpen={showUserForm}
           onClose={() => {
             setShowUserForm(false)
-            setSelectedUser(undefined)
+            setSelectedUser(null)
           }}
           onSubmit={handleSubmitUser}
           initialData={selectedUser}
           isEdit={!!selectedUser}
+          formations={formations}
+          groupes={groupes}
         />
       )}
     </div>
