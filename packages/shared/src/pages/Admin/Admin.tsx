@@ -1,9 +1,9 @@
+import { formation, groupe } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { API_URL, Formation, Groupe, UserUpdate, Utilisateur } from '../../types/types'
 import { styles } from '../../styles/Admin/AdminStyles'
 import { createUser, fetchUsers, updateUser } from '../../backend/services/admin'
-import { formation, groupe } from '@prisma/client'
 
 type Tab = 'users' | 'import'
 
@@ -54,22 +54,32 @@ export function Admin() {
 
     Promise.all([
       fetch(`${API_URL}/api/all/formations`).then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (formations)');
-        return response.json();
+        if (!response.ok) throw new Error('Erreur réseau (formations)')
+        return response.json()
       }),
       fetch(`${API_URL}/api/all/groupes`).then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (groupes)');
-        return response.json();
-      })
+        if (!response.ok) throw new Error('Erreur réseau (groupes)')
+        return response.json()
+      }),
     ])
       .then(([formationsData, groupesData]) => {
-        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
+        setFormations(
+          formationsData.map((f: formation) => ({
+            value: f.id_formation,
+            label: f.libelle,
+          }))
+        )
 
-        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
+        setGroupes(
+          groupesData.map((g: groupe) => ({
+            value: g.id_grp,
+            label: g.libelle,
+          }))
+        )
       })
       .catch((error) => {
-        console.error('Erreur lors de la récupération des données:', error);
-      });
+        console.error('Erreur lors de la récupération des données:', error)
+      })
   }, [])
 
   useEffect(() => {
@@ -204,7 +214,11 @@ export function Admin() {
             </TouchableOpacity>
           </View>
 
-          <UserFilters onFilterChange={handleFilterChange} formations={formations} groupes={groupes} />
+          <UserFilters
+            onFilterChange={handleFilterChange}
+            formations={formations}
+            groupes={groupes}
+          />
 
           <UserTable
             users={utilisateurs}
