@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#ccc',
     borderWidth: 1,
+    color: '#000',
   },
   moduleCard: {
     backgroundColor: '#fff',
