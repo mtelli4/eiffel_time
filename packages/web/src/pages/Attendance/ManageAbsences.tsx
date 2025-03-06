@@ -267,9 +267,22 @@ export function ManageAbsences() {
                 }
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
-                dayClassName={(date) =>
-                  'dark:hover:bg-gray-700 dark:text-white'
-                }
+                dayClassName={(date) => {
+                  const isToday =
+                    date.getDate() === new Date().getDate() &&
+                    date.getMonth() === new Date().getMonth() &&
+                    date.getFullYear() === new Date().getFullYear()
+
+                  const isSelected =
+                    endDate &&
+                    date.getDate() === new Date(endDate).getDate() &&
+                    date.getMonth() === new Date(endDate).getMonth() &&
+                    date.getFullYear() === new Date(endDate).getFullYear()
+
+                  if (isSelected) return 'bg-primary text-white'
+                  if (isToday) return 'bg-gray-700 text-white'
+                  return 'dark:hover:bg-gray-700 dark:text-white'
+                }}
                 wrapperClassName="w-full"
                 dateFormat="dd/MM/yyyy"
                 placeholderText="jj/mm/aaaa"
@@ -295,11 +308,24 @@ export function ManageAbsences() {
                 }
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
-                dayClassName={(date) =>
-                  'dark:hover:bg-gray-700 dark:text-white'
-                }
+                dayClassName={(date) => {
+                  const isToday =
+                    date.getDate() === new Date().getDate() &&
+                    date.getMonth() === new Date().getMonth() &&
+                    date.getFullYear() === new Date().getFullYear()
+
+                  const isSelected =
+                    endDate &&
+                    date.getDate() === new Date(endDate).getDate() &&
+                    date.getMonth() === new Date(endDate).getMonth() &&
+                    date.getFullYear() === new Date(endDate).getFullYear()
+
+                  if (isSelected) return 'bg-primary text-white'
+                  if (isToday) return 'bg-gray-700 text-white'
+                  return 'dark:hover:bg-gray-700 dark:text-white'
+                }}
                 wrapperClassName="w-full"
-                dateFormat="dd/MM/yyyy" // Format de date français
+                dateFormat="dd/MM/yyyy"
                 placeholderText="jj/mm/aaaa"
                 popperProps={{
                   strategy: 'fixed',

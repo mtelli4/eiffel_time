@@ -12,7 +12,6 @@ export default function Root() {
 }
 
 function InnerRoot() {
-
   const user = useMemo(() => {
     try {
       return JSON.parse(localStorage.getItem('user') || '{}')
