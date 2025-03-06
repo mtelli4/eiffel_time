@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from '../../components/Button/Button'
 import { CourseModal } from '../../components/Schedule/CourseModal'
 import { styles } from '../../styles/Schedule/ScheduleStyles'
 import { API_URL, COURSE } from '../../types/types'
+import { dateFormatting } from '@shared/utils/stringUtils'
 
 const DAYS = [
   'Dimanche',
@@ -127,8 +128,7 @@ export function Schedule() {
     <ScrollView style={styles.container}>
       <View>
         <Text>
-          Du {monday.toLocaleDateString('fr-FR')} au{' '}
-          {sunday.toLocaleDateString('fr-FR')}
+          Du {dateFormatting(monday)} au{' '} {dateFormatting(sunday)}
         </Text>
         <View style={styles.buttonContainer}>
           <Button label="Précédent" onPress={() => handleWeekChange(-1)} />
