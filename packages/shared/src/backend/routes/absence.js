@@ -51,7 +51,7 @@ router.get('/', async (req, res) => {
       etudiant: {
         utilisateur: {
           statut: 'student'
-        }
+        },
       },
     },
     orderBy: {
