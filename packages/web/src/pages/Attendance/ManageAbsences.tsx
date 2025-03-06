@@ -1,50 +1,12 @@
-import {
-  Check,
-  FileDown,
-  FileText,
-  Filter,
-  Search,
-  X as XIcon,
-} from 'lucide-react'
+import { Check, FileDown, FileText, Filter, Search, X as XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
-import { API_URL } from '../../../../shared/src/types/types'
-
-interface Student {
-  id: string
-  firstName: string
-  lastName: string
-  group: string
-}
-
-type Groupe = {
-  id_grp: number
-  libelle: string
-}
-
-interface Absence {
-  id_absence: string
-  etudiant: {
-    id_utilisateur: number
-    nom: string
-    prenom: string
-    groupes: Groupe[]
-  }
-  module: {
-    id_module: number
-    codeapogee: string
-    libelle: string
-  }
-  date: Date
-  envoye: boolean
-  valide: boolean
-  updatedat: Date
-  statut: 'pending' | 'approved' | 'rejected'
-  path?: string
-}
+import { ManageAbsencesAbsence } from '../../../../shared/src/types/types'
+import { fetchAbsences } from '../../../../shared/src/backend/services/absences'
+import { dateFormatting } from '../../../../shared/src/utils/stringUtils'
 
 // Définition des options pour la fréquence des alertes
 const statusOptions = [
@@ -55,54 +17,18 @@ const statusOptions = [
 ]
 
 export function ManageAbsences() {
-  const [absences, setAbsences] = useState<Absence[]>([])
+  const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedStatut, setSelectedStatut] = useState<
-    Absence['statut'] | 'all'
-  >('all')
+  const [selectedStatut, setSelectedStatut] = useState<ManageAbsencesAbsence['statut'] | 'all'>('all')
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [alertFrequency, setAlertFrequency] = useState('immediate')
-  const setAbsenceStatut = (absence: Absence) => {
-    if (absence.envoye && absence.valide) {
-      return 'approved'
-    } else if (absence.envoye && !absence.valide) {
-      return 'rejected'
-    } else {
-      return 'pending'
-    }
-  }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/absences/`)
-      .then((res) => res.json())
+    fetchAbsences()
       .then((data) => {
-        setAbsences(
-          data.map((absence: any) => ({
-            id_absence: absence.id_absence,
-            etudiant: {
-              id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
-              nom: absence.etudiant.utilisateur.nom,
-              prenom: absence.etudiant.utilisateur.prenom,
-              groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
-                id_grp: groupe.groupe.id_grp,
-                libelle: groupe.groupe.libelle,
-              })),
-            },
-            module: {
-              id_module: absence.cours.module.id_module,
-              codeapogee: absence.cours.module.codeapogee,
-              libelle: absence.cours.module.libelle,
-            },
-            date: new Date(absence.cours.debut),
-            envoye: absence.envoye,
-            valide: absence.valide,
-            updatedat: new Date(absence.updatedat),
-            statut: setAbsenceStatut(absence),
-            path: absence.justificatif,
-          }))
-        )
+        setAbsences(data)
       })
       .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
   }, [])
@@ -128,22 +54,17 @@ export function ManageAbsences() {
   }
 
   const filteredAbsences = absences.filter((absence) => {
-    const student = absences.find(
-      (s) => s.id_absence === absence.id_absence
-    )?.etudiant
-    const searchString =
-      `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
+    const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
+    const searchString = `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
-    const matchesStatut =
-      selectedStatut === 'all' || absence.statut === selectedStatut
-    const matchesDateRange =
-      (!startDate || absence.date >= startDate) &&
-      (!endDate || absence.date <= endDate)
-
+    const matchesStatut = selectedStatut === 'all' || absence.statut === selectedStatut
+    const matchesDateRange = (!startDate || absence.date >= startDate) && (!endDate || absence.date <= endDate)
     return matchesSearch && matchesStatut && matchesDateRange
   })
 
-  const getStatutBadgeClass = (statut: Absence['statut']) => {
+  filteredAbsences.sort((a, b) => b.date.getTime() - a.date.getTime())
+
+  const getStatutBadgeClass = (statut: ManageAbsencesAbsence['statut']) => {
     switch (statut) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-600 dark:text-white'
@@ -154,7 +75,7 @@ export function ManageAbsences() {
     }
   }
 
-  const getStatutText = (statut: Absence['statut']) => {
+  const getStatutText = (statut: ManageAbsencesAbsence['statut']) => {
     switch (statut) {
       case 'pending':
         return 'En attente'
@@ -219,13 +140,11 @@ export function ManageAbsences() {
                 Statut
               </label>
               <Select
-                defaultValue={statusOptions.find(
-                  (option) => option.value === selectedStatut
-                )}
+                defaultValue={statusOptions.find((option) => option.value === selectedStatut)}
                 options={statusOptions}
                 isSearchable={false}
                 onChange={(option) =>
-                  setSelectedStatut(option?.value as Absence['statut'] | 'all')
+                  setSelectedStatut(option?.value as ManageAbsencesAbsence['statut'] | 'all')
                 }
                 className="w-full dark:text-white"
                 styles={{
@@ -392,7 +311,7 @@ export function ManageAbsences() {
                   <td className="py-3 px-4">
                     <div>
                       <div className="font-medium text-gray-900 dark:text-white">
-                        {new Date(absence.date).toLocaleDateString('fr-FR')}
+                        {dateFormatting(absence.date)}
                       </div>
                       {absence.updatedat && (
                         <div className="text-sm text-gray-500 dark:text-gray-300">
