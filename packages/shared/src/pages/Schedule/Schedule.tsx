@@ -4,7 +4,7 @@ import { Button } from '../../components/Button/Button'
 import { CourseModal } from '../../components/Schedule/CourseModal'
 import { styles } from '../../styles/Schedule/ScheduleStyles'
 import { API_URL, COURSE } from '../../types/types'
-import { dateFormatting } from '@shared/utils/stringUtils'
+import { dateFormatting } from '../../utils/stringUtils'
 
 const DAYS = [
   'Dimanche',
