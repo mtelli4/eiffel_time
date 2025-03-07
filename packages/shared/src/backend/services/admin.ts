@@ -88,7 +88,7 @@ export const updateUser = async (data: UserUpdate): Promise<Utilisateur> => {
 }
 
 // Fonction pour importer les utilisateurs
-export const importUsers = async (users: ImportUser[]): Promise<void> => {
+export const importUsers = async (users: ImportUser[]): Promise<boolean> => {
   const response = await fetch(`${API_URL}/api/admin/import-users/`, {
     method: 'POST',
     headers: {
@@ -97,6 +97,9 @@ export const importUsers = async (users: ImportUser[]): Promise<void> => {
     body: JSON.stringify(users)
   })
   if (!response.ok) {
-    throw new Error('Erreur réseau')
+    const errorData = await response.json()
+    console.error('Erreur lors de l\'importation des utilisateurs : ', errorData.message)
+    return false
   }
+  return true
 }

@@ -222,9 +222,10 @@ router.post('/import-users/', async (req, res) => {
 
       let lastId = lastUser._max.id_utilisateur;
       const createUsers = data.map((user) => {
-        return tx.utilisateur.create({
+        lastId++;
+        const users = tx.utilisateur.create({
           data: {
-            id_utilisateur: lastId++,
+            id_utilisateur: lastId,
             nom: user.nom,
             prenom: user.prenom,
             email: user.email,
@@ -233,7 +234,25 @@ router.post('/import-users/', async (req, res) => {
             updatedat: new Date(),
           },
         });
+        if (user.statut === 'teacher') {
+          tx.enseignant.create({
+            data: {
+              id_utilisateur: lastId,
+              vacataire: null,
+            },
+          });
+        } else if (user.statut === 'student') {
+          tx.etudiant.create({
+            data: {
+              id_utilisateur: lastId,
+              delegue: false,
+              tierstemps: false,
+            },
+          });
+        }
+        return users;
       });
+      await Promise.all([...createUsers]);
     });
     res.json(importUsers);
   } catch (error) {

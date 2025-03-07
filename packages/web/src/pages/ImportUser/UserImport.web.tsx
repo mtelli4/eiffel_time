@@ -77,6 +77,18 @@ export function UserImport() {
     },
   })
 
+  const handleImport = async (data: ImportUser[]) => {
+    const result = await importUsers(data)
+    if (result) {
+      setJsonData([])
+      setValidData([])
+      alert('Importation réussie')
+      window.location.reload()
+    } else {
+      alert('Erreur lors de l\'import')
+    }
+  }
+
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-4">
@@ -214,7 +226,7 @@ export function UserImport() {
           {/* Bouton d'importation */}
           <button
             className="mt-4 px-4 py-2 rounded-md text-white font-semibold bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400"
-            onClick={() => importUsers(validData)}
+            onClick={() => handleImport(validData)}
             disabled={validData.length === 0}
           >
             Importer les utilisateurs ({validData.length} valide{validData.length > 1 ? 's' : ''})
