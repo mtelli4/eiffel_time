@@ -14,6 +14,17 @@ export function Settings() {
   const { dateFormat, setDateFormat } = useDateFormat()
   const { language, setLanguage } = useLanguage()
 
+  // États temporaires pour stocker les modifications
+  const [tempTheme, setTempTheme] = useState(theme)
+  const [tempDate, setTempDate] = useState(dateFormat)
+  const [tempLanguage, setTempLanguage] = useState(language)
+
+  useEffect(() => {
+    setTempTheme(theme)
+    setTempDate(dateFormat)
+    setTempLanguage(language)
+  }, [theme, dateFormat, language])
+
   useEffect(() => {
     const loadComponents = async () => {
       if (Platform.OS === 'web') {
@@ -48,11 +59,6 @@ export function Settings() {
     loadComponents()
   }, [])
 
-  // États temporaires pour stocker les modifications
-  const [tempTheme, setTempTheme] = useState(theme)
-  const [tempDate, setTempDate] = useState(dateFormat)
-  const [tempLanguage, setTempLanguage] = useState(language)
-
   const handleSave = () => {
     setDateFormat(tempDate)
     setTheme(tempTheme)
@@ -60,7 +66,7 @@ export function Settings() {
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {
-    return <Text style={styles.loading}>Loading...</Text>
+    return <Text style={styles.loading}>Chargement...</Text>
   }
 
   return (
@@ -75,7 +81,7 @@ export function Settings() {
               <PersonalizationSettings
                 dateFormat={tempDate}
                 setDate={setTempDate}
-                theme={theme}
+                theme={tempTheme}
                 setTheme={setTempTheme}
                 language={tempLanguage}
                 setLanguage={setTempLanguage}

@@ -13,14 +13,7 @@ interface PersonalizationSettingsProps {
   setLanguage: (newLanguage: string) => void
 }
 
-export default function PersonalizationSettings({
-  dateFormat,
-  setDate,
-  theme,
-  setTheme,
-  language,
-  setLanguage,
-}: PersonalizationSettingsProps) {
+export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme, language, setLanguage, }: PersonalizationSettingsProps) {
   const { themesSelectOptions } = useTheme()
   const { dateSelectOptions } = useDateFormat()
   const { languagesSelectOptions } = useLanguage()
@@ -47,6 +40,7 @@ export default function PersonalizationSettings({
             isSearchable={false}
             onChange={(option) => setTheme(option?.value as string)}
             className="w-full dark:text-white"
+            placeholder="Sélectionnez un thème"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -80,13 +74,12 @@ export default function PersonalizationSettings({
             Langue
           </label>
           <Select
-            defaultValue={languagesSelectOptions.find(
-              (option) => option.value === language
-            )}
+            defaultValue={languagesSelectOptions.find((option) => option.value === language)}
             options={languagesSelectOptions}
             isSearchable={false}
             onChange={(option) => setLanguage(option?.value as string)}
             className="w-full dark:text-white"
+            placeholder="Sélectionnez une langue"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -112,6 +105,7 @@ export default function PersonalizationSettings({
                 color: 'var(--select-text, black)',
               }),
             }}
+            isDisabled
           />
         </div>
 
@@ -130,6 +124,7 @@ export default function PersonalizationSettings({
             )}
             onChange={(option) => setDate(option?.value as string)}
             className="w-full dark:text-white"
+            placeholder="Sélectionnez un format de date"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,

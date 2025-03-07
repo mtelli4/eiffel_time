@@ -205,17 +205,6 @@ CREATE TABLE "utilisateur" (
 );
 
 -- CreateTable
-CREATE TABLE "utilisateurs_eav" (
-    "id_user_eav" SERIAL NOT NULL,
-    "attribute" VARCHAR(255),
-    "valueeav" VARCHAR(255),
-    "createdat" TIMESTAMP(6) NOT NULL,
-    "id_utilisateur" INTEGER NOT NULL,
-
-    CONSTRAINT "utilisateurs_eav_pkey" PRIMARY KEY ("id_user_eav")
-);
-
--- CreateTable
 CREATE TABLE "groupe_etudiant" (
     "id_utilisateur" INTEGER NOT NULL,
     "id_grp" INTEGER NOT NULL,
@@ -303,9 +292,6 @@ ALTER TABLE "notes" ADD CONSTRAINT "notes_id_eval_fkey" FOREIGN KEY ("id_eval") 
 
 -- AddForeignKey
 ALTER TABLE "notes" ADD CONSTRAINT "notes_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "utilisateurs_eav" ADD CONSTRAINT "utilisateurs_eav_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_etudiant" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;

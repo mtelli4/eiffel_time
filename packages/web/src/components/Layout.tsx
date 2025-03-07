@@ -41,6 +41,8 @@ const getPageTitle = (pathname: string): string => {
       return 'Administration'
     case '/settings':
       return 'Paramètres'
+    case '/import-users':
+      return 'Import des utilisateurs'
     default:
       return 'Page introuvable'
   }

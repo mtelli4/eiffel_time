@@ -1,3 +1,4 @@
+import { useDateFormat } from "../hooks/useDateFormat";
 import { format } from "date-fns";
 import { Platform } from "react-native";
 
@@ -28,21 +29,19 @@ export function capitalizeWords(text: string): string {
     .join(' ')
 }
 
-export function getTime(debut: Date, fin: Date) {
-  const date = debut.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-  return `${date} : ${debut.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${fin.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
-}
-
 export function dateFormatting(debut: Date, fin?: Date) {
-  let dateFormat: string;
+  let dateFormat
   if (Platform.OS === 'web') {
-    dateFormat = localStorage.getItem('dateFormat') || 'dd/MM/yyyy'
+    dateFormat = localStorage.getItem('dateFormat')
   } else {
-    dateFormat = 'dd/MM/yyyy'
+    import('react-native-mmkv').then(({ MMKV }) => {
+      const storage = new MMKV()
+      dateFormat = storage.getString('dateFormat')
+    })
   }
   if (fin === undefined) {
-    return format(debut, dateFormat)
+    return format(debut, dateFormat || 'dd/MM/yyyy')
   }
   const heures = format(debut, 'HH:mm') + ' - ' + format(fin, 'HH:mm')
-  return `${format(debut, dateFormat)} ${heures}`
+  return `${format(debut, dateFormat || 'dd/MM/yyyy')} ${heures}`
 }

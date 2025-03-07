@@ -67,7 +67,10 @@ export default function UserFilters({
             Formation
           </label>
           <Select
-            options={formations}
+            options={formations.map((f) => ({
+              value: f.id_formation,
+              label: f.libelle,
+            }))}
             isClearable
             placeholder="Toutes les formations"
             onChange={(option: any) =>
@@ -111,7 +114,10 @@ export default function UserFilters({
             Groupe
           </label>
           <Select
-            options={groupes}
+            options={groupes.map((g) => ({
+              value: g.id_grp,
+              label: g.libelle,
+            }))}
             isClearable
             placeholder="Tous les groupes"
             onChange={(option: any) =>

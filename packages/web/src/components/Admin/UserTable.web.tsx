@@ -16,7 +16,7 @@ interface UserTableProps {
     role: string
     formation: string
     groupe: string
-    type: boolean
+    type?: boolean | null
     search: string
   }
   loading: boolean
@@ -24,19 +24,13 @@ interface UserTableProps {
 
 DataTable.use(DT)
 
-export function UserTable({
-  users,
-  isAdmin,
-  onEdit,
-  onDelete,
-  filters,
-  loading,
-}: UserTableProps) {
+export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }: UserTableProps) {
   const { Edit, Delete } = useEditDeleteLoader()
 
   if (!Edit || !Delete) return null
 
-  /* roleSelected: string */
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
   let filteredData = users
   if (filters.search !== '') {
     filteredData = users.filter(
@@ -68,11 +62,7 @@ export function UserTable({
     )
   }
 
-  if (
-    filters.type === true ||
-    filters.type === false ||
-    filters.type === null
-  ) {
+  if (filters.type === true || filters.type === false || filters.type === null) {
     filteredData = filteredData.filter(
       (utilisateur: Utilisateur) =>
         utilisateur.statut === statut_utilisateur.teacher &&
@@ -152,11 +142,9 @@ export function UserTable({
           {filteredData.map((utilisateur) => (
             <tr
               key={utilisateur.id_utilisateur}
-              className="border-b border-gray-100 hover:bg-gray-600"
+              className={"border-b border-gray-100 hover:bg-gray-600 " + (user.id_utilisateur === utilisateur.id_utilisateur ? 'font-bold' : '')}
             >
-              <td className="py-3 px-4 dt-left">
-                {utilisateur.id_utilisateur}
-              </td>
+              <td className="py-3 px-4 dt-left">{utilisateur.id_utilisateur}</td>
               <td className="py-3 px-4">{utilisateur.nom}</td>
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>

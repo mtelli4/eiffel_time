@@ -213,16 +213,6 @@ model utilisateur {
   formation_utilisateur                  formation_utilisateur[]
   message_message_emetteurToutilisateur  message[]               @relation("message_emetteurToutilisateur")
   message_message_recepteurToutilisateur message[]               @relation("message_recepteurToutilisateur")
-  utilisateurs_eav                       utilisateurs_eav[]
-}
-
-model utilisateurs_eav {
-  id_user_eav    Int         @id @default(autoincrement())
-  attribute      String?     @db.VarChar(255)
-  valueeav       String?     @db.VarChar(255)
-  createdat      DateTime    @db.Timestamp(6)
-  id_utilisateur Int
-  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model groupe_etudiant {

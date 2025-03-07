@@ -1,7 +1,7 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { UserProvider, useUser } from './context/UserContext'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
 export default function Root() {
   return (

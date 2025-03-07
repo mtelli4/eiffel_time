@@ -107,10 +107,8 @@ INSERT INTO ingrid.cours VALUES (13, 'CM', '', '2025-02-18 14:00:00', '2025-02-1
 --
 
 INSERT INTO ingrid.utilisateur VALUES (2, 'Herries', 'Karlik', 'kherries1@dion.ne.jp', NULL, NULL, 'indefinite', '2024-10-11 00:00:00', '2024-09-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, 'student', '2024-11-09 00:00:00', '2024-08-11 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (4, 'Anstee', 'Gypsy', 'ganstee3@exblog.jp', NULL, NULL, 'director', '2024-02-27 00:00:00', '2024-07-24 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (6, 'Gateley', 'Emalee', 'egateley5@addtoany.com', NULL, NULL, 'manager', '2024-02-26 00:00:00', '2024-04-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', NULL, NULL, 'secretary', '2024-08-24 00:00:00', '2023-12-21 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (8, 'Brambell', 'Styrbjörn', 'sbrambell0@cmu.edu', NULL, NULL, 'student', '2024-09-11 00:00:00', '2024-02-06 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (9, 'Eagle', 'Tú', 'keagle1@nyu.edu', NULL, NULL, 'student', '2024-07-10 00:00:00', '2024-09-20 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (10, 'Bearblock', 'Clélia', 'nbearblock2@amazon.co.uk', NULL, NULL, 'student', '2024-07-16 00:00:00', '2024-11-12 00:00:00');
@@ -121,10 +119,12 @@ INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@you
 INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
 INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@gmail.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-02-17 16:20:54.028');
 INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
 INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, 'teacher', '2024-01-21 00:00:00', '2025-02-06 20:40:41.284');
-INSERT INTO ingrid.utilisateur VALUES (19, 'Mariya Constantine', 'Cédric', 'cedric.mc11@gmail.com', NULL, NULL, 'administrator', '2025-02-05 10:27:39.307', '2025-02-17 13:19:20.585');
+INSERT INTO ingrid.utilisateur VALUES (19, 'Mariya Constantine', 'Cédric', 'cedric.mc11@gmail.com', 'eb81c5f99581c4825d898b5c379f506a63a0866aa49c709edc3c1ffb54f6871a', '86bcbd51fb7d66e31f7d9c8404c8d13b', 'administrator', '2025-02-05 10:27:39.307', '2025-03-01 15:24:43.058');
+INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', '13a956b10c0d015f6bd3419604dc7e11e2a67b74d8b0e0966d12dea5ae0a562f', 'ff3bfd7cae5d169a8feeaf7ac6731d95', 'secretary', '2024-08-24 00:00:00', '2025-03-01 21:20:16.192');
+INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, 'teacher', '2024-11-09 00:00:00', '2025-03-04 17:52:32.993');
+INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@gmail.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-03-04 20:16:43.863');
 
 
 --
@@ -221,8 +221,9 @@ INSERT INTO ingrid.communiquer VALUES (22, 'Je propose qu’on se répartisse le
 
 INSERT INTO ingrid.enseignant VALUES (18, true);
 INSERT INTO ingrid.enseignant VALUES (5, false);
-INSERT INTO ingrid.enseignant VALUES (1, NULL);
 INSERT INTO ingrid.enseignant VALUES (19, NULL);
+INSERT INTO ingrid.enseignant VALUES (3, false);
+INSERT INTO ingrid.enseignant VALUES (1, NULL);
 
 
 --
@@ -258,7 +259,6 @@ INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-2
 -- Data for Name: formation_utilisateur; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.formation_utilisateur VALUES (3, 1);
 INSERT INTO ingrid.formation_utilisateur VALUES (8, 2);
 INSERT INTO ingrid.formation_utilisateur VALUES (9, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (10, 1);
@@ -278,14 +278,13 @@ INSERT INTO ingrid.formation_utilisateur VALUES (19, 1);
 INSERT INTO ingrid.formation_utilisateur VALUES (19, 2);
 INSERT INTO ingrid.formation_utilisateur VALUES (19, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (5, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (3, 1);
 
 
 --
 -- Data for Name: groupe_etudiant; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.groupe_etudiant VALUES (3, 1);
-INSERT INTO ingrid.groupe_etudiant VALUES (3, 3);
 INSERT INTO ingrid.groupe_etudiant VALUES (8, 1);
 INSERT INTO ingrid.groupe_etudiant VALUES (8, 3);
 INSERT INTO ingrid.groupe_etudiant VALUES (9, 1);
@@ -314,6 +313,13 @@ INSERT INTO ingrid.message VALUES (57, 'Alors, tu penses que la méthode de Gaus
 INSERT INTO ingrid.message VALUES (58, 'Oui, exactement ! Ça semble bien fonctionner avec l''exercice. Tu veux qu''on passe à l''étape suivante ?', '2025-01-08 14:10:00', 8, 3, 57);
 INSERT INTO ingrid.message VALUES (59, 'Je crois que c''est bon, on a tout résolu. Tu veux qu''on en parle en classe ?', '2025-01-08 14:15:00', 3, 8, 58);
 INSERT INTO ingrid.message VALUES (60, 'Oui, c’est une bonne idée. À plus tard alors.', '2025-01-08 14:20:00', 8, 3, 59);
+INSERT INTO ingrid.message VALUES (61, 'Bonjour !', '2025-03-02 20:46:20.85', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (62, 'Bonjour à toi aussi !', '2025-03-02 21:05:51.666', 7, 19, NULL);
+INSERT INTO ingrid.message VALUES (63, 'Est-ce que tu vas bien ?', '2025-03-03 17:24:33.021', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (64, 'Oui et toi ?', '2025-03-03 17:25:01.958', 7, 19, NULL);
+INSERT INTO ingrid.message VALUES (65, 'Bien merci.', '2025-03-03 17:34:35.54', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (66, 'Je te contacte afin de savoir si l''import des utilisateurs était terminé.', '2025-03-03 17:37:31.653', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (67, 'Ne t''inquiète pas j''ai bientôt terminé.', '2025-03-04 14:19:45.329', 7, 19, NULL);
 
 
 --
@@ -421,36 +427,6 @@ INSERT INTO ingrid.notes VALUES (11, 1, 12.60, 'Pas mal', '2025-02-28 13:36:57.6
 
 
 --
--- Data for Name: utilisateurs_eav; Type: TABLE DATA; Schema: ingrid; Owner: postgres
---
-
-INSERT INTO ingrid.utilisateurs_eav VALUES (1, 'adresse', '123 Rue des Lilas', '2025-01-01 10:00:00', 1);
-INSERT INTO ingrid.utilisateurs_eav VALUES (2, 'téléphone', '0654321098', '2025-01-02 11:30:00', 1);
-INSERT INTO ingrid.utilisateurs_eav VALUES (3, 'langue', 'Français', '2025-01-03 14:15:00', 1);
-INSERT INTO ingrid.utilisateurs_eav VALUES (4, 'adresse', '45 Avenue de la République', '2025-01-02 09:00:00', 2);
-INSERT INTO ingrid.utilisateurs_eav VALUES (5, 'téléphone', '0778456123', '2025-01-04 13:00:00', 2);
-INSERT INTO ingrid.utilisateurs_eav VALUES (6, 'spécialité', 'Informatique', '2025-01-05 08:45:00', 2);
-INSERT INTO ingrid.utilisateurs_eav VALUES (7, 'adresse', '9 Boulevard Haussmann', '2025-01-03 16:00:00', 3);
-INSERT INTO ingrid.utilisateurs_eav VALUES (8, 'téléphone', '0667348291', '2025-01-04 10:00:00', 3);
-INSERT INTO ingrid.utilisateurs_eav VALUES (9, 'hobby', 'Photographie', '2025-01-06 17:30:00', 3);
-INSERT INTO ingrid.utilisateurs_eav VALUES (10, 'adresse', '78 Rue de la Paix', '2025-01-01 12:00:00', 4);
-INSERT INTO ingrid.utilisateurs_eav VALUES (11, 'téléphone', '0687123456', '2025-01-03 15:00:00', 4);
-INSERT INTO ingrid.utilisateurs_eav VALUES (12, 'langue', 'Anglais', '2025-01-05 09:30:00', 4);
-INSERT INTO ingrid.utilisateurs_eav VALUES (13, 'adresse', '23 Impasse des Fleurs', '2025-01-02 14:00:00', 5);
-INSERT INTO ingrid.utilisateurs_eav VALUES (14, 'téléphone', '0698123476', '2025-01-03 16:30:00', 5);
-INSERT INTO ingrid.utilisateurs_eav VALUES (15, 'préférence', 'Travail en équipe', '2025-01-06 11:00:00', 5);
-INSERT INTO ingrid.utilisateurs_eav VALUES (16, 'adresse', '12 Place Bellecour', '2025-01-01 18:00:00', 6);
-INSERT INTO ingrid.utilisateurs_eav VALUES (17, 'téléphone', '0678564912', '2025-01-04 08:00:00', 6);
-INSERT INTO ingrid.utilisateurs_eav VALUES (18, 'langue', 'Espagnol', '2025-01-06 13:15:00', 6);
-INSERT INTO ingrid.utilisateurs_eav VALUES (19, 'adresse', '50 Rue Principale', '2025-01-07 14:00:00', 7);
-INSERT INTO ingrid.utilisateurs_eav VALUES (20, 'téléphone', '0765432189', '2025-01-07 15:30:00', 7);
-INSERT INTO ingrid.utilisateurs_eav VALUES (21, 'adresse', '89 Chemin des Pins', '2025-01-08 16:00:00', 8);
-INSERT INTO ingrid.utilisateurs_eav VALUES (22, 'téléphone', '0751234897', '2025-01-08 17:00:00', 8);
-INSERT INTO ingrid.utilisateurs_eav VALUES (23, 'adresse', '67 Rue du Bac', '2025-01-09 11:00:00', 9);
-INSERT INTO ingrid.utilisateurs_eav VALUES (24, 'téléphone', '0645781239', '2025-01-09 12:30:00', 9);
-
-
---
 -- Name: absence_id_absence_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
@@ -482,7 +458,7 @@ SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 13, true);
 -- Name: evaluation_id_eval_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 1, true);
+SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 4, true);
 
 
 --
@@ -503,7 +479,7 @@ SELECT pg_catalog.setval('ingrid.groupe_id_grp_seq', 5, true);
 -- Name: message_id_message_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.message_id_message_seq', 60, true);
+SELECT pg_catalog.setval('ingrid.message_id_message_seq', 67, true);
 
 
 --
@@ -524,14 +500,7 @@ SELECT pg_catalog.setval('ingrid.notification_id_notif_seq', 11, true);
 -- Name: utilisateur_id_utilisateur_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 18, true);
-
-
---
--- Name: utilisateurs_eav_id_user_eav_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
---
-
-SELECT pg_catalog.setval('ingrid.utilisateurs_eav_id_user_eav_seq', 24, true);
+SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 19, true);
 
 
 --

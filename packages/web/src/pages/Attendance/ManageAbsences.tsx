@@ -1,103 +1,37 @@
-import {
-  Check,
-  FileDown,
-  FileText,
-  Filter,
-  Search,
-  X as XIcon,
-} from 'lucide-react'
+import { Check, FileDown, FileText, Filter, Search, X as XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
-import { API_URL } from '../../../../shared/src/types/types'
+import { ManageAbsencesAbsence } from '../../../../shared/src/types/types'
+import { fetchAbsences } from '../../../../shared/src/backend/services/absences'
+import { dateFormatting } from '../../../../shared/src/utils/stringUtils'
 
-interface Student {
-  id: string
-  firstName: string
-  lastName: string
-  group: string
-}
-
-type Groupe = {
-  id_grp: number
-  libelle: string
-}
-
-interface Absence {
-  id_absence: string
-  etudiant: {
-    id_utilisateur: number
-    nom: string
-    prenom: string
-    groupes: Groupe[]
-  }
-  module: {
-    id_module: number
-    codeapogee: string
-    libelle: string
-  }
-  date: string
-  envoye: boolean
-  valide: boolean
-  updatedat: string
-  statut: 'pending' | 'approved' | 'rejected'
-  path?: string
-}
+// Définition des options pour la fréquence des alertes
+const statusOptions = [
+  { value: 'all', label: 'Tous les statuts' },
+  { value: 'pending', label: 'En attente' },
+  { value: 'approved', label: 'Validées' },
+  { value: 'rejected', label: 'Refusées' },
+]
 
 export function ManageAbsences() {
-  const [absences, setAbsences] = useState<Absence[]>([])
+  const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedStatut, setSelectedStatut] = useState<
-    Absence['statut'] | 'all'
-  >('all')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [selectedStatut, setSelectedStatut] = useState<ManageAbsencesAbsence['statut'] | 'all'>('all')
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [alertFrequency, setAlertFrequency] = useState('immediate')
-  const setAbsenceStatut = (absence: Absence) => {
-    if (absence.envoye && absence.valide) {
-      return 'approved'
-    } else if (absence.envoye && !absence.valide) {
-      return 'rejected'
-    } else {
-      return 'pending'
-    }
-  }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/absences/`)
-      .then((res) => res.json())
+    fetchAbsences()
       .then((data) => {
-        setAbsences(
-          data.map((absence: any) => ({
-            id_absence: absence.id_absence,
-            etudiant: {
-              id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
-              nom: absence.etudiant.utilisateur.nom,
-              prenom: absence.etudiant.utilisateur.prenom,
-              groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
-                id_grp: groupe.groupe.id_grp,
-                libelle: groupe.groupe.libelle,
-              })),
-            },
-            module: {
-              id_module: absence.cours.module.id_module,
-              codeapogee: absence.cours.module.codeapogee,
-              libelle: absence.cours.module.libelle,
-            },
-            date: absence.cours.debut,
-            envoye: absence.envoye,
-            valide: absence.valide,
-            updatedat: absence.updatedat,
-            statut: setAbsenceStatut(absence),
-            path: absence.justificatif,
-          }))
-        )
+        setAbsences(data)
       })
-      .catch((error) => console.error('Error:', error))
-  })
+      .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
+  }, [])
 
   const handleApprove = (absenceId: string) => {
     setAbsences((prev) =>
@@ -120,22 +54,17 @@ export function ManageAbsences() {
   }
 
   const filteredAbsences = absences.filter((absence) => {
-    const student = absences.find(
-      (s) => s.id_absence === absence.id_absence
-    )?.etudiant
-    const searchString =
-      `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
+    const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
+    const searchString = `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
-    const matchesStatut =
-      selectedStatut === 'all' || absence.statut === selectedStatut
-    const matchesDateRange =
-      (!startDate || absence.date >= startDate) &&
-      (!endDate || absence.date <= endDate)
-
+    const matchesStatut = selectedStatut === 'all' || absence.statut === selectedStatut
+    const matchesDateRange = (!startDate || absence.date >= startDate) && (!endDate || absence.date <= endDate)
     return matchesSearch && matchesStatut && matchesDateRange
   })
 
-  const getStatutBadgeClass = (statut: Absence['statut']) => {
+  filteredAbsences.sort((a, b) => b.date.getTime() - a.date.getTime())
+
+  const getStatutBadgeClass = (statut: ManageAbsencesAbsence['statut']) => {
     switch (statut) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-600 dark:text-white'
@@ -146,7 +75,7 @@ export function ManageAbsences() {
     }
   }
 
-  const getStatutText = (statut: Absence['statut']) => {
+  const getStatutText = (statut: ManageAbsencesAbsence['statut']) => {
     switch (statut) {
       case 'pending':
         return 'En attente'
@@ -156,13 +85,6 @@ export function ManageAbsences() {
         return 'Refusée'
     }
   }
-  // Définition des options pour la fréquence des alertes
-  const statusOptions = [
-    { value: 'all', label: 'Tous les statuts' },
-    { value: 'pending', label: 'En attente' },
-    { value: 'approved', label: 'Validées' },
-    { value: 'rejected', label: 'Refusées' },
-  ]
 
   const CustomDatePicker = ({
     selectedDate,
@@ -218,13 +140,11 @@ export function ManageAbsences() {
                 Statut
               </label>
               <Select
-                defaultValue={statusOptions.find(
-                  (option) => option.value === selectedStatut
-                )}
+                defaultValue={statusOptions.find((option) => option.value === selectedStatut)}
                 options={statusOptions}
                 isSearchable={false}
                 onChange={(option) =>
-                  setSelectedStatut(option?.value as Absence['statut'] | 'all')
+                  setSelectedStatut(option?.value as ManageAbsencesAbsence['statut'] | 'all')
                 }
                 className="w-full dark:text-white"
                 styles={{
@@ -244,8 +164,8 @@ export function ManageAbsences() {
                     backgroundColor: state.isSelected
                       ? 'var(--select-selected-bg, #2e3494)'
                       : state.isFocused
-                      ? 'var(--select-hover-bg, #deebff)'
-                      : 'var(--select-menu-bg, --select-menu-bg)',
+                        ? 'var(--select-hover-bg, #deebff)'
+                        : 'var(--select-menu-bg, --select-menu-bg)',
                   }),
                   singleValue: (baseStyles) => ({
                     ...baseStyles,
@@ -262,9 +182,7 @@ export function ManageAbsences() {
                 // showIcon
                 calendarIconClassName="w-5 h-5 text-gray-400 dark:text-white"
                 selected={startDate ? new Date(startDate) : null}
-                onChange={(date: Date | null) =>
-                  setStartDate(date ? date.toISOString().split('T')[0] : '')
-                }
+                onChange={(date: Date | null) => setStartDate(date)}
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
                 dayClassName={(date) => {
@@ -303,9 +221,7 @@ export function ManageAbsences() {
               </label>
               <DatePicker
                 selected={endDate ? new Date(endDate) : null}
-                onChange={(date: Date | null) =>
-                  setEndDate(date ? date.toISOString().split('T')[0] : '')
-                }
+                onChange={(date: Date | null) => setEndDate(date)}
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
                 dayClassName={(date) => {
@@ -365,7 +281,7 @@ export function ManageAbsences() {
           </thead>
           <tbody>
             {filteredAbsences.map((absence) => {
-              return (
+              return absence.etudiant.groupes.length > 0 && (
                 <tr
                   key={absence.id_absence}
                   className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -395,7 +311,7 @@ export function ManageAbsences() {
                   <td className="py-3 px-4">
                     <div>
                       <div className="font-medium text-gray-900 dark:text-white">
-                        {new Date(absence.date).toLocaleDateString('fr-FR')}
+                        {dateFormatting(absence.date)}
                       </div>
                       {absence.updatedat && (
                         <div className="text-sm text-gray-500 dark:text-gray-300">

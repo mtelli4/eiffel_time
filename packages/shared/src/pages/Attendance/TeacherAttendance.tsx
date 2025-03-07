@@ -1,4 +1,4 @@
-// import { FileDown, Plus } from 'lucide-react'
+import { FileDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { AttendanceTable } from '../../components/attendance/AttendanceTable'
@@ -7,7 +7,8 @@ import { Card } from '../../components/attendance/Card'
 import { HoursPlanning } from '../../components/attendance/HoursPlanning'
 import { TeacherFilters } from '../../components/attendance/TeacherFilters'
 import { API_URL, TeacherPlanning, TeacherPlanningForm } from '../../../../shared/src/types/types'
-import { periode } from '@prisma/client'
+import { PlusButton } from '../../components/Button/PlusButton'
+import { FileDownButton } from '../../components/Button/FileDownButton'
 
 export function TeacherAttendance() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -140,14 +141,14 @@ export function TeacherAttendance() {
             variant="primary"
           >
             <View style={styles.buttonContent}>
-              {/* <Plus size={16} color="#FFFFFF" /> */}
+              <PlusButton />
               <Text style={styles.buttonText}>Ajouter une présence</Text>
             </View>
           </Button>
           <View style={styles.buttonSpacing} />
           <Button onPress={handleExport} variant="outline">
             <View style={styles.buttonContent}>
-              {/* <FileDown size={16} color="#2C3E50" /> */}
+              <FileDownButton />
               <Text style={styles.exportButtonText}>Exporter</Text>
             </View>
           </Button>
