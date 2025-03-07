@@ -198,8 +198,8 @@ export function UserImport() {
                 {validData.map((user, index) => (
                   <tr
                     key={index}
-                    className={`border-b border-gray-100 hover:bg-gray-600 dark:hover:bg-[#2C3E50] ${!isEmailValid(user.email, user.statut) ? 'text-red-500' : 'text-gray-600 dark:text-gray-300'
-                      }`}
+                    className={`border-b border-gray-100 hover:bg-gray-600 dark:hover:bg-[#2C3E50] 
+                      ${!isEmailValid(user.email, user.statut) ? 'text-red-500' : 'text-gray-600 dark:text-gray-300'}`}
                   >
                     <td className="py-3 px-4">{user.nom}</td>
                     <td className="py-3 px-4">{user.prenom}</td>
@@ -214,7 +214,7 @@ export function UserImport() {
           {/* Bouton d'importation */}
           <button
             className="mt-4 px-4 py-2 rounded-md text-white font-semibold bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400"
-            onClick={() => importUsers(validData, statut)}
+            onClick={() => importUsers(validData)}
             disabled={validData.length === 0}
           >
             Importer les utilisateurs ({validData.length} valide{validData.length > 1 ? 's' : ''})
