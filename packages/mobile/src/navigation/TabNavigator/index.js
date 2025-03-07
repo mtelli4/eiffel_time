@@ -1,22 +1,19 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useContext, useEffect } from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React, {useContext} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { Login } from '../../../../shared/src/pages/Login/SignIn';
-import { Admin } from '../../../../shared/src/pages/Admin/Admin';
-import { Absences } from '../../../../shared/src/pages/Attendance/StudentAbsences';
-import { TeacherAttendance } from '../../../../shared/src/pages/Attendance/TeacherAttendance';
-import { ClassAverages } from '../../../../shared/src/pages/Averages/ClassAverages';
-import { ClassGrades } from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
-import { Grades } from '../../../../shared/src/pages/Grades/StudentGradestest';
-import { Schedule } from '../../../../shared/src/pages/Schedule/Schedule';
-import { Settings } from '../../../../shared/src/pages/Settings/Settings';
-import { UserContext } from '../../context/UserContext'; // Exemple de contexte utilisateur
-import { ManageAbsences } from '../../screens/ManageAbsences';
-import { Messages } from '../../screens/Messaging/Messages';
-import { MMKV } from 'react-native-mmkv';
+import {Absences} from '../../../../shared/src/pages/Attendance/StudentAbsences';
+import {TeacherAttendance} from '../../../../shared/src/pages/Attendance/TeacherAttendance';
+import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages';
+import {ClassGrades} from '../../../../shared/src/pages/Grades/GradesManagement/ClassGrades';
+import {Grades} from '../../../../shared/src/pages/Grades/StudentGradestest';
+import {Schedule} from '../../../../shared/src/pages/Schedule/Schedule';
+import {Settings} from '../../../../shared/src/pages/Settings/Settings';
+import {UserContext} from '../../context/UserContext'; // Exemple de contexte utilisateur
+import {ManageAbsences} from '../../screens/ManageAbsences';
+import {Messages} from '../../screens/Messaging/Messages';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,98 +23,98 @@ const TABS_CONFIG = {
     {
       name: 'Emploi du temps',
       component: Schedule,
-      icon: { name: 'calendar', source: 'Feather' },
+      icon: {name: 'calendar', source: 'Feather'},
     },
     {
       name: 'Absences',
       component: Absences,
-      icon: { name: 'user-check', source: 'Feather' },
+      icon: {name: 'user-check', source: 'Feather'},
     },
     {
       name: 'Notes',
       component: Grades,
-      icon: { name: 'clipboard', source: 'Feather' },
+      icon: {name: 'clipboard', source: 'Feather'},
     },
     {
       name: 'Messagerie',
       component: Schedule,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Schedule,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
   teacher: [
     {
       name: 'Emploi du temps',
       component: Schedule,
-      icon: { name: 'calendar', source: 'Feather' },
+      icon: {name: 'calendar', source: 'Feather'},
     },
     {
       name: 'Gestion des notes',
       component: ClassGrades,
-      icon: { name: 'clipboard', source: 'Feather' },
+      icon: {name: 'clipboard', source: 'Feather'},
     },
     {
       name: 'Moyennes',
       component: ClassAverages,
-      icon: { name: 'graduation', source: 'SimpleLineIcons' },
+      icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
     {
       name: 'Messagerie',
       component: Schedule,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Schedule,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
   secretary: [
     {
       name: 'Moyennes',
       component: ClassAverages,
-      icon: { name: 'graduation', source: 'SimpleLineIcons' },
+      icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
     {
       name: 'Absences et Retards',
       component: ClassGrades,
-      icon: { name: 'user-check', source: 'Feather' },
+      icon: {name: 'user-check', source: 'Feather'},
     },
     {
       name: 'Présences professeurs',
       component: ClassAverages,
-      icon: { name: 'users', source: 'Feather' },
+      icon: {name: 'users', source: 'Feather'},
     },
     {
       name: 'Messagerie',
       component: Schedule,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Schedule,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
   manager: [
     {
       name: 'Schedule',
       component: Schedule,
-      icon: { name: 'calendar', source: 'Feather' },
+      icon: {name: 'calendar', source: 'Feather'},
     },
     {
       name: 'Grades',
       component: ClassGrades,
-      icon: { name: 'clipboard', source: 'Feather' },
+      icon: {name: 'clipboard', source: 'Feather'},
     },
     {
       name: 'Moyennes',
       component: ClassAverages,
-      icon: { name: 'graduation', source: 'SimpleLineIcons' },
+      icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
     // {
     //   name: 'Absences et Retards',
@@ -132,12 +129,12 @@ const TABS_CONFIG = {
     {
       name: 'Messagerie',
       component: Schedule,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Schedule,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
     // {
     //   name: 'Gestion des utilisateurs',
@@ -150,37 +147,37 @@ const TABS_CONFIG = {
     {
       name: 'Schedule',
       component: Schedule,
-      icon: { name: 'calendar', source: 'Feather' },
+      icon: {name: 'calendar', source: 'Feather'},
     },
     {
       name: 'Notes',
       component: ClassGrades,
-      icon: { name: 'clipboard', source: 'Feather' },
+      icon: {name: 'clipboard', source: 'Feather'},
     },
     {
       name: 'Moyennes',
       component: ClassAverages,
-      icon: { name: 'graduation', source: 'SimpleLineIcons' },
+      icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
     {
       name: 'Absences et Retards',
       component: ManageAbsences,
-      icon: { name: 'user-check', source: 'Feather' },
+      icon: {name: 'user-check', source: 'Feather'},
     },
     {
       name: 'Présences professeurs',
       component: TeacherAttendance,
-      icon: { name: 'users', source: 'Feather' },
+      icon: {name: 'users', source: 'Feather'},
     },
     {
       name: 'Messagerie',
       component: Messages,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Settings,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
     // {
     //   name: 'Gestion des utilisateurs',
@@ -192,7 +189,7 @@ const TABS_CONFIG = {
 
 // Génération de l'icône en fonction de la configuration
 const getTabIcon = (icon, color) => {
-  const { name, source } = icon;
+  const {name, source} = icon;
   switch (source) {
     case 'Feather':
       return <Feather name={name} color={color} size={24} />;
@@ -207,16 +204,15 @@ const getTabIcon = (icon, color) => {
 };
 
 const TabNavigator = () => {
-
-  const { role } = useContext(UserContext); // Exemple pour récupérer le rôle
+  const {role} = useContext(UserContext); // Exemple pour récupérer le rôle
 
   // Obtenez les onglets pour le rôle actuel
   const tabs = TABS_CONFIG[role] || [];
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color }) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({color}) => {
           const tabConfig = tabs.find(tab => tab.name === route.name);
           return tabConfig ? getTabIcon(tabConfig.icon, color) : null;
         },

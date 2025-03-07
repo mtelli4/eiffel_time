@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -97,28 +98,31 @@ export function Schedule() {
   // Create styles based on the active theme
   const styles = createStyles(activeTheme === 'dark' ? darkTheme : lightTheme)
 
-  // Effect to check for user theme preference (for web)
+  // Effect to check for user theme preference (only for web)
   useEffect(() => {
-    // For web, check localStorage for theme preference
-    try {
-      const storedTheme = localStorage.getItem('theme')
-      if (storedTheme === 'dark' || storedTheme === 'light') {
-        setUserTheme(storedTheme)
+    // Only run this code on web platform
+    if (Platform.OS === 'web') {
+      // For web, check localStorage for theme preference
+      try {
+        const storedTheme = localStorage.getItem('theme')
+        if (storedTheme === 'dark' || storedTheme === 'light') {
+          setUserTheme(storedTheme)
+        }
+      } catch (error) {
+        // Not in a browser environment or other error
+        console.log('Unable to access localStorage for theme')
       }
-    } catch (error) {
-      // Not in a browser environment or other error
-      console.log('Unable to access localStorage for theme')
-    }
 
-    // Optional: Listen for theme changes
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'theme') {
-        setUserTheme(e.newValue as 'light' | 'dark' | null)
+      // Optional: Listen for theme changes
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === 'theme') {
+          setUserTheme(e.newValue as 'light' | 'dark' | null)
+        }
       }
-    }
 
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+      window.addEventListener('storage', handleStorageChange)
+      return () => window.removeEventListener('storage', handleStorageChange)
+    }
   }, [])
 
   const handleWeekChange = (delta: number) => {
@@ -272,7 +276,6 @@ export function Schedule() {
           course={selectedCourse}
           onClose={() => setSelectedCourse(null)}
           onPresenceCheck={handlePresenceCheck}
-          isDarkMode={activeTheme === 'dark'}
         />
       )}
     </ScrollView>
