@@ -12,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
 import { API_URL } from '../../../../shared/src/types/types'
+import '../../styles/select-styles.css'
 
 interface Student {
   id: string
@@ -176,6 +177,23 @@ export function ManageAbsences() {
     // Convertir la chaîne en objet Date si nécessaire
     const dateValue =
       typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
+
+    return (
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          {label}
+        </label>
+        <DatePicker
+          selected={dateValue}
+          onChange={(date: Date | null) =>
+            onChange(date ? date.toISOString().split('T')[0] : '')
+          }
+          className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          dateFormat="dd/MM/yyyy"
+          placeholderText="jj/mm/aaaa"
+        />
+      </div>
+    )
   }
 
   return (

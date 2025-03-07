@@ -5,6 +5,7 @@ import {
   TEACHER_TYPES,
   UserFiltersProps,
 } from '../../../../shared/src/types/types'
+import '../../styles/select-styles.css'
 
 export default function UserFilters({
   onFilterChange,

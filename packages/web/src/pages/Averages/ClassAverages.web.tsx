@@ -311,7 +311,7 @@ export default function Averages() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-300 dark:border-gray-400">
+              <tr className="border-b-2 border-gray-300 dark:border-gray-500">
                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-900">
                   Étudiant
                 </th>
@@ -336,7 +336,7 @@ export default function Averages() {
                       ue.modules.map((module) => (
                         <th
                           key={module.code}
-                          className="text-center py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 border-l border-gray-200 whitespace-nowrap"
+                          className="text-center py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 border-l border-gray-200 dark:border-gray-500 whitespace-nowrap"
                         >
                           {module.code}
                         </th>
@@ -344,7 +344,7 @@ export default function Averages() {
                   </React.Fragment>
                 ))}
               </tr>
-              <tr className="border-b-2 border-gray-300 dark:border-gray-400">
+              <tr className="border-b-2 border-gray-300 dark:border-gray-500">
                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-900"></th>
                 {UES.map((ue) => (
                   <React.Fragment key={ue.code}>
@@ -396,7 +396,7 @@ export default function Averages() {
                         ue.modules.map((module) => (
                           <td
                             key={module.code}
-                            className="text-center py-3 px-4 border-l border-gray-200 dark:text-gray-300"
+                            className="text-center py-3 px-4 border-l border-gray-200 dark:border-gray-500 dark:text-gray-300"
                           >
                             {selectedSemester !== 'all'
                               ? student.grades[selectedSemester as number]?.[
