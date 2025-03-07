@@ -30,7 +30,7 @@ body {
   }
 
   .btn-outline {
-    @apply border border-primary text-primary hover:bg-primary hover:text-white;
+    @apply border border-primary dark:bg-gray-100 text-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-800 dark:hover:bg-blue-600 dark:hover:text-white;
   }
 
   .input {

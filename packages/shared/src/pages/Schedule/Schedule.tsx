@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native'
 import { Button } from '../../components/Button/Button'
 import { CourseModal } from '../../components/Schedule/CourseModal'
-import { styles } from '../../styles/Schedule/ScheduleStyles'
+import {
+  createStyles,
+  darkTheme,
+  lightTheme,
+} from '../../styles/Schedule/ScheduleStyles'
 import { API_URL, COURSE } from '../../types/types'
 
 const DAYS = [
@@ -74,6 +84,43 @@ export function Schedule() {
   const [weekOffset, setWeekOffset] = useState(0)
   const { monday, sunday } = getWeekRange(weekOffset)
 
+  // Get the system color scheme
+  const systemColorScheme = useColorScheme()
+
+  // For web, check localStorage or another source for theme preference
+  const [userTheme, setUserTheme] = useState<'light' | 'dark' | null>(null)
+
+  // Determine the active theme
+  // Priority: user preference > system preference > light as default
+  const activeTheme = userTheme || systemColorScheme || 'light'
+
+  // Create styles based on the active theme
+  const styles = createStyles(activeTheme === 'dark' ? darkTheme : lightTheme)
+
+  // Effect to check for user theme preference (for web)
+  useEffect(() => {
+    // For web, check localStorage for theme preference
+    try {
+      const storedTheme = localStorage.getItem('theme')
+      if (storedTheme === 'dark' || storedTheme === 'light') {
+        setUserTheme(storedTheme)
+      }
+    } catch (error) {
+      // Not in a browser environment or other error
+      console.log('Unable to access localStorage for theme')
+    }
+
+    // Optional: Listen for theme changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'theme') {
+        setUserTheme(e.newValue as 'light' | 'dark' | null)
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
+
   const handleWeekChange = (delta: number) => {
     setWeekOffset((prevOffset) => prevOffset + delta)
   }
@@ -116,17 +163,14 @@ export function Schedule() {
       })
   }, [])
 
-  // console.log(courses);
-  // console.log(sunday.getDate())
-  // const daysOfYear = []
-  // for (var d = monday; d <= sunday; d.setDate(d.getDate() + 1)) {
-  //   daysOfYear.push(new Date(d))
-  // }
+  const filteredCourses = courses.filter(
+    (c) => c.date >= monday && c.date <= sunday
+  )
 
   return (
     <ScrollView style={styles.container}>
       <View>
-        <Text>
+        <Text style={styles.dateRangeText}>
           Du {monday.toLocaleDateString('fr-FR')} au{' '}
           {sunday.toLocaleDateString('fr-FR')}
         </Text>
@@ -144,11 +188,6 @@ export function Schedule() {
                 {day}
               </Text>
             ))}
-            {/* {daysOfYear.map((value) => (
-              <Text key={value.getDate()} style={styles.headerDayCell}>
-                {DAYS[value.getDay()]} {value.getDate()}
-              </Text>
-            ))} */}
           </View>
         </View>
 
@@ -179,10 +218,8 @@ export function Schedule() {
           <View style={styles.daysContainer}>
             {DAYS.slice(1).map((day) => (
               <View key={day} style={styles.dayColumn}>
-                {courses
-                  .filter(
-                    (c) => c.day === day && monday < c.date && c.date < sunday
-                  )
+                {filteredCourses
+                  .filter((c) => c.day === day)
                   .map((course) => {
                     const { top, height } = calculateCoursePosition(
                       course.start,
@@ -222,6 +259,12 @@ export function Schedule() {
             ))}
           </View>
         </View>
+
+        {filteredCourses.length === 0 && (
+          <Text style={styles.emptyMessage}>
+            Aucun cours pour cette semaine
+          </Text>
+        )}
       </ScrollView>
 
       {selectedCourse && (
@@ -229,6 +272,7 @@ export function Schedule() {
           course={selectedCourse}
           onClose={() => setSelectedCourse(null)}
           onPresenceCheck={handlePresenceCheck}
+          isDarkMode={activeTheme === 'dark'}
         />
       )}
     </ScrollView>
