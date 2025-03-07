@@ -209,8 +209,7 @@ router.delete('/delete-user/:id', async (req, res) => {
 });
 
 // Route pour importer/créer des utilisateurs
-router.post('/import-users/:statut', async (req, res) => {
-  const { statut } = req.params;
+router.post('/import-users/', async (req, res) => {
   const data = req.body;
 
   try {
@@ -222,56 +221,19 @@ router.post('/import-users/:statut', async (req, res) => {
       });
 
       let lastId = lastUser._max.id_utilisateur;
-
-      if (statut === 'administrator' || statut === 'manager') {
-        const createUsers = data.map((user) =>
-          tx.utilisateur.create({
-            data: {
-              id_utilisateur: lastId++,
-              nom: user.nom,
-              prenom: user.prenom,
-              email: user.email,
-              statut: user.statut,
-              createdat: new Date(),
-              updatedat: new Date(),
-            },
-          })
-        );
-      } else {
-        const createUsers = data.map((user) => {
-          const groupes = tx.groupe.findMany({
-            where: { libelle: { in: user.groupes.split(',').trim() } },
-          });
-          tx.utilisateur.create({
-            data: {
-              id_utilisateur: lastId++,
-              nom: user.nom,
-              prenom: user.prenom,
-              email: user.email,
-              statut: user.statut,
-              createdat: new Date(),
-              updatedat: new Date(),
-            },
-          });
-          tx.etudiant.create({
-            data: {
-              id_utilisateur: lastId,
-              delegue: false,
-              tierstemps: false,
-            },
-          });
-          tx.groupe_etudiant.create({
-            data: {
-              id_utilisateur: lastId,
-              id_grp: groupes.id_grp,
-            },
-          });
+      const createUsers = data.map((user) => {
+        return tx.utilisateur.create({
+          data: {
+            id_utilisateur: lastId++,
+            nom: user.nom,
+            prenom: user.prenom,
+            email: user.email,
+            statut: user.statut,
+            createdat: new Date(),
+            updatedat: new Date(),
+          },
         });
-        console.log(createUsers);
-        // await Promise.all([...createUsers]);
-
-        return data;
-      }
+      });
     });
     res.json(importUsers);
   } catch (error) {
