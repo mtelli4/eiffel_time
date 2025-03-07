@@ -229,7 +229,7 @@ export function Admin() {
                 setSelectedUser(undefined)
                 setShowUserForm(true)
               }}
-              className="flex items-center bg-primary text-white px-4 py-2 rounded-md"
+              className="flex items-center bg-primary dark:hover:bg-blue-600 text-white px-4 py-2 rounded-md"
             >
               Ajouter un utilisateur
             </button>

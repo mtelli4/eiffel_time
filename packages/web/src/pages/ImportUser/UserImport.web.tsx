@@ -1,23 +1,27 @@
-import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
-import { FileUp } from 'lucide-react'
-import Papa from 'papaparse'
-import * as XLSX from 'xlsx'
-import { useState } from 'react'
 import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
-import '../../styles/dataTables.dataTables.min.css'
-import { roleFinder } from '../../../../shared/src/lib/utils'
+import { FileUp } from 'lucide-react'
+import Papa from 'papaparse'
+import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import * as XLSX from 'xlsx'
+import { roleFinder } from '../../../../shared/src/lib/utils'
+import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
+import '../../styles/dataTables.dataTables.min.css'
 
-DataTable.use(DT);
+DataTable.use(DT)
 
 export function UserImport() {
   const [jsonData, setJsonData] = useState<any[]>([])
 
   // Vérifie si l'email correspond à celui de l'Université Gustave Eiffel
   const isEmailValid = (email: string) => {
-    return email.endsWith('@u-pem.fr') || email.endsWith('@univ-eiffel.fr') || email.endsWith('@edu.univ-eiffel.fr')
+    return (
+      email.endsWith('@u-pem.fr') ||
+      email.endsWith('@univ-eiffel.fr') ||
+      email.endsWith('@edu.univ-eiffel.fr')
+    )
   }
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -58,7 +62,14 @@ export function UserImport() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { 'text/csv': ['.csv'], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'], 'application/vnd.ms-excel': ['.xls'], /* json */ 'application/json': ['.json'] },
+    accept: {
+      'text/csv': ['.csv'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
+        '.xlsx',
+      ],
+      'application/vnd.ms-excel': ['.xls'],
+      /* json */ 'application/json': ['.json'],
+    },
   })
 
   const handleImportUsers = () => {
@@ -68,29 +79,49 @@ export function UserImport() {
   return (
     <div style={styles.content}>
       <header style={styles.header}>
-        <span style={styles.subtitle}>
+        <span className="text-xl font-bold text-gray-600 dark:text-gray-300">
           Importation des utilisateurs
         </span>
       </header>
       {jsonData.length === 0 && (
-        <div className='text-gray-600 dark:text-gray-300'>
-          <p>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire.</p>
+        <div className="text-gray-600 dark:text-gray-300">
+          <p>
+            Cette section permet d'importer des utilisateurs afin de les créer,
+            veuillez noter qu'une vérification et une validation des données
+            importées est nécessaire.
+          </p>
           <br />
           <p>Modalités d'importation des utilisateurs :</p>
           <ul className="list-disc list-inside ml-4">
             <li>Le fichier doit être au format CSV, XLSX, XLS ou JSON.</li>
-            <li>Les colonnes du fichier doivent être au format suivant : nom (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre colonne sera ignorée.</li>
-            <li>Les rôles possibles sont : indefinite (Indéfini), student (Étudiant), teacher (Enseignant), secretary (Secrétaire), director (Directeur).</li>
+            <li>
+              Les colonnes du fichier doivent être au format suivant : nom
+              (Nom), prenom (Prénom), email (Email), statut (Rôle). Toute autre
+              colonne sera ignorée.
+            </li>
+            <li>
+              Les rôles possibles sont : indefinite (Indéfini), student
+              (Étudiant), teacher (Enseignant), secretary (Secrétaire), director
+              (Directeur).
+            </li>
             <li>Les utilisateurs seront créés après validation des données.</li>
           </ul>
           <br />
           {/* Zone de drag & drop */}
-          <div {...getRootProps()} className="border-2 border-dashed p-6 text-center cursor-pointer bg-gray-100 hover:bg-gray-200 transition">
+          <div
+            {...getRootProps()}
+            className="border-2 border-dashed p-6 text-center cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
+          >
             <input {...getInputProps()} />
             {isDragActive ? (
-              <p className="text-blue-600 font-medium">Déposez votre fichier ici...</p>
+              <p className="text-blue-600 font-medium">
+                Déposez votre fichier ici...
+              </p>
             ) : (
-              <p className="text-gray-600">Glissez-déposez un fichier ici ou cliquez pour sélectionner un fichier</p>
+              <p className="text-gray-600">
+                Glissez-déposez un fichier ici ou cliquez pour sélectionner un
+                fichier
+              </p>
             )}
             <FileUp className="mx-auto mt-2 text-gray-500" size={24} />
           </div>
@@ -99,7 +130,7 @@ export function UserImport() {
       <br />
       {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre><br /> */}
       {jsonData.length > 0 && (
-        <div className='dark:text-white'>
+        <div className="dark:text-white">
           <DataTable
             options={{
               info: true,
@@ -117,18 +148,31 @@ export function UserImport() {
           >
             <thead>
               <tr className="bg-[#ECF0F1] border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">Nom</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">Prénom</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">Email</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">Rôle</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
+                  Nom
+                </th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
+                  Prénom
+                </th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
+                  Email
+                </th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-[#2C3E50] cursor-pointer">
+                  Rôle
+                </th>
               </tr>
             </thead>
             <tbody>
               {jsonData.map((user, index) => (
-                <tr 
-                key={index} 
-                className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
-                ${!isEmailValid(user.email) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}>
+                <tr
+                  key={index}
+                  className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
+                ${
+                  !isEmailValid(user.email)
+                    ? `text-red-500`
+                    : `text-gray-600 dark:text-gray-300`
+                }`}
+                >
                   <td className="py-3 px-4">{user.nom}</td>
                   <td className="py-3 px-4">{user.prenom}</td>
                   <td className={`py-3 px-4`}>{user.email}</td>
@@ -137,7 +181,13 @@ export function UserImport() {
               ))}
             </tbody>
           </DataTable>
-          <button className='btn btn-primary' onClick={handleImportUsers} disabled={true}>Importer les utilisateurs</button>
+          <button
+            className="btn btn-primary"
+            onClick={handleImportUsers}
+            disabled={true}
+          >
+            Importer les utilisateurs
+          </button>
         </div>
       )}
     </div>

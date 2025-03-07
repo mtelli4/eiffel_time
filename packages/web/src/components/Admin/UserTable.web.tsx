@@ -152,7 +152,7 @@ export function UserTable({
           {filteredData.map((utilisateur) => (
             <tr
               key={utilisateur.id_utilisateur}
-              className="border-b border-gray-100 hover:bg-gray-600"
+              className="border-b border-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600"
             >
               <td className="py-3 px-4 dt-left">
                 {utilisateur.id_utilisateur}
