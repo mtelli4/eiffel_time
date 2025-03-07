@@ -1,55 +1,77 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { FormNote, NoteFormProps } from '../../../../../shared/src/types/types';
+import React, {useEffect, useState} from 'react';
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {FormNote, NoteFormProps} from '../../../../../shared/src/types/types';
 
-export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, students, note }: NoteFormProps) {
+export function NoteForm({
+  isOpen,
+  onClose,
+  onSubmit,
+  isEdit,
+  evaluation,
+  students,
+  note,
+}: NoteFormProps) {
   const [formData, setFormData] = useState({
     id_eval: evaluation.id_eval,
     id_utilisateur: 0,
     note: '',
     commentaire: '',
-  })
+  });
 
   useEffect(() => {
     if (isEdit && note) {
       formData.id_utilisateur = note.id_utilisateur;
       formData.note = note.note.toString();
       formData.commentaire = note.commentaire;
-      setValueStudent(note.id_utilisateur)
+      setValueStudent(note.id_utilisateur);
     }
-  }, [isEdit, note])
+  }, [isEdit, note]);
 
   const [openStudent, setOpenStudent] = useState(false);
   const [valueStudent, setValueStudent] = useState(0);
-  const [itemsStudent, setItemsStudent] = useState(isEdit ? students.map(s => ({
-    label: `${note?.nom} ${note?.prenom}`,
-    value: note?.id_utilisateur
-  })) : students.map(s => ({
-    label: `${s.nom} ${s.prenom}`,
-    value: s.id_utilisateur
-  })));
+  const [itemsStudent, setItemsStudent] = useState(
+    isEdit
+      ? students.map(s => ({
+          label: `${note?.nom} ${note?.prenom}`,
+          value: note?.id_utilisateur,
+        }))
+      : students.map(s => ({
+          label: `${s.nom} ${s.prenom}`,
+          value: s.id_utilisateur,
+        })),
+  );
 
   const handleSubmit = () => {
-    formData.id_utilisateur = valueStudent
-    const note = parseFloat(formData.note)
+    formData.id_utilisateur = valueStudent;
+    const note = parseFloat(formData.note);
 
     if (formData.id_utilisateur === 0) {
-      Alert.alert('Un étudiant doit être sélectionné')
-      return
+      Alert.alert('Un étudiant doit être sélectionné');
+      return;
     }
     if (isNaN(note) || note < 0 || note > evaluation.notemaximale) {
-      Alert.alert(`La note doit être comprise entre 0 et ${evaluation.notemaximale}`)
-      return
+      Alert.alert(
+        `La note doit être comprise entre 0 et ${evaluation.notemaximale}`,
+      );
+      return;
     }
     const submittedNote: FormNote = {
       ...formData,
-      note: note
-    }
-    onSubmit(submittedNote)
-    onClose()
-  }
+      note: note,
+    };
+    onSubmit(submittedNote);
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -85,7 +107,7 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
                 setOpen={setOpenStudent}
                 setValue={setValueStudent}
                 setItems={setItemsStudent}
-                placeholder='Sélectionner un étudiant'
+                placeholder="Sélectionner un étudiant"
                 disabled={isEdit}
               />
             </View>
@@ -98,9 +120,9 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
                 onChangeText={text => {
                   const regex = /^[0-9]*[.,]?[0-9]*$/;
                   if (regex.test(text)) {
-                    setFormData({ 
-                      ...formData, 
-                      note: text.replace(',', '.') // Remplace la virgule par un point
+                    setFormData({
+                      ...formData,
+                      note: text.replace(',', '.'), // Remplace la virgule par un point
                     });
                   }
                 }}
@@ -113,7 +135,9 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
               <TextInput
                 style={styles.input}
                 value={formData.commentaire}
-                onChangeText={text => setFormData({ ...formData, commentaire: text })}
+                onChangeText={text =>
+                  setFormData({...formData, commentaire: text})
+                }
               />
             </View>
 
@@ -121,8 +145,12 @@ export function NoteForm({ isOpen, onClose, onSubmit, isEdit, evaluation, studen
               <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
                 <Text style={styles.cancelButtonText}>Annuler</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>{isEdit ? 'Modifier' : 'Ajouter'}</Text>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}>
+                <Text style={styles.submitButtonText}>
+                  {isEdit ? 'Modifier' : 'Ajouter'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
