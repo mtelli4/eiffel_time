@@ -1,5 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {useContext} from 'react';
+import {useColorScheme} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -16,6 +17,23 @@ import {ManageAbsences} from '../../screens/ManageAbsences';
 import {Messages} from '../../screens/Messaging/Messages';
 
 const Tab = createBottomTabNavigator();
+
+// Définition des thèmes pour la navigation
+const lightTheme = {
+  headerBackground: '#FFFFFF',
+  headerTint: '#2E3494',
+  tabBarBackground: '#2E3494',
+  tabBarActiveTint: '#FFFFFF',
+  tabBarInactiveTint: 'rgba(255,255,255,0.6)',
+};
+
+const darkTheme = {
+  headerBackground: '#374151', // bg-gray-700 pour le thème sombre uniquement
+  headerTint: '#FFFFFF',
+  tabBarBackground: '#2E3494',
+  tabBarActiveTint: '#FFFFFF',
+  tabBarInactiveTint: 'rgba(255,255,255,0.6)',
+};
 
 // Configuration des onglets par rôle
 const TABS_CONFIG = {
@@ -116,16 +134,6 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Absences et Retards',
-    //   component: ClassGrades,
-    //   icon: {name: 'user-check', source: 'Feather'},
-    // },
-    // {
-    //   name: 'Présences professeurs',
-    //   component: ClassAverages,
-    //   icon: {name: 'users', source: 'Feather'},
-    // },
     {
       name: 'Messagerie',
       component: Schedule,
@@ -136,11 +144,6 @@ const TABS_CONFIG = {
       component: Schedule,
       icon: {name: 'settings', source: 'Feather'},
     },
-    // {
-    //   name: 'Gestion des utilisateurs',
-    //   component: Admin,
-    //   icon: { name: 'tool', source: 'Feather' },
-    // },
   ],
 
   admin: [
@@ -179,11 +182,6 @@ const TABS_CONFIG = {
       component: Settings,
       icon: {name: 'settings', source: 'Feather'},
     },
-    // {
-    //   name: 'Gestion des utilisateurs',
-    //   component: Admin,
-    //   icon: { name: 'tool', source: 'Feather' },
-    // },
   ],
 };
 
@@ -206,6 +204,12 @@ const getTabIcon = (icon, color) => {
 const TabNavigator = () => {
   const {role} = useContext(UserContext); // Exemple pour récupérer le rôle
 
+  // Récupérer le thème du système
+  const systemColorScheme = useColorScheme();
+
+  // Déterminer le thème à utiliser (vous pouvez aussi récupérer une préférence utilisateur ici)
+  const activeTheme = systemColorScheme === 'dark' ? darkTheme : lightTheme;
+
   // Obtenez les onglets pour le rôle actuel
   const tabs = TABS_CONFIG[role] || [];
 
@@ -217,23 +221,20 @@ const TabNavigator = () => {
           return tabConfig ? getTabIcon(tabConfig.icon, color) : null;
         },
         tabBarStyle: {
-          backgroundColor: '#2E3494',
+          backgroundColor: activeTheme.tabBarBackground,
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
         },
-        tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: 'rgba(255,255,255,0.6)',
+        tabBarActiveTintColor: activeTheme.tabBarActiveTint,
+        tabBarInactiveTintColor: activeTheme.tabBarInactiveTint,
+        headerStyle: {
+          backgroundColor: activeTheme.headerBackground,
+        },
+        headerTintColor: activeTheme.headerTint,
       })}>
       {tabs.map(tab => (
-        <Tab.Screen
-          key={tab.name}
-          name={tab.name}
-          component={tab.component}
-          options={{
-            headerTintColor: '#2E3494',
-          }}
-        />
+        <Tab.Screen key={tab.name} name={tab.name} component={tab.component} />
       ))}
     </Tab.Navigator>
   );
