@@ -7,6 +7,8 @@ import { cn } from '../../../../shared/src/lib/utils'
 import { ManageAbsencesAbsence } from '../../../../shared/src/types/types'
 import { fetchAbsences } from '../../../../shared/src/backend/services/absences'
 import { dateFormatting } from '../../../../shared/src/utils/stringUtils'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 // Définition des options pour la fréquence des alertes
 const statusOptions = [
@@ -49,8 +51,31 @@ export function ManageAbsences() {
     )
   }
 
-  const handleExport = () => {
-    console.log('Exporting absences...')
+  const handleExport = (absences: ManageAbsencesAbsence[]) => {
+    const doc = new jsPDF()
+    
+    // Titre du document
+    doc.setFontSize(18)
+    doc.text('Liste des Absences', 14, 20)
+
+    // Préparer les données pour autoTable
+    const tableData = absences.map((absence) => [
+      `${absence.etudiant.nom} ${absence.etudiant.prenom}`,
+      absence.module.codeapogee,
+      absence.module.libelle,
+      dateFormatting(absence.date),
+      getStatutText(absence.statut),
+    ])
+
+    // Ajouter le tableau
+    autoTable(doc, {
+      startY: 30,
+      head: [['Étudiant', 'Code Apogée', 'Module', 'Date', 'Statut']],
+      body: tableData,
+    })
+
+    // Télécharger le fichier PDF
+    doc.save(`absences-${dateFormatting(new Date())}.pdf`)
   }
 
   const filteredAbsences = absences.filter((absence) => {
@@ -86,29 +111,15 @@ export function ManageAbsences() {
     }
   }
 
-  const CustomDatePicker = ({
-    selectedDate,
-    onChange,
-    label,
-  }: {
-    selectedDate: string | Date | null
-    onChange: (date: string) => void
-    label: string
-  }) => {
-    // Convertir la chaîne en objet Date si nécessaire
-    const dateValue =
-      typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
-  }
-
   return (
     <div className="h-full">
       <div className="flex items-center justify-between mb-6">
         <button
-          onClick={handleExport}
+          onClick={() => handleExport(filteredAbsences)}
           className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
         >
           <FileDown className="w-4 h-4" />
-          Exporter
+          Exporter en PDF
         </button>
       </div>
 
