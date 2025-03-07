@@ -202,15 +202,9 @@ const getTabIcon = (icon, color) => {
 };
 
 const TabNavigator = () => {
-  const {role} = useContext(UserContext); // Exemple pour récupérer le rôle
-
-  // Récupérer le thème du système
+  const {role} = useContext(UserContext);
   const systemColorScheme = useColorScheme();
-
-  // Déterminer le thème à utiliser (vous pouvez aussi récupérer une préférence utilisateur ici)
   const activeTheme = systemColorScheme === 'dark' ? darkTheme : lightTheme;
-
-  // Obtenez les onglets pour le rôle actuel
   const tabs = TABS_CONFIG[role] || [];
 
   return (
@@ -230,6 +224,10 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: activeTheme.tabBarInactiveTint,
         headerStyle: {
           backgroundColor: activeTheme.headerBackground,
+          height: 95, // Réduire la hauteur du header
+        },
+        headerTitleStyle: {
+          fontSize: 16, // Réduire la taille du texte du titre
         },
         headerTintColor: activeTheme.headerTint,
       })}>
