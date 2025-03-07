@@ -1,14 +1,14 @@
 import { FileDown } from "lucide-react"
 
-interface PlusButtonProps {
+interface FileDownButtonProps {
   color?: string
   size?: number
 }
 
-export default function PlusButton({ color = "#2E3494", size = 4 }: PlusButtonProps) {
+export function FileDownButton({ color = "#2E3494", size = 4 }: FileDownButtonProps) {
   return (
-    <div className={`text-${color} transition-colors`}>
-      <FileDown className={`w-${size} h-${size} text-${color}`} />
+    <div className={`text-[${color}] transition-colors`}>
+      <FileDown className='w-4 h-4' />
     </div>
   )
 }
