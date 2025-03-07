@@ -72,6 +72,10 @@ export function ManageAbsences() {
       startY: 30,
       head: [['Étudiant', 'Code Apogée', 'Module', 'Date', 'Statut']],
       body: tableData,
+      headStyles: {
+        fillColor: '#2E3494',
+        textColor: 'white'
+      },
     })
 
     // Télécharger le fichier PDF
