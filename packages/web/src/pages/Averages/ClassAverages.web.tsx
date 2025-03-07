@@ -238,7 +238,7 @@ export default function Averages() {
               onChange={(option) =>
                 setSelectedSemester(option?.value as string | number)
               }
-              className="w-full dark:text-white"
+              className="w-full text-black dark:text-white"
               styles={{
                 control: (baseStyles, state) => ({
                   ...baseStyles,
@@ -278,7 +278,7 @@ export default function Averages() {
               options={groupOptions}
               isSearchable={false}
               onChange={(option) => setSelectedGroup(option?.value as string)}
-              className="w-full dark:text-white"
+              className="w-full text-black dark:text-white"
               styles={{
                 control: (baseStyles, state) => ({
                   ...baseStyles,
@@ -373,12 +373,12 @@ export default function Averages() {
                   key={student.id}
                   className="border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900"
                 >
-                  <td className="py-3 px-4 sticky left-0 bg-white dark:bg-gray-900 dark:text-gray-300 font-medium">
+                  <td className="py-3 px-4 sticky left-0 bg-white text-gray-500 dark:bg-gray-900 dark:text-gray-300 font-medium">
                     {student.lastName} {student.firstName}
                   </td>
                   {UES.map((ue) => (
                     <React.Fragment key={ue.code}>
-                      <td className="text-center py-3 px-4 border-l-2 border-gray-300 font-bold bg-gray-50 dark:bg-gray-800 dark:text-gray-300">
+                      <td className="text-center py-3 px-4 border-l-2 border-gray-300 text-black font-bold bg-gray-50 dark:bg-gray-800 dark:text-gray-300">
                         {selectedSemester !== 'all'
                           ? student.ueAverages[selectedSemester as number]?.[
                               ue.code
@@ -396,7 +396,7 @@ export default function Averages() {
                         ue.modules.map((module) => (
                           <td
                             key={module.code}
-                            className="text-center py-3 px-4 border-l border-gray-200 dark:border-gray-500 dark:text-gray-300"
+                            className="text-center py-3 px-4 border-l border-gray-200 text-black dark:border-gray-500 dark:text-gray-300"
                           >
                             {selectedSemester !== 'all'
                               ? student.grades[selectedSemester as number]?.[

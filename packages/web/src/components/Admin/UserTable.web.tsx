@@ -104,7 +104,7 @@ export function UserTable({
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
       <DataTable
-        className="w-full dark:text-gray-300"
+        className="w-full text-black dark:text-gray-300"
         options={{
           paging: false,
           searching: false,

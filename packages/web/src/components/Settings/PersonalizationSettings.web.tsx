@@ -1,8 +1,8 @@
 import { Palette } from 'lucide-react'
 import Select from 'react-select'
-import { useTheme } from '../../../../shared/src/hooks/useTheme'
 import { useDateFormat } from '../../../../shared/src/hooks/useDateFormat'
 import { useLanguage } from '../../../../shared/src/hooks/useLanguage'
+import { useTheme } from '../../../../shared/src/hooks/useTheme'
 import '../../styles/select-styles.css'
 interface PersonalizationSettingsProps {
   dateFormat: string
@@ -46,7 +46,7 @@ export default function PersonalizationSettings({
             options={themesSelectOptions}
             isSearchable={false}
             onChange={(option) => setTheme(option?.value as string)}
-            className="w-full dark:text-white"
+            className="w-full text-black dark:text-white"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -86,7 +86,7 @@ export default function PersonalizationSettings({
             options={languagesSelectOptions}
             isSearchable={false}
             onChange={(option) => setLanguage(option?.value as string)}
-            className="w-full dark:text-white"
+            className="w-full text-black dark:text-white"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -129,7 +129,7 @@ export default function PersonalizationSettings({
               (option) => option.value === dateFormat
             )}
             onChange={(option) => setDate(option?.value as string)}
-            className="w-full dark:text-white"
+            className="w-full text-black dark:text-white"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,

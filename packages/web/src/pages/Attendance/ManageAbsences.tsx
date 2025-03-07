@@ -244,7 +244,7 @@ export function ManageAbsences() {
                 onChange={(option) =>
                   setSelectedStatut(option?.value as Absence['statut'] | 'all')
                 }
-                className="w-full dark:text-white"
+                className="w-full text-black dark:text-white"
                 styles={{
                   control: (baseStyles, state) => ({
                     ...baseStyles,
@@ -263,7 +263,7 @@ export function ManageAbsences() {
                       ? 'var(--select-selected-bg, #2e3494)'
                       : state.isFocused
                       ? 'var(--select-hover-bg, #deebff)'
-                      : 'var(--select-menu-bg, --select-menu-bg)',
+                      : 'var(--select-menu-bg, white)',
                   }),
                   singleValue: (baseStyles) => ({
                     ...baseStyles,
