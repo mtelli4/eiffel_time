@@ -287,6 +287,7 @@ export interface ManageAbsencesAbsence {
     id_module: number
     codeapogee: string
     libelle: string
+    formation: Formation
   }
   date: Date
   envoye: boolean

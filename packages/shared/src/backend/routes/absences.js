@@ -37,6 +37,20 @@ router.get('/', async (req, res) => {
               id_module: true,
               codeapogee: true,
               libelle: true,
+              module_bloc_competence: {
+                select: {
+                  bloc_competence: {
+                    select: {
+                      formation: {
+                        select: {
+                          id_formation: true,
+                          libelle: true,
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           debut: true,
