@@ -57,6 +57,7 @@ router.get('/', async (req, res) => {
         }
       },
       updatedat: true,
+      message: true,
       valide: true,
       envoye: true,
       justificatif: true,
@@ -73,6 +74,26 @@ router.get('/', async (req, res) => {
     }
   });
   res.json(absences);
+});
+
+// Route pour accepter une absence
+router.put('/:id/approve', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const absence = await prisma.absence.update({
+    where: { id_absence: id },
+    data: { valide: true, updatedat: new Date() },
+  });
+  res.json(absence);
+});
+
+// Route pour rejeter une absence
+router.put('/:id/reject', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const absence = await prisma.absence.update({
+    where: { id_absence: id },
+    data: { valide: false, envoye: true, updatedat: new Date() },
+  });
+  res.json(absence);
 });
 
 module.exports = router;

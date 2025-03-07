@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import { cn } from '../../../../shared/src/lib/utils'
 import { Formation, ManageAbsencesAbsence } from '../../../../shared/src/types/types'
-import { fetchAbsences } from '../../../../shared/src/backend/services/absences'
+import { approveAbsence, fetchAbsences, rejectAbsence } from '../../../../shared/src/backend/services/absences'
 import { dateFormatting } from '../../../../shared/src/utils/stringUtils'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -16,6 +16,7 @@ const statusOptions = [
   { value: 'pending', label: 'En attente' },
   { value: 'approved', label: 'Validées' },
   { value: 'rejected', label: 'Refusées' },
+  { value: 'unsent', label: 'Non envoyées' },
 ]
 
 export function ManageAbsences() {
@@ -38,18 +39,22 @@ export function ManageAbsences() {
       .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
   }, [])
 
-  const handleApprove = (absenceId: string) => {
+  const handleApprove = async (id_absence: number) => {
+    const result = await approveAbsence(id_absence)
+    if (!result) return
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id_absence === absenceId ? { ...abs, statut: 'approved' } : abs
+        abs.id_absence === id_absence ? { ...abs, statut: 'approved' } : abs
       )
     )
   }
 
-  const handleReject = (absenceId: string) => {
+  const handleReject = async (id_absence: number) => {
+    const result = await rejectAbsence(id_absence)
+    if (!result) return
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id_absence === absenceId ? { ...abs, statut: 'rejected' } : abs
+        abs.id_absence === id_absence ? { ...abs, statut: 'rejected' } : abs
       )
     )
   }
@@ -105,6 +110,8 @@ export function ManageAbsences() {
         return 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
       case 'rejected':
         return 'bg-red-100 text-red-800 dark:bg-red-600 dark:text-white'
+      case 'unsent':
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-white'
     }
   }
 
@@ -116,6 +123,8 @@ export function ManageAbsences() {
         return 'Validée'
       case 'rejected':
         return 'Refusée'
+      case 'unsent':
+        return 'Non envoyée'
     }
   }
 
@@ -282,6 +291,7 @@ export function ManageAbsences() {
                   value: formation.id_formation,
                   label: formation.libelle,
                 }))}
+                isClearable
                 onChange={(option) => setSelectedFormation(option?.value as number | null)}
                 isSearchable
                 className="w-full dark:text-white"
@@ -310,6 +320,7 @@ export function ManageAbsences() {
                     color: 'var(--select-text, black)',
                   }),
                 }}
+                placeholder="Sélectionner une formation"
               />
             </div>
           </div>
@@ -320,6 +331,9 @@ export function ManageAbsences() {
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
+              {/* <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
+                ID
+              </th> */}
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Étudiant
               </th>
@@ -331,6 +345,9 @@ export function ManageAbsences() {
               </th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Date
+              </th>
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
+                Message
               </th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Statut
@@ -347,6 +364,11 @@ export function ManageAbsences() {
                   key={absence.id_absence}
                   className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
+                  {/* <td className="py-3 px-4">
+                    <div className="text-sm text-gray-900 dark:text-white">
+                      {absence.id_absence}
+                    </div>
+                  </td> */}
                   <td className="py-3 px-4">
                     <div>
                       <div className="font-medium text-gray-900 dark:text-white">
@@ -389,6 +411,11 @@ export function ManageAbsences() {
                           )}
                         </div>
                       )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="text-sm text-gray-900 dark:text-white">
+                      {absence.message}
                     </div>
                   </td>
                   <td className="py-3 px-4">

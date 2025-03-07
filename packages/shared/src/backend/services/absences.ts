@@ -1,12 +1,14 @@
 import { API_URL, Formation, ManageAbsencesAbsence } from "../../types/types"
 
-const setAbsenceStatut = (absence: ManageAbsencesAbsence) => {
-  if (absence.envoye && absence.valide) {
+const setAbsenceStatut = (envoye: boolean | null, valide: boolean | null): string => {
+  if (envoye && valide === null) {
+    return 'pending'
+  } else if (valide && envoye) {
     return 'approved'
-  } else if (absence.envoye && !absence.valide) {
+  } else if (!valide && envoye) {
     return 'rejected'
   } else {
-    return 'pending'
+    return 'unsent'
   }
 }
 
@@ -39,10 +41,11 @@ const processAbsenceData = (data: any): { absences: ManageAbsencesAbsence[], for
         formation,
       },
       date: new Date(absence.cours.debut),
+      message: absence.message,
       envoye: absence.envoye,
       valide: absence.valide,
       updatedat: new Date(absence.updatedat),
-      statut: setAbsenceStatut(absence),
+      statut: setAbsenceStatut(absence.envoye, absence.valide),
       path: absence.justificatif,
     }
   })
@@ -57,4 +60,28 @@ export const fetchAbsences = async (): Promise<{ absences: ManageAbsencesAbsence
   }
   const data = await response.json()
   return processAbsenceData(data)
+}
+
+export const approveAbsence = async (id_absence: number): Promise<boolean> => {
+  const response = await fetch(`${API_URL}/api/absences/${id_absence}/approve`, {
+    method: 'PUT',
+  })
+  if (!response.ok) {
+    console.error(`Erreur réseau: ${response.statusText}`)
+    return false
+  }
+
+  return true
+}
+
+export const rejectAbsence = async (id_absence: number): Promise<boolean> => {
+  const response = await fetch(`${API_URL}/api/absences/${id_absence}/reject`, {
+    method: 'PUT',
+  })
+  if (!response.ok) {
+    console.error(`Erreur réseau: ${response.statusText}`)
+    return false
+  }
+
+  return true
 }
