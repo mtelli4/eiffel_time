@@ -27,6 +27,7 @@ This environment variable will be used to connect the server to the database for
 Copy the file `packages/shared/src/utils/ip_address.example.ts` to `packages/shared/src/utils/ip_address.ts` and complete the `ip_address` by the ip address of the server (your computer). This file will be used to connect the mobile application to the server for your own android device.
 
 Run the following command at root of the project, replace `utilisateur_de_la_bdd` by the database user and `bdd` by the database name :
+
 ```
 USER=utilisateur_de_la_bdd DATABASE=bdd npm run db:pull:full
 ```
