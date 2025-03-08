@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 
-export const FileDownButton: React.FC = () => {
-  const [FileDownButton, setFileDownButton] = useState<React.FC | null>(null)
+interface FileDownButtonProps {
+  color?: string
+  size?: number
+}
+
+export function FileDownButton({ color = '#2E3494', size = 16 }: FileDownButtonProps) {
+  const [FileDownButton, setFileDownButton] = useState<any>(null)
 
   useEffect(() => {
     const loadComponent = async () => {
       if (Platform.OS === 'web') {
-        const { default: FileDownButton } = await import('../../../../web/src/components/Button/FileDownButton.web')
+        const { FileDownButton } = await import('../../../../web/src/components/Button/FileDownButton.web')
         setFileDownButton(() => FileDownButton)
       } else {
-        const { default: FileDownButton } = await import('../../../../mobile/src/components/Button/FileDownButton.native')
+        const { FileDownButton } = await import('../../../../mobile/src/components/Button/FileDownButton.native')
         setFileDownButton(() => FileDownButton)
       }
     }
@@ -20,6 +25,6 @@ export const FileDownButton: React.FC = () => {
 
   if (!FileDownButton) return null // Optionally, you can return a loading indicator here
 
-  return <FileDownButton />
+  return <FileDownButton color={color} size={size} />
 }
 

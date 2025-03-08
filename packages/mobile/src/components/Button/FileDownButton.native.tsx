@@ -4,12 +4,12 @@ const iconButton = {
   marginLeft: 8,
 }
 
-interface FileDownloadButtonProps {
+interface FileDownButtonProps {
   color?: string
   size?: number
 }
 
-export default function FileDownButton({ color = "#2E3494", size = 16 }: FileDownloadButtonProps) {
+export function FileDownButton({ color = "#2E3494", size = 16 }: FileDownButtonProps) {
   return (
     <Feather name="download" size={size} color={color} style={iconButton} />
   )

@@ -52,7 +52,7 @@ export default function Averages() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-300 dark:border-gray-400">
+              <tr className="border-b-2 border-gray-300 dark:border-gray-500">
                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-900">
                   Étudiant
                 </th>
