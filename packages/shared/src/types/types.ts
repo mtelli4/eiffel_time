@@ -46,7 +46,7 @@ export type Utilisateur = {
   statut: string
   formations: Formation[]
   groupes: Groupe[]
-  vacataire?: boolean | null
+  vacataire: true | false | null
 }
 
 export interface UserUpdate {
@@ -166,8 +166,8 @@ export interface FormData {
 
 export interface UserFiltersProps {
   onFilterChange: (filterName: string, value: string) => void
-  formations: { value: string; label: string }[]
-  groupes: { value: string; label: string }[]
+  formations: Formation[]
+  groupes: Groupe[]
 }
 
 export interface FormEvaluation {
@@ -265,4 +265,33 @@ export type MessagingConversation = {
   utilisateur: MessagingUtilisateur
   last_message: MessagingMessage
   unread: number
+}
+
+export type ImportUser = {
+  nom: string
+  prenom: string
+  email: string
+  statut: string
+  groupes?: string
+}
+
+export interface ManageAbsencesAbsence {
+  id_absence: string
+  etudiant: {
+    id_utilisateur: number
+    nom: string
+    prenom: string
+    groupes: Groupe[]
+  }
+  module: {
+    id_module: number
+    codeapogee: string
+    libelle: string
+  }
+  date: Date
+  envoye: boolean
+  valide: boolean
+  updatedat: Date
+  statut: 'pending' | 'approved' | 'rejected'
+  path?: string
 }

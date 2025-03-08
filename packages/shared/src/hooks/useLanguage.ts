@@ -28,16 +28,14 @@ export const useLanguage = (initialLanguage?: Language) => {
     }
   }, []);
 
-  // Définir l'état de la langue
-
   // Effet pour appliquer les modifications de langue
   useEffect(() => {
     if (Platform.OS === 'web') {
-      localStorage.setItem('language', language || localStorage.getItem('language'));
+      localStorage.setItem('language', language || localStorage.getItem('language') || 'fr');
     } else {
       import('react-native-mmkv').then(({ MMKV }) => {
         const storage = new MMKV();
-        storage.set('language', language || storage.getString('language'));
+        storage.set('language', language || storage.getString('language') || 'fr');
       });
     }
   }, [language]);

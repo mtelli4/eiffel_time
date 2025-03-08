@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import {
   Check,
   FileDown,
@@ -10,95 +12,40 @@ import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
+import { fetchAbsences } from '../../../../shared/src/backend/services/absences'
 import { cn } from '../../../../shared/src/lib/utils'
-import { API_URL } from '../../../../shared/src/types/types'
+import { ManageAbsencesAbsence } from '../../../../shared/src/types/types'
+import { dateFormatting } from '../../../../shared/src/utils/stringUtils'
 import '../../styles/select-styles.css'
 
-interface Student {
-  id: string
-  firstName: string
-  lastName: string
-  group: string
-}
-
-type Groupe = {
-  id_grp: number
-  libelle: string
-}
-
-interface Absence {
-  id_absence: string
-  etudiant: {
-    id_utilisateur: number
-    nom: string
-    prenom: string
-    groupes: Groupe[]
-  }
-  module: {
-    id_module: number
-    codeapogee: string
-    libelle: string
-  }
-  date: string
-  envoye: boolean
-  valide: boolean
-  updatedat: string
-  statut: 'pending' | 'approved' | 'rejected'
-  path?: string
-}
+// Définition des options pour la fréquence des alertes
+const statusOptions = [
+  { value: 'all', label: 'Tous les statuts' },
+  { value: 'pending', label: 'En attente' },
+  { value: 'approved', label: 'Validées' },
+  { value: 'rejected', label: 'Refusées' },
+]
 
 export function ManageAbsences() {
-  const [absences, setAbsences] = useState<Absence[]>([])
+  const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatut, setSelectedStatut] = useState<
-    Absence['statut'] | 'all'
+    ManageAbsencesAbsence['statut'] | 'all'
   >('all')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [alertFrequency, setAlertFrequency] = useState('immediate')
-  const setAbsenceStatut = (absence: Absence) => {
-    if (absence.envoye && absence.valide) {
-      return 'approved'
-    } else if (absence.envoye && !absence.valide) {
-      return 'rejected'
-    } else {
-      return 'pending'
-    }
-  }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/absences/`)
-      .then((res) => res.json())
+    fetchAbsences()
       .then((data) => {
-        setAbsences(
-          data.map((absence: any) => ({
-            id_absence: absence.id_absence,
-            etudiant: {
-              id_utilisateur: absence.etudiant.utilisateur.id_utilisateur,
-              nom: absence.etudiant.utilisateur.nom,
-              prenom: absence.etudiant.utilisateur.prenom,
-              groupes: absence.etudiant.groupe_etudiant.map((groupe: any) => ({
-                id_grp: groupe.groupe.id_grp,
-                libelle: groupe.groupe.libelle,
-              })),
-            },
-            module: {
-              id_module: absence.cours.module.id_module,
-              codeapogee: absence.cours.module.codeapogee,
-              libelle: absence.cours.module.libelle,
-            },
-            date: absence.cours.debut,
-            envoye: absence.envoye,
-            valide: absence.valide,
-            updatedat: absence.updatedat,
-            statut: setAbsenceStatut(absence),
-            path: absence.justificatif,
-          }))
-        )
+        setAbsences(data)
       })
-      .catch((error) => console.error('Error:', error))
-  })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des absences:', error)
+      })
+  }, [])
 
   const handleApprove = (absenceId: string) => {
     setAbsences((prev) =>
@@ -116,8 +63,31 @@ export function ManageAbsences() {
     )
   }
 
-  const handleExport = () => {
-    console.log('Exporting absences...')
+  const handleExport = (absences: ManageAbsencesAbsence[]) => {
+    const doc = new jsPDF()
+
+    // Titre du document
+    doc.setFontSize(18)
+    doc.text('Liste des Absences', 14, 20)
+
+    // Préparer les données pour autoTable
+    const tableData = absences.map((absence) => [
+      `${absence.etudiant.nom} ${absence.etudiant.prenom}`,
+      absence.module.codeapogee,
+      absence.module.libelle,
+      dateFormatting(absence.date),
+      getStatutText(absence.statut),
+    ])
+
+    // Ajouter le tableau
+    autoTable(doc, {
+      startY: 30,
+      head: [['Étudiant', 'Code Apogée', 'Module', 'Date', 'Statut']],
+      body: tableData,
+    })
+
+    // Télécharger le fichier PDF
+    doc.save(`absences-${dateFormatting(new Date())}.pdf`)
   }
 
   const filteredAbsences = absences.filter((absence) => {
@@ -132,11 +102,12 @@ export function ManageAbsences() {
     const matchesDateRange =
       (!startDate || absence.date >= startDate) &&
       (!endDate || absence.date <= endDate)
-
     return matchesSearch && matchesStatut && matchesDateRange
   })
 
-  const getStatutBadgeClass = (statut: Absence['statut']) => {
+  filteredAbsences.sort((a, b) => b.date.getTime() - a.date.getTime())
+
+  const getStatutBadgeClass = (statut: ManageAbsencesAbsence['statut']) => {
     switch (statut) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-600 dark:text-white'
@@ -147,7 +118,7 @@ export function ManageAbsences() {
     }
   }
 
-  const getStatutText = (statut: Absence['statut']) => {
+  const getStatutText = (statut: ManageAbsencesAbsence['statut']) => {
     switch (statut) {
       case 'pending':
         return 'En attente'
@@ -200,11 +171,11 @@ export function ManageAbsences() {
     <div className="h-full">
       <div className="flex items-center justify-between mb-6">
         <button
-          onClick={handleExport}
+          onClick={() => handleExport(filteredAbsences)}
           className="btn btn-outline dark:bg-primary dark:text-white flex items-center gap-2"
         >
           <FileDown className="w-4 h-4" />
-          Exporter
+          Exporter en PDF
         </button>
       </div>
 
@@ -242,7 +213,9 @@ export function ManageAbsences() {
                 options={statusOptions}
                 isSearchable={false}
                 onChange={(option) =>
-                  setSelectedStatut(option?.value as Absence['statut'] | 'all')
+                  setSelectedStatut(
+                    option?.value as ManageAbsencesAbsence['statut'] | 'all'
+                  )
                 }
                 className="w-full text-black dark:text-white"
                 styles={{
@@ -280,9 +253,7 @@ export function ManageAbsences() {
                 // showIcon
                 calendarIconClassName="w-5 h-5 text-gray-400 dark:text-white"
                 selected={startDate ? new Date(startDate) : null}
-                onChange={(date: Date | null) =>
-                  setStartDate(date ? date.toISOString().split('T')[0] : '')
-                }
+                onChange={(date: Date | null) => setStartDate(date)}
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
                 dayClassName={(date) => {
@@ -321,9 +292,7 @@ export function ManageAbsences() {
               </label>
               <DatePicker
                 selected={endDate ? new Date(endDate) : null}
-                onChange={(date: Date | null) =>
-                  setEndDate(date ? date.toISOString().split('T')[0] : '')
-                }
+                onChange={(date: Date | null) => setEndDate(date)}
                 className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                 calendarClassName="dark:bg-gray-800"
                 dayClassName={(date) => {
@@ -384,89 +353,91 @@ export function ManageAbsences() {
           <tbody>
             {filteredAbsences.map((absence) => {
               return (
-                <tr
-                  key={absence.id_absence}
-                  className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <td className="py-3 px-4">
-                    <div>
-                      <div className="font-medium text-gray-900 dark:text-white">
-                        {absence.etudiant.nom} {absence.etudiant.prenom}
-                      </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-300">
-                        {absence.etudiant.groupes
-                          .map((groupe) => groupe.libelle)
-                          .join(', ')}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
-                    <div>
-                      <div className="font-medium text-gray-900 dark:text-gray-300">
-                        {absence.module.codeapogee}
-                      </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-300">
-                        {absence.module.libelle}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
-                    <div>
-                      <div className="font-medium text-gray-900 dark:text-white">
-                        {new Date(absence.date).toLocaleDateString('fr-FR')}
-                      </div>
-                      {absence.updatedat && (
-                        <div className="text-sm text-gray-500 dark:text-gray-300">
-                          Soumis le{' '}
-                          {new Date(absence.updatedat).toLocaleDateString(
-                            'fr-FR'
-                          )}
+                absence.etudiant.groupes.length > 0 && (
+                  <tr
+                    key={absence.id_absence}
+                    className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  >
+                    <td className="py-3 px-4">
+                      <div>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {absence.etudiant.nom} {absence.etudiant.prenom}
                         </div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className={cn(
-                        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                        getStatutBadgeClass(absence.statut)
-                      )}
-                    >
-                      {getStatutText(absence.statut)}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center justify-end gap-2">
-                      {absence.path && (
-                        <button
-                          onClick={() => window.open(absence.path, '_blank')}
-                          className="p-1 text-gray-500 hover:text-primary"
-                          title="Voir le justificatif"
-                        >
-                          <FileText className="w-4 h-4 dark:text-white" />
-                        </button>
-                      )}
-                      {absence.statut === 'pending' && (
-                        <>
+                        <div className="text-sm text-gray-500 dark:text-gray-300">
+                          {absence.etudiant.groupes
+                            .map((groupe) => groupe.libelle)
+                            .join(', ')}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div>
+                        <div className="font-medium text-gray-900 dark:text-gray-300">
+                          {absence.module.codeapogee}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-300">
+                          {absence.module.libelle}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {dateFormatting(absence.date)}
+                        </div>
+                        {absence.updatedat && (
+                          <div className="text-sm text-gray-500 dark:text-gray-300">
+                            Soumis le{' '}
+                            {new Date(absence.updatedat).toLocaleDateString(
+                              'fr-FR'
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={cn(
+                          'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                          getStatutBadgeClass(absence.statut)
+                        )}
+                      >
+                        {getStatutText(absence.statut)}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center justify-end gap-2">
+                        {absence.path && (
                           <button
-                            onClick={() => handleApprove(absence.id_absence)}
-                            className="p-1 text-green-600 dark:text-green-300 hover:text-green-700"
-                            title="Valider"
+                            onClick={() => window.open(absence.path, '_blank')}
+                            className="p-1 text-gray-500 hover:text-primary"
+                            title="Voir le justificatif"
                           >
-                            <Check className="w-4 h-4" />
+                            <FileText className="w-4 h-4 dark:text-white" />
                           </button>
-                          <button
-                            onClick={() => handleReject(absence.id_absence)}
-                            className="p-1 text-red-600 dark:text-red-300 hover:text-red-700"
-                            title="Refuser"
-                          >
-                            <XIcon className="w-4 h-4" />
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </tr>
+                        )}
+                        {absence.statut === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleApprove(absence.id_absence)}
+                              className="p-1 text-green-600 dark:text-green-300 hover:text-green-700"
+                              title="Valider"
+                            >
+                              <Check className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleReject(absence.id_absence)}
+                              className="p-1 text-red-600 dark:text-red-300 hover:text-red-700"
+                              title="Refuser"
+                            >
+                              <XIcon className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )
               )
             })}
           </tbody>

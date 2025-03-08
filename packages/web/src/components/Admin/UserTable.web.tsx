@@ -16,7 +16,7 @@ interface UserTableProps {
     role: string
     formation: string
     groupe: string
-    type: boolean
+    type?: boolean | null
     search: string
   }
   loading: boolean
@@ -36,7 +36,8 @@ export function UserTable({
 
   if (!Edit || !Delete) return null
 
-  /* roleSelected: string */
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
   let filteredData = users
   if (filters.search !== '') {
     filteredData = users.filter(

@@ -32,7 +32,7 @@ export function TeacherFilters({
   return (
     <View style={styles.container}>
       <View style={styles.filterColumn}>
-        <Text style={styles.label}>Rechercher un professeur</Text>
+        <Text style={styles.label}>Rechercher un enseignant</Text>
         <View style={styles.inputContainer}>
           <Input
             value={searchQuery}
@@ -45,7 +45,7 @@ export function TeacherFilters({
         </View>
       </View>
 
-      <View style={styles.filterColumn}>
+      {/* <View style={styles.filterColumn}>
         <Text style={styles.label}>Année</Text>
         <View style={styles.inputContainer}>
           <Input
@@ -54,7 +54,7 @@ export function TeacherFilters({
             placeholder="Toutes les années"
           />
         </View>
-      </View>
+      </View> */}
 
       <View style={styles.filterColumn}>
         <Text style={styles.label}>Semestre</Text>

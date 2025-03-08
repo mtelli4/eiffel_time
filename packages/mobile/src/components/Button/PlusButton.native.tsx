@@ -1,17 +1,17 @@
-import {TouchableOpacity, useColorScheme} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
 const iconButton = {
   marginLeft: 8,
 };
 
-export default function PlusButton() {
-  const colorScheme = useColorScheme();
-  const iconColor = colorScheme === 'dark' ? '#FFFFFF' : '#2E3494';
+interface PlusButtonProps {
+  color?: string;
+  size?: number;
+}
 
-  return (
-    <TouchableOpacity style={iconButton}>
-      <Feather name="plus" size={16} color={iconColor} />
-    </TouchableOpacity>
-  );
+export default function PlusButton({
+  color = '#2E3494',
+  size = 16,
+}: PlusButtonProps) {
+  return <Feather name="plus" size={size} color={color} />;
 }

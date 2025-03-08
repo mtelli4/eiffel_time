@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Platform,
   ScrollView,
@@ -10,13 +10,9 @@ import {
 } from 'react-native';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import Feather from 'react-native-vector-icons/Feather';
-
-interface Student {
-  id: string;
-  firstName: string;
-  lastName: string;
-  group: string;
-}
+import { API_URL, ManageAbsencesAbsence } from '../../../shared/src/types/types';
+import { fetchAbsences } from '../../../shared/src/backend/services/absences';
+import { dateFormatting } from '../../../shared/src/utils/stringUtils';
 
 interface Absence {
   id: string;
@@ -33,53 +29,30 @@ interface Absence {
   submissionDate?: string;
 }
 
-// Mock data
-const MOCK_STUDENTS: Student[] = [
-  {id: '22001234', firstName: 'Jean', lastName: 'DUPONT', group: 'A1'},
-  {id: '22001235', firstName: 'Marie', lastName: 'MARTIN', group: 'A2'},
-];
-
-const MOCK_ABSENCES: Absence[] = [
-  {
-    id: 'abs1',
-    studentId: '22001234',
-    date: '2024-03-15',
-    module: {code: 'M5101', name: 'Développement Web'},
-    professor: 'Dr. Martin',
-    status: 'pending',
-    justification: 'Certificat médical',
-    document: 'https://example.com/justification.pdf',
-    submissionDate: '2024-03-16',
-  },
-  {
-    id: 'abs2',
-    studentId: '22001235',
-    date: '2024-03-20',
-    module: {code: 'M5102', name: 'Base de données'},
-    professor: 'Dr. Dubois',
-    status: 'approved',
-    justification: 'Rendez-vous médical',
-    document: 'https://example.com/justification2.pdf',
-    submissionDate: '2024-03-21',
-  },
-];
 
 export function ManageAbsences() {
-  const [absences, setAbsences] = useState<Absence[]>(MOCK_ABSENCES);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<
-    Absence['status'] | 'all'
-  >('all');
-  const [startDate, setStartDate] = useState(new Date('2000-01-01'));
-  const [endDate, setEndDate] = useState(new Date('2100-12-31'));
-  const [showFilters, setShowFilters] = useState(false);
+  const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedStatut, setSelectedStatut] = useState<ManageAbsencesAbsence['statut'] | 'all'>('all')
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
+  const [showFilters, setShowFilters] = useState(false)
+  const [alertFrequency, setAlertFrequency] = useState('immediate')
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
+  useEffect(() => {
+    fetchAbsences()
+      .then((data) => {
+        setAbsences(data)
+      })
+      .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
+  }, [])
 
   const handleApprove = (absenceId: string) => {
     setAbsences(prev =>
       prev.map(abs =>
-        abs.id === absenceId ? {...abs, status: 'approved'} : abs,
+        abs.id_absence === absenceId ? { ...abs, status: 'approved' } : abs,
       ),
     );
   };
@@ -87,7 +60,7 @@ export function ManageAbsences() {
   const handleReject = (absenceId: string) => {
     setAbsences(prev =>
       prev.map(abs =>
-        abs.id === absenceId ? {...abs, status: 'rejected'} : abs,
+        abs.id_absence === absenceId ? { ...abs, status: 'rejected' } : abs,
       ),
     );
   };
@@ -96,22 +69,17 @@ export function ManageAbsences() {
     console.log('Exporting absences...');
   };
 
-  const filteredAbsences = absences.filter(absence => {
-    const student = MOCK_STUDENTS.find(s => s.id === absence.studentId);
-    const searchString =
-      `${student?.firstName} ${student?.lastName} ${absence.module.code} ${absence.module.name}`.toLowerCase();
-    const matchesSearch = searchString.includes(searchQuery.toLowerCase());
-    const matchesStatus =
-      selectedStatus === 'all' || absence.status === selectedStatus;
-    const matchesDateRange =
-      (!startDate || absence.date >= startDate.toISOString().split('T')[0]) &&
-      (!endDate || absence.date <= endDate.toISOString().split('T')[0]);
+  const filteredAbsences = absences.filter((absence) => {
+    const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
+    const searchString = `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
+    const matchesSearch = searchString.includes(searchQuery.toLowerCase())
+    const matchesStatut = selectedStatut === 'all' || absence.statut === selectedStatut
+    const matchesDateRange = (!startDate || absence.date >= startDate) && (!endDate || absence.date <= endDate)
+    return matchesSearch && matchesStatut && matchesDateRange
+  })
 
-    return matchesSearch && matchesStatus && matchesDateRange;
-  });
-
-  const getStatusStyle = (status: Absence['status']) => {
-    switch (status) {
+  const getStatusStyle = (statut: ManageAbsencesAbsence['statut']) => {
+    switch (statut) {
       case 'pending':
         return styles.statusPending;
       case 'approved':
@@ -121,8 +89,8 @@ export function ManageAbsences() {
     }
   };
 
-  const getStatusText = (status: Absence['status']) => {
-    switch (status) {
+  const getStatusText = (statut: ManageAbsencesAbsence['statut']) => {
+    switch (statut) {
       case 'pending':
         return 'En attente';
       case 'approved':
@@ -132,7 +100,6 @@ export function ManageAbsences() {
     }
   };
 
-  console.log('Filtered absences:', filteredAbsences);
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -176,9 +143,9 @@ export function ManageAbsences() {
                   /* Implement status picker modal */
                 }}>
                 <Text>
-                  {selectedStatus === 'all'
+                  {selectedStatut === 'all'
                     ? 'Tous les statuts'
-                    : getStatusText(selectedStatus)}
+                    : getStatusText(selectedStatut)}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -188,7 +155,7 @@ export function ManageAbsences() {
               <TouchableOpacity
                 style={styles.picker}
                 onPress={() => setShowStartDatePicker(true)}>
-                <Text>{startDate.toLocaleDateString('fr-FR')}</Text>
+                <Text>{startDate ? startDate.toLocaleDateString('fr-FR') : 'Toutes'}</Text>
               </TouchableOpacity>
             </View>
 
@@ -197,7 +164,7 @@ export function ManageAbsences() {
               <TouchableOpacity
                 style={styles.picker}
                 onPress={() => setShowEndDatePicker(true)}>
-                <Text>{endDate.toLocaleDateString('fr-FR')}</Text>
+                <Text>{endDate ? endDate.toLocaleDateString('fr-FR') : 'Toutes'}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -207,46 +174,46 @@ export function ManageAbsences() {
       <ScrollView
         style={styles.absencesList}
         contentContainerStyle={styles.absencesListContent}>
-        {filteredAbsences.map(absence => {
-          const student = MOCK_STUDENTS.find(s => s.id === absence.studentId);
-          return (
-            <View key={absence.id} style={styles.absenceCard}>
+        {filteredAbsences.map((absence) => {
+          return absence.etudiant.groupes.length > 0 && (
+            <View key={absence.id_absence} style={styles.absenceCard}>
               <View style={styles.absenceHeader}>
                 <View>
                   <Text style={styles.studentName}>
-                    {student?.lastName} {student?.firstName}
+                    {absence.etudiant.nom} {absence.etudiant.prenom}
                   </Text>
-                  <Text style={styles.groupText}>Groupe {student?.group}</Text>
+                  <Text style={styles.groupText}>
+                    {absence.etudiant.groupes
+                      .map((groupe) => groupe.libelle)
+                      .join(', ')}
+                  </Text>
                 </View>
                 <View
-                  style={[styles.statusBadge, getStatusStyle(absence.status)]}>
+                  style={[styles.statusBadge, getStatusStyle(absence.statut)]}>
                   <Text style={styles.statusText}>
-                    {getStatusText(absence.status)}
+                    {getStatusText(absence.statut)}
                   </Text>
                 </View>
               </View>
 
               <View style={styles.moduleInfo}>
-                <Text style={styles.moduleCode}>{absence.module.code}</Text>
-                <Text style={styles.moduleName}>{absence.module.name}</Text>
+                <Text style={styles.moduleCode}>{absence.module.codeapogee}</Text>
+                <Text style={styles.moduleName}>{absence.module.libelle}</Text>
               </View>
 
               <View style={styles.dateInfo}>
                 <Text style={styles.date}>
-                  {new Date(absence.date).toLocaleDateString('fr-FR')}
+                  {dateFormatting(absence.date)}
                 </Text>
-                {absence.submissionDate && (
+                {absence.updatedat && (
                   <Text style={styles.submissionDate}>
-                    Soumis le{' '}
-                    {new Date(absence.submissionDate).toLocaleDateString(
-                      'fr-FR',
-                    )}
+                    Soumis le {dateFormatting(absence.updatedat)}
                   </Text>
                 )}
               </View>
 
               <View style={styles.actions}>
-                {absence.document && (
+                {absence.path && (
                   <TouchableOpacity
                     onPress={() => {
                       /* Implement document viewer */
@@ -255,15 +222,15 @@ export function ManageAbsences() {
                     <Feather name="file-text" size={20} color="#666" />
                   </TouchableOpacity>
                 )}
-                {absence.status === 'pending' && (
+                {absence.statut === 'pending' && (
                   <>
                     <TouchableOpacity
-                      onPress={() => handleApprove(absence.id)}
+                      onPress={() => handleApprove(absence.id_absence)}
                       style={styles.actionButton}>
                       <Feather name="check" size={20} color="#22c55e" />
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleReject(absence.id)}
+                      onPress={() => handleReject(absence.id_absence)}
                       style={styles.actionButton}>
                       <Feather name="x" size={20} color="#ef4444" />
                     </TouchableOpacity>
@@ -375,7 +342,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 1},
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.2,
         shadowRadius: 3,
       },

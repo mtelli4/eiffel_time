@@ -46,7 +46,8 @@ export default function PersonalizationSettings({
             options={themesSelectOptions}
             isSearchable={false}
             onChange={(option) => setTheme(option?.value as string)}
-            className="w-full text-black dark:text-white"
+            className="w-full dark:text-white"
+            placeholder="Sélectionnez un thème"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -86,7 +87,8 @@ export default function PersonalizationSettings({
             options={languagesSelectOptions}
             isSearchable={false}
             onChange={(option) => setLanguage(option?.value as string)}
-            className="w-full text-black dark:text-white"
+            className="w-full dark:text-white"
+            placeholder="Sélectionnez une langue"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -112,6 +114,7 @@ export default function PersonalizationSettings({
                 color: 'var(--select-text, black)',
               }),
             }}
+            isDisabled
           />
         </div>
 
@@ -129,7 +132,8 @@ export default function PersonalizationSettings({
               (option) => option.value === dateFormat
             )}
             onChange={(option) => setDate(option?.value as string)}
-            className="w-full text-black dark:text-white"
+            className="w-full dark:text-white"
+            placeholder="Sélectionnez un format de date"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,

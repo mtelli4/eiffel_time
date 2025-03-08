@@ -1,19 +1,30 @@
+import { useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import Papa from 'papaparse'
+import * as XLSX from 'xlsx'
+import { FileUp } from 'lucide-react'
+import DataTable from 'datatables.net-react'
 import DT from 'datatables.net-dt'
 import 'datatables.net-dt/js/dataTables.dataTables.js'
-import DataTable from 'datatables.net-react'
 import { FileUp } from 'lucide-react'
 import Papa from 'papaparse'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import * as XLSX from 'xlsx'
+import { importUsers } from '../../../../shared/src/backend/services/admin'
 import { roleFinder } from '../../../../shared/src/lib/utils'
-import { styles } from '../../../../shared/src/styles/Admin/AdminStyles'
-import '../../styles/dataTables.dataTables.min.css'
+import { useDropzone } from 'react-dropzone'
 
 DataTable.use(DT)
 
 export function UserImport() {
-  const [jsonData, setJsonData] = useState<any[]>([])
+  const [jsonData, setJsonData] = useState<ImportUser[]>([])
+  const [validData, setValidData] = useState<ImportUser[]>([])
+  const [showOnlyValid, setShowOnlyValid] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const user = localStorage.getItem('user')
+  const statut = JSON.parse(user as string)?.statut || ''
 
   // Vérifie si l'email correspond à celui de l'Université Gustave Eiffel
   const isEmailValid = (email: string) => {
@@ -22,41 +33,49 @@ export function UserImport() {
       email.endsWith('@univ-eiffel.fr') ||
       email.endsWith('@edu.univ-eiffel.fr')
     )
+  const isEmailValid = (email: string, role?: string) => {
+    if (role === 'student' && statut === 'secretary') return email.endsWith('@edu.univ-eiffel.fr')
+    return email.endsWith('@u-pem.fr') || email.endsWith('@univ-eiffel.fr') || email.endsWith('@edu.univ-eiffel.fr')
   }
 
+  // Gestion du fichier déposé
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return
+    setLoading(true)
 
     const file = acceptedFiles[0]
     const fileExtension = file.name.split('.').pop()?.toLowerCase() || ''
-
     const reader = new FileReader()
+
     reader.onload = (e) => {
       const data = e.target?.result
+      let parsedData: ImportUser[] = []
 
       if (fileExtension === 'csv') {
-        const parsedData = Papa.parse(data as string, {
+        parsedData = Papa.parse(data as string, {
           header: true,
           skipEmptyLines: true,
-        })
-        setJsonData(parsedData.data)
+        }).data as ImportUser[]
       } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
         const workbook = XLSX.read(data)
         const sheetName = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[sheetName]
-        const parsedData = XLSX.utils.sheet_to_json(worksheet)
-        setJsonData(parsedData)
+        parsedData = XLSX.utils.sheet_to_json(worksheet)
       } else if (fileExtension === 'json') {
-        setJsonData(JSON.parse(data as string))
+        parsedData = JSON.parse(data as string)
       }
+
+      setJsonData(parsedData)
+      setValidData(
+        parsedData.filter((user) => isEmailValid(user.email, user.statut))
+      )
+      setLoading(false)
     }
 
-    if (fileExtension === 'csv') {
+    if (fileExtension === 'csv' || fileExtension === 'json') {
       reader.readAsText(file)
     } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
       reader.readAsArrayBuffer(file)
-    } else if (fileExtension === 'json') {
-      reader.readAsText(file)
     }
   }
 
@@ -70,18 +89,30 @@ export function UserImport() {
       'application/vnd.ms-excel': ['.xls'],
       /* json */ 'application/json': ['.json'],
     },
+    accept: {
+      'text/csv': ['.csv'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+      'application/vnd.ms-excel': ['.xls'],
+      'application/json': ['.json'],
+    },
   })
 
-  const handleImportUsers = () => {
-    console.log('Importer les utilisateurs')
+  const handleImport = async (data: ImportUser[]) => {
+    const result = await importUsers(data)
+    if (result) {
+      setJsonData([])
+      setValidData([])
+      alert('Importation réussie')
+      window.location.reload()
+    } else {
+      alert("Erreur lors de l'import")
+    }
   }
 
   return (
     <div style={styles.content}>
       <header style={styles.header}>
-        <span className="text-xl font-bold text-gray-600 dark:text-gray-300">
-          Importation des utilisateurs
-        </span>
+        <span style={styles.subtitle}>Importation des utilisateurs</span>
       </header>
       {jsonData.length === 0 && (
         <div className="text-gray-600 dark:text-gray-300">
@@ -90,6 +121,8 @@ export function UserImport() {
             veuillez noter qu'une vérification et une validation des données
             importées est nécessaire.
           </p>
+        <div className='text-gray-600 dark:text-gray-300'>
+          <p>Cette section permet d'importer des utilisateurs afin de les créer, veuillez noter qu'une vérification et une validation des données importées est nécessaire pour éviter toute erreur.</p>
           <br />
           <p>Modalités d'importation des utilisateurs :</p>
           <ul className="list-disc list-inside ml-4">
@@ -105,6 +138,22 @@ export function UserImport() {
               (Directeur).
             </li>
             <li>Les utilisateurs seront créés après validation des données.</li>
+            {statut === 'secretary' && (
+              <li>
+                La création des utilisateurs est irréversible, veuillez vérifier
+                les données avant de les importer.
+              </li>
+            )}
+            <li>
+              La création des utilisateurs sera limitée aux utilisateurs valides
+              et aux 4 colonnes citées ci-dessus.{' '}
+              {statut === 'secretary' && (
+                <>
+                  Veuillez faire appel à un administrateur ou un gestionnaire
+                  pour modifier.
+                </>
+              )}
+            </li>
           </ul>
           <br />
           {/* Zone de drag & drop */}
@@ -128,23 +177,45 @@ export function UserImport() {
         </div>
       )}
       <br />
-      {/* <pre>{JSON.stringify(jsonData, null, 2)}</pre><br /> */}
+      {/* Affichage des utilisateurs importés */}
       {jsonData.length > 0 && (
         <div className="dark:text-white">
           <DataTable
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
+          <div className="mb-4 flex justify-between items-center">
+            {/* Toggle switch */}
+            <label className="flex items-center cursor-pointer">
+              <span className="mr-2">Afficher uniquement valides</span>
+              <input
+                type="checkbox"
+                className="hidden"
+                checked={showOnlyValid}
+                onChange={() => setShowOnlyValid(!showOnlyValid)}
+              />
+              <span className={`relative w-10 h-5 bg-gray-400 rounded-full transition ${showOnlyValid ? 'bg-green-600' : ''}`}>
+                <span className={`absolute left-1 top-1 w-3 h-3 bg-white rounded-full transform transition ${showOnlyValid ? 'translate-x-5' : ''}`}></span>
+              </span>
+            </label>
+          </div>
+
+          {/* Tableau des utilisateurs */}
+          {!showOnlyValid ? (<DataTable
+            className="display w-full dark:text-gray-300 custom-table"
             options={{
               info: true,
               language: {
                 info: 'Affichage de _START_ à _END_ sur _TOTAL_ utilisateurs',
-                emptyTable: 'Aucun utilisateur trouvé',
                 lengthMenu: 'Afficher _MENU_ utilisateurs',
                 search: 'Rechercher :',
                 searchPlaceholder: 'Rechercher un utilisateur',
                 infoEmpty: 'Aucun utilisateur trouvé',
+                emptyTable: loading
+                  ? 'Chargement des données...'
+                  : 'Aucun utilisateur trouvé',
               },
               pageLength: 10,
             }}
-            className="table table-striped table-bordered dark:text-white"
+            key={jsonData.length}
           >
             <thead>
               <tr className="bg-[#ECF0F1] border-b border-gray-200">
