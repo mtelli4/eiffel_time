@@ -139,45 +139,9 @@ export function ManageAbsences() {
         return 'Validée'
       case 'rejected':
         return 'Refusée'
+      case 'unsent':
+        return 'Non envoyée'
     }
-  }
-  // Définition des options pour la fréquence des alertes
-  const statusOptions = [
-    { value: 'all', label: 'Tous les statuts' },
-    { value: 'pending', label: 'En attente' },
-    { value: 'approved', label: 'Validées' },
-    { value: 'rejected', label: 'Refusées' },
-  ]
-
-  const CustomDatePicker = ({
-    selectedDate,
-    onChange,
-    label,
-  }: {
-    selectedDate: string | Date | null
-    onChange: (date: string) => void
-    label: string
-  }) => {
-    // Convertir la chaîne en objet Date si nécessaire
-    const dateValue =
-      typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
-
-    return (
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          {label}
-        </label>
-        <DatePicker
-          selected={dateValue}
-          onChange={(date: Date | null) =>
-            onChange(date ? date.toISOString().split('T')[0] : '')
-          }
-          className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          dateFormat="dd/MM/yyyy"
-          placeholderText="jj/mm/aaaa"
-        />
-      </div>
-    )
   }
 
   return (
