@@ -2,16 +2,15 @@
 
 ## Requierements
 
-* PostgreSQL v17.4
-* Node.js v23.3.0
-* npm v10.9.0
-* 
-
-.![Static Badge](https://img.shields.io/badge/npm-v10.9.0-green)
+* PostgreSQL v17.4 ![Static Badge](https://img.shields.io/badge/postgresql-v17.4-0064a5)
+* Node.js v23.3.0 ![Static Badge](https://img.shields.io/badge/node-v23.3.0-2980b9)
+* npm v10.9.0 ![Static Badge](https://img.shields.io/badge/npm-v10.9.0-333333)
 
 ## Installation
 
-Run the following command at root of the project : `npm install`
+Run the following command at root of the project : `npm install` to install all the dependencies.
+
+### Database
 
 Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 1. `user` by database user;
@@ -21,15 +20,15 @@ Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 5. `dbname` by database name;
 6. `schemaname` by schema name;
 
+Final result should look like this : `DATABASE_URL=postgresql://user:password@server:port/dbname?schema=schemaname`
+
 This environment variable will be used to connect the server to the database for the Prisma ORM.
 
 Copy the file `packages/shared/src/utils/ip_address.example.ts` to `packages/shared/src/utils/ip_address.ts` and complete the `ip_address` by the ip address of the server (your computer). This file will be used to connect the mobile application to the server for your own android device.
 
+Run the following command at root of the project, replace `utilisateur_de_la_bdd` by the database user and `bdd` by the database name :
 ```
-psql -U <username> -d <database_name> -f prisma/migrations/0_init/migration.sql
-psql -U <username> -d <database_name> -f prisma/migrations/0_init/ingrid_data.sql
-npx prisma
-npx prisma db pull
+USER=utilisateur_de_la_bdd DATABASE=bdd npm run db:pull:full
 ```
 
 ## Run
