@@ -1,5 +1,5 @@
 -- Dump nettoyé à partir de prisma/migrations/0_init/ingrid_data.sql
-SET search_path SET ingrid;
+SET search_path TO ingrid;
 
 --
 -- PostgreSQL database dump

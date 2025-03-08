@@ -4,9 +4,39 @@ import { TeacherPlanning } from '../../types/types'
 
 interface AttendanceTableProps {
   teacher: TeacherPlanning
+  theme?: 'light' | 'dark'
 }
 
-export function AttendanceTable({ teacher }: AttendanceTableProps) {
+// Définition des couleurs pour les deux thèmes
+const colors = {
+  light: {
+    headerText: '#2C3E50',
+    columnHeader: '#6B7280',
+    text: '#111827',
+    borderBottom: '#D1D5DB',
+    rowBorder: '#F3F4F6',
+    moduleBackground: '#E0E7FF',
+    moduleText: '#1F2937',
+    background: '#FFFFFF',
+  },
+  dark: {
+    headerText: '#E5E7EB',
+    columnHeader: '#9CA3AF',
+    text: '#F9FAFB',
+    borderBottom: '#4B5563',
+    rowBorder: '#374151',
+    moduleBackground: '#1E293B',
+    moduleText: '#D1D4DC',
+    background: '#111827',
+  },
+}
+
+export function AttendanceTable({
+  teacher,
+  theme = 'light',
+}: AttendanceTableProps) {
+  const themeColors = theme === 'dark' ? colors.dark : colors.light
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       day: 'numeric',
@@ -18,22 +48,64 @@ export function AttendanceTable({ teacher }: AttendanceTableProps) {
   return (
     <View style={styles.wrapper}>
       <ScrollView horizontal contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.container}>
+        <View
+          style={[
+            styles.container,
+            { backgroundColor: themeColors.background },
+          ]}
+        >
           <View style={styles.header}>
-            <Text style={styles.headerText}>Détails</Text>
+            <Text
+              style={[styles.headerText, { color: themeColors.headerText }]}
+            >
+              Détails
+            </Text>
           </View>
-          <View style={styles.headerRow}>
+          <View
+            style={[
+              styles.headerRow,
+              { borderBottomColor: themeColors.borderBottom },
+            ]}
+          >
             <View style={styles.dateCell}>
-              <Text style={styles.columnHeaderText}>Date</Text>
+              <Text
+                style={[
+                  styles.columnHeaderText,
+                  { color: themeColors.columnHeader },
+                ]}
+              >
+                Date
+              </Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.columnHeaderText}>CM</Text>
+              <Text
+                style={[
+                  styles.columnHeaderText,
+                  { color: themeColors.columnHeader },
+                ]}
+              >
+                CM
+              </Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.columnHeaderText}>TD</Text>
+              <Text
+                style={[
+                  styles.columnHeaderText,
+                  { color: themeColors.columnHeader },
+                ]}
+              >
+                TD
+              </Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.columnHeaderText}>TP</Text>
+              <Text
+                style={[
+                  styles.columnHeaderText,
+                  { color: themeColors.columnHeader },
+                ]}
+              >
+                TP
+              </Text>
             </View>
           </View>
 
@@ -44,23 +116,50 @@ export function AttendanceTable({ teacher }: AttendanceTableProps) {
                 { date: '2023-09-22', cm: 4, td: 2, tp: 0 },
                 { date: '2023-10-06', cm: 0, td: 4, tp: 4 },
               ].map((record) => (
-                <View key={record.date} style={styles.row}>
+                <View
+                  key={record.date}
+                  style={[
+                    styles.row,
+                    { borderBottomColor: themeColors.rowBorder },
+                  ]}
+                >
                   <View style={styles.dateCell}>
-                    <Text>{formatDate(record.date)}</Text>
+                    <Text style={{ color: themeColors.text }}>
+                      {formatDate(record.date)}
+                    </Text>
                   </View>
                   <View style={styles.cell}>
-                    <Text style={styles.centerText}>{record.cm}</Text>
+                    <Text
+                      style={[styles.centerText, { color: themeColors.text }]}
+                    >
+                      {record.cm}
+                    </Text>
                   </View>
                   <View style={styles.cell}>
-                    <Text style={styles.centerText}>{record.td}</Text>
+                    <Text
+                      style={[styles.centerText, { color: themeColors.text }]}
+                    >
+                      {record.td}
+                    </Text>
                   </View>
                   <View style={styles.cell}>
-                    <Text style={styles.centerText}>{record.tp}</Text>
+                    <Text
+                      style={[styles.centerText, { color: themeColors.text }]}
+                    >
+                      {record.tp}
+                    </Text>
                   </View>
                 </View>
               ))}
-              <View style={styles.moduleHeader}>
-                <Text style={styles.moduleText}>
+              <View
+                style={[
+                  styles.moduleHeader,
+                  { backgroundColor: themeColors.moduleBackground },
+                ]}
+              >
+                <Text
+                  style={[styles.moduleText, { color: themeColors.moduleText }]}
+                >
                   {module.codeapogee} - {module.libelle}
                 </Text>
               </View>
@@ -81,6 +180,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    // La couleur de fond est appliquée dynamiquement
   },
   header: {
     flexDirection: 'row',
@@ -91,15 +191,17 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#2C3E50',
+    // La couleur est appliquée dynamiquement
   },
   headerRow: {
     flexDirection: 'row',
     borderBottomWidth: 2,
-    borderBottomColor: '#D1D5DB',
+    // La couleur de bordure est appliquée dynamiquement
   },
   row: {
     flexDirection: 'row',
+    borderBottomWidth: 1,
+    // La couleur de bordure est appliquée dynamiquement
   },
   dateCell: {
     flex: 3,
@@ -111,19 +213,20 @@ const styles = StyleSheet.create({
   },
   centerText: {
     textAlign: 'center',
+    // La couleur est appliquée dynamiquement
   },
   columnHeaderText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#6B7280',
+    // La couleur est appliquée dynamiquement
     textAlign: 'center',
   },
   moduleHeader: {
-    backgroundColor: '#E0E7FF',
     padding: 16,
+    // La couleur de fond est appliquée dynamiquement
   },
   moduleText: {
     fontWeight: 'bold',
-    color: '#1F2937',
+    // La couleur est appliquée dynamiquement
   },
 })

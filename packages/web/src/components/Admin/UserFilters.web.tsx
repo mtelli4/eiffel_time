@@ -5,6 +5,7 @@ import {
   TEACHER_TYPES,
   UserFiltersProps,
 } from '../../../../shared/src/types/types'
+import '../../styles/select-styles.css'
 
 export default function UserFilters({
   onFilterChange,
@@ -29,7 +30,7 @@ export default function UserFilters({
             onChange={(option: any) =>
               handleFilterChange('role', option?.value || null)
             }
-            className="text-sm dark:text-white"
+            className="text-sm text-black dark:text-white"
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
@@ -56,7 +57,7 @@ export default function UserFilters({
               }),
               placeholder: (baseStyles) => ({
                 ...baseStyles,
-                color: 'var(--select-placeholder, white)',
+                color: 'var(--select-text, black)',
               }),
             }}
           />
@@ -103,7 +104,7 @@ export default function UserFilters({
               }),
               placeholder: (baseStyles) => ({
                 ...baseStyles,
-                color: 'var(--select-placeholder, white)',
+                color: 'var(--select-text, black)',
               }),
             }}
           />
@@ -150,7 +151,7 @@ export default function UserFilters({
               }),
               placeholder: (baseStyles) => ({
                 ...baseStyles,
-                color: 'var(--select-placeholder, white)',
+                color: 'var(--select-text, black)',
               }),
             }}
           />
@@ -194,7 +195,7 @@ export default function UserFilters({
               }),
               placeholder: (baseStyles) => ({
                 ...baseStyles,
-                color: 'var(--select-placeholder, white)',
+                color: 'var(--select-text, black)',
               }),
             }}
           />

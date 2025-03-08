@@ -1,8 +1,8 @@
 import { Palette } from 'lucide-react'
 import Select from 'react-select'
-import { useTheme } from '../../../../shared/src/hooks/useTheme'
 import { useDateFormat } from '../../../../shared/src/hooks/useDateFormat'
 import { useLanguage } from '../../../../shared/src/hooks/useLanguage'
+import { useTheme } from '../../../../shared/src/hooks/useTheme'
 import '../../styles/select-styles.css'
 interface PersonalizationSettingsProps {
   dateFormat: string
@@ -13,7 +13,14 @@ interface PersonalizationSettingsProps {
   setLanguage: (newLanguage: string) => void
 }
 
-export default function PersonalizationSettings({ dateFormat, setDate, theme, setTheme, language, setLanguage, }: PersonalizationSettingsProps) {
+export default function PersonalizationSettings({
+  dateFormat,
+  setDate,
+  theme,
+  setTheme,
+  language,
+  setLanguage,
+}: PersonalizationSettingsProps) {
   const { themesSelectOptions } = useTheme()
   const { dateSelectOptions } = useDateFormat()
   const { languagesSelectOptions } = useLanguage()
@@ -74,7 +81,9 @@ export default function PersonalizationSettings({ dateFormat, setDate, theme, se
             Langue
           </label>
           <Select
-            defaultValue={languagesSelectOptions.find((option) => option.value === language)}
+            defaultValue={languagesSelectOptions.find(
+              (option) => option.value === language
+            )}
             options={languagesSelectOptions}
             isSearchable={false}
             onChange={(option) => setLanguage(option?.value as string)}
