@@ -24,7 +24,9 @@ Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 5. `dbname` by database name;
 6. `schemaname` by schema name;
 
-Copy the file `packages/shared/src/utils/ip_address.example.ts` to `packages/shared/src/utils/ip_address.ts` and complete the `ip_address` by the ip address of the server (your computer).
+This environment variable will be used to connect the server to the database for the Prisma ORM.
+
+Copy the file `packages/shared/src/utils/ip_address.example.ts` to `packages/shared/src/utils/ip_address.ts` and complete the `ip_address` by the ip address of the server (your computer). This file will be used to connect the mobile application to the server for your own android device.
 
 ```
 psql -U <username> -d <database_name> -f prisma/migrations/0_init/migration.sql
