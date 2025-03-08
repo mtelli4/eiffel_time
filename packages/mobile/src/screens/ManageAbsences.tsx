@@ -10,25 +10,17 @@ import {
 } from 'react-native';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import Feather from 'react-native-vector-icons/Feather';
-import { API_URL, ManageAbsencesAbsence } from '../../../shared/src/types/types';
+import { ManageAbsencesAbsence } from '../../../shared/src/types/types';
 import { fetchAbsences } from '../../../shared/src/backend/services/absences';
 import { dateFormatting } from '../../../shared/src/utils/stringUtils';
 
-interface Absence {
-  id: string;
-  studentId: string;
-  date: string;
-  module: {
-    code: string;
-    name: string;
-  };
-  professor: string;
-  status: 'pending' | 'approved' | 'rejected';
-  justification?: string;
-  document?: string;
-  submissionDate?: string;
-}
-
+const statusOptions = [
+  { value: 'all', label: 'Tous les statuts' },
+  { value: 'pending', label: 'En attente' },
+  { value: 'approved', label: 'Validées' },
+  { value: 'rejected', label: 'Refusées' },
+  { value: 'unsent', label: 'Non envoyées' },
+]
 
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
@@ -44,23 +36,23 @@ export function ManageAbsences() {
   useEffect(() => {
     fetchAbsences()
       .then((data) => {
-        setAbsences(data)
+        setAbsences(data.absences)
       })
       .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
   }, [])
 
-  const handleApprove = (absenceId: string) => {
+  const handleApprove = (id_absence: number) => {
     setAbsences(prev =>
       prev.map(abs =>
-        abs.id_absence === absenceId ? { ...abs, status: 'approved' } : abs,
+        abs.id_absence === id_absence ? { ...abs, status: 'approved' } : abs,
       ),
     );
   };
 
-  const handleReject = (absenceId: string) => {
+  const handleReject = (id_absence: number) => {
     setAbsences(prev =>
       prev.map(abs =>
-        abs.id_absence === absenceId ? { ...abs, status: 'rejected' } : abs,
+        abs.id_absence === id_absence ? { ...abs, status: 'rejected' } : abs,
       ),
     );
   };
@@ -86,6 +78,8 @@ export function ManageAbsences() {
         return styles.statusApproved;
       case 'rejected':
         return styles.statusRejected;
+      case 'unsent':
+        return styles.statusUnsent;
     }
   };
 
@@ -97,6 +91,8 @@ export function ManageAbsences() {
         return 'Validée';
       case 'rejected':
         return 'Refusée';
+      case 'unsent':
+        return 'Non envoyée';
     }
   };
 
@@ -210,6 +206,12 @@ export function ManageAbsences() {
                     Soumis le {dateFormatting(absence.updatedat)}
                   </Text>
                 )}
+              </View>
+
+              <View style={styles.dateInfo}>
+                <Text style={styles.date}>
+                  {absence.message}
+                </Text>
               </View>
 
               <View style={styles.actions}>
@@ -379,6 +381,9 @@ const styles = StyleSheet.create({
   },
   statusRejected: {
     backgroundColor: '#fee2e2',
+  },
+  statusUnsent: {
+    backgroundColor: '#f0f4f8',
   },
   statusText: {
     fontSize: 12,
