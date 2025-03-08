@@ -88,7 +88,7 @@ const TABS_CONFIG = {
       icon: { name: 'user-check', source: 'Feather' },
     },
     {
-      name: 'Présences professeurs',
+      name: 'Présences enseignants',
       component: ClassAverages,
       icon: { name: 'users', source: 'Feather' },
     },
@@ -168,7 +168,7 @@ const TABS_CONFIG = {
       icon: { name: 'user-check', source: 'Feather' },
     },
     {
-      name: 'Présences professeurs',
+      name: 'Présences enseignants',
       component: TeacherAttendance,
       icon: { name: 'users', source: 'Feather' },
     },
