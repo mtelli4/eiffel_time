@@ -1,11 +1,11 @@
 :root {
+  --select-text: black;
   --select-bg: white;
   --select-border: #cccccc;
   --select-focus-border: #2e3494;
   --select-menu-bg: white;
   --select-selected-bg: #2e3494;
   --select-hover-bg: #deebff;
-  --select-text: black;
 }
 
 .dark {

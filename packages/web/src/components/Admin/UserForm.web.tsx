@@ -1,6 +1,6 @@
-import { formation, groupe, statut_utilisateur } from '@prisma/client'
+import { statut_utilisateur } from '@prisma/client'
 import { X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Select from 'react-select'
 import {
   Formation,
@@ -10,6 +10,7 @@ import {
   UserUpdate,
   Utilisateur,
 } from '../../../../shared/src/types/types'
+import '../../styles/select-styles.css'
 
 const roleOptions = ROLES.map((role) => ({
   value: role.value as statut_utilisateur,
@@ -84,54 +85,11 @@ export function UserForm({
     onClose()
   }
 
-  const customSelectStyles = {
-    control: (base: any, state: any) => ({
-      ...base,
-      borderColor: state.isFocused ? '#3498DB' : '#E2E8F0',
-      boxShadow: state.isFocused ? '0 0 0 1px #3498DB' : 'none',
-      '&:hover': {
-        borderColor: '#3498DB',
-      },
-      backgroundColor: 'var(--select-bg)',
-      borderRadius: '0.375rem',
-    }),
-    menu: (base: any) => ({
-      ...base,
-      backgroundColor: 'var(--select-bg)',
-      borderRadius: '0.375rem',
-      boxShadow:
-        '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    }),
-    option: (base: any, state: any) => ({
-      ...base,
-      backgroundColor: state.isSelected
-        ? '#3498DB'
-        : state.isFocused
-          ? 'var(--select-hover)'
-          : 'transparent',
-      color: state.isSelected ? 'white' : 'var(--select-text)',
-      '&:hover': {
-        backgroundColor: state.isSelected ? '#3498DB' : 'var(--select-hover)',
-      },
-    }),
-    singleValue: (base: any) => ({
-      ...base,
-      color: 'var(--select-text)',
-    }),
-    placeholder: (base: any) => ({
-      ...base,
-      color: 'var(--select-placeholder)',
-    }),
-    input: (base: any) => ({
-      ...base,
-      color: 'var(--select-text)',
-    }),
-  }
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-primary rounded-lg max-w-2xl w-full p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-[#2C3E50] dark:text-gray-100">
             {isEdit ? 'Modifier un utilisateur' : 'Ajouter un utilisateur'}
@@ -154,7 +112,7 @@ export function UserForm({
               name="nom"
               value={formData.nom}
               onChange={handleChange}
-              className="w-full border border-gray-200 dark:bg-primary dark:text-white dark:border-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-dark-primary dark:text-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
@@ -167,7 +125,7 @@ export function UserForm({
               name="prenom"
               value={formData.prenom}
               onChange={handleChange}
-              className="w-full border border-gray-200 dark:bg-primary dark:text-white dark:border-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-dark-primary dark:text-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
@@ -180,28 +138,10 @@ export function UserForm({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border border-gray-200 dark:bg-primary dark:text-white dark:border-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-dark-primary dark:text-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-        :root {
-          --select-bg: #ffffff;
-          --select-text: #2C3E50;
-          --select-placeholder: #718096;
-          --select-hover: #EDF2F7;
-        }
-        
-        .dark {
-          --select-bg: #2E3494;
-          --select-text: #E2E8F0;
-          --select-placeholder: #A0AEC0;
-          --select-hover: #3D45A5;
-        }
-      `,
-            }}
-          />
+
           <div>
             <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Rôle
@@ -219,8 +159,36 @@ export function UserForm({
                   statut: option?.value || null,
                 }))
               }
-              className="text-sm"
-              styles={customSelectStyles}
+              className="text-sm dark:text-white"
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-bg, white)',
+                  borderColor: state.isFocused
+                    ? 'var(--select-focus-border, #2684FF)'
+                    : 'var(--select-border, #cccccc)',
+                }),
+                menu: (baseStyles) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-menu-bg, white)',
+                }),
+                option: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: state.isSelected
+                    ? 'var(--select-selected-bg, #2684FF)'
+                    : state.isFocused
+                    ? 'var(--select-hover-bg, #deebff)'
+                    : 'var(--select-menu-bg, white)',
+                }),
+                singleValue: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+                placeholder: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+              }}
             />
           </div>
 
@@ -245,8 +213,36 @@ export function UserForm({
                 }))
               }
               placeholder="Aucune formation"
-              className="text-sm"
-              styles={customSelectStyles}
+              className="text-sm dark:text-white"
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-bg, white)',
+                  borderColor: state.isFocused
+                    ? 'var(--select-focus-border, #2684FF)'
+                    : 'var(--select-border, #cccccc)',
+                }),
+                menu: (baseStyles) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-menu-bg, white)',
+                }),
+                option: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: state.isSelected
+                    ? 'var(--select-selected-bg, #2684FF)'
+                    : state.isFocused
+                    ? 'var(--select-hover-bg, #deebff)'
+                    : 'var(--select-menu-bg, white)',
+                }),
+                singleValue: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+                placeholder: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+              }}
             />
           </div>
 
@@ -272,8 +268,36 @@ export function UserForm({
                   }))
                 }
                 placeholder="Aucun groupe"
-                className="text-sm"
-                styles={customSelectStyles}
+                className="text-sm dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg, white)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, #2684FF)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2684FF)'
+                      : state.isFocused
+                      ? 'var(--select-hover-bg, #deebff)'
+                      : 'var(--select-menu-bg, white)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                  placeholder: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
               />
             </div>
           )}
@@ -284,18 +308,48 @@ export function UserForm({
                 Type
               </label>
               <Select
-                defaultValue={TEACHER_TYPES.find((t) => t.value === formData.vacataire)}
+                defaultValue={TEACHER_TYPES.find(
+                  (t) => t.value === formData.vacataire
+                )}
                 options={TEACHER_TYPES}
                 isClearable
                 placeholder="Sélectionner un type"
                 onChange={(option: any) =>
                   setFormData((prevState) => ({
                     ...prevState,
-                    vacataire: option?.value ?? null, // Utilisez null si l'option est undefined
+                    vacataire: option?.value ?? null,
                   }))
                 }
-                className="text-sm"
-                styles={customSelectStyles}
+                className="text-sm dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg, white)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, #2684FF)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2684FF)'
+                      : state.isFocused
+                      ? 'var(--select-hover-bg, #deebff)'
+                      : 'var(--select-menu-bg, white)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                  placeholder: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
               />
             </div>
           )}
@@ -305,14 +359,14 @@ export function UserForm({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border text-[#2C3E50] bg-gray-100 hover:bg-gray-200 dark:text-white dark:bg-primary dark:hover:bg-[#2980B9] dark:border-white rounded-lg transition-colors"
+              className="px-4 py-2 border text-[#2C3E50] bg-gray-100 hover:bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 dark:border-gray-600 rounded-lg transition-colors"
             >
               Annuler
             </button>
             <button
               // type="submit"
               onClick={handleSubmit}
-              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] dark:text-[#2C3E50] dark:bg-gray-100 dark:hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] dark:text-white dark:hover:bg-blue-600 rounded-lg transition-colors"
             >
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>

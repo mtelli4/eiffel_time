@@ -1,8 +1,7 @@
-import {Modal, Text, TouchableOpacity, View} from 'react-native';
+import {Modal, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {styles} from '../../styles/Schedule/CourseModal.native';
-// import { X, MessageSquare, QrCode } from 'FontAwesome';
 import {CourseModalProps} from '../../../../shared/src/types/types';
 
 export default function NativeCourseModal({
