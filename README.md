@@ -24,6 +24,8 @@ Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 5. `dbname` by database name;
 6. `schemaname` by schema name;
 
+Copy the file `packages/shared/src/utils/ip_address.example.ts` to `packages/shared/src/utils/ip_address.ts` and complete the `ip_address` by the ip address of the server (your computer).
+
 ```
 psql -U <username> -d <database_name> -f prisma/migrations/0_init/migration.sql
 psql -U <username> -d <database_name> -f prisma/migrations/0_init/ingrid_data.sql
