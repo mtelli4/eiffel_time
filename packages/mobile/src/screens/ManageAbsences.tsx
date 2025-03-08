@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-// import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button, Image, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import DatePicker from 'react-native-date-picker'
+import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 import Feather from 'react-native-vector-icons/Feather';
-import { ManageAbsencesAbsence } from '../../../shared/src/types/types';
+import { Formation, ManageAbsencesAbsence } from '../../../shared/src/types/types';
 import { fetchAbsences } from '../../../shared/src/backend/services/absences';
 import { dateFormatting } from '../../../shared/src/utils/stringUtils';
 
@@ -25,7 +18,6 @@ const statusOptions = [
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedStatut, setSelectedStatut] = useState<ManageAbsencesAbsence['statut'] | 'all'>('all')
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [showFilters, setShowFilters] = useState(false)
@@ -33,10 +25,20 @@ export function ManageAbsences() {
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
+  const [isStatutOpen, setIsStatutOpen] = useState(false);
+  const [valueStatut, setValueStatut] = useState(null);
+  const [itemsStatut, setItemsStatut] = useState(statusOptions);
+
+  const [isFormationOpen, setIsFormationOpen] = useState(false);
+  const [valueFormation, setValueFormation] = useState(null);
+  const [itemsFormation, setItemsFormation] = useState<{ value: string | number; label: string }[]>([{ value: 'all', label: 'Toutes les formations' }]);
+
   useEffect(() => {
     fetchAbsences()
       .then((data) => {
         setAbsences(data.absences)
+        const itemsFormation = data.formations.map((formation) => ({ value: formation.id_formation, label: formation.libelle }))
+        setItemsFormation([{ value: 'all', label: 'Toutes les formations' }, ...itemsFormation])
       })
       .catch((error) => { console.error('Erreur lors de la récupération des absences:', error) })
   }, [])
@@ -65,9 +67,10 @@ export function ManageAbsences() {
     const student = absences.find((s) => s.id_absence === absence.id_absence)?.etudiant
     const searchString = `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
-    const matchesStatut = selectedStatut === 'all' || absence.statut === selectedStatut
+    const matchesStatut = valueStatut === null || valueStatut === 'all' || absence.statut === valueStatut
     const matchesDateRange = (!startDate || absence.date >= startDate) && (!endDate || absence.date <= endDate)
-    return matchesSearch && matchesStatut && matchesDateRange
+    const matchesFormation = valueFormation === null || valueFormation === 'all' || absence.module.formation.id_formation === valueFormation
+    return matchesSearch && matchesStatut && matchesDateRange && matchesFormation
   })
 
   const getStatusStyle = (statut: ManageAbsencesAbsence['statut']) => {
@@ -133,26 +136,29 @@ export function ManageAbsences() {
           <View style={styles.filtersContainer}>
             <View style={styles.filterItem}>
               <Text style={styles.filterLabel}>Statut</Text>
-              <TouchableOpacity
+              <DropDownPicker
+                open={isStatutOpen}
+                value={valueStatut}
+                items={itemsStatut}
+                setOpen={setIsStatutOpen}
+                setValue={setValueStatut}
+                setItems={setItemsStatut}
                 style={styles.picker}
-                onPress={() => {
-                  /* Implement status picker modal */
-                }}>
-                <Text>
-                  {selectedStatut === 'all'
-                    ? 'Tous les statuts'
-                    : getStatusText(selectedStatut)}
-                </Text>
-              </TouchableOpacity>
+                placeholder='Sélectionner un statut'
+                dropDownContainerStyle={styles.picker}
+                ArrowUpIconComponent={() => (
+                  <Feather name="chevron-up" size={20} color="#666" />
+                )}
+                ArrowDownIconComponent={() => (
+                  <Feather name="chevron-down" size={20} color="#666" />
+                )}
+              />
             </View>
 
             <View style={styles.filterItem}>
               <Text style={styles.filterLabel}>Date début</Text>
-              <TouchableOpacity
-                style={styles.picker}
-                onPress={() => setShowStartDatePicker(true)}>
-                <Text>{startDate ? startDate.toLocaleDateString('fr-FR') : 'Toutes'}</Text>
-              </TouchableOpacity>
+              <Button title='Date début' onPress={() => setShowStartDatePicker(true)} />0
+              
             </View>
 
             <View style={styles.filterItem}>
@@ -162,6 +168,27 @@ export function ManageAbsences() {
                 onPress={() => setShowEndDatePicker(true)}>
                 <Text>{endDate ? endDate.toLocaleDateString('fr-FR') : 'Toutes'}</Text>
               </TouchableOpacity>
+            </View>
+
+            <View style={styles.filterItem}>
+              <Text style={styles.filterLabel}>Formation</Text>
+              <DropDownPicker
+                open={isFormationOpen}
+                value={valueFormation}
+                items={itemsFormation}
+                setOpen={setIsFormationOpen}
+                setValue={setValueFormation}
+                setItems={setItemsFormation}
+                style={styles.picker}
+                placeholder='Sélectionner une formation'
+                dropDownContainerStyle={styles.picker}
+                ArrowUpIconComponent={() => (
+                  <Feather name="chevron-up" size={20} color="#666" />
+                )}
+                ArrowDownIconComponent={() => (
+                  <Feather name="chevron-down" size={20} color="#666" />
+                )}
+              />
             </View>
           </View>
         )}
@@ -193,6 +220,7 @@ export function ManageAbsences() {
               </View>
 
               <View style={styles.moduleInfo}>
+                <Text style={styles.moduleCode}>{absence.module.formation.libelle}</Text>
                 <Text style={styles.moduleCode}>{absence.module.codeapogee}</Text>
                 <Text style={styles.moduleName}>{absence.module.libelle}</Text>
               </View>
@@ -243,6 +271,10 @@ export function ManageAbsences() {
           );
         })}
       </ScrollView>
+
+      {showStartDatePicker && (
+        <></>
+      )}
     </View>
   );
 }
