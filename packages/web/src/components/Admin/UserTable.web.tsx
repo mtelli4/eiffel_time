@@ -24,7 +24,14 @@ interface UserTableProps {
 
 DataTable.use(DT)
 
-export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }: UserTableProps) {
+export function UserTable({
+  users,
+  isAdmin,
+  onEdit,
+  onDelete,
+  filters,
+  loading,
+}: UserTableProps) {
   const { Edit, Delete } = useEditDeleteLoader()
 
   if (!Edit || !Delete) return null
@@ -62,7 +69,11 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
     )
   }
 
-  if (filters.type === true || filters.type === false || filters.type === null) {
+  if (
+    filters.type === true ||
+    filters.type === false ||
+    filters.type === null
+  ) {
     filteredData = filteredData.filter(
       (utilisateur: Utilisateur) =>
         utilisateur.statut === statut_utilisateur.teacher &&
@@ -94,7 +105,7 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
       <DataTable
-        className="w-full dark:text-gray-300"
+        className="w-full text-black dark:text-gray-300"
         options={{
           paging: false,
           searching: false,
@@ -142,9 +153,11 @@ export function UserTable({ users, isAdmin, onEdit, onDelete, filters, loading }
           {filteredData.map((utilisateur) => (
             <tr
               key={utilisateur.id_utilisateur}
-              className={"border-b border-gray-100 hover:bg-gray-600 " + (user.id_utilisateur === utilisateur.id_utilisateur ? 'font-bold' : '')}
+              className="border-b border-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600"
             >
-              <td className="py-3 px-4 dt-left">{utilisateur.id_utilisateur}</td>
+              <td className="py-3 px-4 dt-left">
+                {utilisateur.id_utilisateur}
+              </td>
               <td className="py-3 px-4">{utilisateur.nom}</td>
               <td className="py-3 px-4">{utilisateur.prenom}</td>
               <td className="py-3 px-4">{utilisateur.email}</td>
