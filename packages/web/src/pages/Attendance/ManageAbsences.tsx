@@ -29,7 +29,7 @@ const statusOptions = [
 
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
-  const [formations, setFormations] = useState<Formation[]>([]) 
+  const [formations, setFormations] = useState<Formation[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatut, setSelectedStatut] = useState<
     ManageAbsencesAbsence['statut'] | 'all'
@@ -212,8 +212,8 @@ export function ManageAbsences() {
                     backgroundColor: state.isSelected
                       ? 'var(--select-selected-bg, #2e3494)'
                       : state.isFocused
-                      ? 'var(--select-hover-bg, #deebff)'
-                      : 'var(--select-menu-bg, white)',
+                        ? 'var(--select-hover-bg, #deebff)'
+                        : 'var(--select-menu-bg, white)',
                   }),
                   singleValue: (baseStyles) => ({
                     ...baseStyles,
@@ -390,7 +390,7 @@ export function ManageAbsences() {
                       {absence.id_absence}
                     </div>
                   </td> */}
-                  <td className="py-3 px-4">
+                    <td className="py-3 px-4">
                       <div>
                         <div className="font-medium text-gray-900 dark:text-white">
                           {absence.etudiant.nom} {absence.etudiant.prenom}
@@ -403,13 +403,13 @@ export function ManageAbsences() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                    <div>
-                      <div className="text-sm text-gray-900 dark:text-white">
-                        {absence.module.formation.libelle}
+                      <div>
+                        <div className="text-sm text-gray-900 dark:text-white">
+                          {absence.module.formation.libelle}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
+                    </td>
+                    <td className="py-3 px-4">
                       <div>
                         <div className="font-medium text-gray-900 dark:text-gray-300">
                           {absence.module.codeapogee}
@@ -435,11 +435,11 @@ export function ManageAbsences() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                    <div className="text-sm text-gray-900 dark:text-white">
-                      {absence.message}
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
+                      <div className="text-sm text-gray-900 dark:text-white">
+                        {absence.message}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
                       <span
                         className={cn(
                           'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
