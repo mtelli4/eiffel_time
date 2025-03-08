@@ -2,19 +2,16 @@
 
 ## Requierements
 
-* PostgreSQL database and ingrid schema
+* PostgreSQL v17.4
+* Node.js v23.3.0
+* npm v10.9.0
+* 
 
 .![Static Badge](https://img.shields.io/badge/npm-v10.9.0-green)
 
 ## Installation
 
 Run the following command at root of the project : `npm install`
-
-## Run
-
-### Web :
-
-Run the following command at root of the project : `npm run start:web`
 
 Copy the `.env.example` to `.env` and complete the `DATABASE_URL` by replacing :
 1. `user` by database user;
@@ -35,7 +32,15 @@ npx prisma
 npx prisma db pull
 ```
 
+## Run
+
+### Server :
+
 For the server, open a second terminal and run : `npm run start:server`
+
+### Web :
+
+Run the following command at root of the project : `npm run start:web`
 
 ### Mobile :
 
