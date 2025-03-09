@@ -56,12 +56,12 @@ const TABS_CONFIG = {
     {
       name: 'Messagerie',
       component: Messages,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Settings,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
   teacher: [
@@ -83,12 +83,12 @@ const TABS_CONFIG = {
     {
       name: 'Messagerie',
       component: Messages,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Settings,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
   secretary: [
@@ -110,12 +110,12 @@ const TABS_CONFIG = {
     {
       name: 'Messagerie',
       component: Messages,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Settings,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
   manager: [
@@ -137,12 +137,12 @@ const TABS_CONFIG = {
     {
       name: 'Messagerie',
       component: Messages,
-      icon: { name: 'message1', source: 'AntDesign' },
+      icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
       component: Settings,
-      icon: { name: 'settings', source: 'Feather' },
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
 
@@ -202,11 +202,12 @@ const getTabIcon = (icon, color) => {
 };
 
 const TabNavigator = () => {
-
-  const { statut } = useContext(UserContext); // Exemple pour récupérer le rôle
+  const {statut} = useContext(UserContext); // Exemple pour récupérer le rôle
 
   // Obtenez les onglets pour le rôle actuel
   const tabs = TABS_CONFIG[statut] || [];
+  const systemColorScheme = useColorScheme();
+  const activeTheme = systemColorScheme === 'dark' ? darkTheme : lightTheme;
 
   return (
     <Tab.Navigator
