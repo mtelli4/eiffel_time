@@ -47,3 +47,10 @@ Open a terminal and run : `cd packages/mobile && npm run start`
 For Android, open a second terminal and run : `cd packages/mobile && npm run android`
 
 For iOS, open a second terminal and run : `cd packages/mobile && npm run ios`
+
+
+## Development
+
+### Server :
+
+Use this command to export your database schema to the Prisma schema : `USER=utilisateur_bdd DATABASE=bdd SCHEMA=ingrid npm run db:data`, replace `utilisateur_bdd` by the database user, `bdd` by the database name and `ingrid` by the schema name.
