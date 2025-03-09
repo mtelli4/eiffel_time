@@ -2,9 +2,7 @@
 
 ## Requierements
 
-* PostgreSQL v17.4 ![Static Badge](https://img.shields.io/badge/postgresql-v17.4-0064a5)
-* Node.js v23.3.0 ![Static Badge](https://img.shields.io/badge/node-v23.3.0-2980b9)
-* npm v10.9.0 ![Static Badge](https://img.shields.io/badge/npm-v10.9.0-333333)
+![Static Badge](https://img.shields.io/badge/postgresql-v17.4-0064a5) ![Static Badge](https://img.shields.io/badge/node-v23.3.0-2980b9) ![Static Badge](https://img.shields.io/badge/npm-v10.9.0-333333) ![Static Badge](https://img.shields.io/badge/android_sdk-v31-a4c639) ![Static Badge](https://img.shields.io/badge/java-21-744e3b)
 
 ## Installation
 
