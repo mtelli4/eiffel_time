@@ -13,8 +13,7 @@ const classgradesRouter = require('./classgrades');
 const messagingRouter = require('./messaging');
 const userRouter = require('./user');
 const averageRouter = require('./averages');
-
-
+const qrcodeRouter = require('./qrcode')
 
 const router = express.Router(); // Création d'un routeur Express
 
@@ -31,5 +30,6 @@ router.use('/messaging', messagingRouter);
 router.use('/signup', signupRouter);
 router.use('/user', userRouter);
 router.use('/averages', averageRouter);
+router.use('/qrcode', qrcodeRouter);
 
 module.exports = router;
