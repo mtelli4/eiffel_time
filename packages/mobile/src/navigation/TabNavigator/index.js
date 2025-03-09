@@ -40,12 +40,12 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: { name: 'settings', source: 'Feather' },
     },
   ],
@@ -67,12 +67,12 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: { name: 'settings', source: 'Feather' },
     },
   ],
@@ -94,12 +94,12 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: { name: 'settings', source: 'Feather' },
     },
   ],
@@ -131,12 +131,12 @@ const TABS_CONFIG = {
     // },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: { name: 'settings', source: 'Feather' },
     },
     // {
@@ -146,7 +146,7 @@ const TABS_CONFIG = {
     // },
   ],
 
-  admin: [
+  administrator: [
     {
       name: 'Schedule',
       component: Schedule,
@@ -208,10 +208,10 @@ const getTabIcon = (icon, color) => {
 
 const TabNavigator = () => {
 
-  const { role } = useContext(UserContext); // Exemple pour récupérer le rôle
+  const { statut } = useContext(UserContext); // Exemple pour récupérer le rôle
 
   // Obtenez les onglets pour le rôle actuel
-  const tabs = TABS_CONFIG[role] || [];
+  const tabs = TABS_CONFIG[statut] || [];
 
   return (
     <Tab.Navigator
