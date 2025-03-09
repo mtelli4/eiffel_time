@@ -14,12 +14,13 @@ router.post('/signin', async (req, res) => {
         id_utilisateur: true, prenom: true, nom: true, email: true, statut: true, mdp: true, salt: true
       },
       where: {
-        email: email,
+        email: email.toLowerCase(),
       },
     })
     if (user) {
       const valid = comparePasswords(password, user.salt, user.mdp)
       if (valid) {
+        // enlever le mdp et le salt
         res.json({valid: valid, user: user})
       }
     } else {
