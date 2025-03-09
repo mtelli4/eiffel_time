@@ -10,12 +10,14 @@
     @apply antialiased text-gray-900;
   }
 }
+body {
+  background-color: #f9fafb; /* Light mode default */
+  color: #1f2937;
+}
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #1f2937; /* gray-800 */
-    color: #f9fafb;
-  }
+.dark body {
+  background-color: #1f2937; /* Dark mode */
+  color: #f9fafb;
 }
 
 @layer components {
@@ -24,11 +26,11 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-white hover:bg-secondary dark:hover:bg-gray-600 dark:text-white;
+    @apply bg-primary text-white hover:bg-secondary dark:hover:bg-blue-600 dark:text-white;
   }
 
   .btn-outline {
-    @apply border border-primary text-primary hover:bg-primary hover:text-white;
+    @apply border border-primary dark:bg-gray-100 text-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-800 dark:hover:bg-blue-600 dark:hover:text-white;
   }
 
   .input {

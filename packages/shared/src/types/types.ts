@@ -276,7 +276,7 @@ export type ImportUser = {
 }
 
 export interface ManageAbsencesAbsence {
-  id_absence: string
+  id_absence: number
   etudiant: {
     id_utilisateur: number
     nom: string
@@ -287,11 +287,13 @@ export interface ManageAbsencesAbsence {
     id_module: number
     codeapogee: string
     libelle: string
+    formation: Formation
   }
   date: Date
+  message: string
   envoye: boolean
   valide: boolean
   updatedat: Date
-  statut: 'pending' | 'approved' | 'rejected'
+  statut: 'pending' | 'approved' | 'rejected' | 'unsent'
   path?: string
 }
