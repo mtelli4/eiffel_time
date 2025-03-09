@@ -6,9 +6,7 @@ import TabNavigator from './TabNavigator/index';
 enableScreens();
 const RootNavigator = () => {
   return (
-    <NavigationContainer>
       <TabNavigator />
-    </NavigationContainer>
   );
 };
 

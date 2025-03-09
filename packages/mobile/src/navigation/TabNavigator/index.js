@@ -55,13 +55,13 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
+      component: Messages,
+      icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
+      component: Settings,
+      icon: { name: 'settings', source: 'Feather' },
     },
   ],
   teacher: [
@@ -82,13 +82,13 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
+      component: Messages,
+      icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
+      component: Settings,
+      icon: { name: 'settings', source: 'Feather' },
     },
   ],
   secretary: [
@@ -109,13 +109,13 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
+      component: Messages,
+      icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
+      component: Settings,
+      icon: { name: 'settings', source: 'Feather' },
     },
   ],
   manager: [
@@ -136,17 +136,17 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
-      icon: {name: 'message1', source: 'AntDesign'},
+      component: Messages,
+      icon: { name: 'message1', source: 'AntDesign' },
     },
     {
       name: 'Réglages',
-      component: Schedule,
-      icon: {name: 'settings', source: 'Feather'},
+      component: Settings,
+      icon: { name: 'settings', source: 'Feather' },
     },
   ],
 
-  admin: [
+  administrator: [
     {
       name: 'Schedule',
       component: Schedule,
@@ -202,10 +202,11 @@ const getTabIcon = (icon, color) => {
 };
 
 const TabNavigator = () => {
-  const {role} = useContext(UserContext);
-  const systemColorScheme = useColorScheme();
-  const activeTheme = systemColorScheme === 'dark' ? darkTheme : lightTheme;
-  const tabs = TABS_CONFIG[role] || [];
+
+  const { statut } = useContext(UserContext); // Exemple pour récupérer le rôle
+
+  // Obtenez les onglets pour le rôle actuel
+  const tabs = TABS_CONFIG[statut] || [];
 
   return (
     <Tab.Navigator
