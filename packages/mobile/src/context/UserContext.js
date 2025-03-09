@@ -7,7 +7,7 @@ export const UserContext = createContext();
 // Fournisseur du contexte
 export const UserProvider = ({children}) => {
   // const [user, setUser] = useState({}); // Rôle par défaut
-  const user = JSON.parse(storage.getString('user') || '{}');
+  const user = JSON.parse(storage.getString('user') || '{statut: "student"}');
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };

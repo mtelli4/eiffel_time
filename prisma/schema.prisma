@@ -209,7 +209,7 @@ model qrcode {
   cours          cours       @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction, map: "appel_id_cours_fkey")
   utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction, map: "appel_id_utilisateur_fkey")
 
-  @@ignore
+  @@id([id_cours, id_utilisateur])
 }
 
 model utilisateur {

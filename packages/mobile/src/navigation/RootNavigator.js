@@ -1,4 +1,7 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigationIndependentTree,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {enableScreens} from 'react-native-screens';
 import TabNavigator from './TabNavigator/index';

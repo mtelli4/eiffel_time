@@ -3,6 +3,7 @@ import { CourseModalProps } from '../../../../shared/src/types/types'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import { API_URL } from '../../../../shared/src/types/types'
+import { Button } from '@shared/components/Button/Button'
 
 export default function WebCourseModal({
   course,
@@ -10,7 +11,6 @@ export default function WebCourseModal({
   onPresenceCheck,
 }: CourseModalProps) {
   const [showQRCode, setShowQRCode] = useState(false)
-  const [students, setStudents] = useState<number[]>()
 
   const qrData = JSON.stringify({
     courseId: course.id,
@@ -19,19 +19,51 @@ export default function WebCourseModal({
     time: `${course.start}-${course.end}`,
     location: course.location,
   })
+
+  const courseId = 5
+
+  const [data, setData] = useState()
+
+  const presence = async () => {
+    const response = await fetch(`${API_URL}/api/qrcode/qrcode`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ courseId: courseId }),
+    })
+    const data = await response.json()
+    setData(data)
+  }
+
+  const presenceDelete = async () => {
+    const response = await fetch(`${API_URL}/api/qrcode/qrcodedelete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ courseId: courseId }),
+    })
+    const data = await response.json()
+    setData(data)
+  }
+
+  const handleGenerateQrcode = () => {
+    const newShowQRCode = !showQRCode;
+    setShowQRCode(newShowQRCode);
+    if (newShowQRCode) {
+      presence();
+    } else {
+      presenceDelete();
+    }
+  }
+
+  const handlePresenceCheck = () => {
+
+  }
   
-  const courseId = 4
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/qrcode/qrcode/${courseId}`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau')
-        return response.json()
-      })
-      .then((data) => {setStudents(data.groupe.groupe_etudiant);
-      })
-  }, [])
-
+  // console.log(data)
+  
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full p-6 relative">
@@ -88,7 +120,7 @@ export default function WebCourseModal({
 
         <div className="flex gap-4">
           <button
-            onClick={() => setShowQRCode(!showQRCode)}
+            onClick={handleGenerateQrcode}
             className="btn btn-primary flex items-center gap-2"
           >
             <QrCode className="w-4 h-4" />
