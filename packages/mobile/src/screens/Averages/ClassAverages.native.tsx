@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -8,187 +10,95 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {styles} from '../../../../shared/src/styles/Averages/AveragesStyles';
+import {API_URL} from '../../../../shared/src/types/types';
 
-// Data structures
+// Interfaces adaptées du composant web
 interface Module {
-  code: string;
-  name: string;
+  id_module: number;
+  libelle: string;
+  code?: string;
 }
 
-interface UE {
-  code: string;
-  name: string;
-  ects: number;
+interface BlocCompetence {
+  id_bloc_comp: number;
+  libelle: string;
+  code?: string;
   modules: Module[];
 }
 
 interface Student {
-  id: string;
-  firstName: string;
-  lastName: string;
-  group: string;
-  grades: Record<number, Record<string, number>>; // semester -> module -> grade
-  ueAverages: Record<number, Record<string, number>>; // semester -> UE -> average
+  id_utilisateur: number;
+  nom: string;
+  prenom: string;
+  moyennes: {id_module: number; moyenne: string}[];
+  absences: number;
+  moyenneGenerale: string;
+  moyenneAvecMalus: string;
+}
+
+interface Groupe {
+  id_grp: number;
+  libelle: string;
+}
+
+interface Semestre {
+  periode: string;
 }
 
 interface DropdownOption {
-  value: string | number;
+  value: string;
   label: string;
 }
 
-const SEMESTERS = [1, 2, 3, 4, 5, 6];
-const GROUPS = ['all', 'A', 'B', 'C'];
-
-const UES: UE[] = [
-  {
-    code: 'UE51',
-    name: 'Semestre 5 BC1',
-    ects: 10,
-    modules: [
-      {code: 'S5.A.01', name: 'Développement avancé'},
-      {code: 'R5.A.04', name: 'Qualité algorithmique'},
-      {code: 'R5.A.05', name: 'Programmation avancée'},
-      {code: 'R5.A.06', name: 'Sensibilisation à la programmation multimédia'},
-      {code: 'R5.A.07', name: 'Automatisation de la chaîne de production'},
-      {code: 'R5.A.08', name: 'Qualité de développement'},
-      {code: 'R5.A.09', name: 'Virtualisation avancée'},
-      {code: 'R5.A.10', name: 'Nouveaux paradigmes de base de données'},
-      {code: 'R5.A.13', name: 'Économie durable et numérique'},
-      {code: 'R5.A.14', name: 'Anglais'},
-    ],
-  },
-  {
-    code: 'UE52',
-    name: 'Semestre 5 BC2',
-    ects: 10,
-    modules: [
-      {code: 'S5.A.01', name: 'Développement avancé'},
-      {code: 'R5.A.04', name: 'Qualité algorithmique'},
-      {code: 'R5.A.05', name: 'Programmation avancée'},
-      {code: 'R5.A.06', name: 'Sensibilisation à la programmation multimédia'},
-      {code: 'R5.A.08', name: 'Qualité de développement'},
-      {code: 'R5.A.09', name: 'Virtualisation avancée'},
-      {code: 'R5.A.10', name: 'Nouveaux paradigmes de base de données'},
-      {
-        code: 'R5.A.11',
-        name: "Méthodes d'optimisation pour l'aide à la décision",
-      },
-      {code: 'R5.A.12', name: 'Modélisations mathématiques'},
-      {code: 'R5.A.14', name: 'Anglais'},
-    ],
-  },
-  {
-    code: 'UE53',
-    name: 'Semestre 5 BC6',
-    ects: 10,
-    modules: [
-      {code: 'S5.A.01', name: 'Développement avancé'},
-      {code: 'R5.01', name: 'Initiation au management'},
-      {code: 'R5.02', name: 'Projet personnel et professionnel'},
-      {code: 'R5.03', name: 'Politique de Communication'},
-      {code: 'R5.A.06', name: 'Sensibilisation à la programmation multimédia'},
-      {code: 'R5.A.07', name: 'Automatisation de la chaîne de production'},
-      {code: 'R5.A.13', name: 'Économie durable et numérique'},
-      {code: 'R5.A.14', name: 'Anglais'},
-    ],
-  },
-];
-
-const STUDENTS: Student[] = [
-  {
-    id: '22001234',
-    firstName: 'Jean',
-    lastName: 'DUPONT',
-    group: 'A',
-    grades: {
-      5: {
-        'S5.A.01': 15.5,
-        'R5.A.04': 14.8,
-        'R5.A.05': 16.2,
-        'R5.A.06': 15.0,
-        'R5.A.07': 14.5,
-        'R5.A.08': 16.8,
-        'R5.A.09': 15.2,
-        'R5.A.10': 14.9,
-        'R5.A.11': 15.7,
-        'R5.A.12': 16.1,
-        'R5.A.13': 15.4,
-        'R5.A.14': 14.6,
-        'R5.01': 15.8,
-        'R5.02': 16.5,
-        'R5.03': 15.3,
-      },
-    },
-    ueAverages: {
-      5: {
-        UE51: 15.4,
-        UE52: 15.7,
-        UE53: 15.6,
-      },
-    },
-  },
-  {
-    id: '22001235',
-    firstName: 'Marie',
-    lastName: 'DURAND',
-    group: 'B',
-    grades: {
-      5: {
-        'S5.A.01': 16.5,
-        'R5.A.04': 15.8,
-        'R5.A.05': 17.2,
-        'R5.A.06': 16.0,
-        'R5.A.07': 15.5,
-        'R5.A.08': 17.8,
-        'R5.A.09': 16.2,
-        'R5.A.10': 15.9,
-        'R5.A.11': 16.7,
-        'R5.A.12': 17.1,
-        'R5.A.13': 16.4,
-        'R5.A.14': 15.6,
-      },
-    },
-    ueAverages: {
-      5: {
-        UE51: 16.4,
-        UE52: 16.7,
-        UE53: 16.6,
-      },
-    },
-  },
-];
-
-const semesterOptions: DropdownOption[] = [
-  {value: 'all', label: 'Tous les semestres'},
-  {value: 1, label: 'Semestre 1'},
-  {value: 2, label: 'Semestre 2'},
-  {value: 3, label: 'Semestre 3'},
-  {value: 4, label: 'Semestre 4'},
-  {value: 5, label: 'Semestre 5'},
-  {value: 6, label: 'Semestre 6'},
-];
-
-const groupOptions: DropdownOption[] = [
-  {value: 'all', label: 'Tous les groupes'},
-  {value: 'A', label: 'Groupe Alpha'},
-  {value: 'B', label: 'Groupe Beta'},
-  {value: 'C', label: 'Groupe Gamma'},
-];
-
 export default function Averages() {
-  const [selectedSemester, setSelectedSemester] = useState<string | number>(
-    'all',
+  const [students, setStudents] = useState<Student[]>([]);
+  const [blocsCompetences, setBlocsCompetences] = useState<BlocCompetence[]>(
+    [],
   );
-  const [selectedGroup, setSelectedGroup] = useState<string>('all');
-  const [expandedUEs, setExpandedUEs] = useState<string[]>([]);
+  const [modules, setModules] = useState<Module[]>([]);
+  const [groupes, setGroupes] = useState<Groupe[]>([]);
+  const [semestres, setSemestres] = useState<Semestre[]>([]);
+  const [selectedGroupe, setSelectedGroupe] = useState('all');
+  const [selectedSemestre, setSelectedSemestre] = useState('all');
+  const [expandedBlocs, setExpandedBlocs] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
-  const toggleUE = (ueCode: string) => {
-    setExpandedUEs(prev =>
-      prev.includes(ueCode)
-        ? prev.filter(code => code !== ueCode)
-        : [...prev, ueCode],
+  // Récupération des données avec filtres dynamiques
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        `${API_URL}/api/averages?semestre=${selectedSemestre}&groupe=${selectedGroupe}`,
+      );
+
+      const data = response.data;
+      setModules(data.modules);
+      setStudents(data.students);
+      setGroupes(data.groupes);
+      setBlocsCompetences(data.blocsCompetences);
+      setSemestres(data.semestres);
+      setError(null);
+    } catch (err) {
+      console.error('Erreur lors de la récupération des données:', err);
+      setError('Erreur lors de la récupération des données');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedGroupe, selectedSemestre]);
+
+  const toggleBloc = (blocId: number) => {
+    setExpandedBlocs(prev =>
+      prev.includes(blocId)
+        ? prev.filter(id => id !== blocId)
+        : [...prev, blocId],
     );
   };
 
@@ -200,14 +110,52 @@ export default function Averages() {
     console.log('Exporting to PDF...');
   };
 
-  // Function to render table header for UE
-  const renderUEHeader = (ue: UE) => {
+  // Calcul de la moyenne d'un bloc pour un étudiant
+  const calculateBlocAverage = (
+    student: Student,
+    bloc: BlocCompetence,
+  ): string => {
+    const moduleNotes = bloc.modules
+      .map(module => {
+        const note = student.moyennes.find(
+          m => m.id_module === module.id_module,
+        );
+        return note ? parseFloat(note.moyenne) : null;
+      })
+      .filter(note => note !== null) as number[];
+
+    if (moduleNotes.length === 0) return '-';
+
+    const average =
+      moduleNotes.reduce((sum, note) => sum + note, 0) / moduleNotes.length;
+    return average.toFixed(2);
+  };
+
+  // Création des options pour les select
+  const semestreOptions: DropdownOption[] = [
+    {value: 'all', label: 'Tous les semestres'},
+    ...(semestres?.map(sem => ({
+      value: sem.periode,
+      label: `Semestre ${sem.periode}`,
+    })) || []),
+  ];
+
+  const groupeOptions: DropdownOption[] = [
+    {value: 'all', label: 'Tous les groupes'},
+    ...(groupes?.map(grp => ({
+      value: grp.id_grp.toString(),
+      label: grp.libelle,
+    })) || []),
+  ];
+
+  // Fonction pour afficher l'en-tête d'un bloc de compétences
+  const renderBlocHeader = (bloc: BlocCompetence) => {
     return (
-      <React.Fragment key={`header-${ue.code}`}>
+      <React.Fragment key={`header-${bloc.id_bloc_comp}`}>
         <View
           style={[styles.ueHeaderCell, isDarkMode && styles.ueHeaderCellDark]}>
           <TouchableOpacity
-            onPress={() => toggleUE(ue.code)}
+            onPress={() => toggleBloc(bloc.id_bloc_comp)}
             style={styles.ueHeaderButton}>
             <MaterialCommunityIcons
               name="chevron-down"
@@ -215,18 +163,19 @@ export default function Averages() {
               size={16}
               style={[
                 styles.chevronIcon,
-                expandedUEs.includes(ue.code) && styles.chevronRotated,
+                expandedBlocs.includes(bloc.id_bloc_comp) &&
+                  styles.chevronRotated,
               ]}
             />
             <Text style={[styles.ueCode, isDarkMode && styles.ueCodeDark]}>
-              {ue.code} (ECTS: {ue.ects})
+              {bloc.code || `BC ${bloc.id_bloc_comp}`}
             </Text>
           </TouchableOpacity>
         </View>
-        {expandedUEs.includes(ue.code) &&
-          ue.modules.map(module => (
+        {expandedBlocs.includes(bloc.id_bloc_comp) &&
+          bloc.modules.map(module => (
             <View
-              key={module.code}
+              key={module.id_module}
               style={[
                 styles.moduleHeaderCell,
                 isDarkMode && styles.moduleHeaderCellDark,
@@ -236,7 +185,7 @@ export default function Averages() {
                   styles.moduleCode,
                   isDarkMode && styles.moduleCodeDark,
                 ]}>
-                {module.code}
+                {module.code || `Module ${module.id_module}`}
               </Text>
             </View>
           ))}
@@ -244,20 +193,20 @@ export default function Averages() {
     );
   };
 
-  // Function to render table header for UE name
-  const renderUENameHeader = (ue: UE) => {
+  // Fonction pour afficher le nom des blocs et modules
+  const renderBlocNameHeader = (bloc: BlocCompetence) => {
     return (
-      <React.Fragment key={`name-${ue.code}`}>
+      <React.Fragment key={`name-${bloc.id_bloc_comp}`}>
         <View
           style={[styles.ueHeaderCell, isDarkMode && styles.ueHeaderCellDark]}>
           <Text style={[styles.ueName, isDarkMode && styles.ueNameDark]}>
-            {ue.name}
+            {bloc.libelle}
           </Text>
         </View>
-        {expandedUEs.includes(ue.code) &&
-          ue.modules.map(module => (
+        {expandedBlocs.includes(bloc.id_bloc_comp) &&
+          bloc.modules.map(module => (
             <View
-              key={module.code}
+              key={module.id_module}
               style={[
                 styles.moduleHeaderCell,
                 isDarkMode && styles.moduleHeaderCellDark,
@@ -267,7 +216,7 @@ export default function Averages() {
                   styles.moduleName,
                   isDarkMode && styles.moduleNameDark,
                 ]}>
-                {module.name}
+                {module.libelle}
               </Text>
             </View>
           ))}
@@ -275,15 +224,11 @@ export default function Averages() {
     );
   };
 
-  // Function to render student grades row
+  // Fonction pour afficher une ligne d'étudiant avec ses notes
   const renderStudentRow = (student: Student) => {
-    if (selectedGroup !== 'all' && student.group !== selectedGroup) {
-      return null;
-    }
-
     return (
       <View
-        key={student.id}
+        key={student.id_utilisateur}
         style={[styles.studentRow, isDarkMode && styles.studentRowDark]}>
         <View
           style={[
@@ -292,65 +237,151 @@ export default function Averages() {
           ]}>
           <Text
             style={[styles.studentName, isDarkMode && styles.studentNameDark]}>
-            {student.lastName} {student.firstName}
+            {student.nom} {student.prenom}
           </Text>
         </View>
-        {UES.map(ue => (
-          <React.Fragment key={`${student.id}-${ue.code}`}>
+        {blocsCompetences.map(bloc => (
+          <React.Fragment
+            key={`${student.id_utilisateur}-${bloc.id_bloc_comp}`}>
             <View
               style={[
                 styles.studentUECell,
                 isDarkMode && styles.studentUECellDark,
               ]}>
               <Text style={[styles.ueGrade, isDarkMode && styles.ueGradeDark]}>
-                {selectedSemester !== 'all'
-                  ? student.ueAverages[selectedSemester as number]?.[
-                      ue.code
-                    ]?.toFixed(2) || '-'
-                  : Object.keys(student.ueAverages)
-                      .map(sem => student.ueAverages[parseInt(sem)]?.[ue.code])
-                      .filter(grade => grade !== undefined)
-                      .map(grade => grade.toFixed(2))
-                      .join(', ') || '-'}
+                {calculateBlocAverage(student, bloc)}
               </Text>
             </View>
-            {expandedUEs.includes(ue.code) &&
-              ue.modules.map(module => (
-                <View
-                  key={`${student.id}-${module.code}`}
-                  style={[
-                    styles.studentModuleCell,
-                    isDarkMode && styles.studentModuleCellDark,
-                  ]}>
-                  <Text
+            {expandedBlocs.includes(bloc.id_bloc_comp) &&
+              bloc.modules.map(module => {
+                const studentModule = student.moyennes.find(
+                  m => m.id_module === module.id_module,
+                );
+                return (
+                  <View
+                    key={`${student.id_utilisateur}-${module.id_module}`}
                     style={[
-                      styles.moduleGrade,
-                      isDarkMode && styles.moduleGradeDark,
+                      styles.studentModuleCell,
+                      isDarkMode && styles.studentModuleCellDark,
                     ]}>
-                    {selectedSemester !== 'all'
-                      ? student.grades[selectedSemester as number]?.[
-                          module.code
-                        ]?.toFixed(2) || '-'
-                      : Object.keys(student.grades)
-                          .map(
-                            sem => student.grades[parseInt(sem)]?.[module.code],
-                          )
-                          .filter(grade => grade !== undefined)
-                          .map(grade => grade.toFixed(2))
-                          .join(', ') || '-'}
-                  </Text>
-                </View>
-              ))}
+                    <Text
+                      style={[
+                        styles.moduleGrade,
+                        isDarkMode && styles.moduleGradeDark,
+                      ]}>
+                      {studentModule ? studentModule.moyenne : '-'}
+                    </Text>
+                  </View>
+                );
+              })}
           </React.Fragment>
         ))}
+        <View
+          style={[
+            styles.studentUECell,
+            isDarkMode && styles.studentUECellDark,
+          ]}>
+          <Text style={[styles.ueGrade, isDarkMode && styles.ueGradeDark]}>
+            {student.moyenneGenerale || '-'}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.studentModuleCell,
+            isDarkMode && styles.studentModuleCellDark,
+          ]}>
+          <Text
+            style={[styles.moduleGrade, isDarkMode && styles.moduleGradeDark]}>
+            {student.absences || '-'}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.studentUECell,
+            isDarkMode && styles.studentUECellDark,
+          ]}>
+          <Text style={[styles.ueGrade, isDarkMode && styles.ueGradeDark]}>
+            {student.moyenneAvecMalus || '-'}
+          </Text>
+        </View>
       </View>
     );
   };
 
-  // Filter students based on selected group
-  const filteredStudents = STUDENTS.filter(
-    student => selectedGroup === 'all' || student.group === selectedGroup,
-  );
+  // Interface pour les dropdowns
+  const renderDropdownButton = (
+    options: DropdownOption[],
+    selectedValue: string,
+    onSelect: (value: string) => void,
+    placeholder: string,
+  ) => {
+    const selectedOption = options.find(opt => opt.value === selectedValue);
+
+    return (
+      <TouchableOpacity
+        style={[styles.dropdown, isDarkMode && styles.dropdownDark]}
+        onPress={() => {
+          // Ici, vous devriez ouvrir un modal avec les options
+          // Pour l'exemple, je simule juste un changement
+          if (options.length > 0) {
+            const nextIndex =
+              options.findIndex(opt => opt.value === selectedValue) + 1;
+            const nextOption = options[nextIndex % options.length];
+            onSelect(nextOption.value);
+          }
+        }}>
+        <Text
+          style={[styles.dropdownText, isDarkMode && styles.dropdownTextDark]}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <View
+        style={[
+          styles.container,
+          isDarkMode && styles.containerDark,
+          {justifyContent: 'center', alignItems: 'center'},
+        ]}>
+        <ActivityIndicator
+          size="large"
+          color={isDarkMode ? '#fff' : '#2e3494'}
+        />
+        <Text style={{color: isDarkMode ? '#fff' : '#333', marginTop: 16}}>
+          Chargement des données...
+        </Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View
+        style={[
+          styles.container,
+          isDarkMode && styles.containerDark,
+          {justifyContent: 'center', alignItems: 'center'},
+        ]}>
+        <Text style={{color: 'red', textAlign: 'center', marginBottom: 16}}>
+          {error}
+        </Text>
+        <TouchableOpacity
+          style={[styles.exportButton, isDarkMode && styles.exportButtonDark]}
+          onPress={fetchData}>
+          <Text
+            style={[
+              styles.exportButtonText,
+              isDarkMode && styles.exportButtonTextDark,
+            ]}>
+            Réessayer
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, isDarkMode && styles.containerDark]}>
@@ -399,6 +430,12 @@ export default function Averages() {
               ]}>
               Semestre
             </Text>
+            {renderDropdownButton(
+              semestreOptions,
+              selectedSemestre,
+              setSelectedSemestre,
+              'Sélectionner un semestre',
+            )}
           </View>
 
           <View style={styles.filterItem}>
@@ -409,12 +446,18 @@ export default function Averages() {
               ]}>
               Groupe
             </Text>
+            {renderDropdownButton(
+              groupeOptions,
+              selectedGroupe,
+              setSelectedGroupe,
+              'Sélectionner un groupe',
+            )}
           </View>
         </View>
 
         <ScrollView horizontal style={styles.tableContainer}>
           <View>
-            {/* Table Header - Row 1 (UE Codes) */}
+            {/* En-tête de tableau - Ligne 1 (Codes des blocs) */}
             <View
               style={[styles.headerRow, isDarkMode && styles.headerRowDark]}>
               <View
@@ -430,10 +473,41 @@ export default function Averages() {
                   Étudiant
                 </Text>
               </View>
-              {UES.map(ue => renderUEHeader(ue))}
+              {blocsCompetences.map(bloc => renderBlocHeader(bloc))}
+              <View
+                style={[
+                  styles.ueHeaderCell,
+                  isDarkMode && styles.ueHeaderCellDark,
+                ]}>
+                <Text style={[styles.ueCode, isDarkMode && styles.ueCodeDark]}>
+                  Moyenne générale
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.moduleHeaderCell,
+                  isDarkMode && styles.moduleHeaderCellDark,
+                ]}>
+                <Text
+                  style={[
+                    styles.moduleCode,
+                    isDarkMode && styles.moduleCodeDark,
+                  ]}>
+                  Absence (h)
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.ueHeaderCell,
+                  isDarkMode && styles.ueHeaderCellDark,
+                ]}>
+                <Text style={[styles.ueCode, isDarkMode && styles.ueCodeDark]}>
+                  Moyenne avec malus
+                </Text>
+              </View>
             </View>
 
-            {/* Table Header - Row 2 (UE Names) */}
+            {/* En-tête de tableau - Ligne 2 (Noms des blocs) */}
             <View
               style={[styles.headerRow, isDarkMode && styles.headerRowDark]}>
               <View
@@ -442,13 +516,31 @@ export default function Averages() {
                   isDarkMode && styles.studentHeaderCellDark,
                 ]}
               />
-              {UES.map(ue => renderUENameHeader(ue))}
+              {blocsCompetences.map(bloc => renderBlocNameHeader(bloc))}
+              <View
+                style={[
+                  styles.ueHeaderCell,
+                  isDarkMode && styles.ueHeaderCellDark,
+                ]}
+              />
+              <View
+                style={[
+                  styles.moduleHeaderCell,
+                  isDarkMode && styles.moduleHeaderCellDark,
+                ]}
+              />
+              <View
+                style={[
+                  styles.ueHeaderCell,
+                  isDarkMode && styles.ueHeaderCellDark,
+                ]}
+              />
             </View>
 
-            {/* Table Body */}
+            {/* Corps du tableau */}
             <ScrollView>
-              {filteredStudents.length > 0 ? (
-                filteredStudents.map(student => renderStudentRow(student))
+              {students.length > 0 ? (
+                students.map(student => renderStudentRow(student))
               ) : (
                 <View
                   style={[
