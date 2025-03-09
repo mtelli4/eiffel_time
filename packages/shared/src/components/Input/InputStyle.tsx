@@ -23,10 +23,12 @@ export const styles = StyleSheet.create({
     right: 20,
     color: '#2E3494',
     cursor: 'pointer',
-    height: 50
+    // height: 50,
+    zIndex: 1,
   },
   inputContainer: {
     justifyContent: 'center',
+
   },
   label: {
     left: 12,
@@ -38,6 +40,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'white',
     paddingHorizontal: 6,
+    zIndex: 1,
   },
   helperContainer: {
     height: 80,
