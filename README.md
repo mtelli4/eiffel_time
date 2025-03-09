@@ -2,9 +2,7 @@
 
 ## Requierements
 
-* PostgreSQL v17.4 ![Static Badge](https://img.shields.io/badge/postgresql-v17.4-0064a5)
-* Node.js v23.3.0 ![Static Badge](https://img.shields.io/badge/node-v23.3.0-2980b9)
-* npm v10.9.0 ![Static Badge](https://img.shields.io/badge/npm-v10.9.0-333333)
+![Static Badge](https://img.shields.io/badge/postgresql-v17.4-0064a5) ![Static Badge](https://img.shields.io/badge/node-v23.3.0-2980b9) ![Static Badge](https://img.shields.io/badge/npm-v10.9.0-333333) ![Static Badge](https://img.shields.io/badge/android_sdk-v31-a4c639) ![Static Badge](https://img.shields.io/badge/java-21-744e3b)
 
 ## Installation
 
@@ -49,3 +47,10 @@ Open a terminal and run : `cd packages/mobile && npm run start`
 For Android, open a second terminal and run : `cd packages/mobile && npm run android`
 
 For iOS, open a second terminal and run : `cd packages/mobile && npm run ios`
+
+
+## Development
+
+### Server :
+
+Use this command to export your database schema to the Prisma schema : `USER=utilisateur_bdd DATABASE=bdd SCHEMA=ingrid npm run db:data`, replace `utilisateur_bdd` by the database user, `bdd` by the database name and `ingrid` by the schema name.

@@ -9,7 +9,11 @@ import TabNavigator from './TabNavigator/index';
 enableScreens();
 const RootNavigator = () => {
   return (
-      <TabNavigator />
+    <NavigationIndependentTree>
+      <NavigationContainer>
+        <TabNavigator />
+      </NavigationContainer>
+    </NavigationIndependentTree>
   );
 };
 
