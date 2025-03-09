@@ -148,7 +148,7 @@ const TABS_CONFIG = {
 
   administrator: [
     {
-      name: 'Schedule',
+      name: 'Emploi du temps',
       component: Schedule,
       icon: {name: 'calendar', source: 'Feather'},
     },
