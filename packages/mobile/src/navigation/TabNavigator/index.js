@@ -225,12 +225,15 @@ const TabNavigator = () => {
         tabBarActiveTintColor: activeTheme.tabBarActiveTint,
         tabBarInactiveTintColor: activeTheme.tabBarInactiveTint,
         headerStyle: {
+          height: 95, // Réduire
           backgroundColor: activeTheme.headerBackground,
-          height: 95, // Réduire la hauteur du header
         },
         headerTitleStyle: {
-          fontSize: 16, // Réduire la taille du texte du titre
+          top: 20,
+          fontSize: 18, // Réduire la taille du texte du titre
+          fontWeight: 'bold', // Mettre en gras le titre
         },
+
         headerTintColor: activeTheme.headerTint,
       })}>
       {tabs.map(tab => (
