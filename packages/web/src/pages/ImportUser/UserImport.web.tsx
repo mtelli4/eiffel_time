@@ -99,10 +99,11 @@ export function UserImport() {
   }
 
   return (
-    <div style={styles.content}>
-      <header style={styles.header}>
-        <span style={styles.subtitle}>Importation des utilisateurs</span>
-      </header>
+    <div className="mb-6">
+      <h2 className="text-xl font-semibold dark:text-white">
+        Importation des utilisateurs
+      </h2>
+      <br/>
       {jsonData.length === 0 && (
         <div className="text-gray-600 dark:text-gray-300">
           <p>
@@ -178,14 +179,12 @@ export function UserImport() {
                 onChange={() => setShowOnlyValid(!showOnlyValid)}
               />
               <span
-                className={`relative w-10 h-5 bg-gray-400 rounded-full transition ${
-                  showOnlyValid ? 'bg-green-600' : ''
-                }`}
+                className={`relative w-10 h-5 bg-gray-400 rounded-full transition ${showOnlyValid ? 'bg-green-600' : ''
+                  }`}
               >
                 <span
-                  className={`absolute left-1 top-1 w-3 h-3 bg-white rounded-full transform transition ${
-                    showOnlyValid ? 'translate-x-5' : ''
-                  }`}
+                  className={`absolute left-1 top-1 w-3 h-3 bg-white rounded-full transform transition ${showOnlyValid ? 'translate-x-5' : ''
+                    }`}
                 ></span>
               </span>
             </label>
@@ -239,11 +238,10 @@ export function UserImport() {
                 <tr
                   key={index}
                   className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
-                ${
-                  !isEmailValid(user.email, user.statut)
-                    ? `text-red-500`
-                    : `text-gray-600 dark:text-gray-300`
-                }`}
+                ${!isEmailValid(user.email, user.statut)
+                      ? `text-red-500`
+                      : `text-gray-600 dark:text-gray-300`
+                    }`}
                 >
                   <td className="py-3 px-4">{user.nom}</td>
                   <td className="py-3 px-4">{user.prenom}</td>
