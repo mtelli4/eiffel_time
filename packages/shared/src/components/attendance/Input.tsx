@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native'
 
 interface InputProps {
   label?: string
@@ -17,16 +17,27 @@ export function Input({
   secureTextEntry,
   error,
 }: InputProps) {
+  const colorScheme = useColorScheme()
+  const isDarkMode = colorScheme === 'dark'
+
   return (
     <View style={[styles.container, error && styles.containerError]}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <Text style={[styles.label, isDarkMode && styles.darkLabel]}>
+          {label}
+        </Text>
+      )}
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
-        style={[styles.input, error && styles.inputError]}
-        placeholderTextColor="#9CA3AF"
+        style={[
+          styles.input,
+          error && styles.inputError,
+          isDarkMode && styles.darkInput,
+        ]}
+        placeholderTextColor={isDarkMode ? '#9CA3AF' : '#9CA3AF'}
       />
       {error && <Text style={styles.error}>{error}</Text>}
     </View>
@@ -63,5 +74,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#EF4444',
     marginTop: 4,
+  },
+  // Dark theme styles
+  darkLabel: {
+    color: '#E5E7EB',
+  },
+  darkInput: {
+    borderColor: '#4B5563',
+    color: '#F9FAFB',
+    backgroundColor: '#111827',
+  },
+  darkPlaceholder: {
+    color: '#9CA3AF',
   },
 })
