@@ -12,6 +12,9 @@ const signupRouter = require('./signup');
 const classgradesRouter = require('./classgrades');
 const messagingRouter = require('./messaging');
 const userRouter = require('./user');
+const averageRouter = require('./averages');
+
+
 
 const router = express.Router(); // Création d'un routeur Express
 
@@ -27,5 +30,6 @@ router.use('/classgrades', classgradesRouter);
 router.use('/messaging', messagingRouter);
 router.use('/signup', signupRouter);
 router.use('/user', userRouter);
+router.use('/averages', averageRouter);
 
 module.exports = router;
