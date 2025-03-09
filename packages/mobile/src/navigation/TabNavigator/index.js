@@ -55,12 +55,12 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: {name: 'settings', source: 'Feather'},
     },
   ],
@@ -82,12 +82,12 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: {name: 'settings', source: 'Feather'},
     },
   ],
@@ -103,18 +103,18 @@ const TABS_CONFIG = {
       icon: {name: 'user-check', source: 'Feather'},
     },
     {
-      name: 'Présences professeurs',
+      name: 'Présences enseignants',
       component: ClassAverages,
       icon: {name: 'users', source: 'Feather'},
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: {name: 'settings', source: 'Feather'},
     },
   ],
@@ -136,17 +136,17 @@ const TABS_CONFIG = {
     },
     {
       name: 'Messagerie',
-      component: Schedule,
+      component: Messages,
       icon: {name: 'message1', source: 'AntDesign'},
     },
     {
       name: 'Réglages',
-      component: Schedule,
+      component: Settings,
       icon: {name: 'settings', source: 'Feather'},
     },
   ],
 
-  admin: [
+  administrator: [
     {
       name: 'Schedule',
       component: Schedule,
@@ -168,7 +168,7 @@ const TABS_CONFIG = {
       icon: {name: 'user-check', source: 'Feather'},
     },
     {
-      name: 'Présences professeurs',
+      name: 'Présences enseignants',
       component: TeacherAttendance,
       icon: {name: 'users', source: 'Feather'},
     },
@@ -202,10 +202,12 @@ const getTabIcon = (icon, color) => {
 };
 
 const TabNavigator = () => {
-  const {role} = useContext(UserContext);
+  const {statut} = useContext(UserContext); // Exemple pour récupérer le rôle
+
+  // Obtenez les onglets pour le rôle actuel
+  const tabs = TABS_CONFIG[statut] || [];
   const systemColorScheme = useColorScheme();
   const activeTheme = systemColorScheme === 'dark' ? darkTheme : lightTheme;
-  const tabs = TABS_CONFIG[role] || [];
 
   return (
     <Tab.Navigator
@@ -223,12 +225,15 @@ const TabNavigator = () => {
         tabBarActiveTintColor: activeTheme.tabBarActiveTint,
         tabBarInactiveTintColor: activeTheme.tabBarInactiveTint,
         headerStyle: {
+          height: 95, // Réduire
           backgroundColor: activeTheme.headerBackground,
-          height: 95, // Réduire la hauteur du header
         },
         headerTitleStyle: {
-          fontSize: 16, // Réduire la taille du texte du titre
+          top: 20,
+          fontSize: 18, // Réduire la taille du texte du titre
+          fontWeight: 'bold', // Mettre en gras le titre
         },
+
         headerTintColor: activeTheme.headerTint,
       })}>
       {tabs.map(tab => (

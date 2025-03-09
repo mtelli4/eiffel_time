@@ -1,5 +1,5 @@
 -- Dump nettoyé à partir de prisma/migrations/0_init/ingrid_data.sql
-SET search_path TO ingrid;
+SET search_path SET ingrid;
 
 --
 -- PostgreSQL database dump
@@ -123,7 +123,10 @@ INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@exampl
 INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, 'teacher', '2024-01-21 00:00:00', '2025-02-06 20:40:41.284');
 INSERT INTO ingrid.utilisateur VALUES (19, 'Mariya Constantine', 'Cédric', 'cedric.mc11@gmail.com', 'eb81c5f99581c4825d898b5c379f506a63a0866aa49c709edc3c1ffb54f6871a', '86bcbd51fb7d66e31f7d9c8404c8d13b', 'administrator', '2025-02-05 10:27:39.307', '2025-03-01 15:24:43.058');
 INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', '13a956b10c0d015f6bd3419604dc7e11e2a67b74d8b0e0966d12dea5ae0a562f', 'ff3bfd7cae5d169a8feeaf7ac6731d95', 'secretary', '2024-08-24 00:00:00', '2025-03-01 21:20:16.192');
-INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, 'teacher', '2024-11-09 00:00:00', '2025-03-04 17:52:32.993');
+INSERT INTO ingrid.utilisateur VALUES (21, 'Telli', 'Mohamed', 'mohamed.telli@edu.univ-eiffel.fr', NULL, NULL, 'student', '2025-03-07 13:12:37.471', '2025-03-07 13:12:37.471');
+INSERT INTO ingrid.utilisateur VALUES (22, 'Létocart', 'Enzo', 'enzo.letocart@edu.univ-eiffel.fr', NULL, NULL, 'student', '2025-03-07 13:13:53.8', '2025-03-07 13:13:53.8');
+INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', '73e8d2f6eb2de29610c0ba166b5ff412d1a95bd7724db2d3fdc754d081cf2270', '6b93ddbc49078f11317b319bf392b80d', 'teacher', '2024-11-09 00:00:00', '2025-03-08 09:28:33.456');
+INSERT INTO ingrid.utilisateur VALUES (20, 'Cherak', 'Rabah', 'rabah.cherak@edu.univ-eiffel.fr', '65fbe7f3ed77c6a4e39e2cbadc98a2de4fb285872c2870738c84e87905f5ee35', 'd541dc8f66261a95e5c7961b1b3a39b7', 'administrator', '2025-03-07 13:01:00.216', '2025-03-07 13:01:00.216');
 INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@gmail.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-03-04 20:16:43.863');
 
 
@@ -161,18 +164,18 @@ INSERT INTO ingrid.notification VALUES (2, 'Message', 'Vous avez reçu un messag
 -- Data for Name: absence; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.absence VALUES (3, 'justificatif2.pdf', 'Accident de transport, justificatif envoyé.', true, NULL, false, '2025-01-03 08:00:00', '2025-01-03 13:00:00', 1, 9, 3);
 INSERT INTO ingrid.absence VALUES (4, NULL, 'Présence signalée avec un retard de 10 minutes.', false, 10, true, '2025-01-04 09:15:00', '2025-01-04 10:00:00', 1, 10, 4);
 INSERT INTO ingrid.absence VALUES (5, NULL, 'Absent sans explication.', false, NULL, false, '2025-01-05 11:00:00', '2025-01-05 15:00:00', 1, 11, 5);
 INSERT INTO ingrid.absence VALUES (6, 'justificatif3.pdf', 'Absence validée pour raisons familiales.', true, NULL, true, '2025-01-06 10:30:00', '2025-01-06 14:30:00', 1, 12, 6);
 INSERT INTO ingrid.absence VALUES (7, NULL, 'Retard non signalé, 20 minutes.', false, 20, false, '2025-01-07 09:45:00', '2025-01-07 12:15:00', 1, 13, 7);
-INSERT INTO ingrid.absence VALUES (8, NULL, 'Justificatif en attente pour cette absence.', false, NULL, false, '2025-01-08 08:30:00', '2025-01-08 11:30:00', 1, 14, 8);
 INSERT INTO ingrid.absence VALUES (9, NULL, 'Absence pour toute la durée avec un retard initial non justifié.', false, 25, true, '2025-01-09 07:00:00', '2025-01-09 13:00:00', 1, 15, 9);
 INSERT INTO ingrid.absence VALUES (10, 'justificatif4.pdf', 'Absence validée avec un retard de 30 minutes.', true, 30, true, '2025-01-10 09:30:00', '2025-01-10 14:00:00', 1, 16, 10);
 INSERT INTO ingrid.absence VALUES (11, NULL, 'Absence déclarée mais non validée.', false, NULL, true, '2025-01-11 10:00:00', '2025-01-11 12:00:00', 1, 17, 11);
 INSERT INTO ingrid.absence VALUES (12, 'justificatif_absence_2025_01_10.pdf', 'Absent pour raison médicale.', true, 0, true, '2025-01-10 08:00:00', '2025-01-10 08:30:00', 1, 3, 1);
 INSERT INTO ingrid.absence VALUES (1, 'justificatif1.pdf', 'Absent pour cause de maladie.', true, NULL, true, '2025-01-01 09:00:00', '2025-01-09 12:00:00', 1, 3, 1);
 INSERT INTO ingrid.absence VALUES (2, NULL, 'Absent sans justificatif. Retard de 15 minutes.', false, 15, true, '2025-01-02 10:00:00', '2025-01-10 11:30:00', 1, 8, 2);
+INSERT INTO ingrid.absence VALUES (8, NULL, 'Justificatif en attente pour cette absence.', NULL, NULL, true, '2025-01-08 08:30:00', '2025-01-08 11:30:00', 1, 14, 8);
+INSERT INTO ingrid.absence VALUES (3, 'justificatif2.pdf', 'Accident de transport, justificatif envoyé.', NULL, NULL, true, '2025-01-03 08:00:00', '2025-03-08 09:31:22.892', 1, 9, 3);
 
 
 --
@@ -326,75 +329,75 @@ INSERT INTO ingrid.message VALUES (67, 'Ne t''inquiète pas j''ai bientôt termi
 -- Data for Name: module_bloc_competence; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.module_bloc_competence VALUES (1, 1, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (2, 1, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (2, 2, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (3, 1, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (3, 5, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (3, 6, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (4, 1, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (4, 3, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (4, 6, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (5, 1, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (6, 1, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (6, 2, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (7, 1, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (7, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (7, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (8, 1, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (8, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 1, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 3, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 1, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 2, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 3, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 4, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (11, 2, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (12, 2, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (12, 3, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (13, 2, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (13, 3, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (14, 2, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (14, 4, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (15, 2, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (16, 2, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (17, 2, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (17, 3, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (18, 2, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (18, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (19, 2, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (20, 3, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (21, 3, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (21, 5, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (21, 6, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (22, 3, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (23, 3, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 3, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 4, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (25, 4, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (26, 4, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (27, 4, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (27, 6, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (28, 4, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (29, 4, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (30, 4, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (31, 4, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (31, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (32, 5, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (33, 5, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (34, 6, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (35, 6, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (36, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (37, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (38, 6, 'Semestre 2', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (39, 5, 'Semestre 1', NULL);
-INSERT INTO ingrid.module_bloc_competence VALUES (39, 6, 'Semestre 1', NULL);
+INSERT INTO ingrid.module_bloc_competence VALUES (1, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (2, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (2, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (3, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (3, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (3, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (4, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (4, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (4, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (5, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (6, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (6, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (7, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (7, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (7, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (8, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (8, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (11, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (12, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (12, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (13, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (13, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (14, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (14, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (15, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (16, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (17, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (17, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (18, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (18, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (19, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (20, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (21, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (21, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (21, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (22, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (23, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (25, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (26, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (27, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (27, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (28, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (29, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (30, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (31, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (31, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (32, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (33, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (34, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (35, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (36, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (37, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (38, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (39, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (39, 6, 'Semestre 1', 1);
 
 
 --
@@ -424,6 +427,12 @@ INSERT INTO ingrid.notes VALUES (16, 10, 15.50, 'Quelques lacunes dans les déta
 INSERT INTO ingrid.notes VALUES (17, 11, 4.00, 'Manque de révision.', '2025-02-20 12:00:00', '2025-02-21 12:00:00');
 INSERT INTO ingrid.notes VALUES (8, 11, 5.00, 'Réponse correcte, mais incomplète.', '2025-02-20 12:30:00', '2025-02-21 12:30:00');
 INSERT INTO ingrid.notes VALUES (11, 1, 12.60, 'Pas mal', '2025-02-28 13:36:57.617', '2025-02-28 14:27:41.793');
+
+
+--
+-- Data for Name: qrcode; Type: TABLE DATA; Schema: ingrid; Owner: postgres
+--
+
 
 
 --

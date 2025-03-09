@@ -3,6 +3,7 @@ import { FlatList, Image, KeyboardAvoidingView, Modal, Platform, SafeAreaView, S
 import Icon from 'react-native-vector-icons/Feather';
 import { fetchConversations, fetchMessages, fetchUsers } from '../../../../shared/src/backend/services/messaging';
 import { MessagingConversation, MessagingMessage, MessagingUtilisateur } from '../../../../shared/src/types/types';
+import { storage } from '../../storage/storage'
 
 export function Messages() {
   const [conversations, setConversations] = useState<MessagingConversation[]>([]);
@@ -17,8 +18,9 @@ export function Messages() {
   const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<MessagingUtilisateur[]>([]);
   const [allUsers, setAllUsers] = useState<MessagingUtilisateur[]>([]);
-
-  const userId = 3;
+  
+  const user = JSON.parse(storage.getString('user') || '{}');
+  const userId = user.id_utilisateur;
 
   useEffect(() => {
     const getConversations = async () => {

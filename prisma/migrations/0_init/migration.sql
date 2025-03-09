@@ -1,15 +1,14 @@
-SET search_path TO ingrid;
 -- CreateEnum
-CREATE TYPE "statut_utilisateur" AS ENUM ('indefinite', 'student', 'teacher', 'secretary', 'director', 'manager', 'administrator');
-
--- CreateEnum
-CREATE TYPE "type_cours" AS ENUM ('CM', 'TD', 'TP', '');
+CREATE TYPE "cours_presence" AS ENUM ('présentiel', 'distanciel');
 
 -- CreateEnum
 CREATE TYPE "periode" AS ENUM ('Semestre 1', 'Semestre 2', 'Semestre 3', 'Semestre 4', 'Semestre 5', 'Semestre 6');
 
 -- CreateEnum
-CREATE TYPE "cours_presence" AS ENUM ('présentiel', 'distanciel');
+CREATE TYPE "statut_utilisateur" AS ENUM ('indefinite', 'student', 'teacher', 'secretary', 'director', 'manager', 'administrator');
+
+-- CreateEnum
+CREATE TYPE "type_cours" AS ENUM ('CM', 'TD', 'TP', '');
 
 -- CreateTable
 CREATE TABLE "absence" (
@@ -137,6 +136,14 @@ CREATE TABLE "groupe" (
 );
 
 -- CreateTable
+CREATE TABLE "groupe_etudiant" (
+    "id_utilisateur" INTEGER NOT NULL,
+    "id_grp" INTEGER NOT NULL,
+
+    CONSTRAINT "groupe_etudiant_id_utilisateur_id_grp" PRIMARY KEY ("id_utilisateur","id_grp")
+);
+
+-- CreateTable
 CREATE TABLE "message" (
     "id_message" SERIAL NOT NULL,
     "contenu" TEXT,
@@ -190,6 +197,13 @@ CREATE TABLE "notification" (
 );
 
 -- CreateTable
+CREATE TABLE "qrcode" (
+    "id_cours" INTEGER NOT NULL,
+    "id_utilisateur" INTEGER NOT NULL,
+    "presence" BOOLEAN NOT NULL DEFAULT false
+);
+
+-- CreateTable
 CREATE TABLE "utilisateur" (
     "id_utilisateur" SERIAL NOT NULL,
     "nom" VARCHAR(255) NOT NULL,
@@ -202,14 +216,6 @@ CREATE TABLE "utilisateur" (
     "updatedat" TIMESTAMP(6) NOT NULL,
 
     CONSTRAINT "utilisateur_pkey" PRIMARY KEY ("id_utilisateur")
-);
-
--- CreateTable
-CREATE TABLE "groupe_etudiant" (
-    "id_utilisateur" INTEGER NOT NULL,
-    "id_grp" INTEGER NOT NULL,
-
-    CONSTRAINT "groupe_etudiant_id_utilisateur_id_grp" PRIMARY KEY ("id_utilisateur","id_grp")
 );
 
 -- CreateIndex
@@ -273,6 +279,12 @@ ALTER TABLE "formation_utilisateur" ADD CONSTRAINT "formation_utilisateur_id_for
 ALTER TABLE "formation_utilisateur" ADD CONSTRAINT "formation_utilisateur_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
+ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_etudiant" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_groupe" FOREIGN KEY ("id_grp") REFERENCES "groupe"("id_grp") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
 ALTER TABLE "message" ADD CONSTRAINT "message_emetteur_fkey" FOREIGN KEY ("emetteur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
@@ -294,8 +306,8 @@ ALTER TABLE "notes" ADD CONSTRAINT "notes_id_eval_fkey" FOREIGN KEY ("id_eval") 
 ALTER TABLE "notes" ADD CONSTRAINT "notes_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_etudiant" FOREIGN KEY ("id_utilisateur") REFERENCES "etudiant"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "qrcode" ADD CONSTRAINT "appel_id_cours_fkey" FOREIGN KEY ("id_cours") REFERENCES "cours"("id_cours") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "groupe_etudiant" ADD CONSTRAINT "fk_groupe" FOREIGN KEY ("id_grp") REFERENCES "groupe"("id_grp") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "qrcode" ADD CONSTRAINT "appel_id_utilisateur_fkey" FOREIGN KEY ("id_utilisateur") REFERENCES "utilisateur"("id_utilisateur") ON DELETE NO ACTION ON UPDATE NO ACTION;
 

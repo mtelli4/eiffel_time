@@ -12,9 +12,9 @@ import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
-import { fetchAbsences } from '../../../../shared/src/backend/services/absences'
 import { cn } from '../../../../shared/src/lib/utils'
-import { ManageAbsencesAbsence } from '../../../../shared/src/types/types'
+import { Formation, ManageAbsencesAbsence } from '../../../../shared/src/types/types'
+import { approveAbsence, fetchAbsences, rejectAbsence } from '../../../../shared/src/backend/services/absences'
 import { dateFormatting } from '../../../../shared/src/utils/stringUtils'
 import '../../styles/select-styles.css'
 
@@ -24,47 +24,56 @@ const statusOptions = [
   { value: 'pending', label: 'En attente' },
   { value: 'approved', label: 'Validées' },
   { value: 'rejected', label: 'Refusées' },
+  { value: 'unsent', label: 'Non envoyées' },
 ]
 
 export function ManageAbsences() {
   const [absences, setAbsences] = useState<ManageAbsencesAbsence[]>([])
+  const [formations, setFormations] = useState<Formation[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatut, setSelectedStatut] = useState<
     ManageAbsencesAbsence['statut'] | 'all'
   >('all')
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
+  const [selectedFormation, setSelectedFormation] = useState<number | null>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [alertFrequency, setAlertFrequency] = useState('immediate')
 
   useEffect(() => {
     fetchAbsences()
       .then((data) => {
-        setAbsences(data)
+        setAbsences(data.absences)
+        setFormations(data.formations)
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des absences:', error)
       })
   }, [])
 
-  const handleApprove = (absenceId: string) => {
+  const handleApprove = async (id_absence: number) => {
+    const result = await approveAbsence(id_absence)
+    if (!result) return
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id_absence === absenceId ? { ...abs, statut: 'approved' } : abs
+        abs.id_absence === id_absence ? { ...abs, statut: 'approved' } : abs
       )
     )
   }
 
-  const handleReject = (absenceId: string) => {
+  const handleReject = async (id_absence: number) => {
+    const result = await rejectAbsence(id_absence)
+    if (!result) return
     setAbsences((prev) =>
       prev.map((abs) =>
-        abs.id_absence === absenceId ? { ...abs, statut: 'rejected' } : abs
+        abs.id_absence === id_absence ? { ...abs, statut: 'rejected' } : abs
       )
     )
   }
 
   const handleExport = (absences: ManageAbsencesAbsence[]) => {
     const doc = new jsPDF()
+
 
     // Titre du document
     doc.setFontSize(18)
@@ -84,6 +93,10 @@ export function ManageAbsences() {
       startY: 30,
       head: [['Étudiant', 'Code Apogée', 'Module', 'Date', 'Statut']],
       body: tableData,
+      headStyles: {
+        fillColor: '#2E3494',
+        textColor: 'white'
+      },
     })
 
     // Télécharger le fichier PDF
@@ -97,12 +110,10 @@ export function ManageAbsences() {
     const searchString =
       `${student?.prenom} ${student?.nom} ${absence.module.codeapogee} ${absence.module.libelle}`.toLowerCase()
     const matchesSearch = searchString.includes(searchQuery.toLowerCase())
-    const matchesStatut =
-      selectedStatut === 'all' || absence.statut === selectedStatut
-    const matchesDateRange =
-      (!startDate || absence.date >= startDate) &&
-      (!endDate || absence.date <= endDate)
-    return matchesSearch && matchesStatut && matchesDateRange
+    const matchesStatut = selectedStatut === 'all' || absence.statut === selectedStatut
+    const matchesDateRange = (!startDate || absence.date >= startDate) && (!endDate || absence.date <= endDate)
+    const matchesFormation = selectedFormation === null || absence.module.formation.id_formation === selectedFormation
+    return matchesSearch && matchesStatut && matchesDateRange && matchesFormation
   })
 
   filteredAbsences.sort((a, b) => b.date.getTime() - a.date.getTime())
@@ -115,6 +126,8 @@ export function ManageAbsences() {
         return 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
       case 'rejected':
         return 'bg-red-100 text-red-800 dark:bg-red-600 dark:text-white'
+      case 'unsent':
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-white'
     }
   }
 
@@ -126,45 +139,9 @@ export function ManageAbsences() {
         return 'Validée'
       case 'rejected':
         return 'Refusée'
+      case 'unsent':
+        return 'Non envoyée'
     }
-  }
-  // Définition des options pour la fréquence des alertes
-  const statusOptions = [
-    { value: 'all', label: 'Tous les statuts' },
-    { value: 'pending', label: 'En attente' },
-    { value: 'approved', label: 'Validées' },
-    { value: 'rejected', label: 'Refusées' },
-  ]
-
-  const CustomDatePicker = ({
-    selectedDate,
-    onChange,
-    label,
-  }: {
-    selectedDate: string | Date | null
-    onChange: (date: string) => void
-    label: string
-  }) => {
-    // Convertir la chaîne en objet Date si nécessaire
-    const dateValue =
-      typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
-
-    return (
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          {label}
-        </label>
-        <DatePicker
-          selected={dateValue}
-          onChange={(date: Date | null) =>
-            onChange(date ? date.toISOString().split('T')[0] : '')
-          }
-          className="w-full rounded-lg border border-gray-300 p-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          dateFormat="dd/MM/yyyy"
-          placeholderText="jj/mm/aaaa"
-        />
-      </div>
-    )
   }
 
   return (
@@ -235,8 +212,8 @@ export function ManageAbsences() {
                     backgroundColor: state.isSelected
                       ? 'var(--select-selected-bg, #2e3494)'
                       : state.isFocused
-                      ? 'var(--select-hover-bg, #deebff)'
-                      : 'var(--select-menu-bg, white)',
+                        ? 'var(--select-hover-bg, #deebff)'
+                        : 'var(--select-menu-bg, white)',
                   }),
                   singleValue: (baseStyles) => ({
                     ...baseStyles,
@@ -325,6 +302,47 @@ export function ManageAbsences() {
                 }
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Formation
+              </label>
+              <Select
+                options={[...formations].map((formation) => ({
+                  value: formation.id_formation,
+                  label: formation.libelle,
+                }))}
+                isClearable
+                onChange={(option) => setSelectedFormation(option?.value as number | null)}
+                isSearchable
+                className="w-full dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg, --select-bg)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, white)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2e3494)'
+                      : state.isFocused
+                        ? 'var(--select-hover-bg, #deebff)'
+                        : 'var(--select-menu-bg, --select-menu-bg)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
+                placeholder="Sélectionner une formation"
+              />
+            </div>
           </div>
         )}
       </div>
@@ -333,14 +351,23 @@ export function ManageAbsences() {
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
+              {/* <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
+                ID
+              </th> */}
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Étudiant
+              </th>
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
+                Formation
               </th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Module
               </th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Date
+              </th>
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
+                Message
               </th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Statut
@@ -358,6 +385,11 @@ export function ManageAbsences() {
                     key={absence.id_absence}
                     className="border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
+                    {/* <td className="py-3 px-4">
+                    <div className="text-sm text-gray-900 dark:text-white">
+                      {absence.id_absence}
+                    </div>
+                  </td> */}
                     <td className="py-3 px-4">
                       <div>
                         <div className="font-medium text-gray-900 dark:text-white">
@@ -367,6 +399,13 @@ export function ManageAbsences() {
                           {absence.etudiant.groupes
                             .map((groupe) => groupe.libelle)
                             .join(', ')}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div>
+                        <div className="text-sm text-gray-900 dark:text-white">
+                          {absence.module.formation.libelle}
                         </div>
                       </div>
                     </td>
@@ -393,6 +432,11 @@ export function ManageAbsences() {
                             )}
                           </div>
                         )}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="text-sm text-gray-900 dark:text-white">
+                        {absence.message}
                       </div>
                     </td>
                     <td className="py-3 px-4">

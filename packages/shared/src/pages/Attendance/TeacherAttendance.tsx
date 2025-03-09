@@ -184,7 +184,7 @@ export function TeacherAttendance() {
           <View style={styles.buttonSpacing} />
           <Button onPress={handleExport} variant="outline">
             <View style={styles.buttonContent}>
-              <FileDownButton />
+              <FileDownButton color={'#2C3E50'} size={4} />
               <Text
                 style={[
                   styles.exportButtonText,
