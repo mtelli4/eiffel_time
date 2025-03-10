@@ -251,7 +251,7 @@ export function UserImport() {
                   <tr
                     key={user.email}
                     className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
-          ${!isUserValid(user) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}
+                      ${!isUserValid(user) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}
                   >
                     <td className="py-3 px-4">{user.nom || '-'}</td>
                     <td className="py-3 px-4">{user.prenom || '-'}</td>
