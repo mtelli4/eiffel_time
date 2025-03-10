@@ -1,9 +1,11 @@
 import { Palette } from 'lucide-react'
+import { useEffect } from 'react'
 import Select from 'react-select'
 import { useDateFormat } from '../../../../shared/src/hooks/useDateFormat'
 import { useLanguage } from '../../../../shared/src/hooks/useLanguage'
 import { useTheme } from '../../../../shared/src/hooks/useTheme'
 import '../../styles/select-styles.css'
+
 interface PersonalizationSettingsProps {
   dateFormat: string
   setDate: (newDate: string) => void
@@ -25,6 +27,13 @@ export default function PersonalizationSettings({
   const { dateSelectOptions } = useDateFormat()
   const { languagesSelectOptions } = useLanguage()
 
+  // Si aucun thème n'est défini, utiliser 'system' par défaut
+  useEffect(() => {
+    if (!theme) {
+      setTheme('system')
+    }
+  }, [theme, setTheme])
+
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6">
       <div className="flex items-center gap-2 mb-4">
@@ -41,7 +50,7 @@ export default function PersonalizationSettings({
           </label>
           <Select
             defaultValue={themesSelectOptions.find(
-              (option) => option.value === theme
+              (option) => option.value === (theme || 'system')
             )}
             options={themesSelectOptions}
             isSearchable={false}

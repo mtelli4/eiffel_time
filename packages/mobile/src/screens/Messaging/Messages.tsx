@@ -1,24 +1,60 @@
 import React, {useEffect, useState} from 'react';
-import { FlatList, Image, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import { fetchConversations, fetchMessages, fetchUsers } from '../../../../shared/src/backend/services/messaging';
-import { MessagingConversation, MessagingMessage, MessagingUtilisateur } from '../../../../shared/src/types/types';
-import { storage } from '../../storage/storage'
+import {
+  fetchConversations,
+  fetchMessages,
+  fetchUsers,
+} from '../../../../shared/src/backend/services/messaging';
+import {useTheme} from '../../../../shared/src/hooks/useTheme';
+import {
+  MessagingConversation,
+  MessagingMessage,
+  MessagingUtilisateur,
+} from '../../../../shared/src/types/types';
+import {storage} from '../../storage/storage';
 
 export function Messages() {
-  const [conversations, setConversations] = useState<MessagingConversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<MessagingConversation | null>(null);
+  const [conversations, setConversations] = useState<MessagingConversation[]>(
+    [],
+  );
+  const [selectedConversation, setSelectedConversation] =
+    useState<MessagingConversation | null>(null);
   const [messages, setMessages] = useState<MessagingMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   // États pour le modal de nouvelle conversation
-  const [showNewConversationModal, setShowNewConversationModal] = useState(false);
+  const [showNewConversationModal, setShowNewConversationModal] =
+    useState(false);
   const [userSearchQuery, setUserSearchQuery] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<MessagingUtilisateur[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<MessagingUtilisateur[]>(
+    [],
+  );
+  const [filteredUsers, setFilteredUsers] = useState<MessagingUtilisateur[]>(
+    [],
+  );
   const [allUsers, setAllUsers] = useState<MessagingUtilisateur[]>([]);
-  
+
+  // Gestion du thème
+  const {theme} = useTheme();
+  const systemTheme = useColorScheme();
+  const isDark = theme === 'system' ? systemTheme === 'dark' : theme === 'dark';
+
   const user = JSON.parse(storage.getString('user') || '{}');
   const userId = user.id_utilisateur;
 
@@ -28,7 +64,10 @@ export function Messages() {
         const conversations = await fetchConversations(userId);
         setConversations(conversations);
       } catch (error) {
-        console.error('Erreur lors de la récupération des conversations:', error);
+        console.error(
+          'Erreur lors de la récupération des conversations:',
+          error,
+        );
       }
     };
 
@@ -54,16 +93,19 @@ export function Messages() {
     if (showNewConversationModal) {
       const getUsers = async () => {
         try {
-          const users = await fetchUsers(userId)
-          setAllUsers(users)
+          const users = await fetchUsers(userId);
+          setAllUsers(users);
         } catch (error) {
-          console.error('Erreur lors de la récupération des utilisateurs:', error)
+          console.error(
+            'Erreur lors de la récupération des utilisateurs:',
+            error,
+          );
         }
-      }
+      };
 
-      getUsers()
+      getUsers();
     }
-  }, [userSearchQuery, showNewConversationModal])
+  }, [userSearchQuery, showNewConversationModal]);
 
   // Filtrer les utilisateurs en fonction de la recherche
   useEffect(() => {
@@ -125,7 +167,9 @@ export function Messages() {
           <View style={styles.onlineStatus} />
         )}
       </View>
-      <Text style={styles.userName} numberOfLines={1}>
+      <Text
+        style={[styles.userName, isDark && styles.darkUserName]}
+        numberOfLines={1}>
         {item.utilisateur.nom + ' ' + item.utilisateur.prenom}
       </Text>
     </TouchableOpacity>
@@ -138,7 +182,9 @@ export function Messages() {
         onPress={() => setShowNewConversationModal(true)}>
         <Icon name="plus" size={24} color="#fff" />
       </TouchableOpacity>
-      <Text style={styles.userName}>Nouveau</Text>
+      <Text style={[styles.userName, isDark && styles.darkUserName]}>
+        Nouveau
+      </Text>
     </View>
   );
 
@@ -154,19 +200,27 @@ export function Messages() {
         <View
           style={[
             styles.messageBubble,
-            isCurrentUser ? styles.sentBubble : styles.receivedBubble,
+            isCurrentUser
+              ? styles.sentBubble
+              : isDark
+              ? styles.darkReceivedBubble
+              : styles.receivedBubble,
           ]}>
           <Text
             style={[
               styles.messageText,
               isCurrentUser
                 ? styles.sentMessageText
+                : isDark
+                ? styles.darkReceivedMessageText
                 : styles.receivedMessageText,
             ]}>
             {item.message}
           </Text>
         </View>
-        <Text style={styles.timestamp}>{formatTimestamp(item.date)}</Text>
+        <Text style={[styles.timestamp, isDark && styles.darkTimestamp]}>
+          {formatTimestamp(item.date)}
+        </Text>
       </View>
     );
   };
@@ -211,9 +265,20 @@ export function Messages() {
     return roles[statut] || 'Utilisateur';
   };
 
+  // For debugging purposes
+  useEffect(() => {
+    console.log('theme:', theme);
+    console.log('systemTheme:', systemTheme);
+    console.log('isDark:', isDark);
+  }, [theme, systemTheme, isDark]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.recentUsersContainer}>
+    <SafeAreaView style={[styles.container, isDark && styles.darkContainer]}>
+      <View
+        style={[
+          styles.recentUsersContainer,
+          isDark && styles.darkRecentUsersContainer,
+        ]}>
         <FlatList
           horizontal
           data={conversations}
@@ -228,19 +293,34 @@ export function Messages() {
       {selectedConversation ? (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={styles.conversationContainer}>
-          <View style={styles.selectedUserHeader}>
+          style={[
+            styles.conversationContainer,
+            isDark && styles.darkConversationContainer,
+          ]}>
+          <View
+            style={[
+              styles.selectedUserHeader,
+              isDark && styles.darkSelectedUserHeader,
+            ]}>
             <Image
               source={{uri: selectedConversation.utilisateur.avatar}}
               style={styles.selectedUserAvatar}
             />
             <View>
-              <Text style={styles.selectedUserName}>
+              <Text
+                style={[
+                  styles.selectedUserName,
+                  isDark && styles.darkSelectedUserName,
+                ]}>
                 {selectedConversation.utilisateur.nom +
                   ' ' +
                   selectedConversation.utilisateur.prenom}
               </Text>
-              <Text style={styles.selectedUserStatus}>
+              <Text
+                style={[
+                  styles.selectedUserStatus,
+                  isDark && styles.darkSelectedUserStatus,
+                ]}>
                 {selectedConversation.utilisateur.status === 'online'
                   ? 'En ligne'
                   : 'Hors ligne'}
@@ -254,35 +334,51 @@ export function Messages() {
             keyExtractor={item => item.id_message.toString()}
             contentContainerStyle={styles.messagesList}
             inverted={false}
+            style={isDark && styles.darkMessagesList}
           />
 
-          <View style={styles.inputContainer}>
+          <View
+            style={[
+              styles.inputContainer,
+              isDark && styles.darkInputContainer,
+            ]}>
             <TextInput
-              style={styles.messageInput}
+              style={[styles.messageInput, isDark && styles.darkMessageInput]}
               value={newMessage}
               onChangeText={setNewMessage}
               placeholder="Écrivez votre message..."
-              placeholderTextColor="#666"
+              placeholderTextColor={isDark ? '#9CA3AF' : '#666'}
               multiline
             />
             <TouchableOpacity
               style={[
                 styles.sendButton,
-                !newMessage.trim() && styles.sendButtonDisabled,
+                !newMessage.trim() &&
+                  (isDark
+                    ? styles.darkSendButtonDisabled
+                    : styles.sendButtonDisabled),
               ]}
               onPress={handleSendMessage}
               disabled={!newMessage.trim()}>
               <Icon
                 name="send"
                 size={24}
-                color={newMessage.trim() ? '#fff' : '#666'}
+                color={newMessage.trim() ? '#fff' : isDark ? '#9CA3AF' : '#666'}
               />
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       ) : (
-        <View style={styles.noConversationContainer}>
-          <Text style={styles.noConversationText}>
+        <View
+          style={[
+            styles.noConversationContainer,
+            isDark && styles.darkNoConversationContainer,
+          ]}>
+          <Text
+            style={[
+              styles.noConversationText,
+              isDark && styles.darkNoConversationText,
+            ]}>
             Sélectionnez un utilisateur pour commencer une conversation
           </Text>
         </View>
@@ -294,29 +390,39 @@ export function Messages() {
         transparent={true}
         animationType="fade">
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
+          <View
+            style={[
+              styles.modalContainer,
+              isDark && styles.darkModalContainer,
+            ]}>
             <TouchableOpacity
               onPress={handleCloseNewConversationModal}
               style={styles.closeButton}>
-              <Icon name="x" size={20} color="#6B7280" />
+              <Icon name="x" size={20} color={isDark ? '#D1D5DB' : '#6B7280'} />
             </TouchableOpacity>
 
-            <Text style={styles.modalTitle}>Nouvelle conversation</Text>
+            <Text style={[styles.modalTitle, isDark && styles.darkModalTitle]}>
+              Nouvelle conversation
+            </Text>
 
             <View style={styles.searchContainer}>
-              <View style={styles.searchInputWrapper}>
+              <View
+                style={[
+                  styles.searchInputWrapper,
+                  isDark && styles.darkSearchInputWrapper,
+                ]}>
                 <Icon
                   name="search"
                   size={20}
-                  color="#9CA3AF"
+                  color={isDark ? '#D1D5DB' : '#9CA3AF'}
                   style={styles.searchIcon}
                 />
                 <TextInput
                   value={userSearchQuery}
                   onChangeText={setUserSearchQuery}
                   placeholder="Rechercher un utilisateur..."
-                  placeholderTextColor="#6B7280"
-                  style={styles.searchInput}
+                  placeholderTextColor={isDark ? '#9CA3AF' : '#6B7280'}
+                  style={[styles.searchInput, isDark && styles.darkSearchInput]}
                 />
               </View>
             </View>
@@ -328,13 +434,23 @@ export function Messages() {
                 style={styles.selectedUsersContainer}
                 contentContainerStyle={styles.selectedUsersContent}>
                 {selectedUsers.map(user => (
-                  <View key={user.id_utilisateur} style={styles.userChip}>
-                    <Text style={styles.userChipText}>
+                  <View
+                    key={user.id_utilisateur}
+                    style={[styles.userChip, isDark && styles.darkUserChip]}>
+                    <Text
+                      style={[
+                        styles.userChipText,
+                        isDark && styles.darkUserChipText,
+                      ]}>
                       {user.nom + ' ' + user.prenom}
                     </Text>
                     <TouchableOpacity
                       onPress={() => handleToggleUserSelection(user)}>
-                      <Icon name="x" size={16} color="#3B82F6" />
+                      <Icon
+                        name="x"
+                        size={16}
+                        color={isDark ? '#4C6FFF' : '#3B82F6'}
+                      />
                     </TouchableOpacity>
                   </View>
                 ))}
@@ -343,7 +459,13 @@ export function Messages() {
 
             <View style={styles.userListContainer}>
               {filteredUsers.length === 0 ? (
-                <Text style={styles.noUsersText}>Aucun utilisateur trouvé</Text>
+                <Text
+                  style={[
+                    styles.noUsersText,
+                    isDark && styles.darkNoUsersText,
+                  ]}>
+                  Aucun utilisateur trouvé
+                </Text>
               ) : (
                 <FlatList
                   data={filteredUsers}
@@ -352,10 +474,14 @@ export function Messages() {
                     <TouchableOpacity
                       onPress={() => handleToggleUserSelection(item)}
                       style={[
-                        styles.modalUserItem, // Utiliser un style spécifique pour les éléments du modal
+                        styles.modalUserItem,
+                        isDark && styles.darkModalUserItem,
                         selectedUsers.some(
                           u => u.id_utilisateur === item.id_utilisateur,
-                        ) && styles.selectedUserItem,
+                        ) &&
+                          (isDark
+                            ? styles.darkSelectedUserItem
+                            : styles.selectedUserItem),
                       ]}>
                       {item.avatar ? (
                         <Image
@@ -363,15 +489,31 @@ export function Messages() {
                           style={styles.modalAvatar}
                         />
                       ) : (
-                        <View style={styles.avatarPlaceholder}>
-                          <Icon name="user" size={20} color="#9CA3AF" />
+                        <View
+                          style={[
+                            styles.avatarPlaceholder,
+                            isDark && styles.darkAvatarPlaceholder,
+                          ]}>
+                          <Icon
+                            name="user"
+                            size={20}
+                            color={isDark ? '#D1D5DB' : '#9CA3AF'}
+                          />
                         </View>
                       )}
                       <View style={styles.userInfo}>
-                        <Text style={styles.userNameModal}>
+                        <Text
+                          style={[
+                            styles.userNameModal,
+                            isDark && styles.darkUserNameModal,
+                          ]}>
                           {item.nom + ' ' + item.prenom}
                         </Text>
-                        <Text style={styles.userRole}>
+                        <Text
+                          style={[
+                            styles.userRole,
+                            isDark && styles.darkUserRole,
+                          ]}>
                           {roleFinder(item.statut)}
                         </Text>
                       </View>
@@ -386,7 +528,8 @@ export function Messages() {
               disabled={selectedUsers.length === 0}
               style={[
                 styles.createButton,
-                selectedUsers.length === 0 && styles.disabledButton,
+                selectedUsers.length === 0 &&
+                  (isDark ? styles.darkDisabledButton : styles.disabledButton),
               ]}>
               <Text style={styles.createButtonText}>Créer la conversation</Text>
             </TouchableOpacity>
@@ -402,6 +545,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  darkContainer: {
+    backgroundColor: '#1F2937',
+  },
   header: {
     padding: 16,
     borderBottomWidth: 1,
@@ -411,6 +557,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e5e5e5',
     paddingVertical: 12,
+  },
+  darkRecentUsersContainer: {
+    borderBottomColor: '#374151',
   },
   recentUsersHeader: {
     flexDirection: 'row',
@@ -468,8 +617,14 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
   },
+  darkUserName: {
+    color: '#F9FAFB',
+  },
   conversationContainer: {
     flex: 1,
+  },
+  darkConversationContainer: {
+    backgroundColor: '#1F2937',
   },
   selectedUserHeader: {
     flexDirection: 'row',
@@ -477,6 +632,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e5e5',
+  },
+  darkSelectedUserHeader: {
+    borderBottomColor: '#374151',
   },
   selectedUserAvatar: {
     width: 40,
@@ -489,12 +647,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
   },
+  darkSelectedUserName: {
+    color: '#F9FAFB',
+  },
   selectedUserStatus: {
     fontSize: 14,
     color: '#666',
   },
+  darkSelectedUserStatus: {
+    color: '#9CA3AF',
+  },
   messagesList: {
     padding: 16,
+  },
+  darkMessagesList: {
+    backgroundColor: '#1F2937',
   },
   messageContainer: {
     marginBottom: 16,
@@ -516,6 +683,9 @@ const styles = StyleSheet.create({
   receivedBubble: {
     backgroundColor: '#f5f5f5',
   },
+  darkReceivedBubble: {
+    backgroundColor: '#374151',
+  },
   messageText: {
     fontSize: 16,
   },
@@ -525,10 +695,16 @@ const styles = StyleSheet.create({
   receivedMessageText: {
     color: '#000',
   },
+  darkReceivedMessageText: {
+    color: '#F9FAFB',
+  },
   timestamp: {
     fontSize: 12,
     color: '#666',
     marginTop: 4,
+  },
+  darkTimestamp: {
+    color: '#9CA3AF',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -536,6 +712,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderTopWidth: 1,
     borderTopColor: '#e5e5e5',
+  },
+  darkInputContainer: {
+    borderTopColor: '#374151',
   },
   messageInput: {
     flex: 1,
@@ -549,6 +728,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
   },
+  darkMessageInput: {
+    backgroundColor: '#374151',
+    color: '#F9FAFB',
+  },
   sendButton: {
     width: 40,
     height: 40,
@@ -560,16 +743,25 @@ const styles = StyleSheet.create({
   sendButtonDisabled: {
     backgroundColor: '#f5f5f5',
   },
+  darkSendButtonDisabled: {
+    backgroundColor: '#374151',
+  },
   noConversationContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
   },
+  darkNoConversationContainer: {
+    backgroundColor: '#1F2937',
+  },
   noConversationText: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
+  },
+  darkNoConversationText: {
+    color: '#9CA3AF',
   },
 
   // Styles pour le modal de nouvelle conversation
@@ -588,6 +780,11 @@ const styles = StyleSheet.create({
     padding: 24,
     position: 'relative',
   },
+  darkModalContainer: {
+    backgroundColor: '#111827',
+    borderColor: '#374151',
+    borderWidth: 1,
+  },
   closeButton: {
     position: 'absolute',
     right: 16,
@@ -599,6 +796,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111827',
     marginBottom: 24,
+  },
+  darkModalTitle: {
+    color: '#F9FAFB',
   },
   searchContainer: {
     marginBottom: 24,
@@ -612,6 +812,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
   },
+  darkSearchInputWrapper: {
+    backgroundColor: '#374151',
+    borderColor: '#4B5563',
+  },
   searchIcon: {
     marginRight: 8,
   },
@@ -620,6 +824,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     color: '#111827',
+  },
+  darkSearchInput: {
+    color: '#F9FAFB',
   },
   selectedUsersContainer: {
     marginBottom: 16,
@@ -636,10 +843,16 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginRight: 8,
   },
+  darkUserChip: {
+    backgroundColor: 'rgba(76, 111, 255, 0.2)',
+  },
   userChipText: {
     fontSize: 14,
     color: '#2E3494',
     marginRight: 6,
+  },
+  darkUserChipText: {
+    color: '#4C6FFF',
   },
   userListContainer: {
     maxHeight: 240,
@@ -650,8 +863,14 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     paddingVertical: 16,
   },
+  darkNoUsersText: {
+    color: '#9CA3AF',
+  },
   selectedUserItem: {
     backgroundColor: 'rgba(46, 52, 148, 0.1)',
+  },
+  darkSelectedUserItem: {
+    backgroundColor: 'rgba(76, 111, 255, 0.2)',
   },
   modalAvatar: {
     width: 40,
@@ -668,6 +887,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
+  darkAvatarPlaceholder: {
+    backgroundColor: '#4B5563',
+  },
   userInfo: {
     flex: 1,
     justifyContent: 'center',
@@ -678,9 +900,15 @@ const styles = StyleSheet.create({
     color: '#111827',
     marginBottom: 4,
   },
+  darkUserNameModal: {
+    color: '#F9FAFB',
+  },
   userRole: {
     fontSize: 14,
     color: '#6B7280',
+  },
+  darkUserRole: {
+    color: '#9CA3AF',
   },
   createButton: {
     backgroundColor: '#2E3494',
@@ -691,12 +919,14 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: '#9CA3AF',
   },
+  darkDisabledButton: {
+    backgroundColor: '#4B5563',
+  },
   createButtonText: {
     color: '#FFFFFF',
     fontWeight: '500',
     fontSize: 16,
   },
-  // Ajoutez ces styles à votre objet StyleSheet
   modalUserItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -704,6 +934,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
-    width: '100%', // Assurez-vous que l'élément occupe toute la largeur
+    width: '100%',
+  },
+  darkModalUserItem: {
+    borderBottomColor: '#374151',
   },
 });
