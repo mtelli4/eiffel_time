@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useTheme } from '../../hooks/useTheme'
+import {
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native'
 import { useDateFormat } from '../../hooks/useDateFormat'
 import { useLanguage } from '../../hooks/useLanguage'
-// import { Save } from 'lucide-react-native' // Assurez-vous d'avoir une version compatible de lucide-react pour React Native
+import { useTheme } from '../../hooks/useTheme'
 
 export function Settings() {
-  const [NotificationSettings, setNotificationSettings] = useState<React.FC | null>(null)
-  const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(null)
-  const [PersonalizationSettings, setPersonalizationSettings] = useState<any>(null)
+  const [NotificationSettings, setNotificationSettings] =
+    useState<React.FC | null>(null)
+  const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(
+    null
+  )
+  const [PersonalizationSettings, setPersonalizationSettings] =
+    useState<any>(null)
 
   const { theme, setTheme } = useTheme()
   const { dateFormat, setDateFormat } = useDateFormat()
   const { language, setLanguage } = useLanguage()
+  const systemTheme = useColorScheme()
 
   // États temporaires pour stocker les modifications
   const [tempTheme, setTempTheme] = useState(theme)
@@ -69,8 +81,11 @@ export function Settings() {
     return <Text style={styles.loading}>Chargement...</Text>
   }
 
+  const isDark =
+    tempTheme === 'system' ? systemTheme === 'dark' : tempTheme === 'dark'
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDark && styles.darkContainer]}>
       <FlatList
         data={[
           { key: 'Notifications', component: <NotificationSettings /> },
@@ -109,6 +124,12 @@ export function Settings() {
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  darkContainer: {
+    backgroundColor: '#1f2937',
     flexGrow: 1,
     justifyContent: 'center',
     padding: 16,
