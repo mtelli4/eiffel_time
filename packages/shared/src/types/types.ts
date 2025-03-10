@@ -297,3 +297,15 @@ export interface ManageAbsencesAbsence {
   statut: 'pending' | 'approved' | 'rejected' | 'unsent'
   path?: string
 }
+
+export interface NotificationSettingsProps {
+  isDark?: boolean
+}
+
+export interface SecuritySettingsProps {
+  isDark?: boolean
+}
+
+export interface MessagesProps {
+  isDark?: boolean
+}

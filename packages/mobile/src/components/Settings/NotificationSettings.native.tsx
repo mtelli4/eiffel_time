@@ -1,33 +1,81 @@
 import React from 'react';
-import {StyleSheet, Switch, Text, View} from 'react-native';
+import {StyleSheet, Switch, Text, View, useColorScheme} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import {useTheme} from '../../../../shared/src/hooks/useTheme';
 
-export default function NotificationSettings() {
+interface NotificationSettingsProps {
+  isDark?: boolean; // Le "?" rend la prop optionnelle
+}
+
+export default function NotificationSettings({
+  isDark: propIsDark,
+}: NotificationSettingsProps) {
+  const {theme} = useTheme();
+  const systemTheme = useColorScheme();
+  const isDark =
+    propIsDark !== undefined
+      ? propIsDark
+      : theme === 'system'
+      ? systemTheme === 'dark'
+      : theme === 'dark';
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDark && styles.darkContainer]}>
       <View style={styles.header}>
-        <Feather name="bell" style={styles.icon} size={20} />
-        <Text style={styles.title}>Notifications</Text>
+        <Feather
+          name="bell"
+          style={[styles.icon, isDark && styles.darkIcon]}
+          size={20}
+        />
+        <Text style={[styles.title, isDark && styles.darkTitle]}>
+          Notifications
+        </Text>
       </View>
 
       <View style={styles.settings}>
         <View style={styles.settingItem}>
-          <Text style={styles.label}>Notifications par email</Text>
-          <Switch />
+          <Text style={[styles.label, isDark && styles.darkLabel]}>
+            Notifications par email
+          </Text>
+          <Switch
+            trackColor={{
+              false: '#767577',
+              true: isDark ? '#4a5af7' : '#2E3494',
+            }}
+            thumbColor={isDark ? '#e5e7eb' : '#f4f3f4'}
+          />
         </View>
 
         <View style={styles.settingItem}>
-          <Text style={styles.label}>Notifications de nouvelles notes</Text>
-          <Switch />
+          <Text style={[styles.label, isDark && styles.darkLabel]}>
+            Notifications de nouvelles notes
+          </Text>
+          <Switch
+            trackColor={{
+              false: '#767577',
+              true: isDark ? '#4a5af7' : '#2E3494',
+            }}
+            thumbColor={isDark ? '#e5e7eb' : '#f4f3f4'}
+          />
         </View>
 
         <View style={styles.settingItem}>
-          <Text style={styles.label}>Notifications d'absences</Text>
-          <Switch />
+          <Text style={[styles.label, isDark && styles.darkLabel]}>
+            Notifications d'absences
+          </Text>
+          <Switch
+            trackColor={{
+              false: '#767577',
+              true: isDark ? '#4a5af7' : '#2E3494',
+            }}
+            thumbColor={isDark ? '#e5e7eb' : '#f4f3f4'}
+          />
         </View>
 
         <View style={styles.frequency}>
-          <Text style={styles.label}>Fréquence des alertes</Text>
+          <Text style={[styles.label, isDark && styles.darkLabel]}>
+            Fréquence des alertes
+          </Text>
           {/* <Picker style={styles.picker} selectedValue="immediate">
             <Picker.Item label="Immédiate" value="immediate" />
             <Picker.Item label="Quotidienne" value="daily" />
@@ -49,6 +97,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     padding: 16,
   },
+  darkContainer: {
+    backgroundColor: '#111827',
+    borderColor: '#374151',
+    borderWidth: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -60,10 +113,16 @@ const styles = StyleSheet.create({
     height: 20,
     color: '#2E3494',
   },
+  darkIcon: {
+    color: '#fff',
+  },
   title: {
     fontSize: 18,
     fontWeight: '600',
     color: '#2E3494',
+  },
+  darkTitle: {
+    color: '#fff',
   },
   settings: {
     gap: 16,
@@ -76,6 +135,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#4B5563',
+  },
+  darkLabel: {
+    color: '#e0e0e0',
   },
   frequency: {
     marginTop: 8,
