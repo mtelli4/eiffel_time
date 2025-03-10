@@ -1,10 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {useContext} from 'react';
+import {useColorScheme} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {Admin} from '../../../../shared/src/pages/Admin/Admin';
 import {Absences} from '../../../../shared/src/pages/Attendance/StudentAbsences';
 import {TeacherAttendance} from '../../../../shared/src/pages/Attendance/TeacherAttendance';
 import {ClassAverages} from '../../../../shared/src/pages/Averages/ClassAverages';
@@ -17,6 +17,23 @@ import {ManageAbsences} from '../../screens/ManageAbsences';
 import {Messages} from '../../screens/Messaging/Messages';
 
 const Tab = createBottomTabNavigator();
+
+// Définition des thèmes pour la navigation
+const lightTheme = {
+  headerBackground: '#FFFFFF',
+  headerTint: '#2E3494',
+  tabBarBackground: '#2E3494',
+  tabBarActiveTint: '#FFFFFF',
+  tabBarInactiveTint: 'rgba(255,255,255,0.6)',
+};
+
+const darkTheme = {
+  headerBackground: '#374151', // bg-gray-700 pour le thème sombre uniquement
+  headerTint: '#FFFFFF',
+  tabBarBackground: '#2E3494',
+  tabBarActiveTint: '#FFFFFF',
+  tabBarInactiveTint: 'rgba(255,255,255,0.6)',
+};
 
 // Configuration des onglets par rôle
 const TABS_CONFIG = {
@@ -36,16 +53,16 @@ const TABS_CONFIG = {
       component: Grades,
       icon: {name: 'clipboard', source: 'Feather'},
     },
-    // {
-    //   name: 'Messagerie',
-    //   component: Schedule,
-    //   icon: {name: 'message1', source: 'AntDesign'},
-    // },
-    // {
-    //   name: 'Réglages',
-    //   component: Schedule,
-    //   icon: {name: 'settings', source: 'Feather'},
-    // },
+    {
+      name: 'Messagerie',
+      component: Messages,
+      icon: {name: 'message1', source: 'AntDesign'},
+    },
+    {
+      name: 'Réglages',
+      component: Settings,
+      icon: {name: 'settings', source: 'Feather'},
+    },
   ],
   teacher: [
     {
@@ -63,16 +80,16 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Messagerie',
-    //   component: Schedule,
-    //   icon: {name: 'message1', source: 'AntDesign'},
-    // },
-    // {
-    //   name: 'Réglages',
-    //   component: Schedule,
-    //   icon: {name: 'settings', source: 'Feather'},
-    // },
+    {
+      name: 'Messagerie',
+      component: Messages,
+      icon: {name: 'message1', source: 'AntDesign'},
+    },
+    {
+      name: 'Réglages',
+      component: Settings,
+      icon: {name: 'settings', source: 'Feather'},
+    },
   ],
   secretary: [
     {
@@ -80,26 +97,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Absences et Retards',
-    //   component: ClassGrades,
-    //   icon: {name: 'user-check', source: 'Feather'},
-    // },
-    // {
-    //   name: 'Présences professeurs',
-    //   component: ClassAverages,
-    //   icon: {name: 'users', source: 'Feather'},
-    // },
-    // {
-    //   name: 'Messagerie',
-    //   component: Schedule,
-    //   icon: {name: 'message1', source: 'AntDesign'},
-    // },
-    // {
-    //   name: 'Réglages',
-    //   component: Schedule,
-    //   icon: {name: 'settings', source: 'Feather'},
-    // },
+    {
+      name: 'Absences et Retards',
+      component: ClassGrades,
+      icon: {name: 'user-check', source: 'Feather'},
+    },
+    {
+      name: 'Présences enseignants',
+      component: TeacherAttendance,
+      icon: {name: 'users', source: 'Feather'},
+    },
+    {
+      name: 'Messagerie',
+      component: Messages,
+      icon: {name: 'message1', source: 'AntDesign'},
+    },
+    {
+      name: 'Réglages',
+      component: Settings,
+      icon: {name: 'settings', source: 'Feather'},
+    },
   ],
   manager: [
     {
@@ -117,41 +134,26 @@ const TABS_CONFIG = {
       component: ClassAverages,
       icon: {name: 'graduation', source: 'SimpleLineIcons'},
     },
-    // {
-    //   name: 'Absences et Retards',
-    //   component: ClassGrades,
-    //   icon: {name: 'user-check', source: 'Feather'},
-    // },
-    // {
-    //   name: 'Présences professeurs',
-    //   component: ClassAverages,
-    //   icon: {name: 'users', source: 'Feather'},
-    // },
-    // {
-    //   name: 'Messagerie',
-    //   component: Schedule,
-    //   icon: {name: 'message1', source: 'AntDesign'},
-    // },
-    // {
-    //   name: 'Réglages',
-    //   component: Schedule,
-    //   icon: {name: 'settings', source: 'Feather'},
-    // },
     {
-      name: 'Gestion des utilisateurs',
-      component: Admin,
-      icon: {name: 'tool', source: 'Feather'},
+      name: 'Messagerie',
+      component: Messages,
+      icon: {name: 'message1', source: 'AntDesign'},
+    },
+    {
+      name: 'Réglages',
+      component: Settings,
+      icon: {name: 'settings', source: 'Feather'},
     },
   ],
 
-  admin: [
+  administrator: [
     {
-      name: 'Schedule',
+      name: 'Emploi du temps',
       component: Schedule,
       icon: {name: 'calendar', source: 'Feather'},
     },
     {
-      name: 'Grades',
+      name: 'Notes',
       component: ClassGrades,
       icon: {name: 'clipboard', source: 'Feather'},
     },
@@ -166,7 +168,7 @@ const TABS_CONFIG = {
       icon: {name: 'user-check', source: 'Feather'},
     },
     {
-      name: 'Présences professeurs',
+      name: 'Présences enseignants',
       component: TeacherAttendance,
       icon: {name: 'users', source: 'Feather'},
     },
@@ -179,11 +181,6 @@ const TABS_CONFIG = {
       name: 'Réglages',
       component: Settings,
       icon: {name: 'settings', source: 'Feather'},
-    },
-    {
-      name: 'Gestion des utilisateurs',
-      component: Admin,
-      icon: {name: 'tool', source: 'Feather'},
     },
   ],
 };
@@ -205,10 +202,12 @@ const getTabIcon = (icon, color) => {
 };
 
 const TabNavigator = () => {
-  const {role} = useContext(UserContext); // Exemple pour récupérer le rôle
+  const {statut} = useContext(UserContext); // Exemple pour récupérer le rôle
 
   // Obtenez les onglets pour le rôle actuel
-  const tabs = TABS_CONFIG[role] || [];
+  const tabs = TABS_CONFIG[statut] || [];
+  const systemColorScheme = useColorScheme();
+  const activeTheme = systemColorScheme === 'dark' ? darkTheme : lightTheme;
 
   return (
     <Tab.Navigator
@@ -218,23 +217,27 @@ const TabNavigator = () => {
           return tabConfig ? getTabIcon(tabConfig.icon, color) : null;
         },
         tabBarStyle: {
-          backgroundColor: '#2E3494',
+          backgroundColor: activeTheme.tabBarBackground,
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
         },
-        tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: 'rgba(255,255,255,0.6)',
+        tabBarActiveTintColor: activeTheme.tabBarActiveTint,
+        tabBarInactiveTintColor: activeTheme.tabBarInactiveTint,
+        headerStyle: {
+          height: 95, // Réduire
+          backgroundColor: activeTheme.headerBackground,
+        },
+        headerTitleStyle: {
+          top: 20,
+          fontSize: 18, // Réduire la taille du texte du titre
+          fontWeight: 'bold', // Mettre en gras le titre
+        },
+
+        headerTintColor: activeTheme.headerTint,
       })}>
       {tabs.map(tab => (
-        <Tab.Screen
-          key={tab.name}
-          name={tab.name}
-          component={tab.component}
-          options={{
-            headerTintColor: '#2E3494',
-          }}
-        />
+        <Tab.Screen key={tab.name} name={tab.name} component={tab.component} />
       ))}
     </Tab.Navigator>
   );

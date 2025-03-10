@@ -1,18 +1,30 @@
+import { statut_utilisateur } from '@prisma/client'
 import { X } from 'lucide-react'
+import { useState } from 'react'
 import Select from 'react-select'
-import { Formation, Groupe, ROLES, TEACHER_TYPES, UserUpdate } from '../../../../shared/src/types/types'
-import { Utilisateur } from '../../../../shared/src/types/types'
-import { useEffect, useState } from 'react'
-import { formation, groupe, statut_utilisateur } from '@prisma/client'
+import {
+  Formation,
+  Groupe,
+  ROLES,
+  TEACHER_TYPES,
+  UserUpdate,
+  Utilisateur,
+} from '../../../../shared/src/types/types'
+import '../../styles/select-styles.css'
 
-const roleOptions = ROLES.map(role => ({ value: role.value as statut_utilisateur, label: role.label }))
+const roleOptions = ROLES.map((role) => ({
+  value: role.value as statut_utilisateur,
+  label: role.label,
+}))
 
 interface UserFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: UserUpdate) => void
-  initialData?: Utilisateur
+  initialData?: Utilisateur | null
   isEdit?: boolean
+  formations: Formation[]
+  groupes: Groupe[]
 }
 
 export function UserForm({
@@ -21,6 +33,8 @@ export function UserForm({
   onSubmit,
   initialData,
   isEdit,
+  formations,
+  groupes,
 }: UserFormProps) {
   const [formData, setFormData] = useState<UserUpdate>({
     id_utilisateur: initialData?.id_utilisateur || 0,
@@ -30,50 +44,28 @@ export function UserForm({
     statut: initialData?.statut || 'indefinite',
     formations: initialData?.formations || [],
     groupes: initialData?.groupes || [],
-    vacataire: initialData?.vacataire || null,
+    vacataire: initialData?.vacataire,
   })
-  const [errorMessage, setErrorMessage] = useState<string[]>([])
-
-  const [formations, setFormations] = useState<Formation[]>([])
-  const [groupes, setGroupes] = useState<Groupe[]>([])
-
-  useEffect(() => {
-    Promise.all([
-      fetch('http://localhost:4000/api/formations').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (formations)');
-        return response.json();
-      }),
-      fetch('http://localhost:4000/api/groupes').then((response) => {
-        if (!response.ok) throw new Error('Erreur réseau (groupes)');
-        return response.json();
-      })
-    ])
-      .then(([formationsData, groupesData]) => {
-        setFormations(formationsData.map((f: formation) => ({ value: f.id_formation, label: f.libelle })));
-
-        setGroupes(groupesData.map((g: groupe) => ({ value: g.id_grp, label: g.libelle })));
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la récupération des données:', error);
-      });
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }))
   }
 
   const handleSubmit = () => {
-    const messages = []
     if (!formData.nom.trim()) {
       alert('Le nom est obligatoire')
     }
     if (!formData.prenom.trim()) {
       alert('Le prénom est obligatoire')
     }
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { // Exemple : test@test
+    if (
+      !formData.email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    ) {
+      // Exemple : test@test
       alert('Veuillez saisir une adresse email valide')
     }
     if (!formData.statut) {
@@ -88,17 +80,18 @@ export function UserForm({
     if (formData.statut === 'teacher' && formData.vacataire === undefined) {
       alert('Un enseignant doit être soit titulaire soit vacataire')
     }
-    alert(`Données valides: ${JSON.stringify(formData)}`)
+
     onSubmit(formData)
+    onClose()
   }
 
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-[#2C3E50]">
+          <h2 className="text-xl font-bold text-[#2C3E50] dark:text-gray-100">
             {isEdit ? 'Modifier un utilisateur' : 'Ajouter un utilisateur'}
           </h2>
           <button
@@ -110,23 +103,8 @@ export function UserForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* TODO: Demander à l'équipe s'il faut garder {!isEdit && (
-            <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
-                ID {!isEdit ? '' : 'utilisateur (optionnel)'}
-              </label>
-              <input
-                type="text"
-                name="id_utilisateur"
-                value={formData.id_utilisateur}
-                onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
-              />
-            </div>
-          )} */}
-
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Nom
             </label>
             <input
@@ -134,12 +112,12 @@ export function UserForm({
               name="nom"
               value={formData.nom}
               onChange={handleChange}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-dark-primary dark:text-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Prénom
             </label>
             <input
@@ -147,12 +125,12 @@ export function UserForm({
               name="prenom"
               value={formData.prenom}
               onChange={handleChange}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-dark-primary dark:text-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -160,84 +138,218 @@ export function UserForm({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full rounded-lg border-gray-200 focus:ring-[#3498DB] focus:border-[#3498DB]"
+              className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-dark-primary dark:text-white rounded-lg focus:ring-[#3498DB] focus:border-[#3498DB]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Rôle
             </label>
             <Select
               options={roleOptions}
               isClearable
               placeholder="Sélectionner un rôle"
-              value={roleOptions.find(option => option.value === formData.statut)}
-              onChange={(option: any) => setFormData(prevState => ({
-                ...prevState,
-                statut: option?.value || null,
-              }))}
-              className="text-sm"
+              value={roleOptions.find(
+                (option) => option.value === formData.statut
+              )}
+              onChange={(option: any) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  statut: option?.value || null,
+                }))
+              }
+              className="text-sm dark:text-white"
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-bg, white)',
+                  borderColor: state.isFocused
+                    ? 'var(--select-focus-border, #2684FF)'
+                    : 'var(--select-border, #cccccc)',
+                }),
+                menu: (baseStyles) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-menu-bg, white)',
+                }),
+                option: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: state.isSelected
+                    ? 'var(--select-selected-bg, #2684FF)'
+                    : state.isFocused
+                    ? 'var(--select-hover-bg, #deebff)'
+                    : 'var(--select-menu-bg, white)',
+                }),
+                singleValue: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+                placeholder: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+            <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
               Formation(s)
             </label>
             <Select
-              defaultValue={initialData?.formations.map(f => ({
+              defaultValue={initialData?.formations.map((f) => ({
                 value: f.id_formation,
                 label: f.libelle,
               }))}
               isMulti
               options={formations}
-              onChange={(options: any) => setFormData(prevState => ({
-                ...prevState,
-                formations: options,
-              }))}
+              onChange={(options: any) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  formations: options.map((o: any) => ({
+                    id_formation: o.value,
+                    libelle: o.label,
+                  })),
+                }))
+              }
               placeholder="Aucune formation"
-              className="text-sm"
+              className="text-sm dark:text-white"
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-bg, white)',
+                  borderColor: state.isFocused
+                    ? 'var(--select-focus-border, #2684FF)'
+                    : 'var(--select-border, #cccccc)',
+                }),
+                menu: (baseStyles) => ({
+                  ...baseStyles,
+                  backgroundColor: 'var(--select-menu-bg, white)',
+                }),
+                option: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: state.isSelected
+                    ? 'var(--select-selected-bg, #2684FF)'
+                    : state.isFocused
+                    ? 'var(--select-hover-bg, #deebff)'
+                    : 'var(--select-menu-bg, white)',
+                }),
+                singleValue: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+                placeholder: (baseStyles) => ({
+                  ...baseStyles,
+                  color: 'var(--select-text, black)',
+                }),
+              }}
             />
           </div>
 
           {formData.statut === 'student' && (
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+              <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
                 Groupes
               </label>
               <Select
-                defaultValue={initialData?.groupes.map(g => ({
+                defaultValue={initialData?.groupes.map((g) => ({
                   value: g.id_grp,
                   label: g.libelle,
                 }))}
                 isMulti
                 options={groupes}
-                onChange={(options: any) => setFormData(prevState => ({
-                  ...prevState,
-                  groupes: options,
-                }))}
+                onChange={(options: any) =>
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    groupes: options.map((o: any) => ({
+                      id_grp: o.value,
+                      libelle: o.label,
+                    })),
+                  }))
+                }
                 placeholder="Aucun groupe"
-                className="text-sm"
+                className="text-sm dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg, white)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, #2684FF)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2684FF)'
+                      : state.isFocused
+                      ? 'var(--select-hover-bg, #deebff)'
+                      : 'var(--select-menu-bg, white)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                  placeholder: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
               />
             </div>
           )}
 
           {formData.statut === 'teacher' && (
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">
+              <label className="block text-sm font-medium text-[#2C3E50] dark:text-gray-300 mb-1">
                 Type
               </label>
               <Select
+                defaultValue={TEACHER_TYPES.find(
+                  (t) => t.value === formData.vacataire
+                )}
                 options={TEACHER_TYPES}
                 isClearable
                 placeholder="Sélectionner un type"
-                value={TEACHER_TYPES.find(option => option.value === formData.vacataire)}
-                onChange={(option: any) => setFormData(prevState => ({
-                  ...prevState,
-                  vacataire: option?.value ?? null, // Utilisez null si l'option est undefined
-                }))}
-                className="text-sm"
+                onChange={(option: any) =>
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    vacataire: option?.value ?? null,
+                  }))
+                }
+                className="text-sm dark:text-white"
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-bg, white)',
+                    borderColor: state.isFocused
+                      ? 'var(--select-focus-border, #2684FF)'
+                      : 'var(--select-border, #cccccc)',
+                  }),
+                  menu: (baseStyles) => ({
+                    ...baseStyles,
+                    backgroundColor: 'var(--select-menu-bg, white)',
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isSelected
+                      ? 'var(--select-selected-bg, #2684FF)'
+                      : state.isFocused
+                      ? 'var(--select-hover-bg, #deebff)'
+                      : 'var(--select-menu-bg, white)',
+                  }),
+                  singleValue: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                  placeholder: (baseStyles) => ({
+                    ...baseStyles,
+                    color: 'var(--select-text, black)',
+                  }),
+                }}
               />
             </div>
           )}
@@ -247,24 +359,18 @@ export function UserForm({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-[#2C3E50] bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-4 py-2 border text-[#2C3E50] bg-gray-100 hover:bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 dark:border-gray-600 rounded-lg transition-colors"
             >
               Annuler
             </button>
             <button
               // type="submit"
               onClick={handleSubmit}
-              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] rounded-lg transition-colors"
+              className="px-4 py-2 text-white bg-primary hover:bg-[#2980B9] dark:text-white dark:hover:bg-blue-600 rounded-lg transition-colors"
             >
               {isEdit ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
-
-          {errorMessage.length > 0 && (
-            <div className="text-red-500 text-sm">
-              {errorMessage.join('. ')}
-            </div>
-          )}
         </form>
       </div>
     </div>

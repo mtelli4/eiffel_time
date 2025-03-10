@@ -1,15 +1,20 @@
+-- Dump nettoyé à partir de prisma/migrations/0_init/ingrid_data.sql
+SET search_path SET ingrid;
+
 --
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.2 (Ubuntu 17.2-1.pgdg24.04+1)
--- Dumped by pg_dump version 17.2 (Ubuntu 17.2-1.pgdg24.04+1)
+-- Dumped from database version 17.4 (Ubuntu 17.4-1.pgdg24.04+2)
+-- Dumped by pg_dump version 17.4 (Ubuntu 17.4-1.pgdg24.04+2)
 
 
 --
 -- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
+INSERT INTO ingrid._prisma_migrations VALUES ('0f913a62-ea49-4986-8d28-b99586151748', '2bef64ddfa02eb26d4b62fa5d4ce5ae12c5800d1f5f62a040c73e7d0b515041d', '2025-02-27 17:09:11.019107+01', '0_init', NULL, NULL, '2025-02-27 17:09:10.99609+01', 1);
+INSERT INTO ingrid._prisma_migrations VALUES ('e8a1b317-343c-4f7d-b0fe-a5e749a5ec4f', '326be9082e94cbdf38c9f61c3dd8cd176e02184323711bd8fde4891c29c94a2c', '2025-02-27 17:09:11.02438+01', '20250227160528_', NULL, NULL, '2025-02-27 17:09:11.019945+01', 1);
 INSERT INTO ingrid._prisma_migrations VALUES ('6f8cae26-0877-4b59-b2c5-a6a26aef01e7', '066280158a609145362a619a3c91c09f26130c9afbe7e658c2ce18fbde7110d9', '2024-12-12 12:10:06.15293+01', '0_init', '', NULL, '2024-12-12 12:10:06.15293+01', 0);
 
 
@@ -101,24 +106,28 @@ INSERT INTO ingrid.cours VALUES (13, 'CM', '', '2025-02-18 14:00:00', '2025-02-1
 -- Data for Name: utilisateur; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.utilisateur VALUES (2, 'Herries', 'Karlik', 'kherries1@dion.ne.jp', NULL, NULL, false, 'indefinite', '2024-10-11 00:00:00', '2024-09-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', NULL, NULL, false, 'student', '2024-11-09 00:00:00', '2024-08-11 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (4, 'Anstee', 'Gypsy', 'ganstee3@exblog.jp', NULL, NULL, true, 'director', '2024-02-27 00:00:00', '2024-07-24 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, true, 'teacher', '2024-01-21 00:00:00', '2024-10-19 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (6, 'Gateley', 'Emalee', 'egateley5@addtoany.com', NULL, NULL, true, 'manager', '2024-02-26 00:00:00', '2024-04-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', NULL, NULL, false, 'secretary', '2024-08-24 00:00:00', '2023-12-21 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (8, 'Brambell', 'Styrbjörn', 'sbrambell0@cmu.edu', NULL, NULL, true, 'student', '2024-09-11 00:00:00', '2024-02-06 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (9, 'Eagle', 'Tú', 'keagle1@nyu.edu', NULL, NULL, true, 'student', '2024-07-10 00:00:00', '2024-09-20 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (10, 'Bearblock', 'Clélia', 'nbearblock2@amazon.co.uk', NULL, NULL, true, 'student', '2024-07-16 00:00:00', '2024-11-12 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (11, 'Tyrer', 'Anaël', 'styrer3@nbcnews.com', NULL, NULL, false, 'student', '2024-07-09 00:00:00', '2024-01-20 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (12, 'Manby', 'Laurène', 'fmanby4@elegantthemes.com', NULL, NULL, false, 'student', '2024-05-26 00:00:00', '2024-11-28 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (13, 'Canter', 'Marie-ève', 'acanter5@scientificamerican.com', NULL, NULL, true, 'student', '2024-02-11 00:00:00', '2024-09-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@youtu.be', NULL, NULL, false, 'student', '2024-01-22 00:00:00', '2024-12-06 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, true, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, true, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, false, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
-INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, true, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
-INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@latimes.com', NULL, NULL, false, 'administrator', '2024-10-12 00:00:00', '2025-01-27 20:32:51.166');
+INSERT INTO ingrid.utilisateur VALUES (2, 'Herries', 'Karlik', 'kherries1@dion.ne.jp', NULL, NULL, 'indefinite', '2024-10-11 00:00:00', '2024-09-07 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (4, 'Anstee', 'Gypsy', 'ganstee3@exblog.jp', NULL, NULL, 'director', '2024-02-27 00:00:00', '2024-07-24 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (6, 'Gateley', 'Emalee', 'egateley5@addtoany.com', NULL, NULL, 'manager', '2024-02-26 00:00:00', '2024-04-27 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (8, 'Brambell', 'Styrbjörn', 'sbrambell0@cmu.edu', NULL, NULL, 'student', '2024-09-11 00:00:00', '2024-02-06 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (9, 'Eagle', 'Tú', 'keagle1@nyu.edu', NULL, NULL, 'student', '2024-07-10 00:00:00', '2024-09-20 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (10, 'Bearblock', 'Clélia', 'nbearblock2@amazon.co.uk', NULL, NULL, 'student', '2024-07-16 00:00:00', '2024-11-12 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (11, 'Tyrer', 'Anaël', 'styrer3@nbcnews.com', NULL, NULL, 'student', '2024-07-09 00:00:00', '2024-01-20 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (12, 'Manby', 'Laurène', 'fmanby4@elegantthemes.com', NULL, NULL, 'student', '2024-05-26 00:00:00', '2024-11-28 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (13, 'Canter', 'Marie-ève', 'acanter5@scientificamerican.com', NULL, NULL, 'student', '2024-02-11 00:00:00', '2024-09-27 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (14, 'Mayworth', 'Märta', 'amayworth6@youtu.be', NULL, NULL, 'student', '2024-01-22 00:00:00', '2024-12-06 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (15, 'Wallett', 'Céline', 'wwallett7@microsoft.com', NULL, NULL, 'student', '2024-08-02 00:00:00', '2024-04-05 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (16, 'Bartkowiak', 'Gaétane', 'jbartkowiak8@istockphoto.com', NULL, NULL, 'student', '2024-03-25 00:00:00', '2024-11-27 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (17, 'Yeabsley', 'Pénélope', 'lyeabsley9@dell.com', NULL, NULL, 'student', '2024-06-05 00:00:00', '2024-06-07 00:00:00');
+INSERT INTO ingrid.utilisateur VALUES (18, 'Dupont', 'Jean', 'jean.dupont@example.com', NULL, NULL, 'teacher', '2025-01-01 08:00:00', '2025-01-01 08:00:00');
+INSERT INTO ingrid.utilisateur VALUES (5, 'Parkins', 'Giustino', 'gparkins4@pinterest.com', NULL, NULL, 'teacher', '2024-01-21 00:00:00', '2025-02-06 20:40:41.284');
+INSERT INTO ingrid.utilisateur VALUES (19, 'Mariya Constantine', 'Cédric', 'cedric.mc11@gmail.com', 'eb81c5f99581c4825d898b5c379f506a63a0866aa49c709edc3c1ffb54f6871a', '86bcbd51fb7d66e31f7d9c8404c8d13b', 'administrator', '2025-02-05 10:27:39.307', '2025-03-01 15:24:43.058');
+INSERT INTO ingrid.utilisateur VALUES (7, 'Elms', 'Diann', 'delms6@cdc.gov', '13a956b10c0d015f6bd3419604dc7e11e2a67b74d8b0e0966d12dea5ae0a562f', 'ff3bfd7cae5d169a8feeaf7ac6731d95', 'secretary', '2024-08-24 00:00:00', '2025-03-01 21:20:16.192');
+INSERT INTO ingrid.utilisateur VALUES (21, 'Telli', 'Mohamed', 'mohamed.telli@edu.univ-eiffel.fr', NULL, NULL, 'student', '2025-03-07 13:12:37.471', '2025-03-07 13:12:37.471');
+INSERT INTO ingrid.utilisateur VALUES (22, 'Létocart', 'Enzo', 'enzo.letocart@edu.univ-eiffel.fr', NULL, NULL, 'student', '2025-03-07 13:13:53.8', '2025-03-07 13:13:53.8');
+INSERT INTO ingrid.utilisateur VALUES (3, 'Sherwell', 'Frankie', 'fsherwell2@virginia.edu', '73e8d2f6eb2de29610c0ba166b5ff412d1a95bd7724db2d3fdc754d081cf2270', '6b93ddbc49078f11317b319bf392b80d', 'teacher', '2024-11-09 00:00:00', '2025-03-08 09:28:33.456');
+INSERT INTO ingrid.utilisateur VALUES (20, 'Cherak', 'Rabah', 'rabah.cherak@edu.univ-eiffel.fr', '65fbe7f3ed77c6a4e39e2cbadc98a2de4fb285872c2870738c84e87905f5ee35', 'd541dc8f66261a95e5c7961b1b3a39b7', 'administrator', '2025-03-07 13:01:00.216', '2025-03-07 13:01:00.216');
+INSERT INTO ingrid.utilisateur VALUES (1, 'Acaster', 'Ula', 'uacaster0@gmail.com', NULL, NULL, 'administrator', '2024-10-12 00:00:00', '2025-03-04 20:16:43.863');
 
 
 --
@@ -136,6 +145,7 @@ INSERT INTO ingrid.etudiant VALUES (14, '599049', true, false);
 INSERT INTO ingrid.etudiant VALUES (15, '545287', false, false);
 INSERT INTO ingrid.etudiant VALUES (16, '532519', false, false);
 INSERT INTO ingrid.etudiant VALUES (17, '428081', false, false);
+INSERT INTO ingrid.etudiant VALUES (1, NULL, NULL, NULL);
 
 
 --
@@ -154,18 +164,18 @@ INSERT INTO ingrid.notification VALUES (2, 'Message', 'Vous avez reçu un messag
 -- Data for Name: absence; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.absence VALUES (1, 'justificatif1.pdf', 'Absent pour cause de maladie.', true, NULL, true, '2025-01-01 09:00:00', '2025-01-01 12:00:00', 1, 3, 1);
-INSERT INTO ingrid.absence VALUES (2, NULL, 'Absent sans justificatif. Retard de 15 minutes.', false, 15, true, '2025-01-02 10:00:00', '2025-01-02 11:30:00', 1, 8, 2);
-INSERT INTO ingrid.absence VALUES (3, 'justificatif2.pdf', 'Accident de transport, justificatif envoyé.', true, NULL, false, '2025-01-03 08:00:00', '2025-01-03 13:00:00', 1, 9, 3);
 INSERT INTO ingrid.absence VALUES (4, NULL, 'Présence signalée avec un retard de 10 minutes.', false, 10, true, '2025-01-04 09:15:00', '2025-01-04 10:00:00', 1, 10, 4);
 INSERT INTO ingrid.absence VALUES (5, NULL, 'Absent sans explication.', false, NULL, false, '2025-01-05 11:00:00', '2025-01-05 15:00:00', 1, 11, 5);
 INSERT INTO ingrid.absence VALUES (6, 'justificatif3.pdf', 'Absence validée pour raisons familiales.', true, NULL, true, '2025-01-06 10:30:00', '2025-01-06 14:30:00', 1, 12, 6);
 INSERT INTO ingrid.absence VALUES (7, NULL, 'Retard non signalé, 20 minutes.', false, 20, false, '2025-01-07 09:45:00', '2025-01-07 12:15:00', 1, 13, 7);
-INSERT INTO ingrid.absence VALUES (8, NULL, 'Justificatif en attente pour cette absence.', false, NULL, false, '2025-01-08 08:30:00', '2025-01-08 11:30:00', 1, 14, 8);
 INSERT INTO ingrid.absence VALUES (9, NULL, 'Absence pour toute la durée avec un retard initial non justifié.', false, 25, true, '2025-01-09 07:00:00', '2025-01-09 13:00:00', 1, 15, 9);
 INSERT INTO ingrid.absence VALUES (10, 'justificatif4.pdf', 'Absence validée avec un retard de 30 minutes.', true, 30, true, '2025-01-10 09:30:00', '2025-01-10 14:00:00', 1, 16, 10);
 INSERT INTO ingrid.absence VALUES (11, NULL, 'Absence déclarée mais non validée.', false, NULL, true, '2025-01-11 10:00:00', '2025-01-11 12:00:00', 1, 17, 11);
 INSERT INTO ingrid.absence VALUES (12, 'justificatif_absence_2025_01_10.pdf', 'Absent pour raison médicale.', true, 0, true, '2025-01-10 08:00:00', '2025-01-10 08:30:00', 1, 3, 1);
+INSERT INTO ingrid.absence VALUES (1, 'justificatif1.pdf', 'Absent pour cause de maladie.', true, NULL, true, '2025-01-01 09:00:00', '2025-01-09 12:00:00', 1, 3, 1);
+INSERT INTO ingrid.absence VALUES (2, NULL, 'Absent sans justificatif. Retard de 15 minutes.', false, 15, true, '2025-01-02 10:00:00', '2025-01-10 11:30:00', 1, 8, 2);
+INSERT INTO ingrid.absence VALUES (8, NULL, 'Justificatif en attente pour cette absence.', NULL, NULL, true, '2025-01-08 08:30:00', '2025-01-08 11:30:00', 1, 14, 8);
+INSERT INTO ingrid.absence VALUES (3, 'justificatif2.pdf', 'Accident de transport, justificatif envoyé.', NULL, NULL, true, '2025-01-03 08:00:00', '2025-03-08 09:31:22.892', 1, 9, 3);
 
 
 --
@@ -214,51 +224,21 @@ INSERT INTO ingrid.communiquer VALUES (22, 'Je propose qu’on se répartisse le
 
 INSERT INTO ingrid.enseignant VALUES (18, true);
 INSERT INTO ingrid.enseignant VALUES (5, false);
+INSERT INTO ingrid.enseignant VALUES (19, NULL);
+INSERT INTO ingrid.enseignant VALUES (3, false);
+INSERT INTO ingrid.enseignant VALUES (1, NULL);
 
 
 --
 -- Data for Name: enseignant_module; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.enseignant_module VALUES (10, 5);
-INSERT INTO ingrid.enseignant_module VALUES (3, 5);
-INSERT INTO ingrid.enseignant_module VALUES (1, 18);
-INSERT INTO ingrid.enseignant_module VALUES (2, 18);
-INSERT INTO ingrid.enseignant_module VALUES (4, 18);
-INSERT INTO ingrid.enseignant_module VALUES (5, 18);
-INSERT INTO ingrid.enseignant_module VALUES (6, 18);
-INSERT INTO ingrid.enseignant_module VALUES (7, 18);
-INSERT INTO ingrid.enseignant_module VALUES (8, 18);
-INSERT INTO ingrid.enseignant_module VALUES (9, 18);
-INSERT INTO ingrid.enseignant_module VALUES (11, 18);
-INSERT INTO ingrid.enseignant_module VALUES (12, 18);
-INSERT INTO ingrid.enseignant_module VALUES (13, 18);
-INSERT INTO ingrid.enseignant_module VALUES (14, 18);
-INSERT INTO ingrid.enseignant_module VALUES (15, 18);
-INSERT INTO ingrid.enseignant_module VALUES (16, 18);
-INSERT INTO ingrid.enseignant_module VALUES (17, 18);
-INSERT INTO ingrid.enseignant_module VALUES (18, 18);
-INSERT INTO ingrid.enseignant_module VALUES (20, 18);
-INSERT INTO ingrid.enseignant_module VALUES (21, 18);
-INSERT INTO ingrid.enseignant_module VALUES (22, 18);
-INSERT INTO ingrid.enseignant_module VALUES (23, 18);
-INSERT INTO ingrid.enseignant_module VALUES (24, 18);
-INSERT INTO ingrid.enseignant_module VALUES (25, 18);
-INSERT INTO ingrid.enseignant_module VALUES (26, 18);
-INSERT INTO ingrid.enseignant_module VALUES (27, 18);
-INSERT INTO ingrid.enseignant_module VALUES (28, 18);
-INSERT INTO ingrid.enseignant_module VALUES (29, 18);
-INSERT INTO ingrid.enseignant_module VALUES (30, 18);
-INSERT INTO ingrid.enseignant_module VALUES (31, 18);
-INSERT INTO ingrid.enseignant_module VALUES (32, 18);
-INSERT INTO ingrid.enseignant_module VALUES (33, 18);
-INSERT INTO ingrid.enseignant_module VALUES (34, 18);
-INSERT INTO ingrid.enseignant_module VALUES (35, 18);
-INSERT INTO ingrid.enseignant_module VALUES (36, 18);
-INSERT INTO ingrid.enseignant_module VALUES (37, 18);
-INSERT INTO ingrid.enseignant_module VALUES (38, 18);
-INSERT INTO ingrid.enseignant_module VALUES (19, 18);
-INSERT INTO ingrid.enseignant_module VALUES (39, 18);
+INSERT INTO ingrid.enseignant_module VALUES (2, 18, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (4, 18, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (5, 18, NULL);
+INSERT INTO ingrid.enseignant_module VALUES (1, 18, '0,0,0');
+INSERT INTO ingrid.enseignant_module VALUES (3, 5, '0,0,0');
+INSERT INTO ingrid.enseignant_module VALUES (10, 5, '0,0,2');
 
 
 --
@@ -276,14 +256,12 @@ INSERT INTO ingrid.evaluation VALUES (8, 'Devoir surveillé', 2, 15, 'Semestre 4
 INSERT INTO ingrid.evaluation VALUES (9, 'Projet final', 5, 20, 'Semestre 5', '2025-02-10 13:00:00', '2025-02-11 13:00:00', 9, 3, 30);
 INSERT INTO ingrid.evaluation VALUES (10, 'Examen théorique', 3, 20, 'Semestre 6', '2025-02-15 14:00:00', '2025-02-16 14:00:00', 10, 3, 33);
 INSERT INTO ingrid.evaluation VALUES (11, 'Quiz', 1, 5, 'Semestre 6', '2025-02-20 12:00:00', '2025-02-21 12:00:00', 11, 3, 39);
-INSERT INTO ingrid.evaluation VALUES (100, 'test', 1, 20, NULL, '2025-01-27 21:39:05.254', NULL, 1, 3, 1);
 
 
 --
 -- Data for Name: formation_utilisateur; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.formation_utilisateur VALUES (3, 1);
 INSERT INTO ingrid.formation_utilisateur VALUES (8, 2);
 INSERT INTO ingrid.formation_utilisateur VALUES (9, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (10, 1);
@@ -299,15 +277,17 @@ INSERT INTO ingrid.formation_utilisateur VALUES (6, 2);
 INSERT INTO ingrid.formation_utilisateur VALUES (6, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (6, 1);
 INSERT INTO ingrid.formation_utilisateur VALUES (4, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (19, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (19, 2);
+INSERT INTO ingrid.formation_utilisateur VALUES (19, 3);
 INSERT INTO ingrid.formation_utilisateur VALUES (5, 1);
+INSERT INTO ingrid.formation_utilisateur VALUES (3, 1);
 
 
 --
 -- Data for Name: groupe_etudiant; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.groupe_etudiant VALUES (3, 1);
-INSERT INTO ingrid.groupe_etudiant VALUES (3, 3);
 INSERT INTO ingrid.groupe_etudiant VALUES (8, 1);
 INSERT INTO ingrid.groupe_etudiant VALUES (8, 3);
 INSERT INTO ingrid.groupe_etudiant VALUES (9, 1);
@@ -330,141 +310,94 @@ INSERT INTO ingrid.groupe_etudiant VALUES (15, 4);
 -- Data for Name: message; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.message VALUES (1, 'Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus. Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque.', '2024-10-07 23:21:26', 8, 11, NULL);
-INSERT INTO ingrid.message VALUES (2, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus. Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.', '2024-03-20 22:57:06', 5, 17, NULL);
-INSERT INTO ingrid.message VALUES (3, 'Nullam varius. Nulla facilisi. Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis.', '2024-10-07 17:24:30', 5, 9, NULL);
-INSERT INTO ingrid.message VALUES (4, 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.', '2024-08-07 04:45:05', 2, 16, NULL);
-INSERT INTO ingrid.message VALUES (5, 'Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', '2024-03-17 14:30:41', 16, 9, NULL);
-INSERT INTO ingrid.message VALUES (6, 'Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum.', '2024-12-30 11:26:05', 13, 1, NULL);
-INSERT INTO ingrid.message VALUES (7, 'Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.', '2024-04-20 12:20:32', 16, 1, NULL);
-INSERT INTO ingrid.message VALUES (8, 'In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl. Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.', '2024-12-24 18:55:10', 3, 5, NULL);
-INSERT INTO ingrid.message VALUES (9, 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.', '2024-09-17 08:14:22', 17, 12, NULL);
-INSERT INTO ingrid.message VALUES (10, 'Integer ac leo.', '2024-02-05 23:04:40', 16, 3, NULL);
-INSERT INTO ingrid.message VALUES (11, 'Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.', '2024-04-06 22:54:02', 13, 2, NULL);
-INSERT INTO ingrid.message VALUES (12, 'Etiam vel augue. Vestibulum rutrum rutrum neque.', '2024-07-05 23:42:19', 5, 9, NULL);
-INSERT INTO ingrid.message VALUES (13, 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est. Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', '2024-01-27 21:43:05', 10, 12, NULL);
-INSERT INTO ingrid.message VALUES (14, 'Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '2024-02-14 05:55:34', 2, 4, NULL);
-INSERT INTO ingrid.message VALUES (15, 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit.', '2024-02-22 07:33:07', 15, 9, NULL);
-INSERT INTO ingrid.message VALUES (16, 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius. Integer ac leo.', '2024-09-19 05:37:43', 5, 14, NULL);
-INSERT INTO ingrid.message VALUES (17, 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst.', '2024-10-29 01:13:17', 8, 10, NULL);
-INSERT INTO ingrid.message VALUES (18, 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi. Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit.', '2024-08-13 14:21:32', 8, 17, NULL);
-INSERT INTO ingrid.message VALUES (19, 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', '2024-01-23 18:46:06', 13, 5, NULL);
-INSERT INTO ingrid.message VALUES (20, 'Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', '2024-10-08 03:57:55', 12, 4, NULL);
-INSERT INTO ingrid.message VALUES (21, 'Vestibulum sed magna at nunc commodo placerat.', '2024-07-05 13:11:17', 4, 2, NULL);
-INSERT INTO ingrid.message VALUES (22, 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', '2024-02-15 14:35:19', 3, 6, NULL);
-INSERT INTO ingrid.message VALUES (23, 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis.', '2024-09-15 14:49:14', 4, 11, NULL);
-INSERT INTO ingrid.message VALUES (24, 'Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique.', '2024-05-04 21:08:03', 4, 7, NULL);
-INSERT INTO ingrid.message VALUES (25, 'Suspendisse potenti. Cras in purus eu magna vulputate luctus.', '2024-05-31 14:03:47', 16, 14, NULL);
-INSERT INTO ingrid.message VALUES (26, 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '2024-12-13 09:36:26', 5, 1, NULL);
-INSERT INTO ingrid.message VALUES (27, 'Integer ac leo.', '2024-05-17 07:42:21', 7, 4, NULL);
-INSERT INTO ingrid.message VALUES (28, 'Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.', '2024-05-21 21:23:31', 13, 5, NULL);
-INSERT INTO ingrid.message VALUES (29, 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', '2024-03-25 04:40:09', 1, 7, NULL);
-INSERT INTO ingrid.message VALUES (30, 'Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est. Phasellus sit amet erat. Nulla tempus.', '2024-10-23 04:56:53', 2, 2, NULL);
-INSERT INTO ingrid.message VALUES (31, 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', '2024-06-06 22:42:10', 13, 13, NULL);
-INSERT INTO ingrid.message VALUES (32, 'Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', '2024-09-16 15:26:21', 9, 11, NULL);
-INSERT INTO ingrid.message VALUES (33, 'Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus. Pellentesque at nulla.', '2024-09-01 02:58:33', 4, 1, NULL);
-INSERT INTO ingrid.message VALUES (34, 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', '2024-02-01 19:40:44', 14, 3, NULL);
-INSERT INTO ingrid.message VALUES (35, 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat.', '2024-09-08 06:05:43', 7, 10, NULL);
-INSERT INTO ingrid.message VALUES (36, 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.', '2025-01-02 21:22:32', 1, 17, NULL);
-INSERT INTO ingrid.message VALUES (37, 'Praesent lectus. Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.', '2024-01-11 15:43:48', 9, 3, NULL);
-INSERT INTO ingrid.message VALUES (38, 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', '2024-02-15 14:57:03', 4, 3, NULL);
-INSERT INTO ingrid.message VALUES (39, 'Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst.', '2024-05-16 09:16:52', 17, 17, NULL);
-INSERT INTO ingrid.message VALUES (40, 'Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.', '2024-08-01 10:18:24', 1, 11, NULL);
-INSERT INTO ingrid.message VALUES (41, 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.', '2024-04-04 13:52:50', 13, 17, NULL);
-INSERT INTO ingrid.message VALUES (42, 'In blandit ultrices enim.', '2024-03-20 13:03:52', 17, 9, NULL);
-INSERT INTO ingrid.message VALUES (43, 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue.', '2024-09-20 23:12:26', 9, 10, NULL);
-INSERT INTO ingrid.message VALUES (44, 'Suspendisse potenti. Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', '2024-05-28 23:07:35', 12, 9, NULL);
-INSERT INTO ingrid.message VALUES (45, 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh.', '2024-11-27 23:56:33', 11, 3, NULL);
-INSERT INTO ingrid.message VALUES (46, 'In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.', '2024-12-11 12:32:59', 9, 13, NULL);
-INSERT INTO ingrid.message VALUES (47, 'Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', '2024-04-30 14:13:52', 7, 16, NULL);
-INSERT INTO ingrid.message VALUES (48, 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', '2024-07-07 07:44:06', 9, 10, NULL);
-INSERT INTO ingrid.message VALUES (49, 'Morbi non quam nec dui luctus rutrum. Nulla tellus. In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti. In eleifend quam a odio.', '2024-09-10 06:46:49', 9, 5, NULL);
-INSERT INTO ingrid.message VALUES (50, 'Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', '2024-11-20 20:34:19', 7, 7, NULL);
-INSERT INTO ingrid.message VALUES (53, 'Je pense qu''il faut d''abord décomposer le problème en étapes. Peut-être qu''on devrait revoir les bases sur les matrices.', '2025-01-08 10:10:00', 3, 8, 52);
 INSERT INTO ingrid.message VALUES (51, 'Salut, tu as compris le dernier exercice sur les matrices ?', '2025-01-08 10:00:00', 3, 8, NULL);
 INSERT INTO ingrid.message VALUES (52, 'Non, pas vraiment. Tu as des idées pour le résoudre ?', '2025-01-08 10:05:00', 8, 3, 51);
-INSERT INTO ingrid.message VALUES (54, 'Bonne idée, je vais regarder le cours à nouveau. Tu veux qu''on réessaie ensemble après ? ', '2025-01-08 10:15:00', 8, 3, 53);
-INSERT INTO ingrid.message VALUES (55, 'Oui, ça me va. On peut se retrouver à la bibliothèque à 14h ?', '2025-01-08 10:20:00', 3, 8, 54);
-INSERT INTO ingrid.message VALUES (56, 'Ok, c''est parfait. À tout à l''heure !', '2025-01-08 10:25:00', 8, 3, 55);
 INSERT INTO ingrid.message VALUES (57, 'Alors, tu penses que la méthode de Gauss est la bonne approche pour résoudre ce système ?', '2025-01-08 14:05:00', 3, 8, NULL);
 INSERT INTO ingrid.message VALUES (58, 'Oui, exactement ! Ça semble bien fonctionner avec l''exercice. Tu veux qu''on passe à l''étape suivante ?', '2025-01-08 14:10:00', 8, 3, 57);
 INSERT INTO ingrid.message VALUES (59, 'Je crois que c''est bon, on a tout résolu. Tu veux qu''on en parle en classe ?', '2025-01-08 14:15:00', 3, 8, 58);
 INSERT INTO ingrid.message VALUES (60, 'Oui, c’est une bonne idée. À plus tard alors.', '2025-01-08 14:20:00', 8, 3, 59);
+INSERT INTO ingrid.message VALUES (61, 'Bonjour !', '2025-03-02 20:46:20.85', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (62, 'Bonjour à toi aussi !', '2025-03-02 21:05:51.666', 7, 19, NULL);
+INSERT INTO ingrid.message VALUES (63, 'Est-ce que tu vas bien ?', '2025-03-03 17:24:33.021', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (64, 'Oui et toi ?', '2025-03-03 17:25:01.958', 7, 19, NULL);
+INSERT INTO ingrid.message VALUES (65, 'Bien merci.', '2025-03-03 17:34:35.54', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (66, 'Je te contacte afin de savoir si l''import des utilisateurs était terminé.', '2025-03-03 17:37:31.653', 19, 7, NULL);
+INSERT INTO ingrid.message VALUES (67, 'Ne t''inquiète pas j''ai bientôt terminé.', '2025-03-04 14:19:45.329', 7, 19, NULL);
 
 
 --
 -- Data for Name: module_bloc_competence; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.module_bloc_competence VALUES (1, 1, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (2, 1, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (2, 2, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (3, 1, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (3, 5, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (3, 6, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (4, 1, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (4, 3, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (4, 6, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (5, 1, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (6, 1, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (6, 2, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (7, 1, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (7, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (7, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (8, 1, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (8, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 1, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 3, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (9, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 1, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 2, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 3, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 4, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (10, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (11, 2, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (12, 2, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (12, 3, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (13, 2, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (13, 3, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (14, 2, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (14, 4, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (15, 2, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (16, 2, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (17, 2, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (17, 3, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (18, 2, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (18, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (19, 2, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (20, 3, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (21, 3, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (21, 5, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (21, 6, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (22, 3, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (23, 3, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 3, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 4, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (24, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (25, 4, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (26, 4, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (27, 4, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (27, 6, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (28, 4, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (29, 4, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (30, 4, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (31, 4, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (31, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (32, 5, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (33, 5, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (34, 6, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (35, 6, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (36, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (37, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (38, 6, 'Semestre 2');
-INSERT INTO ingrid.module_bloc_competence VALUES (39, 5, 'Semestre 1');
-INSERT INTO ingrid.module_bloc_competence VALUES (39, 6, 'Semestre 1');
+INSERT INTO ingrid.module_bloc_competence VALUES (1, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (2, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (2, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (3, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (3, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (3, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (4, 1, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (4, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (4, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (5, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (6, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (6, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (7, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (7, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (7, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (8, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (8, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (9, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 1, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (10, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (11, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (12, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (12, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (13, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (13, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (14, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (14, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (15, 2, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (16, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (17, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (17, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (18, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (18, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (19, 2, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (20, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (21, 3, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (21, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (21, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (22, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (23, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 3, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (24, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (25, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (26, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (27, 4, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (27, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (28, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (29, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (30, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (31, 4, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (31, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (32, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (33, 5, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (34, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (35, 6, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (36, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (37, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (38, 6, 'Semestre 2', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (39, 5, 'Semestre 1', 1);
+INSERT INTO ingrid.module_bloc_competence VALUES (39, 6, 'Semestre 1', 1);
 
 
 --
@@ -493,36 +426,13 @@ INSERT INTO ingrid.notes VALUES (15, 10, 16.00, 'Bonne préparation.', '2025-02-
 INSERT INTO ingrid.notes VALUES (16, 10, 15.50, 'Quelques lacunes dans les détails.', '2025-02-15 14:20:00', '2025-02-16 14:20:00');
 INSERT INTO ingrid.notes VALUES (17, 11, 4.00, 'Manque de révision.', '2025-02-20 12:00:00', '2025-02-21 12:00:00');
 INSERT INTO ingrid.notes VALUES (8, 11, 5.00, 'Réponse correcte, mais incomplète.', '2025-02-20 12:30:00', '2025-02-21 12:30:00');
+INSERT INTO ingrid.notes VALUES (11, 1, 12.60, 'Pas mal', '2025-02-28 13:36:57.617', '2025-02-28 14:27:41.793');
 
 
 --
--- Data for Name: utilisateurs_eav; Type: TABLE DATA; Schema: ingrid; Owner: postgres
+-- Data for Name: qrcode; Type: TABLE DATA; Schema: ingrid; Owner: postgres
 --
 
-INSERT INTO ingrid.utilisateurs_eav VALUES (1, 'adresse', '123 Rue des Lilas', '2025-01-01 10:00:00', 1);
-INSERT INTO ingrid.utilisateurs_eav VALUES (2, 'téléphone', '0654321098', '2025-01-02 11:30:00', 1);
-INSERT INTO ingrid.utilisateurs_eav VALUES (3, 'langue', 'Français', '2025-01-03 14:15:00', 1);
-INSERT INTO ingrid.utilisateurs_eav VALUES (4, 'adresse', '45 Avenue de la République', '2025-01-02 09:00:00', 2);
-INSERT INTO ingrid.utilisateurs_eav VALUES (5, 'téléphone', '0778456123', '2025-01-04 13:00:00', 2);
-INSERT INTO ingrid.utilisateurs_eav VALUES (6, 'spécialité', 'Informatique', '2025-01-05 08:45:00', 2);
-INSERT INTO ingrid.utilisateurs_eav VALUES (7, 'adresse', '9 Boulevard Haussmann', '2025-01-03 16:00:00', 3);
-INSERT INTO ingrid.utilisateurs_eav VALUES (8, 'téléphone', '0667348291', '2025-01-04 10:00:00', 3);
-INSERT INTO ingrid.utilisateurs_eav VALUES (9, 'hobby', 'Photographie', '2025-01-06 17:30:00', 3);
-INSERT INTO ingrid.utilisateurs_eav VALUES (10, 'adresse', '78 Rue de la Paix', '2025-01-01 12:00:00', 4);
-INSERT INTO ingrid.utilisateurs_eav VALUES (11, 'téléphone', '0687123456', '2025-01-03 15:00:00', 4);
-INSERT INTO ingrid.utilisateurs_eav VALUES (12, 'langue', 'Anglais', '2025-01-05 09:30:00', 4);
-INSERT INTO ingrid.utilisateurs_eav VALUES (13, 'adresse', '23 Impasse des Fleurs', '2025-01-02 14:00:00', 5);
-INSERT INTO ingrid.utilisateurs_eav VALUES (14, 'téléphone', '0698123476', '2025-01-03 16:30:00', 5);
-INSERT INTO ingrid.utilisateurs_eav VALUES (15, 'préférence', 'Travail en équipe', '2025-01-06 11:00:00', 5);
-INSERT INTO ingrid.utilisateurs_eav VALUES (16, 'adresse', '12 Place Bellecour', '2025-01-01 18:00:00', 6);
-INSERT INTO ingrid.utilisateurs_eav VALUES (17, 'téléphone', '0678564912', '2025-01-04 08:00:00', 6);
-INSERT INTO ingrid.utilisateurs_eav VALUES (18, 'langue', 'Espagnol', '2025-01-06 13:15:00', 6);
-INSERT INTO ingrid.utilisateurs_eav VALUES (19, 'adresse', '50 Rue Principale', '2025-01-07 14:00:00', 7);
-INSERT INTO ingrid.utilisateurs_eav VALUES (20, 'téléphone', '0765432189', '2025-01-07 15:30:00', 7);
-INSERT INTO ingrid.utilisateurs_eav VALUES (21, 'adresse', '89 Chemin des Pins', '2025-01-08 16:00:00', 8);
-INSERT INTO ingrid.utilisateurs_eav VALUES (22, 'téléphone', '0751234897', '2025-01-08 17:00:00', 8);
-INSERT INTO ingrid.utilisateurs_eav VALUES (23, 'adresse', '67 Rue du Bac', '2025-01-09 11:00:00', 9);
-INSERT INTO ingrid.utilisateurs_eav VALUES (24, 'téléphone', '0645781239', '2025-01-09 12:30:00', 9);
 
 
 --
@@ -557,7 +467,7 @@ SELECT pg_catalog.setval('ingrid.cours_id_cours_seq', 13, true);
 -- Name: evaluation_id_eval_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 1, true);
+SELECT pg_catalog.setval('ingrid.evaluation_id_eval_seq', 4, true);
 
 
 --
@@ -578,7 +488,7 @@ SELECT pg_catalog.setval('ingrid.groupe_id_grp_seq', 5, true);
 -- Name: message_id_message_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.message_id_message_seq', 60, true);
+SELECT pg_catalog.setval('ingrid.message_id_message_seq', 67, true);
 
 
 --
@@ -599,14 +509,7 @@ SELECT pg_catalog.setval('ingrid.notification_id_notif_seq', 11, true);
 -- Name: utilisateur_id_utilisateur_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 18, true);
-
-
---
--- Name: utilisateurs_eav_id_user_eav_seq; Type: SEQUENCE SET; Schema: ingrid; Owner: postgres
---
-
-SELECT pg_catalog.setval('ingrid.utilisateurs_eav_id_user_eav_seq', 24, true);
+SELECT pg_catalog.setval('ingrid.utilisateur_id_utilisateur_seq', 19, true);
 
 
 --

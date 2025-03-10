@@ -1,8 +1,7 @@
-import {Modal, Text, TouchableOpacity, View} from 'react-native';
+import {Modal, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {styles} from '../../styles/Schedule/CourseModal.native';
-// import { X, MessageSquare, QrCode } from 'FontAwesome';
 import {CourseModalProps} from '../../../../shared/src/types/types';
 
 export default function NativeCourseModal({
@@ -17,25 +16,25 @@ export default function NativeCourseModal({
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <FontAwesome6 name="x" size={24} color="#2C3E50" />
           </TouchableOpacity>
-          <Text style={styles.modalTitle}>{course.subject}</Text>
+          <Text style={styles.modalTitle}>{course.summary}</Text>
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Professeur</Text>
-              <Text style={styles.infoValue}>{course.professor}</Text>
+              <Text style={styles.infoLabel}>Enseignant</Text>
+              <Text style={styles.infoValue}>{course.teacher}</Text>
             </View>
             <View style={styles.infoItem}>
               <Text style={styles.infoLabel}>Salle</Text>
-              <Text style={styles.infoValue}>{course.room}</Text>
+              <Text style={styles.infoValue}>{course.location}</Text>
             </View>
             <View style={styles.infoItem}>
               <Text style={styles.infoLabel}>Horaires</Text>
               <Text style={styles.infoValue}>
-                {course.startTime} - {course.endTime}
+                {course.start} - {course.end}
               </Text>
             </View>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Type</Text>
-              <Text style={styles.infoValue}>{course.type}</Text>
+              <Text style={styles.infoLabel}>Groupe(s)</Text>
+              <Text style={styles.infoValue}>{course.group}</Text>
             </View>
           </View>
           <View style={styles.buttonContainer}>

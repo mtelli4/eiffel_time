@@ -1,0 +1,19 @@
+:root {
+  --select-text: black;
+  --select-bg: white;
+  --select-border: #cccccc;
+  --select-focus-border: #2e3494;
+  --select-menu-bg: white;
+  --select-selected-bg: #2e3494;
+  --select-hover-bg: #deebff;
+}
+
+.dark {
+  --select-text: white;
+  --select-bg: #1f2937; /* gray-800 */
+  --select-border: #d1d5db; /* gray-300 */
+  --select-focus-border: #2e3494; /* blue-500 */
+  --select-menu-bg: #1f2937; /* gray-800 */
+  --select-selected-bg: #2e3494; /* blue-500 */
+  --select-hover-bg: #374151; /* gray-700 */
+}

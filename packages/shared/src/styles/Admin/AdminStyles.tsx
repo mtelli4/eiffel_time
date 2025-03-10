@@ -5,7 +5,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#ecf0f1',
   },
   title: {
     fontSize: 24,
@@ -25,7 +24,7 @@ export const styles = StyleSheet.create({
     marginRight: 8,
   },
   activeTabButton: {
-    backgroundColor: '#2C3E50',
+    backgroundColor: '#2E3494',
   },
   inactiveTabButton: {
     backgroundColor: '#fff',

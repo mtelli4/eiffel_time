@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model absence {
   id_absence     Int          @id @default(autoincrement())
   justificatif   String?      @db.VarChar(50)
@@ -43,7 +42,6 @@ model communiquer {
   utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model cours {
   id_cours     Int             @id @default(autoincrement())
   type         type_cours?
@@ -64,6 +62,7 @@ model cours {
   groupe       groupe?         @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction)
   module       module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   evaluation   evaluation[]
+  qrcode       qrcode[]        @ignore
 }
 
 model enseignant {
@@ -76,6 +75,7 @@ model enseignant {
 model enseignant_module {
   id_module      Int
   id_utilisateur Int
+  heures         String?    @db.VarChar(50)
   module         module     @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   enseignant     enseignant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
 
@@ -93,7 +93,6 @@ model etudiant {
   notes           notes[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model evaluation {
   id_eval      Int          @id @default(autoincrement())
   libelle      String?      @db.VarChar(50)
@@ -106,11 +105,11 @@ model evaluation {
   id_notif     Int
   id_module    Int
   cours        cours        @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction)
+  module       module       @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
   notification notification @relation(fields: [id_notif], references: [id_notif], onDelete: NoAction, onUpdate: NoAction)
   notes        notes[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model formation {
   id_formation          Int                     @id @default(autoincrement())
   libelle               String?                 @db.VarChar(50)
@@ -137,6 +136,15 @@ model groupe {
   groupe_etudiant groupe_etudiant[]
 }
 
+model groupe_etudiant {
+  id_utilisateur Int
+  id_grp         Int
+  etudiant       etudiant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction, map: "fk_etudiant")
+  groupe         groupe   @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction, map: "fk_groupe")
+
+  @@id([id_utilisateur, id_grp], map: "groupe_etudiant_id_utilisateur_id_grp")
+}
+
 model message {
   id_message                                 Int         @id @default(autoincrement())
   contenu                                    String?
@@ -150,8 +158,6 @@ model message {
   other_message                              message[]   @relation("messageTomessage")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model module {
   id_module              Int                      @id @default(autoincrement())
   libelle                String?                  @db.VarChar(100)
@@ -159,6 +165,7 @@ model module {
   heures                 String?                  @db.VarChar(50)
   cours                  cours[]
   enseignant_module      enseignant_module[]
+  evaluation             evaluation[]
   module_bloc_competence module_bloc_competence[]
 }
 
@@ -166,6 +173,7 @@ model module_bloc_competence {
   id_module       Int
   id_bloc_comp    Int
   periode         periode?
+  coefficient     Int?
   bloc_competence bloc_competence @relation(fields: [id_bloc_comp], references: [id_bloc_comp], onDelete: NoAction, onUpdate: NoAction)
   module          module          @relation(fields: [id_module], references: [id_module], onDelete: NoAction, onUpdate: NoAction)
 
@@ -193,14 +201,24 @@ model notification {
   evaluation evaluation[]
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model qrcode {
+  id_cours       Int
+  id_utilisateur Int
+  presence       Boolean     @default(false)
+  cours          cours       @relation(fields: [id_cours], references: [id_cours], onDelete: NoAction, onUpdate: NoAction, map: "appel_id_cours_fkey")
+  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction, map: "appel_id_utilisateur_fkey")
+
+  @@id([id_cours, id_utilisateur])
+}
+
 model utilisateur {
   id_utilisateur                         Int                     @id @default(autoincrement())
   nom                                    String                  @db.VarChar(255)
   prenom                                 String                  @db.VarChar(255)
   email                                  String?                 @unique(map: "utilisateur_email") @db.VarChar(255)
   mdp                                    String?                 @db.VarChar(255)
-  salt                                   String?                 @db.VarChar(255)
-  premiereconnexion                      Boolean?
+  salt                                   String?                 @db.VarChar(64)
   statut                                 statut_utilisateur?
   createdat                              DateTime                @db.Timestamp(6)
   updatedat                              DateTime                @db.Timestamp(6)
@@ -210,25 +228,21 @@ model utilisateur {
   formation_utilisateur                  formation_utilisateur[]
   message_message_emetteurToutilisateur  message[]               @relation("message_emetteurToutilisateur")
   message_message_recepteurToutilisateur message[]               @relation("message_recepteurToutilisateur")
-  utilisateurs_eav                       utilisateurs_eav[]
+  qrcode                                 qrcode[]                @ignore
 }
 
-model utilisateurs_eav {
-  id_user_eav    Int         @id @default(autoincrement())
-  attribute      String?     @db.VarChar(255)
-  valueeav       String?     @db.VarChar(255)
-  createdat      DateTime    @db.Timestamp(6)
-  id_utilisateur Int
-  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction)
+enum cours_presence {
+  pr_sentiel @map("présentiel")
+  distanciel
 }
 
-model groupe_etudiant {
-  id_utilisateur Int
-  id_grp         Int
-  etudiant       etudiant @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: NoAction, onUpdate: NoAction, map: "fk_etudiant")
-  groupe         groupe   @relation(fields: [id_grp], references: [id_grp], onDelete: NoAction, onUpdate: NoAction, map: "fk_groupe")
-
-  @@id([id_utilisateur, id_grp], map: "groupe_etudiant_id_utilisateur_id_grp")
+enum periode {
+  Semestre_1 @map("Semestre 1")
+  Semestre_2 @map("Semestre 2")
+  Semestre_3 @map("Semestre 3")
+  Semestre_4 @map("Semestre 4")
+  Semestre_5 @map("Semestre 5")
+  Semestre_6 @map("Semestre 6")
 }
 
 enum statut_utilisateur {
@@ -246,18 +260,4 @@ enum type_cours {
   TD
   TP
   EMPTY_ENUM_VALUE @map("")
-}
-
-enum periode {
-  Semestre_1 @map("Semestre 1")
-  Semestre_2 @map("Semestre 2")
-  Semestre_3 @map("Semestre 3")
-  Semestre_4 @map("Semestre 4")
-  Semestre_5 @map("Semestre 5")
-  Semestre_6 @map("Semestre 6")
-}
-
-enum cours_presence {
-  pr_sentiel @map("présentiel")
-  distanciel
 }

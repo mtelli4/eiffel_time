@@ -1,22 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import {
+  FlatList,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from 'react-native'
-// import { Save } from 'lucide-react-native' // Assurez-vous d'avoir une version compatible de lucide-react pour React Native
+import { useDateFormat } from '../../hooks/useDateFormat'
+import { useLanguage } from '../../hooks/useLanguage'
+import { useTheme } from '../../hooks/useTheme'
+import { NotificationSettingsProps } from '../../types/types'
+import { SecuritySettingsProps } from '../../types/types'
 
 export function Settings() {
   const [NotificationSettings, setNotificationSettings] =
-    useState<React.FC | null>(null)
-  const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(
-    null
-  )
+    useState<React.ComponentType<NotificationSettingsProps> | null>(null)
+
+  const [SecuritySettings, setSecuritySettings] =
+    useState<React.ComponentType<SecuritySettingsProps> | null>(null)
   const [PersonalizationSettings, setPersonalizationSettings] =
-    useState<React.FC | null>(null)
+    useState<any>(null)
+
+  const { theme, setTheme } = useTheme()
+  const { dateFormat, setDateFormat } = useDateFormat()
+  const { language, setLanguage } = useLanguage()
+  const systemTheme = useColorScheme()
+
+  // États temporaires pour stocker les modifications
+  const [tempTheme, setTempTheme] = useState(theme || 'system')
+  const [tempDate, setTempDate] = useState(dateFormat)
+  const [tempLanguage, setTempLanguage] = useState(language)
+
+  useEffect(() => {
+    setTempTheme(theme || 'system')
+    setTempDate(dateFormat)
+    setTempLanguage(language)
+  }, [theme, dateFormat, language])
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -53,34 +74,67 @@ export function Settings() {
   }, [])
 
   const handleSave = () => {
-    // Implement save functionality
+    setDateFormat(tempDate)
+    setTheme(tempTheme)
+    setLanguage(tempLanguage)
   }
 
   if (!NotificationSettings || !SecuritySettings || !PersonalizationSettings) {
-    return <Text style={styles.loading}>Loading...</Text>
+    return <Text style={styles.loading}>Chargement...</Text>
   }
 
+  const isDark =
+    tempTheme === 'system' ? systemTheme === 'dark' : tempTheme === 'dark'
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.form}>
-        <NotificationSettings />
-        <View style={{ marginVertical: 20 }} />
-        <SecuritySettings />
-        <View style={{ marginVertical: 20 }} />
-        <PersonalizationSettings />
-        <View style={{ marginVertical: 20 }} />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleSave}>
-            <Text style={styles.button}>Enregistrer</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+    <View style={[styles.container, isDark && styles.darkContainer]}>
+      <FlatList
+        data={[
+          {
+            key: 'Notifications',
+            component: <NotificationSettings isDark={isDark} />,
+          },
+          { key: 'Sécurité', component: <SecuritySettings isDark={isDark} /> },
+          {
+            key: 'Personnalisation',
+            component: (
+              <PersonalizationSettings
+                dateFormat={tempDate}
+                setDate={setTempDate}
+                theme={tempTheme}
+                setTheme={setTempTheme}
+                language={tempLanguage}
+                setLanguage={setTempLanguage}
+              />
+            ),
+          },
+          {
+            key: 'Enregistrer',
+            component: (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.button} onPress={handleSave}>
+                  <Text style={styles.button}>Enregistrer</Text>
+                </TouchableOpacity>
+              </View>
+            ),
+          },
+        ]}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: 20 }}>{item.component}</View>
+        )}
+      />
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  darkContainer: {
+    backgroundColor: '#1f2937',
     flexGrow: 1,
     justifyContent: 'center',
     padding: 16,

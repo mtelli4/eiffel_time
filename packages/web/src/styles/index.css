@@ -10,20 +10,29 @@
     @apply antialiased text-gray-900;
   }
 }
+body {
+  background-color: #f9fafb; /* Light mode default */
+  color: #1f2937;
+}
+
+.dark body {
+  background-color: #1f2937; /* Dark mode */
+  color: #f9fafb;
+}
 
 @layer components {
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-colors;
   }
-  
+
   .btn-primary {
-    @apply bg-primary text-white hover:bg-secondary;
+    @apply bg-primary text-white hover:bg-secondary dark:hover:bg-blue-600 dark:text-white;
   }
-  
+
   .btn-outline {
-    @apply border border-primary text-primary hover:bg-primary hover:text-white;
+    @apply border border-primary dark:bg-gray-100 text-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-800 dark:hover:bg-blue-600 dark:hover:text-white;
   }
-  
+
   .input {
     @apply px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent;
   }
@@ -34,4 +43,51 @@
   /* display: flex;
   justify-content: center;
   align-items: center;; */
+}
+
+/* Appliquer un style sombre aux éléments de DataTables */
+.dark .dataTables_wrapper {
+  color: white;
+  background-color: #1e293b; /* Fond sombre */
+}
+
+/* Style pour la barre de recherche */
+.dark .dataTables_filter input {
+  background-color: #334155; /* Fond du champ */
+  color: white;
+  border-color: #64748b;
+}
+
+/* Style pour la pagination */
+.dark .dataTables_paginate .paginate_button {
+  background-color: #334155;
+  color: white !important;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+.dark .dataTables_paginate .paginate_button:hover {
+  background-color: #475569;
+}
+
+/* Désactiver le texte grisé des boutons non actifs */
+.dark .dataTables_paginate .paginate_button.disabled {
+  color: #64748b !important;
+}
+
+/* Style pour l'en-tête du tableau */
+.dark .dataTables_wrapper thead {
+  background-color: #334155;
+  color: white;
+}
+
+/* Style pour les lignes du tableau */
+.dark .dataTables_wrapper tbody tr {
+  background-color: #1e293b;
+  color: white;
+}
+
+/* Style pour le hover sur les lignes */
+.dark .dataTables_wrapper tbody tr:hover {
+  background-color: #334155;
 }

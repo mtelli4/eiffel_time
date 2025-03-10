@@ -122,3 +122,5 @@ yarn-error.log*
 
 # TypeScript
 *.tsbuildinfo
+
+ip_address.ts
