@@ -265,6 +265,13 @@ export function Messages() {
     return roles[statut] || 'Utilisateur';
   };
 
+  // For debugging purposes
+  useEffect(() => {
+    console.log('theme:', theme);
+    console.log('systemTheme:', systemTheme);
+    console.log('isDark:', isDark);
+  }, [theme, systemTheme, isDark]);
+
   return (
     <SafeAreaView style={[styles.container, isDark && styles.darkContainer]}>
       <View

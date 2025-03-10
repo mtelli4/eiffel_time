@@ -305,3 +305,7 @@ export interface NotificationSettingsProps {
 export interface SecuritySettingsProps {
   isDark?: boolean
 }
+
+export interface MessagesProps {
+  isDark?: boolean
+}
