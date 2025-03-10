@@ -3,7 +3,7 @@ import 'datatables.net-dt/js/dataTables.dataTables.js'
 import DataTable from 'datatables.net-react'
 import { FileUp } from 'lucide-react'
 import Papa from 'papaparse'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import * as XLSX from 'xlsx'
 import { importUsers } from '../../../../shared/src/backend/services/admin'
@@ -20,18 +20,24 @@ export function UserImport() {
   const [loading, setLoading] = useState(false)
 
   const user = localStorage.getItem('user')
-  const statut = JSON.parse(user as string)?.statut || ''
+  const userStatus = JSON.parse(user as string)?.statut || ''
 
-  // Vérifie si l'email correspond à celui de l'Université Gustave Eiffel
-  const isEmailValid = (email: string, role?: string) => {
-    if (role === 'student' && statut === 'secretary')
-      return email.endsWith('@edu.univ-eiffel.fr')
+  const isUserValid = (user: ImportUser) => {
+    const { email, statut, nom, prenom } = user
+    // Vérifie que toutes les données sont présentes
+    if (email === '' || statut === '' || nom === '' || prenom === '') return false
+
+    // Vérifie la validité de l'email
+    if (statut === 'student' && userStatus === 'secretary') {
+      return email.endsWith('@edu.univ-eiffel.fr');
+    }
+
     return (
       email.endsWith('@u-pem.fr') ||
       email.endsWith('@univ-eiffel.fr') ||
       email.endsWith('@edu.univ-eiffel.fr')
-    )
-  }
+    );
+  };
 
   // Gestion du fichier déposé
   const onDrop = (acceptedFiles: File[]) => {
@@ -61,9 +67,7 @@ export function UserImport() {
       }
 
       setJsonData(parsedData)
-      setValidData(
-        parsedData.filter((user) => isEmailValid(user.email, user.statut))
-      )
+      setValidData(parsedData.filter((user) => isUserValid(user)))
       setLoading(false)
     }
 
@@ -71,6 +75,8 @@ export function UserImport() {
       reader.readAsText(file)
     } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
       reader.readAsArrayBuffer(file)
+    } else {
+      alert('Format de fichier non supporté')
     }
   }
 
@@ -98,12 +104,16 @@ export function UserImport() {
     }
   }
 
+  const displayedData = useMemo(() => {
+    return showOnlyValid ? validData : jsonData
+  }, [showOnlyValid, validData, jsonData])
+
   return (
     <div className="mb-6">
       <h2 className="text-xl font-semibold dark:text-white">
         Importation des utilisateurs
       </h2>
-      <br/>
+      <br />
       {jsonData.length === 0 && (
         <div className="text-gray-600 dark:text-gray-300">
           <p>
@@ -126,7 +136,7 @@ export function UserImport() {
               (Directeur).
             </li>
             <li>Les utilisateurs seront créés après validation des données.</li>
-            {statut === 'secretary' && (
+            {userStatus === 'secretary' && (
               <li>
                 La création des utilisateurs est irréversible, veuillez vérifier
                 les données avant de les importer.
@@ -135,7 +145,7 @@ export function UserImport() {
             <li>
               La création des utilisateurs sera limitée aux utilisateurs valides
               et aux 4 colonnes citées ci-dessus.{' '}
-              {statut === 'secretary' && (
+              {userStatus === 'secretary' && (
                 <>
                   Veuillez faire appel à un administrateur ou un gestionnaire
                   pour modifier.
@@ -147,19 +157,20 @@ export function UserImport() {
           {/* Zone de drag & drop */}
           <div
             {...getRootProps()}
-            className="border-2 border-dashed p-6 text-center cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
+            className="border-2 border-dashed p-6 text-center cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-[#2C3E50] dark:hover:bg-[#34495E] dark:border-gray-600 transition-colors"
           >
             <input {...getInputProps()} />
             {isDragActive ? (
-              <p className="text-blue-600 font-medium">
+              <p className="text-blue-600 font-medium dark:text-blue-400">
                 Déposez votre fichier ici...
               </p>
             ) : (
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Glissez-déposez un fichier ici ou cliquez pour sélectionner un
                 fichier
               </p>
             )}
+            <em>Formats acceptés : CSV, XLSX, XLS, JSON</em>
             <FileUp className="mx-auto mt-2 text-gray-500" size={24} />
           </div>
         </div>
@@ -167,7 +178,7 @@ export function UserImport() {
       <br />
       {/* Affichage des utilisateurs importés */}
       {jsonData.length > 0 && (
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
+        <div className="rounded-lg shadow-sm overflow-hidden">
           <div className="mb-4 flex justify-between items-center">
             {/* Toggle switch */}
             <label className="flex items-center cursor-pointer">
@@ -192,21 +203,23 @@ export function UserImport() {
             <button
               className="btn btn-primary"
               onClick={() => handleImport(showOnlyValid ? validData : jsonData)}
-              disabled={validData.length === 0}
+              disabled={validData.length === 0 || loading}
             >
-              Importer les utilisateurs
+              Importer les utilisateurs valides ({validData.length} /{' '}
+              {jsonData.length})
             </button>
           </div>
 
           {/* Tableau des utilisateurs */}
           <DataTable
+            key={displayedData.map((d) => d.email).join('-')}
             className="display w-full dark:text-gray-300 custom-table"
             options={{
               info: true,
               language: {
                 info: 'Affichage de _START_ à _END_ sur _TOTAL_ utilisateurs',
                 lengthMenu: 'Afficher _MENU_ utilisateurs',
-                search: 'Rechercher :',
+                search: 'Rechercher : ',
                 searchPlaceholder: 'Rechercher un utilisateur',
                 infoEmpty: 'Aucun utilisateur trouvé',
                 emptyTable: loading
@@ -215,7 +228,6 @@ export function UserImport() {
               },
               pageLength: 10,
             }}
-            key={jsonData.length}
           >
             <thead>
               <tr className="bg-[#ECF0F1] border-b border-gray-200">
@@ -234,20 +246,19 @@ export function UserImport() {
               </tr>
             </thead>
             <tbody>
-              {(showOnlyValid ? validData : jsonData).map((user, index) => (
-                <tr
-                  key={index}
-                  className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
-                ${!isEmailValid(user.email, user.statut)
-                      ? `text-red-500`
-                      : `text-gray-600 dark:text-gray-300`
-                    }`}
-                >
-                  <td className="py-3 px-4">{user.nom}</td>
-                  <td className="py-3 px-4">{user.prenom}</td>
-                  <td className={`py-3 px-4`}>{user.email}</td>
-                  <td className="py-3 px-4">{roleFinder(user.statut)}</td>
-                </tr>
+              {displayedData.map((user) => (
+                user.email ? (
+                  <tr
+                    key={user.email}
+                    className={`border-b border-gray-100 hover:bg-[#ECF0F1] dark:hover:bg-[#2C3E50] 
+          ${!isUserValid(user) ? `text-red-500` : `text-gray-600 dark:text-gray-300`}`}
+                  >
+                    <td className="py-3 px-4">{user.nom || '-'}</td>
+                    <td className="py-3 px-4">{user.prenom || '-'}</td>
+                    <td className="py-3 px-4">{user.email || '-'}</td>
+                    <td className="py-3 px-4">{roleFinder(user.statut) || '-'}</td>
+                  </tr>
+                ) : null
               ))}
             </tbody>
           </DataTable>
