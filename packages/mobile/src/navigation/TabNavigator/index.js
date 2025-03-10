@@ -104,7 +104,7 @@ const TABS_CONFIG = {
     },
     {
       name: 'Présences enseignants',
-      component: ClassAverages,
+      component: TeacherAttendance,
       icon: {name: 'users', source: 'Feather'},
     },
     {
