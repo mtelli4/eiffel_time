@@ -32,7 +32,7 @@ export default function PersonalizationSettings({
   const isDark = theme === 'system' ? systemTheme === 'dark' : theme === 'dark';
 
   const [isThemeOpen, setIsThemeOpen] = React.useState(false);
-  const [themeValue, setThemeValue] = React.useState(theme);
+  const [themeValue, setThemeValue] = React.useState(theme || 'system');
   const [themeItems, setThemeItems] = React.useState(themesSelectOptions);
 
   const [isLanguageOpen, setIsLanguageOpen] = React.useState(false);
@@ -50,6 +50,11 @@ export default function PersonalizationSettings({
   useEffect(() => {
     DropDownPicker.setListMode('MODAL');
   }, []);
+
+  // Mettre à jour l'état local si les props changent
+  useEffect(() => {
+    setThemeValue(theme || 'system');
+  }, [theme]);
 
   useEffect(() => {
     setTheme(themeValue);

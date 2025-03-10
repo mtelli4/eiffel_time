@@ -27,12 +27,12 @@ export function Settings() {
   const systemTheme = useColorScheme()
 
   // États temporaires pour stocker les modifications
-  const [tempTheme, setTempTheme] = useState(theme)
+  const [tempTheme, setTempTheme] = useState(theme || 'system')
   const [tempDate, setTempDate] = useState(dateFormat)
   const [tempLanguage, setTempLanguage] = useState(language)
 
   useEffect(() => {
-    setTempTheme(theme)
+    setTempTheme(theme || 'system')
     setTempDate(dateFormat)
     setTempLanguage(language)
   }, [theme, dateFormat, language])
