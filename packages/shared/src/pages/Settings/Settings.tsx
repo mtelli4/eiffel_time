@@ -11,13 +11,15 @@ import {
 import { useDateFormat } from '../../hooks/useDateFormat'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useTheme } from '../../hooks/useTheme'
+import { NotificationSettingsProps } from '../../types/types'
+import { SecuritySettingsProps } from '../../types/types'
 
 export function Settings() {
   const [NotificationSettings, setNotificationSettings] =
-    useState<React.FC | null>(null)
-  const [SecuritySettings, setSecuritySettings] = useState<React.FC | null>(
-    null
-  )
+    useState<React.ComponentType<NotificationSettingsProps> | null>(null)
+
+  const [SecuritySettings, setSecuritySettings] =
+    useState<React.ComponentType<SecuritySettingsProps> | null>(null)
   const [PersonalizationSettings, setPersonalizationSettings] =
     useState<any>(null)
 
@@ -88,8 +90,11 @@ export function Settings() {
     <View style={[styles.container, isDark && styles.darkContainer]}>
       <FlatList
         data={[
-          { key: 'Notifications', component: <NotificationSettings /> },
-          { key: 'Sécurité', component: <SecuritySettings /> },
+          {
+            key: 'Notifications',
+            component: <NotificationSettings isDark={isDark} />,
+          },
+          { key: 'Sécurité', component: <SecuritySettings isDark={isDark} /> },
           {
             key: 'Personnalisation',
             component: (

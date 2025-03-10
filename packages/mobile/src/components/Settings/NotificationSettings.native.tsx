@@ -3,12 +3,21 @@ import {StyleSheet, Switch, Text, View, useColorScheme} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {useTheme} from '../../../../shared/src/hooks/useTheme';
 
-export default function NotificationSettings() {
+interface NotificationSettingsProps {
+  isDark?: boolean; // Le "?" rend la prop optionnelle
+}
+
+export default function NotificationSettings({
+  isDark: propIsDark,
+}: NotificationSettingsProps) {
   const {theme} = useTheme();
   const systemTheme = useColorScheme();
-
-  // Use system theme when theme is set to "system"
-  const isDark = theme === 'system' ? systemTheme === 'dark' : theme === 'dark';
+  const isDark =
+    propIsDark !== undefined
+      ? propIsDark
+      : theme === 'system'
+      ? systemTheme === 'dark'
+      : theme === 'dark';
 
   return (
     <View style={[styles.container, isDark && styles.darkContainer]}>

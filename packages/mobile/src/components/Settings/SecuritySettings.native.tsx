@@ -9,13 +9,19 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {useTheme} from '../../../../shared/src/hooks/useTheme';
+import {SecuritySettingsProps} from '../../../../shared/src/types/types';
 
-export default function SecuritySettings() {
+export default function SecuritySettings({
+  isDark: propIsDark,
+}: SecuritySettingsProps) {
   const {theme} = useTheme();
   const systemTheme = useColorScheme();
-
-  // Use system theme when theme is set to "system"
-  const isDark = theme === 'system' ? systemTheme === 'dark' : theme === 'dark';
+  const isDark =
+    propIsDark !== undefined
+      ? propIsDark
+      : theme === 'system'
+      ? systemTheme === 'dark'
+      : theme === 'dark';
 
   return (
     <View style={[styles.container, isDark && styles.darkContainer]}>
