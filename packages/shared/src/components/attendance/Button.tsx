@@ -5,6 +5,7 @@ interface ButtonProps {
   children: React.ReactNode
   variant?: 'primary' | 'outline'
   disabled?: boolean
+  isDarkMode?: boolean
 }
 
 export function Button({
@@ -12,6 +13,7 @@ export function Button({
   children,
   variant = 'primary',
   disabled,
+  isDarkMode,
 }: ButtonProps) {
   return (
     <TouchableOpacity

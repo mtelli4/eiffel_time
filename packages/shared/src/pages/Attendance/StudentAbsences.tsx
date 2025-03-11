@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native'
 import { Badge } from '../../components/attendance/Badge'
 import { Button } from '../../components/attendance/Button'
 import { Card } from '../../components/attendance/Card'
@@ -17,9 +24,12 @@ type StudentAbsences = {
   status: 'approved' | 'rejected' | 'pending' | 'unjustified'
 }
 
-type StatusKey = 'justified' | 'unjustified' | 'pending' | 'undefined';
+type StatusKey = 'justified' | 'unjustified' | 'pending' | 'undefined'
 
-const statusConfig: Record<StatusKey, { variant: 'success' | 'error' | 'warning' | 'default'; text: string }> = {
+const statusConfig: Record<
+  StatusKey,
+  { variant: 'success' | 'error' | 'warning' | 'default'; text: string }
+> = {
   justified: {
     variant: 'success' as const,
     text: 'Justifiée',
@@ -46,11 +56,13 @@ const setAbsenceStatut = (envoye: boolean, valide: boolean) => {
   } else if (envoye && valide === null) {
     return 'pending'
   } else {
-    'unjusitified'
+    ;('unjusitified')
   }
 }
 
-const setVariant = (status: string): 'success' | 'error' | 'warning' | 'default' => {
+const setVariant = (
+  status: string
+): 'success' | 'error' | 'warning' | 'default' => {
   return statusConfig[status as StatusKey].variant
 }
 
@@ -61,6 +73,8 @@ const setBadgeText = (status: string): string => {
 export function Absences() {
   const [studentAbsences, setStudentAbsences] = useState<StudentAbsences[]>([])
   const [justification, setJustification] = useState<Record<string, string>>({})
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === 'dark'
 
   const userId = 3
 
@@ -71,16 +85,18 @@ export function Absences() {
         return response.json()
       })
       .then((data) => {
-        setStudentAbsences(data.map((absence: any) => ({
-          id_absence: absence.id_absence,
-          module: absence.module,
-          enseignant: absence.enseignant,
-          dateAbsence: new Date(absence.date_absence),
-          justificatif: absence.justificatif,
-          dateJustificatif: new Date(absence.date_justificatif),
-          message: absence.message,
-          status: setAbsenceStatut(absence.envoye, absence.valide),
-        })))
+        setStudentAbsences(
+          data.map((absence: any) => ({
+            id_absence: absence.id_absence,
+            module: absence.module,
+            enseignant: absence.enseignant,
+            dateAbsence: new Date(absence.date_absence),
+            justificatif: absence.justificatif,
+            dateJustificatif: new Date(absence.date_justificatif),
+            message: absence.message,
+            status: setAbsenceStatut(absence.envoye, absence.valide),
+          }))
+        )
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des absences:', error)
@@ -103,16 +119,24 @@ export function Absences() {
   }
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView style={[styles.scrollView, isDark && styles.scrollViewDark]}>
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           {studentAbsences.map((absence) => (
-            <Card key={absence.id_absence}>
+            <Card
+              key={absence.id_absence}
+              style={[styles.cardContainer, isDark && styles.cardContainerDark]}
+            >
               <View style={styles.cardContent}>
                 <View style={styles.cardHeader}>
                   <View>
                     <View style={styles.moduleContainer}>
-                      <Text style={styles.moduleText}>
+                      <Text
+                        style={[
+                          styles.moduleText,
+                          isDark && styles.moduleTextDark,
+                        ]}
+                      >
                         {absence.module || 'Module inconnu'}
                       </Text>
                       <View style={styles.badgeContainer}>
@@ -120,9 +144,16 @@ export function Absences() {
                         {/* <Badge variant={setVariant(absence.status)}>yo</Badge> */}
                       </View>
                     </View>
-                    <Text style={styles.professorText}>
-                      {absence.dateAbsence.toLocaleDateString('fr-FR') || 'Date inconnue'}{' '}
-                      •{' '} {/* TODO: Ajouter la date de soumission du justificatif */}
+                    <Text
+                      style={[
+                        styles.professorText,
+                        isDark && styles.professorTextDark,
+                      ]}
+                    >
+                      {absence.dateAbsence.toLocaleDateString('fr-FR') ||
+                        'Date inconnue'}{' '}
+                      •{' '}
+                      {/* TODO: Ajouter la date de soumission du justificatif */}
                       {`${absence.enseignant}` || 'Enseignant inconnu'}
                     </Text>
                   </View>
@@ -134,7 +165,12 @@ export function Absences() {
                       }}
                       style={styles.documentButton}
                     >
-                      <Text style={styles.documentText}>
+                      <Text
+                        style={[
+                          styles.documentText,
+                          isDark && styles.documentTextDark,
+                        ]}
+                      >
                         Voir le justificatif
                       </Text>
                     </TouchableOpacity>
@@ -142,7 +178,12 @@ export function Absences() {
                 </View>
 
                 {absence.message && (
-                  <Text style={styles.justificationText}>
+                  <Text
+                    style={[
+                      styles.justificationText,
+                      isDark && styles.justificationTextDark,
+                    ]}
+                  >
                     Motif : {absence.message}
                   </Text>
                 )}
@@ -159,17 +200,26 @@ export function Absences() {
                         }))
                       }
                       placeholder="Saisissez le motif de l'absence"
+                      isDarkMode={isDark}
                     />
 
                     <View style={styles.actionButtonsContainer}>
                       <View style={styles.uploadButton}>
                         <TouchableOpacity
-                          style={styles.uploadTouchable}
+                          style={[
+                            styles.uploadTouchable,
+                            isDark && styles.uploadTouchableDark,
+                          ]}
                           onPress={() => {
                             /* Implement file upload */
                           }}
                         >
-                          <Text style={styles.uploadText}>
+                          <Text
+                            style={[
+                              styles.uploadText,
+                              isDark && styles.uploadTextDark,
+                            ]}
+                          >
                             Ajouter un justificatif
                           </Text>
                         </TouchableOpacity>
@@ -181,6 +231,7 @@ export function Absences() {
                           handleJustificationSubmit(absence.id_absence)
                         }
                         disabled={!justification[absence.id_absence]}
+                        isDarkMode={isDark}
                       >
                         Soumettre
                       </Button>
@@ -201,11 +252,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
+  scrollViewDark: {
+    backgroundColor: '#1F2937',
+  },
   container: {
     padding: 24,
   },
+  containerDark: {
+    backgroundColor: '#1F2937',
+  },
   cardContainer: {
     gap: 16,
+  },
+  cardContainerDark: {
+    backgroundColor: '#111827',
   },
   cardContent: {
     gap: 16,
@@ -227,10 +287,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#2E3494',
   },
+  moduleTextDark: {
+    color: 'white',
+  },
   professorText: {
     fontSize: 14,
     color: '#6B7280',
     marginTop: 4,
+  },
+  professorTextDark: {
+    color: '#ccc', // Plus clair en mode sombre
   },
   documentButton: {
     flexDirection: 'row',
@@ -243,6 +309,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2E3494',
   },
+  documentTextDark: {
+    color: '#4C6FFF',
+  },
   badgeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -253,6 +322,9 @@ const styles = StyleSheet.create({
   justificationText: {
     fontSize: 14,
     color: '#6B7280',
+  },
+  justificationTextDark: {
+    color: '#ccc',
   },
   justificationContainer: {
     gap: 16,
@@ -276,8 +348,14 @@ const styles = StyleSheet.create({
     borderColor: '#2E3494',
     borderRadius: 6,
   },
+  uploadTouchableDark: {
+    borderColor: '#4C6FFF',
+  },
   uploadText: {
     color: '#2E3494',
     fontSize: 16,
+  },
+  uploadTextDark: {
+    color: '#4C6FFF',
   },
 })

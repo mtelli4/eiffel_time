@@ -7,6 +7,7 @@ interface InputProps {
   placeholder?: string
   secureTextEntry?: boolean
   error?: string
+  isDarkMode?: boolean
 }
 
 export function Input({
@@ -16,9 +17,10 @@ export function Input({
   placeholder,
   secureTextEntry,
   error,
+  isDarkMode,
 }: InputProps) {
   const colorScheme = useColorScheme()
-  const isDarkMode = colorScheme === 'dark'
+  isDarkMode = colorScheme === 'dark'
 
   return (
     <View style={[styles.container, error && styles.containerError]}>
